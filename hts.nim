@@ -2,14 +2,15 @@ import "hts_concat"
 import strutils
 
 type
-  Bam = ref object of RootObj
-    hts: ptr htsFile
-    hdr: ptr bamHdrT
-    b: ptr bam1T
-
   Record = ref object of RootObj
     b: ptr bam1T
     hdr: ptr bamHdrT
+
+  Bam = ref object of RootObj
+    hts: ptr htsFile
+    hdr: ptr bamHdrT
+    rec: Record
+
 
 proc chrom(r: Record): string =
   let tid = r.b.core.tid
@@ -26,27 +27,34 @@ proc stop(r: Record): int =
 proc `$`(r: Record): string =
   return format("Record($1:$2-$3)", [r.chrom, intToStr(r.start), intToStr(r.stop)])
 
-proc destroyBam(bam: Bam) =
+proc finalizeBam(bam: Bam) =
   discard htsClose(bam.hts)
   bam_hdr_destroy(bam.hdr)
-  bam_destroy1(bam.b)
+
+proc finalizeRecord(rec: Record) =
+  bam_destroy1(rec.b)
 
 proc NewBam(path: cstring): Bam =
   var hts = htsOpen(path, "r")
   var hdr = samHdrRead(hts)
   var b   = bamInit1()
+  # the record is attached to the bam, but it takes care of it's own finalizer.
+  var rec: Record
+  new(rec, finalizeRecord)
+  rec.b = b
+  rec.hdr = hdr
   var bam: Bam
-  new(bam, destroyBam)
+  new(bam, finalizeBam)
   bam.hts = hts
   bam.hdr = hdr
-  bam.b = b
+  bam.rec = rec
   return bam
 
 iterator items(bam: Bam): Record =
-  var ret = 1
+  var ret = samRead1(bam.hts, bam.hdr, bam.rec.b)
   while ret > 0:
-    ret = samRead1(bam.hts, bam.hdr, bam.b)
-    yield Record(b: bam.b, hdr: bam.hdr)
+    yield bam.rec
+    ret = samRead1(bam.hts, bam.hdr, bam.rec.b)
 
 
 proc main() =
@@ -54,6 +62,8 @@ proc main() =
   var bam = NewBam("/home/brentp/src/svv/test/HG02002.bam")
 
   for b in bam:
-    echo b
-     
-main()
+    discard b
+
+
+for i in 1..1000000:
+    main()
