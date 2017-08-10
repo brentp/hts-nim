@@ -1,0 +1,578 @@
+ {.deadCodeElim: on.}
+when defined(windows):
+  const
+    libname* = "libhts.dll"
+elif defined(macosx):
+  const
+    libname* = "libhhts.dylib"
+else:
+  const
+    libname* = "libhts.so"
+proc malloc*(size: csize): pointer {.cdecl, importc: "malloc", dynlib: libname.}
+proc free*(a2: pointer) {.cdecl, importc: "free", dynlib: libname.}
+proc strncpy*(dst: cstring; src: cstring; size: csize): cstring {.cdecl,
+    importc: "strncpy", dynlib: libname.}
+proc strtol*(str: cstring; endptr: cstringArray; base: cint): clong {.cdecl,
+    importc: "strtol", dynlib: libname.}
+type
+  hFILE* {.bycopy.} = object
+  
+
+## ############################
+## # kstring
+## ############################
+
+type
+  kstring_t* {.bycopy.} = object
+    l*: csize
+    m*: csize
+    s*: cstring
+
+
+proc ks_release*(s: ptr kstring_t): cstring {.inline, cdecl, importc: "ks_release",
+    dynlib: libname.}
+proc kputsn*(a2: cstring; a3: cint; a4: ptr kstring_t) {.cdecl, importc: "kputsn",
+    dynlib: libname.}
+## ##########################
+## # BGZF
+## ##########################
+
+type
+  bgzidx_t* {.bycopy.} = object
+  
+  bgzf_mtaux_t* {.bycopy.} = object
+  
+  z_stream* {.bycopy.} = object
+  
+  BGZF* {.bycopy.} = object
+    errcode* {.bitsize: 16.}: cuint ##  Reserved bits should be written as 0; read as "don't care"
+    reserved* {.bitsize: 1.}: cuint
+    is_write* {.bitsize: 1.}: cuint
+    no_eof_block* {.bitsize: 1.}: cuint
+    is_be* {.bitsize: 1.}: cuint
+    compress_level* {.bitsize: 9.}: cint
+    last_block_eof* {.bitsize: 1.}: cuint
+    is_compressed* {.bitsize: 1.}: cuint
+    is_gzip* {.bitsize: 1.}: cuint
+    cache_size*: cint
+    block_length*: cint
+    block_clength*: cint
+    block_offset*: cint
+    block_address*: int64
+    uncompressed_address*: int64
+    uncompressed_block*: pointer
+    compressed_block*: pointer
+    cache*: pointer            ##  a pointer to a hash table
+    fp*: ptr hFILE              ##  actual file handle
+    mt*: ptr bgzf_mtaux_t       ##  only used for multi-threading
+    idx*: ptr bgzidx_t          ##  BGZF index
+    idx_build_otf*: cint       ##  build index on the fly, set by bgzf_index_build_init()
+    gz_stream*: ptr z_stream    ##  for gzip-compressed files
+  
+
+proc bgzf_open*(path: cstring; mode: cstring): ptr BGZF {.cdecl, importc: "bgzf_open",
+    dynlib: libname.}
+proc bgzf_close*(fp: ptr BGZF): cint {.cdecl, importc: "bgzf_close", dynlib: libname.}
+proc bgzf_hopen*(fp: ptr hFILE; mode: cstring): ptr BGZF {.cdecl, importc: "bgzf_hopen",
+    dynlib: libname.}
+proc bgzf_flush*(fp: ptr BGZF): cint {.cdecl, importc: "bgzf_flush", dynlib: libname.}
+type
+  htsFormatCategory* {.size: sizeof(cint).} = enum
+    unknown_category, sequence_data, ##  Sequence data -- SAM, BAM, CRAM, etc
+    variant_data,             ##  Variant calling data -- VCF, BCF, etc
+    index_file,               ##  Index file associated with some data file
+    region_list,              ##  Coordinate intervals or regions -- BED, etc
+    category_maximum = 32767
+
+
+type
+  htsExactFormat* {.size: sizeof(cint).} = enum
+    unknown_format, binary_format, text_format, sam, bam, bai, cram, crai, vcf, bcf, csi,
+    gzi, tbi, bed, json, format_maximum = 32767
+
+
+type
+  htsCompression* {.size: sizeof(cint).} = enum
+    no_compression, gzip, bgzf, custom, compression_maximum = 32767
+
+
+type
+  INNER_C_STRUCT_1799009620* {.bycopy.} = object
+    major*: cshort
+    minor*: cshort
+
+  htsFormat* {.bycopy.} = object
+    category*: htsFormatCategory
+    format*: htsExactFormat
+    version*: INNER_C_STRUCT_1799009620
+    compression*: htsCompression
+    compression_level*: cshort ##  currently unused
+    specific*: pointer         ##  format specific options; see struct hts_opt.
+  
+
+## ###########################
+## # hts
+## ###########################
+
+type
+  INNER_C_UNION_1568417404* {.bycopy.} = object {.union.}
+    bgzf*: ptr BGZF
+    cram*: ptr cram_fd
+    hfile*: ptr hFILE
+
+  cram_fd* {.bycopy.} = object
+  
+  hts_idx_t* {.bycopy.} = object
+  
+  htsFile* {.bycopy.} = object
+    is_bin* {.bitsize: 1.}: uint32
+    is_write* {.bitsize: 1.}: uint32
+    is_be* {.bitsize: 1.}: uint32
+    is_cram* {.bitsize: 1.}: uint32
+    is_bgzf* {.bitsize: 1.}: uint32
+    dummy* {.bitsize: 27.}: uint32
+    lineno*: int64
+    line*: kstring_t
+    fn*: cstring
+    fn_aux*: cstring
+    fp*: INNER_C_UNION_1568417404
+    format*: htsFormat
+
+
+proc hts_open*(fn: cstring; mode: cstring): ptr htsFile {.cdecl, importc: "hts_open",
+    dynlib: libname.}
+proc hts_close*(fp: ptr htsFile): cint {.cdecl, importc: "hts_close", dynlib: libname.}
+proc hts_getline*(fp: ptr htsFile; delimiter: cint; str: ptr kstring_t): cint {.cdecl,
+    importc: "hts_getline", dynlib: libname.}
+## char **hts_readlines(const char *fn, int *_n);
+
+proc hts_set_threads*(fp: ptr htsFile; n: cint): cint {.cdecl,
+    importc: "hts_set_threads", dynlib: libname.}
+proc hts_set_fai_filename*(fp: ptr htsFile; fn_aux: cstring): cint {.cdecl,
+    importc: "hts_set_fai_filename", dynlib: libname.}
+type
+  hts_readrec_func* = proc (fp: ptr BGZF; data: pointer; r: pointer; tid: ptr cint;
+                         beg: ptr cint; `end`: ptr cint): cint {.cdecl.}
+  hts_id2name_f* = proc (a2: pointer; a3: cint): cstring {.cdecl.}
+  hts_itr_t* {.bycopy.} = object
+  
+
+proc hts_idx_init*(n: cint; fmt: cint; offset0: uint64; min_shift: cint; n_lvls: cint): ptr hts_idx_t {.
+    cdecl, importc: "hts_idx_init", dynlib: libname.}
+proc hts_idx_destroy*(idx: ptr hts_idx_t) {.cdecl, importc: "hts_idx_destroy",
+                                        dynlib: libname.}
+proc hts_idx_push*(idx: ptr hts_idx_t; tid: cint; beg: cint; `end`: cint; offset: uint64;
+                  is_mapped: cint): cint {.cdecl, importc: "hts_idx_push",
+                                        dynlib: libname.}
+proc hts_idx_finish*(idx: ptr hts_idx_t; final_offset: uint64) {.cdecl,
+    importc: "hts_idx_finish", dynlib: libname.}
+proc hts_idx_save*(idx: ptr hts_idx_t; fn: cstring; fmt: cint) {.cdecl,
+    importc: "hts_idx_save", dynlib: libname.}
+proc hts_idx_load*(fn: cstring; fmt: cint): ptr hts_idx_t {.cdecl,
+    importc: "hts_idx_load", dynlib: libname.}
+proc hts_idx_get_meta*(idx: ptr hts_idx_t; l_meta: ptr cint): ptr uint8 {.cdecl,
+    importc: "hts_idx_get_meta", dynlib: libname.}
+proc hts_idx_set_meta*(idx: ptr hts_idx_t; l_meta: cint; meta: ptr uint8; is_copy: cint) {.
+    cdecl, importc: "hts_idx_set_meta", dynlib: libname.}
+proc hts_idx_get_stat*(idx: ptr hts_idx_t; tid: cint; mapped: ptr uint64;
+                      unmapped: ptr uint64): cint {.cdecl,
+    importc: "hts_idx_get_stat", dynlib: libname.}
+proc hts_idx_get_n_no_coor*(idx: ptr hts_idx_t): uint64 {.cdecl,
+    importc: "hts_idx_get_n_no_coor", dynlib: libname.}
+proc hts_parse_reg*(s: cstring; beg: ptr cint; `end`: ptr cint): cstring {.cdecl,
+    importc: "hts_parse_reg", dynlib: libname.}
+proc hts_itr_query*(idx: ptr hts_idx_t; tid: cint; beg: cint; `end`: cint;
+                   readrec: ptr hts_readrec_func): ptr hts_itr_t {.cdecl,
+    importc: "hts_itr_query", dynlib: libname.}
+proc hts_itr_destroy*(iter: ptr hts_itr_t) {.cdecl, importc: "hts_itr_destroy",
+    dynlib: libname.}
+proc hts_itr_next*(fp: ptr BGZF; iter: ptr hts_itr_t; r: pointer; data: pointer): cint {.
+    cdecl, importc: "hts_itr_next", dynlib: libname.}
+proc hts_idx_seqnames*(idx: ptr hts_idx_t; n: ptr cint; getid: hts_id2name_f;
+                      hdr: pointer): cstringArray {.cdecl,
+    importc: "hts_idx_seqnames", dynlib: libname.}
+## ###########################
+## # tbx
+## ###########################
+
+type
+  tbx_conf_t* {.bycopy.} = object
+    preset*: int32
+    sc*: int32
+    bc*: int32
+    ec*: int32                 ##  seq col., beg col. and end col.
+    meta_char*: int32
+    line_skip*: int32
+
+  tbx_t* {.bycopy.} = object
+    conf*: tbx_conf_t
+    idx*: ptr hts_idx_t
+    dict*: pointer
+
+
+proc tbx_index_build*(fn: cstring; min_shift: cint; conf: ptr tbx_conf_t): cint {.cdecl,
+    importc: "tbx_index_build", dynlib: libname.}
+proc tbx_index_load*(fn: cstring): ptr tbx_t {.cdecl, importc: "tbx_index_load",
+    dynlib: libname.}
+proc tbx_seqnames*(tbx: ptr tbx_t; n: ptr cint): cstringArray {.cdecl,
+    importc: "tbx_seqnames", dynlib: libname.}
+##  free the array but not the values
+
+proc tbx_destroy*(tbx: ptr tbx_t) {.cdecl, importc: "tbx_destroy", dynlib: libname.}
+proc tbx_itr_querys*(tbx: ptr tbx_t; a3: cstring): ptr hts_itr_t {.cdecl,
+    importc: "tbx_itr_querys", dynlib: libname.}
+proc tbx_itr_next*(fp: ptr htsFile; tbx: ptr tbx_t; iter: ptr hts_itr_t; data: pointer): cint {.
+    cdecl, importc: "tbx_itr_next", dynlib: libname.}
+## #####################################
+## # sam.h
+## #####################################
+
+type
+  samFile* = htsFile
+  bam_hdr_t* {.bycopy.} = object
+    n_targets*: int32
+    ignore_sam_err*: int32
+    l_text*: uint32
+    target_len*: ptr uint32
+    cigar_tab*: ptr int8
+    target_name*: cstringArray
+    text*: cstring
+    sdict*: pointer
+
+  bam1_core_t* {.bycopy.} = object
+    tid*: int32
+    pos*: int32
+    bin*: uint16
+    qual*: uint8
+    l_qname*: uint8
+    flag*: uint16
+    unused1*: uint8
+    l_extranul*: uint8
+    n_cigar*: uint32
+    l_qseq*: int32
+    mtid*: int32
+    mpos*: int32
+    isize*: int32
+
+  bam1_t* {.bycopy.} = object
+    core*: bam1_core_t
+    l_data*: cint
+    m_data*: cint
+    data*: ptr uint8
+    id*: uint64
+
+
+proc sam_hdr_parse*(l_text: cint; text: cstring): ptr bam_hdr_t {.cdecl,
+    importc: "sam_hdr_parse", dynlib: libname.}
+proc sam_hdr_read*(fp: ptr samFile): ptr bam_hdr_t {.cdecl, importc: "sam_hdr_read",
+    dynlib: libname.}
+proc bam_hdr_dup*(h0: ptr bam_hdr_t): ptr bam_hdr_t {.cdecl, importc: "bam_hdr_dup",
+    dynlib: libname.}
+proc bam_hdr_write*(fp: ptr BGZF; h: ptr bam_hdr_t): cint {.cdecl,
+    importc: "bam_hdr_write", dynlib: libname.}
+proc sam_hdr_write*(fp: ptr htsFile; h: ptr bam_hdr_t): cint {.cdecl,
+    importc: "sam_hdr_write", dynlib: libname.}
+proc sam_write1*(fp: ptr htsFile; h: ptr bam_hdr_t; b: ptr bam1_t): cint {.cdecl,
+    importc: "sam_write1", dynlib: libname.}
+proc sam_format1*(h: ptr bam_hdr_t; b: ptr bam1_t; str: ptr kstring_t): cint {.cdecl,
+    importc: "sam_format1", dynlib: libname.}
+proc sam_read1*(fp: ptr samFile; h: ptr bam_hdr_t; b: ptr bam1_t): cint {.cdecl,
+    importc: "sam_read1", dynlib: libname.}
+proc bam_read1*(fp: ptr BGZF; b: ptr bam1_t): cint {.cdecl, importc: "bam_read1",
+    dynlib: libname.}
+proc bam_init1*(): ptr bam1_t {.cdecl, importc: "bam_init1", dynlib: libname.}
+proc bam_destroy1*(b: ptr bam1_t) {.cdecl, importc: "bam_destroy1", dynlib: libname.}
+proc bam_is_rev*(b: ptr bam1_t): cint {.cdecl, importc: "bam_is_rev", dynlib: libname.}
+proc bam_is_mrev*(b: ptr bam1_t): cint {.cdecl, importc: "bam_is_mrev", dynlib: libname.}
+proc bam_get_qname*(b: ptr bam1_t): cstring {.cdecl, importc: "bam_get_qname",
+    dynlib: libname.}
+proc bam_get_cigar*(b: ptr bam1_t): ptr uint32 {.cdecl, importc: "bam_get_cigar",
+    dynlib: libname.}
+proc bam_get_seq*(b: ptr bam1_t): ptr uint8 {.cdecl, importc: "bam_get_seq",
+                                        dynlib: libname.}
+proc bam_seqi*(c: ptr uint8; i: cint): uint8 {.cdecl, importc: "bam_seqi", dynlib: libname.}
+proc bam_get_qual*(b: ptr bam1_t): ptr uint8 {.cdecl, importc: "bam_get_qual",
+    dynlib: libname.}
+proc bam_get_aux*(b: ptr bam1_t): ptr uint8 {.cdecl, importc: "bam_get_aux",
+                                        dynlib: libname.}
+proc bam_get_l_aux*(b: ptr bam1_t): cint {.cdecl, importc: "bam_get_l_aux",
+                                      dynlib: libname.}
+proc bam_aux_get*(b: ptr bam1_t; tag: array[2, char]): ptr uint8 {.cdecl,
+    importc: "bam_aux_get", dynlib: libname.}
+proc bam_aux2i*(s: ptr uint8): int32 {.cdecl, importc: "bam_aux2i", dynlib: libname.}
+proc bam_aux2f*(s: ptr uint8): cfloat {.cdecl, importc: "bam_aux2f", dynlib: libname.}
+proc bam_aux2Z*(s: ptr uint8): cstring {.cdecl, importc: "bam_aux2Z", dynlib: libname.}
+proc bam_copy1*(bdst: ptr bam1_t; bsrc: ptr bam1_t): ptr bam1_t {.cdecl,
+    importc: "bam_copy1", dynlib: libname.}
+proc bam_dup1*(bsrc: ptr bam1_t): ptr bam1_t {.cdecl, importc: "bam_dup1",
+    dynlib: libname.}
+proc bam_cigar2qlen*(n_cigar: cint; cigar: ptr uint32): cint {.cdecl,
+    importc: "bam_cigar2qlen", dynlib: libname.}
+proc bam_cigar2rlen*(n_cigar: cint; cigar: ptr uint32): cint {.cdecl,
+    importc: "bam_cigar2rlen", dynlib: libname.}
+proc bam_endpos*(b: ptr bam1_t): int32 {.cdecl, importc: "bam_endpos", dynlib: libname.}
+proc bam_str2flag*(str: cstring): cint {.cdecl, importc: "bam_str2flag",
+                                     dynlib: libname.}
+## * returns negative value on error
+
+proc bam_flag2str*(flag: cint): cstring {.cdecl, importc: "bam_flag2str",
+                                      dynlib: libname.}
+## * The string must be freed by the user
+
+proc sam_parse1*(s: ptr kstring_t; h: ptr bam_hdr_t; b: ptr bam1_t): cint {.cdecl,
+    importc: "sam_parse1", dynlib: libname.}
+proc sam_index_load*(`in`: ptr samFile; a3: cstring): ptr hts_idx_t {.cdecl,
+    importc: "sam_index_load", dynlib: libname.}
+##  load index
+
+proc bam_index_build*(fn: cstring; min_shift: cint): cint {.cdecl,
+    importc: "bam_index_build", dynlib: libname.}
+proc sam_itr_querys*(a2: ptr hts_idx_t; h: ptr bam_hdr_t; region: cstring): ptr hts_itr_t {.
+    cdecl, importc: "sam_itr_querys", dynlib: libname.}
+## int tbx_itr_next(htsFile *fp, tbx_t *tbx, hts_itr_t *iter, void *data);
+
+proc sam_itr_next*(fp: ptr htsFile; iter: ptr hts_itr_t; data: pointer): cint {.cdecl,
+    importc: "sam_itr_next", dynlib: libname.}
+const
+  BAM_CMATCH* = 0
+  BAM_CINS* = 1
+  BAM_CDEL* = 2
+  BAM_CREF_SKIP* = 3
+  BAM_CSOFT_CLIP* = 4
+  BAM_CHARD_CLIP* = 5
+  BAM_CPAD* = 6
+  BAM_CEQUAL* = 7
+  BAM_CDIFF* = 8
+  BAM_CBACK* = 9
+
+proc bam_cigar_op*(cigar: uint32): uint32 {.cdecl, importc: "bam_cigar_op",
+                                        dynlib: libname.}
+proc bam_cigar_opchr*(cigar: uint32): char {.cdecl, importc: "bam_cigar_opchr",
+    dynlib: libname.}
+proc bam_cigar_oplen*(cigar: uint32): uint32 {.cdecl, importc: "bam_cigar_oplen",
+    dynlib: libname.}
+type
+  bam_pileup_cd* {.bycopy.} = object {.union.}
+    p*: pointer
+    i*: int64
+    f*: cdouble
+
+  bam_pileup1_t* {.bycopy.} = object
+    b*: ptr bam1_t
+    qpos*: int32
+    indel*: cint
+    level*: cint
+    is_del* {.bitsize: 1.}: uint32
+    is_head* {.bitsize: 1.}: uint32
+    is_tail* {.bitsize: 1.}: uint32
+    is_refskip* {.bitsize: 1.}: uint32
+    aux* {.bitsize: 28.}: uint32
+    cd*: bam_pileup_cd         ##  generic per-struct data, owned by caller.
+  
+  bam_plp_auto_f* = proc (data: pointer; b: ptr bam1_t): cint {.cdecl.}
+  bam_plp_t* {.bycopy.} = object
+  
+  bam_mplp_t* {.bycopy.} = object
+  
+
+proc bam_plp_init*(`func`: bam_plp_auto_f; data: pointer): bam_plp_t {.cdecl,
+    importc: "bam_plp_init", dynlib: libname.}
+proc bam_plp_destroy*(iter: bam_plp_t) {.cdecl, importc: "bam_plp_destroy",
+                                      dynlib: libname.}
+proc bam_plp_push*(iter: bam_plp_t; b: ptr bam1_t): cint {.cdecl,
+    importc: "bam_plp_push", dynlib: libname.}
+proc bam_plp_next*(iter: bam_plp_t; tid: ptr cint; pos: ptr cint; n_plp: ptr cint): ptr bam_pileup1_t {.
+    cdecl, importc: "bam_plp_next", dynlib: libname.}
+proc bam_plp_auto*(iter: bam_plp_t; tid: ptr cint; pos: ptr cint; n_plp: ptr cint): ptr bam_pileup1_t {.
+    cdecl, importc: "bam_plp_auto", dynlib: libname.}
+proc bam_plp_set_maxcnt*(iter: bam_plp_t; maxcnt: cint) {.cdecl,
+    importc: "bam_plp_set_maxcnt", dynlib: libname.}
+proc bam_plp_reset*(iter: bam_plp_t) {.cdecl, importc: "bam_plp_reset",
+                                    dynlib: libname.}
+proc bam_mplp_init*(n: cint; `func`: bam_plp_auto_f; data: ptr pointer): bam_mplp_t {.
+    cdecl, importc: "bam_mplp_init", dynlib: libname.}
+proc bam_mplp_init_overlaps*(iter: bam_mplp_t) {.cdecl,
+    importc: "bam_mplp_init_overlaps", dynlib: libname.}
+proc bam_mplp_destroy*(iter: bam_mplp_t) {.cdecl, importc: "bam_mplp_destroy",
+                                        dynlib: libname.}
+proc bam_mplp_set_maxcnt*(iter: bam_mplp_t; maxcnt: cint) {.cdecl,
+    importc: "bam_mplp_set_maxcnt", dynlib: libname.}
+proc bam_mplp_auto*(iter: bam_mplp_t; tid: ptr cint; pos: ptr cint; n_plp: ptr cint;
+                   plp: ptr ptr bam_pileup1_t): cint {.cdecl,
+    importc: "bam_mplp_auto", dynlib: libname.}
+## ##############################################
+## # kfunc
+## ##############################################
+
+proc kt_fisher_exact*(n11: cint; n12: cint; n21: cint; n22: cint; left: ptr cdouble;
+                     right: ptr cdouble; two: ptr cdouble): cdouble {.cdecl,
+    importc: "kt_fisher_exact", dynlib: libname.}
+## ##############################################
+## # faidx
+## ##############################################
+
+type
+  faidx_t* {.bycopy.} = object
+  
+
+proc fai_destroy*(fai: ptr faidx_t) {.cdecl, importc: "fai_destroy", dynlib: libname.}
+proc fai_build*(fn: cstring): cint {.cdecl, importc: "fai_build", dynlib: libname.}
+proc fai_load*(fn: cstring): ptr faidx_t {.cdecl, importc: "fai_load", dynlib: libname.}
+##   @param  len  Length of the region; -2 if seq not present, -1 general error
+
+proc fai_fetch*(fai: ptr faidx_t; reg: cstring; len: ptr cint): cstring {.cdecl,
+    importc: "fai_fetch", dynlib: libname.}
+proc faidx_nseq*(fai: ptr faidx_t): cint {.cdecl, importc: "faidx_nseq", dynlib: libname.}
+proc faidx_fetch_seq*(fai: ptr faidx_t; c_name: cstring; p_beg_i: cint; p_end_i: cint;
+                     len: ptr cint): cstring {.cdecl, importc: "faidx_fetch_seq",
+    dynlib: libname.}
+proc faidx_has_seq*(fai: ptr faidx_t; seq: cstring): cint {.cdecl,
+    importc: "faidx_has_seq", dynlib: libname.}
+## ##############################################
+## # vcf
+## ##############################################
+## 
+## typedef struct {
+##     int32_t rid;  // CHROM
+##     int32_t pos;  // POS
+##     int32_t rlen; // length of REF
+##     float qual;   // QUAL
+##     uint32_t n_info:16, n_allele:16;
+##     uint32_t n_fmt:8, n_sample:24;
+##     kstring_t shared, indiv;
+##     bcf_dec_t d; // lazy evaluation: $d is not generated by bcf_read(), but by explicitly calling bcf_unpack()
+##     int max_unpack;         // Set to BCF_UN_STR, BCF_UN_FLT, or BCF_UN_INFO to boost performance of vcf_parse when some of the fields won't be needed
+##     int unpacked;           // remember what has been unpacked to allow calling bcf_unpack() repeatedly without redoing the work
+##     int unpack_size[3];     // the original block size of ID, REF+ALT and FILTER
+##     int errcode;    // one of BCF_ERR_* codes
+## } bcf1_t;
+## 
+
+type
+  INNER_C_UNION_3076470401* {.bycopy.} = object {.union.}
+    i*: int32                  ##  integer value
+    f*: cfloat                 ##  float value
+  
+  variant_t* {.bycopy.} = object
+    `type`*: cint
+    n*: cint                   ##  variant type and the number of bases affected, negative for deletions
+  
+  bcf_hrec_t* {.bycopy.} = object
+    `type`*: cint              ##  One of the BCF_HL_* type
+    key*: cstring              ##  The part before '=', i.e. FILTER/INFO/FORMAT/contig/fileformat etc.
+    value*: cstring            ##  Set only for generic lines, NULL for FILTER/INFO, etc.
+    nkeys*: cint               ##  Number of structured fields
+    keys*: cstringArray
+    vals*: cstringArray        ##  The key=value pairs
+  
+  bcf_fmt_t* {.bycopy.} = object
+    id*: cint                  ##  id: numeric tag id, the corresponding string is bcf_hdr_t::id[BCF_DT_ID][$id].key
+    n*: cint
+    size*: cint
+    `type`*: cint              ##  n: number of values per-sample; size: number of bytes per-sample; type: one of BCF_BT_* types
+    p*: ptr uint8               ##  same as vptr and vptr_* in bcf_info_t below
+    p_len*: uint32
+    p_off* {.bitsize: 31.}: uint32
+    p_free* {.bitsize: 1.}: uint32
+
+  bcf_info_t* {.bycopy.} = object
+    key*: cint                 ##  key: numeric tag id, the corresponding string is bcf_hdr_t::id[BCF_DT_ID][$key].key
+    `type`*: cint
+    len*: cint                 ##  type: one of BCF_BT_* types; len: vector length, 1 for scalars
+    v1*: INNER_C_UNION_3076470401 ##  only set if $len==1; for easier access
+    vptr*: ptr uint8            ##  pointer to data array in bcf1_t->shared.s, excluding the size+type and tag id bytes
+    vptr_len*: uint32          ##  length of the vptr block or, when set, of the vptr_mod block, excluding offset
+    vptr_off* {.bitsize: 31.}: uint32 ##  vptr offset, i.e., the size of the INFO key plus size+type bytes
+    vptr_free* {.bitsize: 1.}: uint32 ##  indicates that vptr-vptr_off must be freed; set only when modified and the new
+                                  ##     data block is bigger than the original
+  
+  bcf_idinfo_t* {.bycopy.} = object
+    info*: array[3, uint32] ##  stores Number:20, var:4, Type:4, ColType:4 in info[0..2]
+                         ##  for BCF_HL_FLT,INFO,FMT and contig length in info[0] for BCF_HL_CTG
+    hrec*: array[3, ptr bcf_hrec_t]
+    id*: cint
+
+  bcf_idpair_t* {.bycopy.} = object
+    key*: cstring
+    val*: ptr bcf_idinfo_t
+
+  bcf_hdr_t* {.bycopy.} = object
+    n*: array[3, int32]
+    id*: array[3, ptr bcf_idpair_t]
+    dict*: array[3, pointer]    ##  ID dictionary, contig dict and sample dict
+    samples*: cstringArray
+    hrec*: ptr ptr bcf_hrec_t
+    nhrec*: cint
+    dirty*: cint
+    ntransl*: cint
+    transl*: array[2, ptr cint]  ##  for bcf_translate()
+    nsamples_ori*: cint        ##  for bcf_hdr_set_samples()
+    keep_samples*: ptr uint8
+    mem*: kstring_t
+    m*: array[3, int32]
+
+  bcf_dec_t* {.bycopy.} = object
+    m_fmt*: cint
+    m_info*: cint
+    m_id*: cint
+    m_als*: cint
+    m_allele*: cint
+    m_flt*: cint               ##  allocated size (high-water mark); do not change
+    n_flt*: cint               ##  Number of FILTER fields
+    flt*: ptr cint              ##  FILTER keys in the dictionary
+    id*: cstring
+    als*: cstring              ##  ID and REF+ALT block (\0-seperated)
+    allele*: cstringArray      ##  allele[0] is the REF (allele[] pointers to the als block); all null terminated
+    info*: ptr bcf_info_t       ##  INFO
+    fmt*: ptr bcf_fmt_t         ##  FORMAT and individual sample
+    `var`*: ptr variant_t       ##  $var and $var_type set only when set_variant_types called
+    n_var*: cint
+    var_type*: cint
+    shared_dirty*: cint        ##  if set, shared.s must be recreated on BCF output
+    indiv_dirty*: cint         ##  if set, indiv.s must be recreated on BCF output
+  
+  bcf1_t* {.bycopy.} = object
+    rid*: int32                ##  CHROM
+    pos*: int32                ##  POS
+    rlen*: int32               ##  length of REF
+    qual*: cfloat              ##  QUAL
+    n_info* {.bitsize: 16.}: uint32
+    n_allele* {.bitsize: 16.}: uint32
+    n_fmt* {.bitsize: 8.}: uint32
+    n_sample* {.bitsize: 24.}: uint32
+    shared*: kstring_t
+    indiv*: kstring_t
+    d*: bcf_dec_t              ##  lazy evaluation: $d is not generated by bcf_read(), but by explicitly calling bcf_unpack()
+    max_unpack*: cint          ##  Set to BCF_UN_STR, BCF_UN_FLT, or BCF_UN_INFO to boost performance of vcf_parse when some of the fields won't be needed
+    unpacked*: cint            ##  remember what has been unpacked to allow calling bcf_unpack() repeatedly without redoing the work
+    unpack_size*: array[3, cint] ##  the original block size of ID, REF+ALT and FILTER
+    errcode*: cint             ##  one of BCF_ERR_* codes
+  
+
+proc bcf_init*(): ptr bcf1_t {.cdecl, importc: "bcf_init", dynlib: libname.}
+proc bcf_hdr_read*(fp: ptr htsFile): ptr bcf_hdr_t {.cdecl, importc: "bcf_hdr_read",
+    dynlib: libname.}
+proc bcf_hdr_set_samples*(hdr: ptr bcf_hdr_t; samples: cstring; is_file: cint): cint {.
+    cdecl, importc: "bcf_hdr_set_samples", dynlib: libname.}
+proc bcf_read*(fp: ptr htsFile; h: ptr bcf_hdr_t; v: ptr bcf1_t): cint {.cdecl,
+    importc: "bcf_read", dynlib: libname.}
+proc bcf_hdr_id2name*(hdr: ptr bcf_hdr_t; rid: cint): cstring {.inline, cdecl,
+    importc: "bcf_hdr_id2name", dynlib: libname.}
+proc bcf_unpack*(b: ptr bcf1_t; which: cint): cint {.cdecl, importc: "bcf_unpack",
+    dynlib: libname.}
+const
+  BCF_DT_ID* = 0
+  BCF_DT_CTG* = 1
+  BCF_DT_SAMPLE* = 2
+
+proc bcf_get_genotypes*(hdr: ptr bcf_hdr_t; line: ptr bcf1_t; dst: ptr ptr cint;
+                       ndst: ptr cint): cint {.cdecl, importc: "bcf_get_genotypes",
+    dynlib: libname.}
+proc bcf_get_format_values*(hdr: ptr bcf_hdr_t; line: ptr bcf1_t; tag: cstring;
+                           dst: ptr pointer; ndst: ptr cint; `type`: cint): cint {.cdecl,
+    importc: "bcf_get_format_values", dynlib: libname.}
+## typedef htsFile vcfFile;
+## ##############################################
+## # hts_extra
+## ##############################################
+## int bam_get_read_seq(bam1_t *b, kstring_t *str);
