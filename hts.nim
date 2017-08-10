@@ -1,9 +1,6 @@
 import "hts_concat"
 import strutils
 
-proc sprintf(formatstr: cstring): cstring {.importc: "sprintf", varargs,
-                                  header: "<stdio.h>".}
-
 type
   Bam = ref object of RootObj
     hts: ptr htsFile
@@ -29,19 +26,21 @@ proc stop(r: Record): int =
 proc `$`(r: Record): string =
   return format("Record($1:$2-$3)", [r.chrom, intToStr(r.start), intToStr(r.stop)])
 
-proc hts_finalize(hts: ptr htsFile) =
-  var ret = htsClose(hts)
-  echo ret
+proc destroyBam(bam: Bam) =
+  discard htsClose(bam.hts)
+  bam_hdr_destroy(bam.hdr)
+  bam_destroy1(bam.b)
 
 proc NewBam(path: cstring): Bam =
-  # HELP: hwo to do finalizer here?
-  # var hts: ptr htsFile
-  # hts = new(hts, hts_finalize)
   var hts = htsOpen(path, "r")
   var hdr = samHdrRead(hts)
-  # TODO: see https://nim-lang.org/docs/system.html (finalizer)
   var b   = bamInit1()
-  return Bam(hts: hts, hdr:hdr, b: b)
+  var bam: Bam
+  new(bam, destroyBam)
+  bam.hts = hts
+  bam.hdr = hdr
+  bam.b = b
+  return bam
 
 iterator items(bam: Bam): Record =
   var ret = 1
@@ -49,8 +48,12 @@ iterator items(bam: Bam): Record =
     ret = samRead1(bam.hts, bam.hdr, bam.b)
     yield Record(b: bam.b, hdr: bam.hdr)
 
-var bam = NewBam("/home/brentp/src/svv/test/HG02002.bam")
 
-for b in bam:
-  echo b
+proc main() =
 
+  var bam = NewBam("/home/brentp/src/svv/test/HG02002.bam")
+
+  for b in bam:
+    echo b
+     
+main()

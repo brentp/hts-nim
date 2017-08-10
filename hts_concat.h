@@ -234,12 +234,15 @@ bam_hdr_t* bam_hdr_dup(const bam_hdr_t *h0);
 int bam_hdr_write(BGZF *fp, const bam_hdr_t *h);
 int sam_hdr_write(htsFile *fp, const bam_hdr_t *h);
 int sam_write1(htsFile *fp, const bam_hdr_t *h, const bam1_t *b);
+void bam_hdr_destroy(bam_hdr_t *h);
+
 
 
 
 int sam_format1(const bam_hdr_t *h, const bam1_t *b, kstring_t *str);
 int sam_read1(samFile *fp, bam_hdr_t *h, bam1_t *b);
 int bam_read1(BGZF *fp, bam1_t *b);
+
 
 bam1_t *bam_init1();
 void bam_destroy1(bam1_t *b);
