@@ -34,9 +34,21 @@ iterator query(bam: Bam, chrom:string, start:int, stop:int): Record =
   hts_itr_destroy(qiter)
 
 
-proc `$`(r: Record): string =
+proc `$`*(r: Record): string =
   return format("Record($1:$2-$3)", [r.chrom, intToStr(r.start), intToStr(r.stop)])
 
+proc tostring(r: Record): string =
+  #var kstr: ptr kstring_t
+  var kstr : kstring_t
+  kstr.l = 0
+  kstr.m = 0
+  kstr.s = nil
+
+  if sam_format1(r.hdr, r.b, kstr.addr) < 0:
+    raise newException(ValueError, "error for sam formatting")
+  var s = $(kstr.s)
+  free(kstr.s)
+  return s
 
 proc finalizeBam(bam: Bam) =
   echo "finalize bam"
@@ -89,14 +101,14 @@ iterator items(bam: Bam): Record =
 
 proc main() =
 
-  #var bam = NewBam("/home/brentp/src/svv/test/HG02002.bam")
+  #var bam = NewBam("/home/brentp/src/svv/test/HG02002.bam", index=true)
   var bam = NewBam("/tmp/t.cram", fai="/data/human/g1k_v37_decoy.fa", index=true)
 
   for b in bam:
-    discard b
+    echo b.tostring()
   for b in bam.query("6", 328, 32816675):
     discard b
 
-for i in 1..10000:
+for i in 1..1000:
     echo i
     main()

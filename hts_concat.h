@@ -32,8 +32,8 @@ struct hFILE;
 //############################
 
 typedef struct __kstring_t {
-        size_t l, m;
-                char *s;
+  size_t l, m;
+  char *s;
 } kstring_t;
 
 static inline char *ks_release(kstring_t *s);
@@ -124,6 +124,7 @@ typedef struct {
 
 htsFile *hts_open(const char *fn, const char *mode);
 int hts_close(htsFile *fp);
+int hts_check_EOF(htsFile *fp);
 
 int hts_getline(htsFile *fp, int delimiter, kstring_t *str);
 //char **hts_readlines(const char *fn, int *_n);
@@ -284,7 +285,8 @@ int bam_index_build(const char *fn, int min_shift);
 hts_itr_t * sam_itr_querys(hts_idx_t*, bam_hdr_t *h, char * region);
 
 //int tbx_itr_next(htsFile *fp, tbx_t *tbx, hts_itr_t *iter, void *data);
-int sam_itr_next(htsFile *fp, hts_itr_t *iter, void *data);
+#define sam_itr_next(htsfp, itr, r) hts_itr_next((htsfp)->fp.bgzf, (itr), (r), (htsfp))
+
 
 #define BAM_CMATCH      0
 #define BAM_CINS        1
