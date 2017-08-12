@@ -12,6 +12,47 @@ type
     rec: Record
     idx: ptr hts_idx_t
 
+  Flag = uint16
+
+const zero = uint16(0)
+
+proc pair(f: Flag): bool =
+    return zero != (f and BAM_FPAIRED)
+
+proc proper_pair(f: Flag): bool =
+    return zero != (f and BAM_FPROPER_PAIR)
+
+proc unmapped(f: Flag): bool =
+    return zero != (f and BAM_FUNMAP)
+
+proc mate_unmapped(f: Flag): bool =
+    return zero != (f and BAM_FMUNMAP)
+
+proc reverse(f: Flag): bool =
+    return zero != (f and BAM_FREVERSE)
+
+proc mate_reverse(f: Flag): bool =
+    return zero != (f and BAM_FMREVERSE)
+
+proc read1(f: Flag): bool =
+    return zero != (f and BAM_FREAD1)
+
+proc read2(f: Flag): bool =
+    return zero != (f and BAM_FREAD2)
+
+proc secondary(f: Flag): bool =
+    return zero != (f and BAM_FSECONDARY)
+
+proc qcfail(f: Flag): bool =
+    return zero != (f and BAM_FQCFAIL)
+
+proc dup(f: Flag): bool =
+    return zero != (f and BAM_FDUP)
+
+proc supplementary(f: Flag): bool =
+    return zero != (f and BAM_FSUPPLEMENTARY)
+
+
 proc chrom(r: Record): string =
   let tid = r.b.core.tid
   if tid == -1:
@@ -24,6 +65,15 @@ proc start(r: Record): int =
 proc stop(r: Record): int =
   return bamEndpos(r.b)
 
+proc copy(r: Record): Record =
+  return Record(b: bam_dup1(r.b), hdr: r.hdr)
+
+proc qname(r: Record): string =
+    return $(bam_get_qname(r.b))
+
+proc flag(r: Record): Flag =
+    return Flag(r.b.core.flag)
+
 iterator query(bam: Bam, chrom:string, start:int, stop:int): Record =
   var region = format("$1:$2-$3", chrom, intToStr(start+1), intToStr(stop))
   var qiter = sam_itr_querys(bam.idx, bam.hdr, region);
@@ -33,9 +83,8 @@ iterator query(bam: Bam, chrom:string, start:int, stop:int): Record =
     slen = sam_itr_next(bam.hts, qiter, bam.rec.b)
   hts_itr_destroy(qiter)
 
-
 proc `$`*(r: Record): string =
-  return format("Record($1:$2-$3)", [r.chrom, intToStr(r.start), intToStr(r.stop)])
+    return format("Record($1:$2-$3):$4", [r.chrom, intToStr(r.start), intToStr(r.stop), r.qname])
 
 proc tostring(r: Record): string =
   #var kstr: ptr kstring_t
@@ -104,8 +153,13 @@ proc main() =
   #var bam = NewBam("/home/brentp/src/svv/test/HG02002.bam", index=true)
   var bam = NewBam("/tmp/t.cram", fai="/data/human/g1k_v37_decoy.fa", index=true)
 
+  var recs = newSeq[Record]()
+
   for b in bam:
-    echo b.tostring()
+    if len(recs) < 10:
+        recs.add(b.copy())
+  for b in recs:
+      echo b, " ", b.flag.dup
   for b in bam.query("6", 328, 32816675):
     discard b
 
