@@ -274,7 +274,6 @@ void bam_destroy1(bam1_t *b);
 #define bam_is_mrev(b) (((b)->core.flag&BAM_FMREVERSE) != 0)
 #define bam_get_qname(b) ((char*)(b)->data)
 
-uint32_t *bam_get_cigar(bam1_t *b);
 uint8_t *bam_get_seq(bam1_t *b);
 
 uint8_t bam_seqi(uint8_t *c, int i);
@@ -323,10 +322,19 @@ hts_itr_t * sam_itr_querys(hts_idx_t*, bam_hdr_t *h, char * region);
 #define BAM_CDIFF       8
 #define BAM_CBACK       9
 
+#define BAM_CIGAR_STR   "MIDNSHP=XB"
+#define BAM_CIGAR_SHIFT 4
+#define BAM_CIGAR_MASK  0xf
+#define BAM_CIGAR_TYPE  0x3C1A7
 
-uint32_t bam_cigar_op(uint32_t cigar);
-char bam_cigar_opchr(uint32_t cigar);
-uint32_t bam_cigar_oplen(uint32_t cigar);
+#define bam_cigar_op(c) ((c)&BAM_CIGAR_MASK)
+#define bam_cigar_oplen(c) ((c)>>BAM_CIGAR_SHIFT)
+// Note that BAM_CIGAR_STR is padded to length 16 bytes below so that
+// the array look-up will not fall off the end.  '?' is chosen as the
+// padding character so it's easy to spot if one is emitted, and will
+// result in a parsing failure (in sam_parse1(), at least) if read.
+#define bam_cigar_opchr(c) ("MIDNSHP=XB??????"[bam_cigar_op(c)])
+#define bam_cigar_gen(l, o) ((l)<<BAM_CIGAR_SHIFT|(o))
 
 
 typedef union {

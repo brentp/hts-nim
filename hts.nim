@@ -12,46 +12,8 @@ type
     rec: Record
     idx: ptr hts_idx_t
 
-  Flag = uint16
-
-const zero = uint16(0)
-
-proc pair(f: Flag): bool =
-    return zero != (f and BAM_FPAIRED)
-
-proc proper_pair(f: Flag): bool =
-    return zero != (f and BAM_FPROPER_PAIR)
-
-proc unmapped(f: Flag): bool =
-    return zero != (f and BAM_FUNMAP)
-
-proc mate_unmapped(f: Flag): bool =
-    return zero != (f and BAM_FMUNMAP)
-
-proc reverse(f: Flag): bool =
-    return zero != (f and BAM_FREVERSE)
-
-proc mate_reverse(f: Flag): bool =
-    return zero != (f and BAM_FMREVERSE)
-
-proc read1(f: Flag): bool =
-    return zero != (f and BAM_FREAD1)
-
-proc read2(f: Flag): bool =
-    return zero != (f and BAM_FREAD2)
-
-proc secondary(f: Flag): bool =
-    return zero != (f and BAM_FSECONDARY)
-
-proc qcfail(f: Flag): bool =
-    return zero != (f and BAM_FQCFAIL)
-
-proc dup(f: Flag): bool =
-    return zero != (f and BAM_FDUP)
-
-proc supplementary(f: Flag): bool =
-    return zero != (f and BAM_FSUPPLEMENTARY)
-
+include flag
+include cigar
 
 proc chrom(r: Record): string =
   let tid = r.b.core.tid
@@ -73,6 +35,13 @@ proc qname(r: Record): string =
 
 proc flag(r: Record): Flag =
     return Flag(r.b.core.flag)
+
+template bam_get_cigar*(b: untyped): untyped =
+  (cast[ptr uint32](((cast[int]((b).data)) + cast[int]((b).core.l_qname))))
+
+
+proc cigar(r: Record): Cigar =
+    return NewCigar(bam_get_cigar(r.b), r.b.core.n_cigar)
 
 iterator query(bam: Bam, chrom:string, start:int, stop:int): Record =
   var region = format("$1:$2-$3", chrom, intToStr(start+1), intToStr(stop))
@@ -150,16 +119,19 @@ iterator items(bam: Bam): Record =
 
 proc main() =
 
-  #var bam = NewBam("/home/brentp/src/svv/test/HG02002.bam", index=true)
-  var bam = NewBam("/tmp/t.cram", fai="/data/human/g1k_v37_decoy.fa", index=true)
+  var bam = NewBam("/home/brentp/src/svv/test/HG02002.bam", index=true)
+  #var bam = NewBam("/tmp/t.cram", fai="/data/human/g1k_v37_decoy.fa", index=true)
 
   var recs = newSeq[Record]()
 
   for b in bam:
     if len(recs) < 10:
         recs.add(b.copy())
+    var cig = b.cigar
   for b in recs:
-      echo b, " ", b.flag.dup
+      echo b, " ", b.flag.dup, " ", b.cigar
+      for op in b.cigar:
+          echo op, " ", op.consumesQuery, " ", op.consumesReference
   for b in bam.query("6", 328, 32816675):
     discard b
 
