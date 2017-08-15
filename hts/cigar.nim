@@ -35,13 +35,18 @@ type
   Op* = uint32 ## `Op` holds the operation (length and type) of each element of a `Cigar`. 
   
 
-proc NewCigar*(p: ptr uint32, n: uint32): Cigar =
+proc newCigar(p: ptr uint32, n: uint32): Cigar =
   return Cigar(cig: safe(cast[CPtr[uint32]](p), int(n)), n:n)
+
+proc len*(c: Cigar): int =
+  ## returns the number of operations in the cigar.
+  return int(c.n)
 
 proc `[]`*(c:Cigar, i:int): Op =
   return Op(c.cig[i])
 
 iterator items*(c: Cigar): Op =
+  ## iterates over the ops in the cigar.
   for i in 0..<c.cig.size:
     yield c.cig[i]
 
@@ -52,25 +57,30 @@ proc bam_cigar_type(o: Op): uint8 =
   return BAM_CIGAR_TYPE shr ((o) shl 1) and 3
 
 proc op*(o: Op): uint8 =
+  ## `op` gives the operation of the cigar.
   return uint8(o and BAM_CIGAR_MASK)
 
 proc len*(o: Op): int =
+  ## `len` gives the length of the cigar op.
   return int(o shr BAM_CIGAR_SHIFT)
 
-proc `$`*(o: Op): string =
+proc tostring*(o: Op): string =
+  ## `tostring` shows the string representation of the cigar op.
   var opstr = BAM_CIGAR_STR[int(o.op)]
   var oplen = o.len
   return intToStr(oplen) & $opstr
 
 proc consumesQuery*(o: Op): bool =
+  # returns true if the op consumes bases in the query.
   return (bam_cigar_type(o.op) and uint8(1)) != 0
 
 proc consumesReference*(o: Op): bool =
+  # returns true if the op consumes bases in the reference.
   return (bam_cigar_type(o.op) and uint8(2)) != 0
 
 proc `$`*(c: Cigar): string =
   var s: string = ""
   for i in 0..<c.cig.size:
     var cig = c.cig[i]
-    s &= $cig
+    s &= cig.tostring()
   return s
