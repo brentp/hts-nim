@@ -129,6 +129,7 @@ proc main() =
   for b in bam.query("6", 328, 32816675):
     discard b
 
-for i in 1..1000:
-    echo i
-    main()
+when isMainModule:
+  for i in 1..1000:
+      echo i
+      main()

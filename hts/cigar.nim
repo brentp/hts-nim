@@ -1,36 +1,39 @@
+import "hts_concat"
+import strutils
 # https://forum.nim-lang.org/t/567 (by Jehan)
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-type CArray*{.unchecked.}[T] = array[0..0, T]
-type CPtr*[T] = ptr CArray[T]
+type CArray{.unchecked.}[T] = array[0..0, T]
+type CPtr[T] = ptr CArray[T]
 
-type SafeCPtr*[T] =
+type SafeCPtr[T] =
   object
     size: int
     mem: CPtr[T]
 
-proc safe*[T](p: CPtr[T], k: int): SafeCPtr[T] =
+proc safe[T](p: CPtr[T], k: int): SafeCPtr[T] =
     SafeCPtr[T](mem: p, size: k)
 
-proc safe*[T](a: var openarray[T], k: int): SafeCPtr[T] =
+proc safe[T](a: var openarray[T], k: int): SafeCPtr[T] =
   safe(cast[CPtr[T]](addr(a)), k)
 
-proc `[]`*[T](p: SafeCPtr[T], k: int): T =
+proc `[]`[T](p: SafeCPtr[T], k: int): T =
   when not defined(release):
     assert k < p.size
   result = p.mem[k]
 
-proc `[]=`*[T](p: SafeCPtr[T], k: int, val: T) =
+proc `[]=`[T](p: SafeCPtr[T], k: int, val: T) =
   when not defined(release):
     assert k < p.size
   p.mem[k] = val
-
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 type
   Cigar* = ref object of RootObj
+    ## `Cigar` represents ths SAM Cigar type. It consists of one or more `Op`.
     cig: SafeCPtr[uint32]
     n: uint32
-  Op = uint32
+  Op* = uint32 ## `Op` holds the operation (length and type) of each element of a `Cigar`. 
+  
 
 proc NewCigar*(p: ptr uint32, n: uint32): Cigar =
   return Cigar(cig: safe(cast[CPtr[uint32]](p), int(n)), n:n)
@@ -42,7 +45,7 @@ iterator items*(c: Cigar): Op =
   for i in 0..<c.cig.size:
     yield c.cig[i]
 
-template bam_get_cigar(b: untyped): untyped =
+template bam_get_cigar*(b: untyped): untyped =
   (cast[ptr uint32](((cast[int]((b).data)) + cast[int]((b).core.l_qname))))
 
 proc bam_cigar_type(o: Op): uint8 =

@@ -1,3 +1,4 @@
+import "hts_concat"
 const zero = uint16(0)
 
 type

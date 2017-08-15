@@ -8,6 +8,64 @@ elif defined(macosx):
 else:
   const
     libname* = "libhts.so"
+const
+  BAM_FPAIRED* = 1
+
+## ! @abstract the read is mapped in a proper pair
+
+const
+  BAM_FPROPER_PAIR* = 2
+
+## ! @abstract the read itself is unmapped; conflictive with BAM_FPROPER_PAIR
+
+const
+  BAM_FUNMAP* = 4
+
+## ! @abstract the mate is unmapped
+
+const
+  BAM_FMUNMAP* = 8
+
+## ! @abstract the read is mapped to the reverse strand
+
+const
+  BAM_FREVERSE* = 16
+
+## ! @abstract the mate is mapped to the reverse strand
+
+const
+  BAM_FMREVERSE* = 32
+
+## ! @abstract this is read1
+
+const
+  BAM_FREAD1* = 64
+
+## ! @abstract this is read2
+
+const
+  BAM_FREAD2* = 128
+
+## ! @abstract not primary alignment
+
+const
+  BAM_FSECONDARY* = 256
+
+## ! @abstract QC failure
+
+const
+  BAM_FQCFAIL* = 512
+
+## ! @abstract optical or PCR duplicate
+
+const
+  BAM_FDUP* = 1024
+
+## ! @abstract supplementary alignment
+
+const
+  BAM_FSUPPLEMENTARY* = 2048
+
 proc malloc*(size: csize): pointer {.cdecl, importc: "malloc", dynlib: libname.}
 proc free*(a2: pointer) {.cdecl, importc: "free", dynlib: libname.}
 proc strncpy*(dst: cstring; src: cstring; size: csize): cstring {.cdecl,
@@ -97,14 +155,14 @@ type
 
 
 type
-  INNER_C_STRUCT_1799009620* {.bycopy.} = object
+  INNER_C_STRUCT_3100013000* {.bycopy.} = object
     major*: cshort
     minor*: cshort
 
   htsFormat* {.bycopy.} = object
     category*: htsFormatCategory
     format*: htsExactFormat
-    version*: INNER_C_STRUCT_1799009620
+    version*: INNER_C_STRUCT_3100013000
     compression*: htsCompression
     compression_level*: cshort ##  currently unused
     specific*: pointer         ##  format specific options; see struct hts_opt.
@@ -115,7 +173,7 @@ type
 ## ###########################
 
 type
-  INNER_C_UNION_1568417404* {.bycopy.} = object {.union.}
+  INNER_C_UNION_303587077* {.bycopy.} = object {.union.}
     bgzf*: ptr BGZF
     cram*: ptr cram_fd
     hfile*: ptr hFILE
@@ -135,13 +193,15 @@ type
     line*: kstring_t
     fn*: cstring
     fn_aux*: cstring
-    fp*: INNER_C_UNION_1568417404
+    fp*: INNER_C_UNION_303587077
     format*: htsFormat
 
 
 proc hts_open*(fn: cstring; mode: cstring): ptr htsFile {.cdecl, importc: "hts_open",
     dynlib: libname.}
 proc hts_close*(fp: ptr htsFile): cint {.cdecl, importc: "hts_close", dynlib: libname.}
+proc hts_check_EOF*(fp: ptr htsFile): cint {.cdecl, importc: "hts_check_EOF",
+                                        dynlib: libname.}
 proc hts_getline*(fp: ptr htsFile; delimiter: cint; str: ptr kstring_t): cint {.cdecl,
     importc: "hts_getline", dynlib: libname.}
 ## char **hts_readlines(const char *fn, int *_n);
@@ -274,6 +334,8 @@ proc sam_hdr_write*(fp: ptr htsFile; h: ptr bam_hdr_t): cint {.cdecl,
     importc: "sam_hdr_write", dynlib: libname.}
 proc sam_write1*(fp: ptr htsFile; h: ptr bam_hdr_t; b: ptr bam1_t): cint {.cdecl,
     importc: "sam_write1", dynlib: libname.}
+proc bam_hdr_destroy*(h: ptr bam_hdr_t) {.cdecl, importc: "bam_hdr_destroy",
+                                      dynlib: libname.}
 proc sam_format1*(h: ptr bam_hdr_t; b: ptr bam1_t; str: ptr kstring_t): cint {.cdecl,
     importc: "sam_format1", dynlib: libname.}
 proc sam_read1*(fp: ptr samFile; h: ptr bam_hdr_t; b: ptr bam1_t): cint {.cdecl,
@@ -282,12 +344,12 @@ proc bam_read1*(fp: ptr BGZF; b: ptr bam1_t): cint {.cdecl, importc: "bam_read1"
     dynlib: libname.}
 proc bam_init1*(): ptr bam1_t {.cdecl, importc: "bam_init1", dynlib: libname.}
 proc bam_destroy1*(b: ptr bam1_t) {.cdecl, importc: "bam_destroy1", dynlib: libname.}
-proc bam_is_rev*(b: ptr bam1_t): cint {.cdecl, importc: "bam_is_rev", dynlib: libname.}
-proc bam_is_mrev*(b: ptr bam1_t): cint {.cdecl, importc: "bam_is_mrev", dynlib: libname.}
-proc bam_get_qname*(b: ptr bam1_t): cstring {.cdecl, importc: "bam_get_qname",
-    dynlib: libname.}
-proc bam_get_cigar*(b: ptr bam1_t): ptr uint32 {.cdecl, importc: "bam_get_cigar",
-    dynlib: libname.}
+template bam_is_mrev*(b: untyped): untyped =
+  (((b).core.flag and BAM_FMREVERSE) != 0)
+
+template bam_get_qname*(b: untyped): untyped =
+  (cast[cstring]((b).data))
+
 proc bam_get_seq*(b: ptr bam1_t): ptr uint8 {.cdecl, importc: "bam_get_seq",
                                         dynlib: libname.}
 proc bam_seqi*(c: ptr uint8; i: cint): uint8 {.cdecl, importc: "bam_seqi", dynlib: libname.}
@@ -331,8 +393,9 @@ proc sam_itr_querys*(a2: ptr hts_idx_t; h: ptr bam_hdr_t; region: cstring): ptr 
     cdecl, importc: "sam_itr_querys", dynlib: libname.}
 ## int tbx_itr_next(htsFile *fp, tbx_t *tbx, hts_itr_t *iter, void *data);
 
-proc sam_itr_next*(fp: ptr htsFile; iter: ptr hts_itr_t; data: pointer): cint {.cdecl,
-    importc: "sam_itr_next", dynlib: libname.}
+template sam_itr_next*(htsfp, itr, r: untyped): untyped =
+  hts_itr_next((htsfp).fp.bgzf, (itr), (r), (htsfp))
+
 const
   BAM_CMATCH* = 0
   BAM_CINS* = 1
@@ -344,13 +407,28 @@ const
   BAM_CEQUAL* = 7
   BAM_CDIFF* = 8
   BAM_CBACK* = 9
+  BAM_CIGAR_STR* = "MIDNSHP=XB"
+  BAM_CIGAR_SHIFT* = 4
+  BAM_CIGAR_MASK* = 0x0000000F
+  BAM_CIGAR_TYPE* = 0x0003C1A7
 
-proc bam_cigar_op*(cigar: uint32): uint32 {.cdecl, importc: "bam_cigar_op",
-                                        dynlib: libname.}
-proc bam_cigar_opchr*(cigar: uint32): char {.cdecl, importc: "bam_cigar_opchr",
-    dynlib: libname.}
-proc bam_cigar_oplen*(cigar: uint32): uint32 {.cdecl, importc: "bam_cigar_oplen",
-    dynlib: libname.}
+template bam_cigar_op*(c: untyped): untyped =
+  ((c) and BAM_CIGAR_MASK)
+
+template bam_cigar_oplen*(c: untyped): untyped =
+  ((c) shr BAM_CIGAR_SHIFT)
+
+##  Note that BAM_CIGAR_STR is padded to length 16 bytes below so that
+##  the array look-up will not fall off the end.  '?' is chosen as the
+##  padding character so it's easy to spot if one is emitted, and will
+##  result in a parsing failure (in sam_parse1(), at least) if read.
+
+template bam_cigar_opchr*(c: untyped): untyped =
+  ("MIDNSHP=XB??????"[bam_cigar_op(c)])
+
+template bam_cigar_gen*(l, o: untyped): untyped =
+  ((l) shl BAM_CIGAR_SHIFT or (o))
+
 type
   bam_pileup_cd* {.bycopy.} = object {.union.}
     p*: pointer
@@ -449,7 +527,7 @@ proc faidx_has_seq*(fai: ptr faidx_t; seq: cstring): cint {.cdecl,
 ## 
 
 type
-  INNER_C_UNION_3076470401* {.bycopy.} = object {.union.}
+  INNER_C_UNION_3369339069* {.bycopy.} = object {.union.}
     i*: int32                  ##  integer value
     f*: cfloat                 ##  float value
   
@@ -479,7 +557,7 @@ type
     key*: cint                 ##  key: numeric tag id, the corresponding string is bcf_hdr_t::id[BCF_DT_ID][$key].key
     `type`*: cint
     len*: cint                 ##  type: one of BCF_BT_* types; len: vector length, 1 for scalars
-    v1*: INNER_C_UNION_3076470401 ##  only set if $len==1; for easier access
+    v1*: INNER_C_UNION_3369339069 ##  only set if $len==1; for easier access
     vptr*: ptr uint8            ##  pointer to data array in bcf1_t->shared.s, excluding the size+type and tag id bytes
     vptr_len*: uint32          ##  length of the vptr block or, when set, of the vptr_mod block, excluding offset
     vptr_off* {.bitsize: 31.}: uint32 ##  vptr offset, i.e., the size of the INFO key plus size+type bytes
