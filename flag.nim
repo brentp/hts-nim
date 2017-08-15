@@ -1,40 +1,40 @@
 const zero = uint16(0)
 
 type
-  Flag = uint16
+  Flag* = uint16
 
-proc pair(f: Flag): bool =
+proc pair*(f: Flag): bool =
     return zero != (f and BAM_FPAIRED)
 
-proc proper_pair(f: Flag): bool =
+proc proper_pair*(f: Flag): bool =
     return zero != (f and BAM_FPROPER_PAIR)
 
-proc unmapped(f: Flag): bool =
+proc unmapped*(f: Flag): bool =
     return zero != (f and BAM_FUNMAP)
 
-proc mate_unmapped(f: Flag): bool =
+proc mate_unmapped*(f: Flag): bool =
     return zero != (f and BAM_FMUNMAP)
 
-proc reverse(f: Flag): bool =
+proc reverse*(f: Flag): bool =
     return zero != (f and BAM_FREVERSE)
 
-proc mate_reverse(f: Flag): bool =
+proc mate_reverse*(f: Flag): bool =
     return zero != (f and BAM_FMREVERSE)
 
-proc read1(f: Flag): bool =
+proc read1*(f: Flag): bool =
     return zero != (f and BAM_FREAD1)
 
-proc read2(f: Flag): bool =
+proc read2*(f: Flag): bool =
     return zero != (f and BAM_FREAD2)
 
-proc secondary(f: Flag): bool =
+proc secondary*(f: Flag): bool =
     return zero != (f and BAM_FSECONDARY)
 
-proc qcfail(f: Flag): bool =
+proc qcfail*(f: Flag): bool =
     return zero != (f and BAM_FQCFAIL)
 
-proc dup(f: Flag): bool =
+proc dup*(f: Flag): bool =
     return zero != (f and BAM_FDUP)
 
-proc supplementary(f: Flag): bool =
+proc supplementary*(f: Flag): bool =
     return zero != (f and BAM_FSUPPLEMENTARY)
