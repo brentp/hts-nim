@@ -3,7 +3,6 @@ import "hts_concat"
 type
   Flag* = distinct uint16
 
-
 # Q: better way to implement these for distinct types?
 proc `and`*(f: Flag, o: uint16): uint16 =
   return uint16(f) and o

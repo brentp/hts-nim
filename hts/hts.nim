@@ -27,12 +27,12 @@ type
 include flag
 include cigar
 
-proc finalizeHeader(h: Header) =
+proc finalize_header(h: Header) =
   bam_hdr_destroy(h.hdr)
 
 proc copy*(h: Header): Header =
   var hdr: Header
-  new(hdr, finalizeHeader)
+  new(hdr, finalize_header)
   hdr.hdr = bam_hdr_dup(h.hdr)
   return hdr
 
@@ -121,12 +121,12 @@ proc tostring*(r: Record): string =
   free(kstr.s)
   return s
 
-proc finalizeBam(bam: Bam) =
+proc finalize_bam(bam: Bam) =
   if bam.idx != nil:
       hts_idx_destroy(bam.idx)
   discard htsClose(bam.hts)
 
-proc finalizeRecord(rec: Record) =
+proc finalize_record(rec: Record) =
   bam_destroy1(rec.b)
 
 
@@ -142,17 +142,17 @@ proc Open*(path: cstring, threads: cint=2, fai: cstring=nil, index: bool=false):
   #if 0 != hts_set_threads(hts, threads):
   #    raise newException(ValueError, "error setting number of threads")
   var hdr: Header
-  new(hdr, finalizeHeader)
+  new(hdr, finalize_header)
   hdr.hdr = sam_hdr_read(hts)
       
   var b   = bam_init1()
   # the record is attached to the bam, but it takes care of it's own finalizer.
   var rec: Record
-  new(rec, finalizeRecord)
+  new(rec, finalize_record)
   rec.b = b
   rec.hdr = hdr
   var bam: Bam
-  new(bam, finalizeBam)
+  new(bam, finalize_bam)
   bam.hts = hts
   bam.hdr = hdr
   bam.rec = rec
@@ -169,14 +169,14 @@ proc Open*(path: cstring, threads: cint=2, fai: cstring=nil, index: bool=false):
 iterator items*(bam: Bam): Record =
   ## items iterates over a bam. A single element is used and overwritten
   ## on each iteration so use `Record.copy` to retain.
-  var ret = samRead1(bam.hts, bam.hdr.hdr, bam.rec.b)
+  var ret = sam_read1(bam.hts, bam.hdr.hdr, bam.rec.b)
   while ret > 0:
     yield bam.rec
-    ret = samRead1(bam.hts, bam.hdr.hdr, bam.rec.b)
+    ret = sam_read1(bam.hts, bam.hdr.hdr, bam.rec.b)
 
 proc main() =
 
-  var bam = Open("/home/brentp/src/svv/test/HG02002.bam", index=true)
+  var bam = Open("tests/HG02002.bam", index=true)
   #var bam = Open("/tmp/t.cram", fai="/data/human/g1k_v37_decoy.fa", index=true)
 
   var recs = newSeq[Record]()
@@ -187,7 +187,7 @@ proc main() =
   for b in recs:
       echo b, " ", b.flag.dup, " ", b.cigar
       for op in b.cigar:
-          echo op, " ", op.consumesQuery, " ", op.consumesReference
+          echo op, " ", op.consumes_query, " ", op.consumes_reference
   for b in bam.query("6", 328, 32816675):
     discard b
 

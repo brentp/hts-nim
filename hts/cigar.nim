@@ -71,11 +71,11 @@ proc `$`*(o: Op): string =
   var oplen = o.len
   return intToStr(oplen) & $opstr
 
-proc consumesQuery*(o: Op): bool =
+proc consumes_query*(o: Op): bool =
   # returns true if the op consumes bases in the query.
   return (bam_cigar_type(o.op) and uint8(1)) != 0
 
-proc consumesReference*(o: Op): bool =
+proc consumes_reference*(o: Op): bool =
   # returns true if the op consumes bases in the reference.
   return (bam_cigar_type(o.op) and uint8(2)) != 0
 

@@ -29,7 +29,7 @@ for record in bam.query('6', 30816675, 32816675):
     # cigar is an iterable of operations:
     for op in record.cigar:
       # $op gives the string repr of the operation, e.g. '151M'
-      echo $op, op.consumesReference, op.consumesQuery
+      echo $op, op.consumes_reference, op.consumes_query
 
 # cram requires an fasta to decode:
 var cram = Open("/tmp/t.cram", fai="/data/human/g1k_v37_decoy.fa")
