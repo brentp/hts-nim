@@ -2,34 +2,64 @@ import "hts_concat"
 import strutils
 
 type
+  Header* = ref object of RootObj
+    ## Header wraps the bam header info.
+    hdr*: ptr bam_hdr_t
+
   Record* = ref object of RootObj
     ## Record is a single alignment object.
     b: ptr bam1_t
-    hdr: ptr bam_hdr_t
+    hdr: Header
 
   Bam* = ref object of RootObj
     ## Bam wraps a BAM/CRAM/SAM reader object from htslib.
     hts: ptr hts_file
-    hdr: ptr bam_hdr_t
+    hdr*: Header
     rec: Record
     idx: ptr hts_idx_t
+
+  Target* = ref object of RootObj
+    ## Target is a chromosome or contig from the bam header.
+    name*: string
+    length*: uint32
+    tid*: int
 
 include flag
 include cigar
 
+proc finalizeHeader(h: Header) =
+  bam_hdr_destroy(h.hdr)
+
+proc copy*(h: Header): Header =
+  var hdr: Header
+  new(hdr, finalizeHeader)
+  hdr.hdr = bam_hdr_dup(h.hdr)
+  return hdr
+
+proc targets*(h: Header): seq[Target] =
+  var n = int(h.hdr.n_targets)
+  var ts = newSeq[Target](n)
+  var arr = safe(cast[CPtr[uint32]](h.hdr.target_len), n)
+  for tid in 0..<n:
+    ts[tid] = Target(name: $h.hdr.target_name[tid], length: arr[tid], tid: tid)
+  return ts
+
+proc `$`*(t: Target): string =
+  return format("Target($1:$2)", t.name, t.length)
+ 
 proc chrom*(r: Record): string =
   ## `chrom` returns the chromosome or '' if not mapped.
   let tid = r.b.core.tid
   if tid == -1:
     return ""
-  return $r.hdr.target_name[tid]
+  return $r.hdr.hdr.target_name[tid]
 
 proc mate_chrom*(r: Record): string =
   ## `mate_chrom` returns the chromosome of the mate or '' if not mapped.
   let tid = r.b.core.mtid
   if tid == -1:
     return ""
-  return $r.hdr.target_name[tid]
+  return $r.hdr.hdr.target_name[tid]
 
 proc start*(r: Record): int =
   ## `start` returns 0-based start position.
@@ -59,7 +89,7 @@ iterator query*(bam: Bam, chrom:string, start:int, stop:int): Record =
   ## query iterates over the given region. A single element is used and
   ## overwritten on each iteration so use `Record.copy` to retain.
   var region = format("$1:$2-$3", chrom, intToStr(start+1), intToStr(stop))
-  var qiter = sam_itr_querys(bam.idx, bam.hdr, region);
+  var qiter = sam_itr_querys(bam.idx, bam.hdr.hdr, region);
   var slen = sam_itr_next(bam.hts, qiter, bam.rec.b)
   while slen > 0:
     yield bam.rec
@@ -85,7 +115,7 @@ proc tostring*(r: Record): string =
   kstr.m = 0
   kstr.s = nil
 
-  if sam_format1(r.hdr, r.b, kstr.addr) < 0:
+  if sam_format1(r.hdr.hdr, r.b, kstr.addr) < 0:
     raise newException(ValueError, "error for sam formatting")
   var s = $(kstr.s)
   free(kstr.s)
@@ -95,10 +125,10 @@ proc finalizeBam(bam: Bam) =
   if bam.idx != nil:
       hts_idx_destroy(bam.idx)
   discard htsClose(bam.hts)
-  bam_hdr_destroy(bam.hdr)
 
 proc finalizeRecord(rec: Record) =
   bam_destroy1(rec.b)
+
 
 proc Open*(path: cstring, threads: cint=2, fai: cstring=nil, index: bool=false): Bam =
   ## `Open` returns a bam object for the given path. If CRAM, then fai must be given.
@@ -111,8 +141,10 @@ proc Open*(path: cstring, threads: cint=2, fai: cstring=nil, index: bool=false):
     discard hts_set_fai_filename(hts, fai);
   #if 0 != hts_set_threads(hts, threads):
   #    raise newException(ValueError, "error setting number of threads")
+  var hdr: Header
+  new(hdr, finalizeHeader)
+  hdr.hdr = sam_hdr_read(hts)
       
-  var hdr = sam_hdr_read(hts)
   var b   = bam_init1()
   # the record is attached to the bam, but it takes care of it's own finalizer.
   var rec: Record
@@ -137,10 +169,10 @@ proc Open*(path: cstring, threads: cint=2, fai: cstring=nil, index: bool=false):
 iterator items*(bam: Bam): Record =
   ## items iterates over a bam. A single element is used and overwritten
   ## on each iteration so use `Record.copy` to retain.
-  var ret = samRead1(bam.hts, bam.hdr, bam.rec.b)
+  var ret = samRead1(bam.hts, bam.hdr.hdr, bam.rec.b)
   while ret > 0:
     yield bam.rec
-    ret = samRead1(bam.hts, bam.hdr, bam.rec.b)
+    ret = samRead1(bam.hts, bam.hdr.hdr, bam.rec.b)
 
 proc main() =
 
@@ -160,6 +192,6 @@ proc main() =
     discard b
 
 when isMainModule:
-  for i in 1..1000:
+  for i in 1..3000:
       echo i
       main()

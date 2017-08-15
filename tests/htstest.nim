@@ -12,7 +12,10 @@ suite "flag hts-suite":
         discard rec.flag.unmapped
 
       if rec.cigar.len() > 0:
-        check rec.copy().cigar[0] == rec.cigar[0]
+        check uint32(rec.copy().cigar[0]) == uint32(rec.cigar[0])
 
       discard rec.isize
       discard rec.qual
+    check b.hdr.targets[0].name == "1"
+    check b.hdr.targets[0].length == 249250621
+    check len(b.hdr.targets) == b.hdr.hdr.n_targets
