@@ -12,7 +12,7 @@ too different to python.
 Here is an example of the syntax in this library:
 
 ```nim
-require hts
+import hts
 
 # open a bam and look for the index.
 var bam = Open("test/HG02002.bam", index=true)
