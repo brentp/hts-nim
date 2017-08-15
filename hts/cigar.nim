@@ -66,7 +66,7 @@ proc len*(o: Op): int =
   return int(uint32(o) shr BAM_CIGAR_SHIFT)
 
 proc `$`*(o: Op): string =
-  ## `shows the string representation of the cigar op.
+  ## shows the string representation of the cigar op.
   var opstr = BAM_CIGAR_STR[int(o.op)]
   var oplen = o.len
   return intToStr(oplen) & $opstr
