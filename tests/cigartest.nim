@@ -1,4 +1,4 @@
-import unittest, cigar
+import unittest, hts as hts
 
 suite "flag cigar-suite":
   test "test op":
@@ -13,3 +13,18 @@ suite "flag cigar-suite":
     check $Op(2056) == "128X"
     check $Op(2057) == "128B"
     check $Op(4096) == "256M"
+
+  test "ref coverage":
+    var b = hts.open_hts("tests/HG02002.bam")
+    for rec in b:
+      if rec.flag.unmapped: continue
+      var pieces = rec.cigar.ref_coverage(ipos=rec.start)
+      if len(pieces) == 0:
+        check rec.qual == 0
+        continue
+
+      check pieces[0] >= rec.start
+      if pieces[len(pieces)-1] > rec.stop:
+        echo rec.tostring
+      check pieces[len(pieces)-1] <= rec.stop
+      check pieces.len mod 2 == 0

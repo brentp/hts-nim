@@ -34,7 +34,9 @@ type
     n: uint32
 
   Op* = distinct uint32 ## `Op` holds the operation (length and type) of each element of a `Cigar`.
-  
+
+type CigarOp* = enum
+  match, insert, deletion, ref_skip, soft_clip, hard_clip, pad, equal, diff, back
 
 proc newCigar(p: ptr uint32, n: uint32): Cigar =
   return Cigar(cig: safe(cast[CPtr[uint32]](p), int(n)), n:n)
@@ -54,12 +56,12 @@ iterator items*(c: Cigar): Op =
 template bam_get_cigar*(b: untyped): untyped =
   (cast[ptr uint32](((cast[int]((b).data)) + cast[int]((b).core.l_qname))))
 
-proc bam_cigar_type(o: uint8): uint8 =
+proc bam_cigar_type(o: CigarOp): uint8 =
   return BAM_CIGAR_TYPE shr (uint32(o) shl 1) and 3
 
-proc op*(o: Op): uint8 =
+proc op*(o: Op): CigarOp =
   ## `op` gives the operation of the cigar.
-  return uint8(uint32(o) and BAM_CIGAR_MASK)
+  return CigarOp(uint8(uint32(o) and BAM_CIGAR_MASK))
 
 proc len*(o: Op): int =
   ## `len` gives the length of the cigar op.
@@ -71,6 +73,12 @@ proc `$`*(o: Op): string =
   var oplen = o.len
   return intToStr(oplen) & $opstr
 
+proc `$`*(c: Cigar): string =
+  var s = ""
+  for o in c:
+    s &= $o
+  return s
+
 proc consumes_query*(o: Op): bool =
   # returns true if the op consumes bases in the query.
   return (bam_cigar_type(o.op) and uint8(1)) != 0
@@ -79,9 +87,21 @@ proc consumes_reference*(o: Op): bool =
   # returns true if the op consumes bases in the reference.
   return (bam_cigar_type(o.op) and uint8(2)) != 0
 
-proc `$`*(c: Cigar): string =
-  var s: string = ""
-  for i in 0..<c.cig.size:
-    var cig = c.cig[i]
-    s &= $cig
-  return s
+proc ref_coverage*(c: Cigar, ipos: int = 0): seq[int] =
+  if c.len == 1 and c[0].op == CigarOp(match):
+    return @[ipos, c[0].len]
+
+  var pos = ipos
+  var posns = newSeq[int]()
+  for op in c:
+    if not op.consumes_reference:
+      continue
+    var olen = op.len
+    if op.consumes_query:
+      if len(posns) == 0 or pos != posns[len(posns)-1]:
+        posns.add(pos)
+        posns.add(pos + olen)
+      else:
+        posns[len(posns)-1] = pos + olen
+    pos += olen
+  return posns

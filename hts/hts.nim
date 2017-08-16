@@ -67,7 +67,7 @@ proc start*(r: Record): int =
 
 proc stop*(r: Record): int =
   ## `stop` returns end position of the read.
-  return bamEndpos(r.b)
+  return bam_endpos(r.b)
 
 proc copy*(r: Record): Record =
   ## `copy` makes a copy of the record.
@@ -187,7 +187,7 @@ proc main() =
   for b in recs:
       echo b, " ", b.flag.dup, " ", b.cigar
       for op in b.cigar:
-          echo op, " ", op.consumes_query, " ", op.consumes_reference
+          echo op, " ", op.op, " ", op.consumes_query, " ", op.consumes_reference
   for b in bam.query("6", 328, 32816675):
     discard b
 
