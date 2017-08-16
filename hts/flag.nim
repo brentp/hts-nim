@@ -3,24 +3,13 @@ import "hts_concat"
 type
   Flag* = distinct uint16
 
-# Q: better way to implement these for distinct types?
-proc `and`*(f: Flag, o: uint16): uint16 =
-  return uint16(f) and o
-
-proc `and`*(f: Flag, o: Flag): uint16 =
-  return uint16(f) and uint16(o)
-
-proc `or`*(f: Flag, o: uint16): uint16 =
-  return uint16(f) or o
-
-proc `==`*(f: Flag, o: Flag): bool =
-  return uint16(f) == uint16(o)
-
-proc `==`*(f: Flag, o: uint16): bool =
-  return uint16(f) == o
-
-proc `==`*(o: uint16, f: Flag): bool =
-  return uint16(f) == o
+proc `and`*(f: Flag, o: uint16): uint16 {. borrow .}
+proc `and`*(f: Flag, o: Flag): uint16 {. borrow .}
+proc `or`*(f: Flag, o: uint16): uint16 {. borrow .}
+proc `or`*(o: uint16, f: Flag): uint16 {. borrow .}
+proc `==`*(f: Flag, o: Flag): bool {. borrow .}
+proc `==`*(f: Flag, o: uint16): bool {. borrow .}
+proc `==`*(o: uint16, f: Flag): bool {. borrow .}
 
 proc has_flag*(f: Flag, o: uint16): bool =
   return (f and o) != 0
