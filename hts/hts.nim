@@ -130,8 +130,8 @@ proc finalize_record(rec: Record) =
   bam_destroy1(rec.b)
 
 
-proc Open*(path: cstring, threads: cint=2, fai: cstring=nil, index: bool=false): Bam =
-  ## `Open` returns a bam object for the given path. If CRAM, then fai must be given.
+proc open_hts*(path: cstring, threads: cint=2, fai: cstring=nil, index: bool=false): Bam =
+  ## `open_hts` returns a bam object for the given path. If CRAM, then fai must be given.
   ## if index is true, then it will attempt to open an index file for regional queries.
   var hts = hts_open(path, "r")
   if hts_check_EOF(hts) != 1:
@@ -176,8 +176,8 @@ iterator items*(bam: Bam): Record =
 
 proc main() =
 
-  var bam = Open("tests/HG02002.bam", index=true)
-  #var bam = Open("/tmp/t.cram", fai="/data/human/g1k_v37_decoy.fa", index=true)
+  var bam = open_hts("tests/HG02002.bam", index=true)
+  #var bam = open_hts("/tmp/t.cram", fai="/data/human/g1k_v37_decoy.fa", index=true)
 
   var recs = newSeq[Record]()
 

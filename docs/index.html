@@ -1337,8 +1337,8 @@ function main() {
     title="mate_pos(r: Record): int32"><wbr />mate_<wbr />pos<span class="attachedType" style="visibility:hidden">Record</span></a></li>
   <li><a class="reference" href="#tostring,Record"
     title="tostring(r: Record): string"><wbr />tostring<span class="attachedType" style="visibility:hidden">Record</span></a></li>
-  <li><a class="reference" href="#Open,cstring,cint,cstring,bool"
-    title="Open(path: cstring; threads: cint = 2; fai: cstring = nil; index: bool = false): Bam"><wbr />Open<span class="attachedType" style="visibility:hidden">Bam</span></a></li>
+  <li><a class="reference" href="#open_hts,cstring,cint,cstring,bool"
+    title="open_hts(path: cstring; threads: cint = 2; fai: cstring = nil; index: bool = false): Bam"><wbr />open_<wbr />hts<span class="attachedType" style="visibility:hidden">Bam</span></a></li>
 
   </ul>
 </li>
@@ -1849,10 +1849,10 @@ class="link-seesrc" target="_blank">Source</a>
 <a href="/edit/devel/hts/hts.nim#L111" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
-<dt id="Open"><a name="Open,cstring,cint,cstring,bool"></a><pre><span class="Keyword">proc</span> <span class="Identifier">Open</span><span class="Other">(</span><span class="Identifier">path</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span> <span class="Identifier">threads</span><span class="Other">:</span> <span class="Identifier">cint</span> <span class="Other">=</span> <span class="DecNumber">2</span><span class="Other">;</span> <span class="Identifier">fai</span><span class="Other">:</span> <span class="Identifier">cstring</span> <span class="Other">=</span> <span class="Keyword">nil</span><span class="Other">;</span> <span class="Identifier">index</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other">=</span> <span class="Identifier">false</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Bam</span> <span class="Other pragmabegin">{.</span><div class="pragma">
+<dt id="open_hts"><a name="open_hts,cstring,cint,cstring,bool"></a><pre><span class="Keyword">proc</span> <span class="Identifier">open_hts</span><span class="Other">(</span><span class="Identifier">path</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span> <span class="Identifier">threads</span><span class="Other">:</span> <span class="Identifier">cint</span> <span class="Other">=</span> <span class="DecNumber">2</span><span class="Other">;</span> <span class="Identifier">fai</span><span class="Other">:</span> <span class="Identifier">cstring</span> <span class="Other">=</span> <span class="Keyword">nil</span><span class="Other">;</span> <span class="Identifier">index</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other">=</span> <span class="Identifier">false</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Bam</span> <span class="Other pragmabegin">{.</span><div class="pragma">
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
-<cite>Open</cite> returns a bam object for the given path. If CRAM, then fai must be given. if index is true, then it will attempt to open an index file for regional queries.
+<cite>open_hts</cite> returns a bam object for the given path. If CRAM, then fai must be given. if index is true, then it will attempt to open an index file for regional queries.
 &nbsp;&nbsp;<a
 href="/tree/master/hts/hts.nim#L133"
 class="link-seesrc" target="_blank">Source</a>
@@ -1916,7 +1916,7 @@ class="link-seesrc" target="_blank">Source</a>
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small>Made with Nim. Generated: 2017-08-15 15:40:24 UTC</small>
+        <small>Made with Nim. Generated: 2017-08-16 09:04:26 UTC</small>
       </div>
     </div>
   </div>

@@ -15,9 +15,7 @@ Here is an example of the syntax in this library:
 import hts
 
 # open a bam and look for the index.
-var bam = Open("test/HG02002.bam", index=true)
-
-# iterate over the bam:
+var bam = open_hts("test/HG02002.bam", index=true)
 
 for record in bam:
   if record.qual > 10:
@@ -32,7 +30,7 @@ for record in bam.query('6', 30816675, 32816675):
       echo $op, op.consumes_reference, op.consumes_query
 
 # cram requires an fasta to decode:
-var cram = Open("/tmp/t.cram", fai="/data/human/g1k_v37_decoy.fa")
+var cram = open_hts("/tmp/t.cram", fai="/data/human/g1k_v37_decoy.fa")
 for record in cram:
   echo record.qname, record.isize
 ```
