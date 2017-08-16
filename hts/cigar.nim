@@ -87,21 +87,23 @@ proc consumes_reference*(o: Op): bool =
   # returns true if the op consumes bases in the reference.
   return (bam_cigar_type(o.op) and uint8(2)) != 0
 
-proc ref_coverage*(c: Cigar, ipos: int = 0): seq[int] =
+type
+  Range* = tuple[start: int, stop: int]
+
+proc ref_coverage*(c: Cigar, ipos: int = 0): seq[Range] =
   if c.len == 1 and c[0].op == CigarOp(match):
-    return @[ipos, c[0].len]
+    return @[(ipos, c[0].len)]
 
   var pos = ipos
-  var posns = newSeq[int]()
+  var posns = newSeq[Range]()
   for op in c:
     if not op.consumes_reference:
       continue
     var olen = op.len
     if op.consumes_query:
-      if len(posns) == 0 or pos != posns[len(posns)-1]:
-        posns.add(pos)
-        posns.add(pos + olen)
+      if len(posns) == 0 or pos != posns[len(posns)-1].stop:
+        posns.add((pos, pos+olen))
       else:
-        posns[len(posns)-1] = pos + olen
+        posns[len(posns)-1].stop = pos + olen
     pos += olen
   return posns

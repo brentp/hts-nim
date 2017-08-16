@@ -23,8 +23,7 @@ suite "flag cigar-suite":
         check rec.qual == 0
         continue
 
-      check pieces[0] >= rec.start
-      if pieces[len(pieces)-1] > rec.stop:
+      check pieces[0].start >= rec.start
+      if pieces[len(pieces)-1].stop > rec.stop:
         echo rec.tostring
-      check pieces[len(pieces)-1] <= rec.stop
-      check pieces.len mod 2 == 0
+      check pieces[len(pieces)-1].stop <= rec.stop
