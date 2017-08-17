@@ -92,12 +92,15 @@ type
 
 proc ref_coverage*(c: Cigar, ipos: int = 0): seq[Range] =
   if c.len == 1 and c[0].op == CigarOp(match):
-    return @[(ipos, c[0].len)]
+    return @[(ipos, ipos + c[0].len)]
 
   var pos = ipos
   var posns = newSeq[Range]()
   for op in c:
     if not op.consumes_reference:
+      #if op.op == CigarOp(soft_clip):
+        # NOTE: need to check this.
+      #  pos += op.len
       continue
     var olen = op.len
     if op.consumes_query:

@@ -1,13 +1,13 @@
 # Package
 
-version       = "0.1.0"
+version       = "0.1.1"
 author        = "Brent Pedersen"
 description   = "hts (bam/sam) for nim"
 license       = "MIT"
 
 # Dependencies
 
-requires "nim >= 0.17.0", "nim-lang/c2nim>=0.9.13"
+requires "nim >= 0.17.0" #, "nim-lang/c2nim>=0.9.13"
 
 skipDirs = @["tests"]
 

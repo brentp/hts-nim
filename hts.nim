@@ -8,7 +8,7 @@ type
 
   Record* = ref object of RootObj
     ## Record is a single alignment object.
-    b: ptr bam1_t
+    b*: ptr bam1_t
     hdr: Header
 
   Bam* = ref object of RootObj
