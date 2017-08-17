@@ -18,4 +18,4 @@ before test:
   exec "c2nim hts/hts_concat.h"
 
 task docs, "make docs":
-  exec "nim doc2 hts/hts; mkdir -p docs; mv hts.html docs/index.html"
+  exec "nim doc2 hts; mkdir -p docs; mv hts.html docs/index.html"

@@ -84,6 +84,16 @@ proc cigar*(r: Record): Cigar =
   ## `cigar` returns a `Cigar` object.
   return newCigar(bam_get_cigar(r.b), r.b.core.n_cigar)
 
+iterator querys*(bam: Bam, region: string): Record =
+  ## query iterates over the given region. A single element is used and
+  ## overwritten on each iteration so use `Record.copy` to retain.
+  var qiter = sam_itr_querys(bam.idx, bam.hdr.hdr, region);
+  var slen = sam_itr_next(bam.hts, qiter, bam.rec.b)
+  while slen > 0:
+    yield bam.rec
+    slen = sam_itr_next(bam.hts, qiter, bam.rec.b)
+  hts_itr_destroy(qiter)
+
 iterator query*(bam: Bam, chrom:string, start:int, stop:int): Record =
   ## query iterates over the given region. A single element is used and
   ## overwritten on each iteration so use `Record.copy` to retain.
