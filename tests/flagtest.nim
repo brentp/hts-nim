@@ -1,4 +1,5 @@
-import unittest, flag
+import unittest
+import hts/flag
 
 suite "flag test-suite":
   test "test flags":

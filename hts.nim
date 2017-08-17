@@ -1,5 +1,7 @@
-import "hts_concat"
+import hts/hts_concat
 import strutils
+include hts/flag
+include hts/cigar
 
 type
   Header* = ref object of RootObj
@@ -23,9 +25,6 @@ type
     name*: string
     length*: uint32
     tid*: int
-
-include flag
-include cigar
 
 proc finalize_header(h: Header) =
   bam_hdr_destroy(h.hdr)
@@ -115,7 +114,7 @@ proc tostring*(r: Record): string =
   kstr.m = 0
   kstr.s = nil
 
-  if sam_format1(r.hdr.hdr, r.b, kstr.addr) < 0:
+  if sam_format1(r.hdr.hdr, r.b, kstr.addr) < cint(0):
     raise newException(ValueError, "error for sam formatting")
   var s = $(kstr.s)
   free(kstr.s)
@@ -129,8 +128,7 @@ proc finalize_bam(bam: Bam) =
 proc finalize_record(rec: Record) =
   bam_destroy1(rec.b)
 
-
-proc open_hts*(path: cstring, threads: cint=2, fai: cstring=nil, index: bool=false): Bam =
+proc open_hts*(path: cstring, threads: int=0, fai: cstring=nil, index: bool=false): Bam =
   ## `open_hts` returns a bam object for the given path. If CRAM, then fai must be given.
   ## if index is true, then it will attempt to open an index file for regional queries.
   var hts = hts_open(path, "r")
@@ -139,8 +137,8 @@ proc open_hts*(path: cstring, threads: cint=2, fai: cstring=nil, index: bool=fal
 
   if fai != nil:
     discard hts_set_fai_filename(hts, fai);
-  #if 0 != hts_set_threads(hts, threads):
-  #    raise newException(ValueError, "error setting number of threads")
+  if 0 != threads and 0 != hts_set_threads(hts, cint(threads)):
+      raise newException(ValueError, "error setting number of threads")
   var hdr: Header
   new(hdr, finalize_header)
   hdr.hdr = sam_hdr_read(hts)

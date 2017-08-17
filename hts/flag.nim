@@ -1,5 +1,4 @@
-import "hts_concat"
-
+include hts_concat
 type
   Flag* = distinct uint16
 
