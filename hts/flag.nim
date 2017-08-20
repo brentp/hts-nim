@@ -2,15 +2,15 @@ include hts_concat
 type
   Flag* = distinct uint16
 
-proc `and`*(f: Flag, o: uint16): uint16 {. borrow .}
-proc `and`*(f: Flag, o: Flag): uint16 {. borrow .}
+proc `and`*(f: Flag, o: uint16): uint16 {. borrow, inline .}
+proc `and`*(f: Flag, o: Flag): uint16 {. borrow, inline .}
 proc `or`*(f: Flag, o: uint16): uint16 {. borrow .}
 proc `or`*(o: uint16, f: Flag): uint16 {. borrow .}
-proc `==`*(f: Flag, o: Flag): bool {. borrow .}
-proc `==`*(f: Flag, o: uint16): bool {. borrow .}
-proc `==`*(o: uint16, f: Flag): bool {. borrow .}
+proc `==`*(f: Flag, o: Flag): bool {. borrow, inline .}
+proc `==`*(f: Flag, o: uint16): bool {. borrow, inline .}
+proc `==`*(o: uint16, f: Flag): bool {. borrow, inline .}
 
-proc has_flag*(f: Flag, o: uint16): bool =
+proc has_flag*(f: Flag, o: uint16): {. inline .} bool =
   return (f and o) != 0
 
 proc pair*(f: Flag): bool =
