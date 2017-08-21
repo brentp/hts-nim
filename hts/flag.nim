@@ -10,7 +10,7 @@ proc `==`*(f: Flag, o: Flag): bool {. borrow, inline .}
 proc `==`*(f: Flag, o: uint16): bool {. borrow, inline .}
 proc `==`*(o: uint16, f: Flag): bool {. borrow, inline .}
 
-proc has_flag*(f: Flag, o: uint16): {. inline .} bool =
+proc has_flag*(f: Flag, o: uint16): bool {. inline .} =
   return (f and o) != 0
 
 proc pair*(f: Flag): bool =

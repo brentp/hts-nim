@@ -35,6 +35,8 @@ type
 
   Op* = distinct uint32 ## `Op` holds the operation (length and type) of each element of a `Cigar`.
 
+  Consume* = distinct uint32
+
 type CigarOp* = enum
   match, insert, deletion, ref_skip, soft_clip, hard_clip, pad, equal, diff, back
 
@@ -79,13 +81,16 @@ proc `$`*(c: Cigar): string =
     s &= $o
   return s
 
-proc consumes_query*(o: Op): bool {. inline .} =
-  # returns true if the op consumes bases in the query.
-  return (bam_cigar_type(o.op) and uint8(1)) != 0
+proc consumes*(o: Op): Consume {. inline .} =
+  return Consume(bam_cigar_type(o.op))
 
-proc consumes_reference*(o: Op): bool {. inline .} =
+proc query*(c: Consume): bool {. inline .} =
+  # returns true if the op consumes bases in the query.
+  return (uint32(c) and uint8(1)) != 0
+
+proc reference*(c: Consume): bool {. inline .} =
   # returns true if the op consumes bases in the reference.
-  return (bam_cigar_type(o.op) and uint8(2)) != 0
+  return (uint32(c) and uint8(2)) != 0
 
 type
   Range* = tuple[start: int, stop: int]
@@ -97,13 +102,14 @@ proc ref_coverage*(c: Cigar, ipos: int = 0): seq[Range] =
   var pos = ipos
   var posns = newSeq[Range]()
   for op in c:
-    if not op.consumes_reference:
+    var c = op.consumes
+    if not c.reference:
       #if op.op == CigarOp(soft_clip):
         # NOTE: need to check this.
       #  pos += op.len
       continue
     var olen = op.len
-    if op.consumes_query:
+    if c.query:
       if len(posns) == 0 or pos != posns[len(posns)-1].stop:
         posns.add((pos, pos+olen))
       else:
