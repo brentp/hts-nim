@@ -306,6 +306,8 @@ int bam_index_build(const char *fn, int min_shift);
 
 
 hts_itr_t * sam_itr_querys(hts_idx_t*, bam_hdr_t *h, char * region);
+hts_itr_t *sam_itr_queryi(const hts_idx_t *idx, int tid, int beg, int end);
+
 
 //int tbx_itr_next(htsFile *fp, tbx_t *tbx, hts_itr_t *iter, void *data);
 #define sam_itr_next(htsfp, itr, r) hts_itr_next((htsfp)->fp.bgzf, (itr), (r), (htsfp))
