@@ -8,6 +8,40 @@ elif defined(macosx):
 else:
   const
     libname* = "libhts.so"
+## 
+## enum hts_fmt_option {
+##     // CRAM specific
+##     CRAM_OPT_DECODE_MD,
+##     CRAM_OPT_PREFIX,
+##     CRAM_OPT_VERBOSITY,  // obsolete, use hts_set_log_level() instead
+##     CRAM_OPT_SEQS_PER_SLICE,
+##     CRAM_OPT_SLICES_PER_CONTAINER,
+##     CRAM_OPT_RANGE,
+##     CRAM_OPT_VERSION,    // rename to cram_version?
+##     CRAM_OPT_EMBED_REF,
+##     CRAM_OPT_IGNORE_MD5,
+##     CRAM_OPT_REFERENCE,  // make general
+##     CRAM_OPT_MULTI_SEQ_PER_SLICE,
+##     CRAM_OPT_NO_REF,
+##     CRAM_OPT_USE_BZIP2,
+##     CRAM_OPT_SHARED_REF,
+##     CRAM_OPT_NTHREADS,   // deprecated, use HTS_OPT_NTHREADS
+##     CRAM_OPT_THREAD_POOL,// make general
+##     CRAM_OPT_USE_LZMA,
+##     CRAM_OPT_USE_RANS,
+##     CRAM_OPT_REQUIRED_FIELDS,
+##     CRAM_OPT_LOSSY_NAMES,
+##     CRAM_OPT_BASES_PER_SLICE,
+## 
+##     // General purpose
+##     HTS_OPT_COMPRESSION_LEVEL = 100,
+##     HTS_OPT_NTHREADS,
+##     HTS_OPT_THREAD_POOL,
+##     HTS_OPT_CACHE_SIZE,
+##     HTS_OPT_BLOCK_SIZE,
+## };
+## 
+
 const
   BAM_FPAIRED* = 1
 
@@ -155,14 +189,14 @@ type
 
 
 type
-  INNER_C_STRUCT_3100013000* {.bycopy.} = object
+  INNER_C_STRUCT_1831707270* {.bycopy.} = object
     major*: cshort
     minor*: cshort
 
   htsFormat* {.bycopy.} = object
     category*: htsFormatCategory
     format*: htsExactFormat
-    version*: INNER_C_STRUCT_3100013000
+    version*: INNER_C_STRUCT_1831707270
     compression*: htsCompression
     compression_level*: cshort ##  currently unused
     specific*: pointer         ##  format specific options; see struct hts_opt.
@@ -173,7 +207,7 @@ type
 ## ###########################
 
 type
-  INNER_C_UNION_303587077* {.bycopy.} = object {.union.}
+  INNER_C_UNION_3330248643* {.bycopy.} = object {.union.}
     bgzf*: ptr BGZF
     cram*: ptr cram_fd
     hfile*: ptr hFILE
@@ -193,9 +227,18 @@ type
     line*: kstring_t
     fn*: cstring
     fn_aux*: cstring
-    fp*: INNER_C_UNION_303587077
+    fp*: INNER_C_UNION_3330248643
     format*: htsFormat
 
+
+## !
+##   @abstract  Sets a specified CRAM option on the open file handle.
+##   @param fp  The file handle open the open file.
+##   @param opt The CRAM_OPT_* option.
+##   @param ... Optional arguments, dependent on the option used.
+##   @return    0 for success, or negative if an error occurred.
+## int hts_set_opt(htsFile *fp, enum hts_fmt_option opt, ...);
+## 
 
 proc hts_open*(fn: cstring; mode: cstring): ptr htsFile {.cdecl, importc: "hts_open",
     dynlib: libname.}
@@ -391,6 +434,8 @@ proc bam_index_build*(fn: cstring; min_shift: cint): cint {.cdecl,
     importc: "bam_index_build", dynlib: libname.}
 proc sam_itr_querys*(a2: ptr hts_idx_t; h: ptr bam_hdr_t; region: cstring): ptr hts_itr_t {.
     cdecl, importc: "sam_itr_querys", dynlib: libname.}
+proc sam_itr_queryi*(idx: ptr hts_idx_t; tid: cint; beg: cint; `end`: cint): ptr hts_itr_t {.
+    cdecl, importc: "sam_itr_queryi", dynlib: libname.}
 ## int tbx_itr_next(htsFile *fp, tbx_t *tbx, hts_itr_t *iter, void *data);
 
 template sam_itr_next*(htsfp, itr, r: untyped): untyped =
@@ -527,7 +572,7 @@ proc faidx_has_seq*(fai: ptr faidx_t; seq: cstring): cint {.cdecl,
 ## 
 
 type
-  INNER_C_UNION_3369339069* {.bycopy.} = object {.union.}
+  INNER_C_UNION_1649844422* {.bycopy.} = object {.union.}
     i*: int32                  ##  integer value
     f*: cfloat                 ##  float value
   
@@ -557,7 +602,7 @@ type
     key*: cint                 ##  key: numeric tag id, the corresponding string is bcf_hdr_t::id[BCF_DT_ID][$key].key
     `type`*: cint
     len*: cint                 ##  type: one of BCF_BT_* types; len: vector length, 1 for scalars
-    v1*: INNER_C_UNION_3369339069 ##  only set if $len==1; for easier access
+    v1*: INNER_C_UNION_1649844422 ##  only set if $len==1; for easier access
     vptr*: ptr uint8            ##  pointer to data array in bcf1_t->shared.s, excluding the size+type and tag id bytes
     vptr_len*: uint32          ##  length of the vptr block or, when set, of the vptr_mod block, excluding offset
     vptr_off* {.bitsize: 31.}: uint32 ##  vptr offset, i.e., the size of the INFO key plus size+type bytes

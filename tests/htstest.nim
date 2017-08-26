@@ -19,3 +19,6 @@ suite "flag hts-suite":
     check b.hdr.targets[0].name == "1"
     check b.hdr.targets[0].length == 249250621
     check len(b.hdr.targets) == b.hdr.hdr.n_targets
+
+    check b.set_fields(SamField.SAM_POS, SamField.SAM_RNEXT) == 0
+    check b.set_option(FormatOption.CRAM_OPT_DECODE_MD, 0) == 0

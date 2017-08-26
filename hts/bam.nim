@@ -181,6 +181,25 @@ proc open_hts*(path: cstring, threads: int=0, fai: cstring=nil, index: bool=fals
 
   return bam
 
+proc hts_set_opt*(fp: ptr htsFile; opt: FormatOption): cint {.varargs, cdecl,
+    importc: "hts_set_opt", dynlib: libname.}
+
+proc set_fields*(b: Bam, fields: varargs[SamField]): int =
+  var opt : int = 0
+  for f in fields:
+    opt = opt or int(f)
+
+  var ret = int(hts_set_opt(b.hts, CRAM_OPT_REQUIRED_FIELDS, cint(opt)))
+  if ret != 0:
+    stderr.write_line("couldn't set opts")
+  return ret
+
+proc set_option*(b: Bam, f: FormatOption, val: int): int =
+  var ret = int(hts_set_opt(b.hts, f, cint(val)))
+  if ret != 0:
+    stderr.write_line("couldn't set opts")
+  return ret
+
 iterator items*(bam: Bam): Record =
   ## items iterates over a bam. A single element is used and overwritten
   ## on each iteration so use `Record.copy` to retain.
