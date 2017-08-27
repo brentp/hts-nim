@@ -173,11 +173,11 @@ proc open_hts*(path: cstring, threads: int=0, fai: cstring=nil, index: bool=fals
   bam.rec = rec
 
   if index:
-    var idx = sam_index_load(hts, path)
+    var idx = sam_index_load(bam.hts, path)
     if idx != nil:
         bam.idx = idx
     else:
-        echo "index not found"
+      stderr.write_line "index not found for:", path
 
   return bam
 
@@ -188,7 +188,6 @@ proc set_fields*(b: Bam, fields: varargs[SamField]): int =
   var opt : int = 0
   for f in fields:
     opt = opt or int(f)
-
   var ret = int(hts_set_opt(b.hts, CRAM_OPT_REQUIRED_FIELDS, cint(opt)))
   if ret != 0:
     stderr.write_line("couldn't set opts")
