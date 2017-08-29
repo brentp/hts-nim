@@ -1,0 +1,50 @@
+
+type
+  FormatOption* {.size: sizeof(cint).} = enum ##  CRAM specific
+    CRAM_OPT_DECODE_MD
+    CRAM_OPT_PREFIX
+    CRAM_OPT_VERBOSITY
+    ##  obsolete use hts_set_log_level() instead
+    CRAM_OPT_SEQS_PER_SLICE
+    CRAM_OPT_SLICES_PER_CONTAINER
+    CRAM_OPT_RANGE
+    CRAM_OPT_VERSION
+    ##  rename to cram_version?
+    CRAM_OPT_EMBED_REF
+    CRAM_OPT_IGNORE_MD5
+    CRAM_OPT_REFERENCE
+    ##  make general
+    CRAM_OPT_MULTI_SEQ_PER_SLICE
+    CRAM_OPT_NO_REF
+    CRAM_OPT_USE_BZIP2,
+    CRAM_OPT_SHARED_REF
+    CRAM_OPT_NTHREADS
+    ##  deprecated use HTS_OPT_NTHREADS
+    CRAM_OPT_THREAD_POOL
+        ##  make general
+    CRAM_OPT_USE_LZMA
+    CRAM_OPT_USE_RANS
+    CRAM_OPT_REQUIRED_FIELDS,
+    CRAM_OPT_LOSSY_NAMES
+    CRAM_OPT_BASES_PER_SLICE
+    ##  General purpose
+    HTS_OPT_COMPRESSION_LEVEL = 100
+    HTS_OPT_NTHREADS
+    HTS_OPT_THREAD_POOL
+    HTS_OPT_CACHE_SIZE
+    HTS_OPT_BLOCK_SIZE
+
+  SamField* {.size: sizeof(cint).} = enum
+    SAM_QNAME = 0x00000001
+    SAM_FLAG = 0x00000002
+    SAM_RNAME = 0x00000004
+    SAM_POS = 0x00000008
+    SAM_MAPQ = 0x00000010
+    SAM_CIGAR = 0x00000020
+    SAM_RNEXT = 0x00000040
+    SAM_PNEXT = 0x00000080
+    SAM_TLEN = 0x00000100
+    SAM_SEQ = 0x00000200
+    SAM_QUAL = 0x00000400
+    SAM_AUX = 0x00000800
+    SAM_RGAUX = 0x00001000
