@@ -15,7 +15,7 @@ type
     hts: ptr hts_file
     hdr*: Header
     rec: Record
-    idx: ptr hts_idx_t
+    idx*: ptr hts_idx_t
 
   Target* = ref object of RootObj
     ## Target is a chromosome or contig from the bam header.
