@@ -99,6 +99,10 @@ const
 
 const
   BAM_FSUPPLEMENTARY* = 2048
+  HTS_FMT_CSI* = 0
+  HTS_FMT_BAI* = 1
+  HTS_FMT_TBI* = 2
+  HTS_FMT_CRAI* = 3
 
 proc malloc*(size: csize): pointer {.cdecl, importc: "malloc", dynlib: libname.}
 proc free*(a2: pointer) {.cdecl, importc: "free", dynlib: libname.}
@@ -168,6 +172,21 @@ proc bgzf_close*(fp: ptr BGZF): cint {.cdecl, importc: "bgzf_close", dynlib: lib
 proc bgzf_hopen*(fp: ptr hFILE; mode: cstring): ptr BGZF {.cdecl, importc: "bgzf_hopen",
     dynlib: libname.}
 proc bgzf_flush*(fp: ptr BGZF): cint {.cdecl, importc: "bgzf_flush", dynlib: libname.}
+## *
+##  Write _length_ bytes from _data_ to the file.  If no I/O errors occur,
+##  the complete _length_ bytes will be written (or queued for writing).
+## 
+##  @param fp     BGZF file handler
+##  @param data   data array to write
+##  @param length size of data to write
+##  @return       number of bytes written (i.e., _length_); negative on error
+## 
+
+proc bgzf_write*(fp: ptr BGZF; data: pointer; length: csize): int64 {.cdecl,
+    importc: "bgzf_write", dynlib: libname.}
+template bgzf_tell*(fp: untyped): untyped =
+  (((fp).block_address shl 16) or ((fp).block_offset and 0x0000FFFF))
+
 type
   htsFormatCategory* {.size: sizeof(cint).} = enum
     unknown_category, sequence_data, ##  Sequence data -- SAM, BAM, CRAM, etc
@@ -189,14 +208,14 @@ type
 
 
 type
-  INNER_C_STRUCT_1831707270* {.bycopy.} = object
+  INNER_C_STRUCT_596455751* {.bycopy.} = object
     major*: cshort
     minor*: cshort
 
   htsFormat* {.bycopy.} = object
     category*: htsFormatCategory
     format*: htsExactFormat
-    version*: INNER_C_STRUCT_1831707270
+    version*: INNER_C_STRUCT_596455751
     compression*: htsCompression
     compression_level*: cshort ##  currently unused
     specific*: pointer         ##  format specific options; see struct hts_opt.
@@ -207,7 +226,7 @@ type
 ## ###########################
 
 type
-  INNER_C_UNION_3330248643* {.bycopy.} = object {.union.}
+  INNER_C_UNION_2094997124* {.bycopy.} = object {.union.}
     bgzf*: ptr BGZF
     cram*: ptr cram_fd
     hfile*: ptr hFILE
@@ -227,7 +246,7 @@ type
     line*: kstring_t
     fn*: cstring
     fn_aux*: cstring
-    fp*: INNER_C_UNION_3330248643
+    fp*: INNER_C_UNION_2094997124
     format*: htsFormat
 
 
@@ -572,7 +591,7 @@ proc faidx_has_seq*(fai: ptr faidx_t; seq: cstring): cint {.cdecl,
 ## 
 
 type
-  INNER_C_UNION_1649844422* {.bycopy.} = object {.union.}
+  INNER_C_UNION_2275859132* {.bycopy.} = object {.union.}
     i*: int32                  ##  integer value
     f*: cfloat                 ##  float value
   
@@ -602,7 +621,7 @@ type
     key*: cint                 ##  key: numeric tag id, the corresponding string is bcf_hdr_t::id[BCF_DT_ID][$key].key
     `type`*: cint
     len*: cint                 ##  type: one of BCF_BT_* types; len: vector length, 1 for scalars
-    v1*: INNER_C_UNION_1649844422 ##  only set if $len==1; for easier access
+    v1*: INNER_C_UNION_2275859132 ##  only set if $len==1; for easier access
     vptr*: ptr uint8            ##  pointer to data array in bcf1_t->shared.s, excluding the size+type and tag id bytes
     vptr_len*: uint32          ##  length of the vptr block or, when set, of the vptr_mod block, excluding offset
     vptr_off* {.bitsize: 31.}: uint32 ##  vptr offset, i.e., the size of the INFO key plus size+type bytes

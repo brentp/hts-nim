@@ -15,6 +15,7 @@
 #mangle int8_t int8
 #mangle int32_t int32
 #mangle int64_t int64
+#mangle ssize_t int64
 #endif
 
 /*
@@ -76,6 +77,11 @@ enum hts_fmt_option {
 /*! @abstract supplementary alignment */
 #define BAM_FSUPPLEMENTARY 2048
 
+#define HTS_FMT_CSI 0
+#define HTS_FMT_BAI 1
+#define HTS_FMT_TBI 2
+#define HTS_FMT_CRAI 3
+
 
 void *malloc(size_t size);
 void free(void *);
@@ -128,6 +134,21 @@ BGZF* bgzf_open(const char* path, const char *mode);
 int bgzf_close(BGZF *fp);
 BGZF* bgzf_hopen(struct hFILE *fp, const char *mode);
 int bgzf_flush(BGZF *fp);
+
+    /**
+     * Write _length_ bytes from _data_ to the file.  If no I/O errors occur,
+     * the complete _length_ bytes will be written (or queued for writing).
+     *
+     * @param fp     BGZF file handler
+     * @param data   data array to write
+     * @param length size of data to write
+     * @return       number of bytes written (i.e., _length_); negative on error
+     */
+ssize_t bgzf_write(BGZF *fp, const void *data, size_t length);
+
+#define bgzf_tell(fp) (((fp)->block_address << 16) | ((fp)->block_offset & 0xFFFF))
+
+
 
 enum htsFormatCategory {
     unknown_category,
