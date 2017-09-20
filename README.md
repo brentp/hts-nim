@@ -34,3 +34,21 @@ var cram = open_hts("/tmp/t.cram", fai="/data/human/g1k_v37_decoy.fa")
 for record in cram:
   echo record.qname, record.isize
 ```
+
+## bgzip with csi
+
+A nice thing that is facilitate through this library is creating a .csi index while writing sorted
+intervals to a file.
+This can be done as:
+
+```nim
+import hts
+# arguments are 1-based seq-col, start-col, end-col and whether the intervals are 0-based.
+var bx = wopen_bgzi("ti.txt.gz", 1, 2, 3, true)
+# some duplication of args to avoid re-parsing. args are line, chrom, start, end
+check bx.write_interval("a\t4\t10", "a", 4, 10) > 0
+check bx.write_interval("b\t2\t20", "b", 2, 20) > 0
+check bx.close() == 0
+```
+
+After this, `ti.txt.gz.csi` will be usable by tabix.

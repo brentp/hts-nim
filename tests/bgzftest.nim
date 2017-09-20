@@ -33,10 +33,7 @@ suite "bgzf-suite":
 
   test "write-with-index":
 
-    var bx = wopen_bgzi("ti.txt.gz", 1, 2, 3)
-    check bx.write_interval("a\t1\t10", "a", 1, 10) > 0
+    var bx = wopen_bgzi("ti.txt.gz", 1, 2, 3, true)
+    check bx.write_interval("a\t4\t10", "a", 4, 10) > 0
     check bx.write_interval("b\t2\t20", "b", 2, 20) > 0
-    check bx.write_interval("b\t10\t20", "b", 10, 20) > 0
-
     check bx.close() == 0
-

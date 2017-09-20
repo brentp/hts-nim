@@ -8,6 +8,7 @@ type
   CSI* = ref object of RootObj
     idx*: ptr hts_idx_t
     cnf*: tbx_conf_t
+    subtract: int
 
   BGZI* = ref object of RootObj
     bgz*: BGZ
@@ -16,19 +17,36 @@ type
     chroms*: seq[string]
     last_start: int
 
-proc idx_set_meta*(idx: ptr hts_idx_t; tc: ptr tbx_conf_t; chroms: string): cint {.cdecl.} =
+proc `+`[T](a: ptr T, b: int): ptr T =
+    if b >= 0:
+        cast[ptr T](cast[uint](a) + cast[uint](b * a[].sizeof))
+    else:
+        cast[ptr T](cast[uint](a) - cast[uint](-1 * b * a[].sizeof))
+
+proc idx_set_meta*(idx: ptr hts_idx_t; tc: ptr tbx_conf_t; chroms: seq[string]): int =
   var x: array[7, uint32]
-  x[6] = cast[uint32](chroms.len)
-  var meta = new_seq[uint8](28 + chroms.len)
-  copyMem(cast[pointer](meta.addr), cast[pointer](x.addr), 28)
+  x[0] = uint32(tc.preset)
+  x[1] = uint32(tc.sc)
+  x[2] = uint32(tc.bc)
+  x[3] = uint32(tc.ec)
+  x[4] = uint32(tc.metachar)
+  x[5] = uint32(tc.lineskip)
+  var l = 0
+  for chrom in chroms:
+    l += chrom.len + 1
+  x[6] = uint32(l)
+  var meta = new_seq[uint8](28 + l)
+  copyMem(cast[pointer](meta[0].addr), cast[pointer](x[0].addr), 28)
+  var cs: cstring
 
-  var s = new_string(chroms.len)
-  s = chroms
-
-  var vm = meta[28..len(meta)]
-  copyMem(cast[pointer](vm.addr), cast[pointer](s.addr), chroms.len)
-  hts_idx_set_meta(idx, cint(32), cast[ptr uint8](meta), cint(0))
-
+  var offset = 28
+  # copy each chrom, char by char into the meta array and leave the 0 (NULL) at the end of each.
+  for chrom in chroms:
+    for c in chrom:
+      meta[offset] = uint8(c)
+      offset += 1
+    offset += 1
+  return int(hts_idx_set_meta(idx, uint32(len(meta)), cast[ptr uint8](meta[0].addr), cint(1)))
 
 proc open*(b: var BGZ, path: string, mode: string) =
   if b == nil:
@@ -58,15 +76,20 @@ proc tell*(b: BGZ): uint64 =
   return uint64(bgzf_tell(b.cptr))
 
 # these are all 1-based.
-proc new_csi*(seq_col: int, start_col: int, end_col: int): CSI =
+proc new_csi*(seq_col: int, start_col: int, end_col: int, one_based: bool): CSI =
   var c = CSI()
   c.idx = hts_idx_init(0, HTS_FMT_CSI, 0, 14, 5)
   # automatically set the comment char to '#'
-  c.cnf = tbx_conf_t(preset: int32(0), sc: int32(seq_col), bc: int32(start_col), ec: int32(end_col), meta_char: int32(35), line_skip: int32(0))
+  c.cnf = tbx_conf_t(preset: int32(0), sc: int32(seq_col), bc: int32(start_col), ec: int32(end_col), meta_char: int32('#'), line_skip: int32(0))
+  if one_based:
+    c.subtract = 1
+  else:
+    c.subtract = 0
+
   return c
 
 proc add*(c: CSI, tid: int, start: int, stop: int, offset:uint64): int =
-  return int(hts_idx_push(c.idx, cint(tid), cint(start), cint(stop), offset, 1))
+  return int(hts_idx_push(c.idx, cint(tid), cint(start - c.subtract), cint(stop), offset, 1))
 
 proc finish*(c: CSI, offset: uint64) =
   hts_idx_finish(c.idx, offset)
@@ -76,16 +99,12 @@ proc save*(c: CSI, path: string) =
 
 # int l_meta, uint8_t *meta, int is_copy
 proc set_meta*(c: CSI, chroms: seq[string]): int =
-  var chrom_string = ""
-  for chrom in chroms:
-    chrom_string &= chrom
-    chrom_string.add('\0')
-  idx_set_meta(c.idx, c.cnf.addr, chrom_string)
+  return idx_set_meta(c.idx, c.cnf.addr, chroms)
 
-proc wopen_bgzi*(path: string, seq_col: int, start_col: int, end_col: int): BGZI =
+proc wopen_bgzi*(path: string, seq_col: int, start_col: int, end_col: int, zero_based: bool): BGZI =
   var b: BGZ
   b.open(path, "w")
-  var bgzi = BGZI(bgz:b, csi: new_csi(seq_col, start_col, end_col), path:path)
+  var bgzi = BGZI(bgz:b, csi: new_csi(seq_col, start_col, end_col, zero_based), path:path)
   bgzi.chroms = new_seq[string]()
   bgzi.last_start = -100000
   return bgzi
@@ -97,8 +116,9 @@ proc write_interval*(b: BGZI, line: string, chrom: string, start: int, stop: int
     b.chroms.add(chrom)
   elif start < b.last_start:
     stderr.write_line("[hts-nim] starts out of order for:", b.path, " in:", line)
+  b.last_start = start
   var r = b.bgz.write_line(line)
-  if b.csi.add(len(b.chroms), start, stop, b.bgz.tell()) < 0:
+  if b.csi.add(len(b.chroms) - 1, start, stop, b.bgz.tell()) < 0:
     stderr.write_line("[hts-nim] error adding to csi index")
     quit()
   return r
@@ -106,7 +126,9 @@ proc write_interval*(b: BGZI, line: string, chrom: string, start: int, stop: int
 proc close*(b: BGZI): int =
    discard b.bgz.flush()
    b.csi.finish(b.bgz.tell())
-   discard b.csi.set_meta(b.chroms)
+   if b.csi.set_meta(b.chroms) != 0:
+     stderr.write_line("[hts-nim] error writing CSI meta")
+     quit()
    if b.bgz.close() < 0:
      stderr.write_line("[hts-nim] error closing bgzf")
      quit()
