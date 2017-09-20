@@ -8,7 +8,7 @@ suite "bgzf-suite":
     check b.write_line("a\t1\t2") > 0
     check b.write("b\t10\t20\n") > 0
     check b.flush() == 0
-    check b.tell() > 0
+    check int(b.tell()) > 0
     check b.close() == 0
 
   test "test-read":
@@ -27,6 +27,16 @@ suite "bgzf-suite":
     check $kstr.s == "b\t10\t20"
     check b.read_line(p) == -1 # EOF: todo. handle this in a nim-like way.
     check $kstr.s == "b\t10\t20"
-    check b.tell() > 0
+    check int(b.tell()) > 0
     free(kstr.s)
     check b.close() == 0
+
+  test "write-with-index":
+
+    var bx = wopen_bgzi("ti.txt.gz", 1, 2, 3)
+    check bx.write_interval("a\t1\t10", "a", 1, 10) > 0
+    check bx.write_interval("b\t2\t20", "b", 2, 20) > 0
+    check bx.write_interval("b\t10\t20", "b", 10, 20) > 0
+
+    check bx.close() == 0
+
