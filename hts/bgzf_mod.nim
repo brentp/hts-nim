@@ -17,12 +17,6 @@ type
     chroms*: seq[string]
     last_start: int
 
-proc `+`[T](a: ptr T, b: int): ptr T =
-    if b >= 0:
-        cast[ptr T](cast[uint](a) + cast[uint](b * a[].sizeof))
-    else:
-        cast[ptr T](cast[uint](a) - cast[uint](-1 * b * a[].sizeof))
-
 proc idx_set_meta*(idx: ptr hts_idx_t; tc: ptr tbx_conf_t; chroms: seq[string]): int =
   var x: array[7, uint32]
   x[0] = uint32(tc.preset)
@@ -56,23 +50,26 @@ proc open*(b: var BGZ, path: string, mode: string) =
 proc close*(b: BGZ): int =
   return int(bgzf_close(b.cptr))
 
-proc write*(b: BGZ, line: string): int =
-  return int(bgzf_write(b.cptr, cstring(line), csize(line.len)))
+proc write*(b: BGZ, line: string): int64 {.inline.} =
+  bgzf_write(b.cptr, cstring(line), csize(line.len))
 
-proc write_line*(b: BGZ, line: string): int =
+proc write_line*(b: BGZ, line: string): int {.inline.} =
   var r = int(bgzf_write(b.cptr, cstring(line), csize(line.len)))
   if r > 0:
     if int(bgzf_write(b.cptr, cstring("\n"), csize(1))) < 0:
       return -1
   return r + 1
 
-proc read_line*(b: BGZ, line:var ptr kstring_t): int =
+proc set_threads*(b: BGZ, threads: int) =
+  discard bgzf_mt(b.cptr, cint(threads), 128)
+
+proc read_line*(b: BGZ, line:var ptr kstring_t): int {.inline.} =
   bgzf_getline(b.cptr, cint(10), line)
 
 proc flush*(b: BGZ): int =
   return int(bgzf_flush(b.cptr))
 
-proc tell*(b: BGZ): uint64 =
+proc tell*(b: BGZ): uint64 {.inline.} =
   return uint64(bgzf_tell(b.cptr))
 
 # these are all 1-based.
@@ -88,7 +85,7 @@ proc new_csi*(seq_col: int, start_col: int, end_col: int, one_based: bool): CSI 
 
   return c
 
-proc add*(c: CSI, tid: int, start: int, stop: int, offset:uint64): int =
+proc add*(c: CSI, tid: int, start: int, stop: int, offset:uint64): int {.inline.} =
   return int(hts_idx_push(c.idx, cint(tid), cint(start - c.subtract), cint(stop), offset, 1))
 
 proc finish*(c: CSI, offset: uint64) =
@@ -101,9 +98,9 @@ proc save*(c: CSI, path: string) =
 proc set_meta*(c: CSI, chroms: seq[string]): int =
   return idx_set_meta(c.idx, c.cnf.addr, chroms)
 
-proc wopen_bgzi*(path: string, seq_col: int, start_col: int, end_col: int, zero_based: bool): BGZI =
+proc wopen_bgzi*(path: string, seq_col: int, start_col: int, end_col: int, zero_based: bool, compression_level:int=1): BGZI =
   var b: BGZ
-  b.open(path, "w")
+  b.open(path, "w" & $compression_level)
   var bgzi = BGZI(bgz:b, csi: new_csi(seq_col, start_col, end_col, zero_based), path:path)
   bgzi.chroms = new_seq[string]()
   bgzi.last_start = -100000

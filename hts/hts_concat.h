@@ -52,8 +52,6 @@ enum hts_fmt_option {
 };
 */
 
-void *memcpy(void *str1, const void *str2, size_t n);
-
 #define BAM_FPAIRED        1
 /*! @abstract the read is mapped in a proper pair */
 #define BAM_FPROPER_PAIR   2
@@ -150,6 +148,8 @@ ssize_t bgzf_write(BGZF *fp, const void *data, size_t length);
 #define bgzf_tell(fp) (((fp)->block_address << 16) | ((fp)->block_offset & 0xFFFF))
 
 int bgzf_getline(BGZF *fp, int delim, kstring_t *str);
+int bgzf_mt(BGZF *fp, int n_threads, int n_sub_blks);
+
 
 
 enum htsFormatCategory {
@@ -262,20 +262,6 @@ typedef struct {
         int32_t meta_char, line_skip;
 } tbx_conf_t;
 
-
-/*
-int hts_idx_set_meta(const hts_idx_t *idx, tbx_conf_t *tc, char *chroms, int l_chroms) {
-    uint32_t x[7];
-    void * t = memcpy(&x[0], tc, 24);
-    x[6] = (uint32_t)l_chroms;
-
-    uint8_t meta[28 + l_chroms];
-    t = memcpy(meta, x, 28);
-    memcpy(meta + 28, chroms, l_chroms);
-
-    hts_idx_set_meta(idx, 32, meta, 0);
-}
-*/
 
 typedef struct {
         tbx_conf_t conf;

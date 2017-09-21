@@ -187,6 +187,10 @@ proc bgzf_write*(fp: ptr BGZF; data: pointer; length: csize): int64 {.cdecl,
 template bgzf_tell*(fp: untyped): untyped =
   (((fp).block_address shl 16) or ((fp).block_offset and 0x0000FFFF))
 
+proc bgzf_getline*(fp: ptr BGZF; delim: cint; str: ptr kstring_t): cint {.cdecl,
+    importc: "bgzf_getline", dynlib: libname.}
+proc bgzf_mt*(fp: ptr BGZF; n_threads: cint; n_sub_blks: cint): cint {.cdecl,
+    importc: "bgzf_mt", dynlib: libname.}
 type
   htsFormatCategory* {.size: sizeof(cint).} = enum
     unknown_category, sequence_data, ##  Sequence data -- SAM, BAM, CRAM, etc
@@ -208,14 +212,14 @@ type
 
 
 type
-  INNER_C_STRUCT_596455751* {.bycopy.} = object
+  INNER_C_STRUCT_4081257040* {.bycopy.} = object
     major*: cshort
     minor*: cshort
 
   htsFormat* {.bycopy.} = object
     category*: htsFormatCategory
     format*: htsExactFormat
-    version*: INNER_C_STRUCT_596455751
+    version*: INNER_C_STRUCT_4081257040
     compression*: htsCompression
     compression_level*: cshort ##  currently unused
     specific*: pointer         ##  format specific options; see struct hts_opt.
@@ -226,7 +230,7 @@ type
 ## ###########################
 
 type
-  INNER_C_UNION_2094997124* {.bycopy.} = object {.union.}
+  INNER_C_UNION_3656171522* {.bycopy.} = object {.union.}
     bgzf*: ptr BGZF
     cram*: ptr cram_fd
     hfile*: ptr hFILE
@@ -246,7 +250,7 @@ type
     line*: kstring_t
     fn*: cstring
     fn_aux*: cstring
-    fp*: INNER_C_UNION_2094997124
+    fp*: INNER_C_UNION_3656171522
     format*: htsFormat
 
 
@@ -294,7 +298,7 @@ proc hts_idx_load*(fn: cstring; fmt: cint): ptr hts_idx_t {.cdecl,
     importc: "hts_idx_load", dynlib: libname.}
 proc hts_idx_get_meta*(idx: ptr hts_idx_t; l_meta: ptr cint): ptr uint8 {.cdecl,
     importc: "hts_idx_get_meta", dynlib: libname.}
-proc hts_idx_set_meta*(idx: ptr hts_idx_t; l_meta: cint; meta: ptr uint8; is_copy: cint) {.
+proc hts_idx_set_meta*(idx: ptr hts_idx_t; l_meta: uint32; meta: ptr uint8; is_copy: cint): cint {.
     cdecl, importc: "hts_idx_set_meta", dynlib: libname.}
 proc hts_idx_get_stat*(idx: ptr hts_idx_t; tid: cint; mapped: ptr uint64;
                       unmapped: ptr uint64): cint {.cdecl,
@@ -591,7 +595,7 @@ proc faidx_has_seq*(fai: ptr faidx_t; seq: cstring): cint {.cdecl,
 ## 
 
 type
-  INNER_C_UNION_2275859132* {.bycopy.} = object {.union.}
+  INNER_C_UNION_3026867523* {.bycopy.} = object {.union.}
     i*: int32                  ##  integer value
     f*: cfloat                 ##  float value
   
@@ -621,7 +625,7 @@ type
     key*: cint                 ##  key: numeric tag id, the corresponding string is bcf_hdr_t::id[BCF_DT_ID][$key].key
     `type`*: cint
     len*: cint                 ##  type: one of BCF_BT_* types; len: vector length, 1 for scalars
-    v1*: INNER_C_UNION_2275859132 ##  only set if $len==1; for easier access
+    v1*: INNER_C_UNION_3026867523 ##  only set if $len==1; for easier access
     vptr*: ptr uint8            ##  pointer to data array in bcf1_t->shared.s, excluding the size+type and tag id bytes
     vptr_len*: uint32          ##  length of the vptr block or, when set, of the vptr_mod block, excluding offset
     vptr_off* {.bitsize: 31.}: uint32 ##  vptr offset, i.e., the size of the INFO key plus size+type bytes
