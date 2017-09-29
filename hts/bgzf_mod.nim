@@ -8,13 +8,13 @@ type
   CSI* = ref object of RootObj
     idx*: ptr hts_idx_t
     cnf*: tbx_conf_t
+    chroms*: seq[string]
     subtract: int
 
   BGZI* = ref object of RootObj
     bgz*: BGZ
     csi*: CSI
     path: string
-    chroms*: seq[string]
     last_start: int
 
 proc idx_set_meta*(idx: ptr hts_idx_t; tc: ptr tbx_conf_t; chroms: seq[string]): int =
@@ -72,10 +72,15 @@ proc flush*(b: BGZ): int =
 proc tell*(b: BGZ): uint64 {.inline.} =
   return uint64(bgzf_tell(b.cptr))
 
+proc finalize_csi(c: CSI) =
+    hts_idx_destroy(c.idx)
+
 # these are all 1-based.
 proc new_csi*(seq_col: int, start_col: int, end_col: int, one_based: bool): CSI =
-  var c = CSI()
+  var c:CSI
+  new(c, finalize_csi)
   c.idx = hts_idx_init(0, HTS_FMT_CSI, 0, 14, 5)
+  c.chroms = new_seq[string]()
   # automatically set the comment char to '#'
   c.cnf = tbx_conf_t(preset: int32(0), sc: int32(seq_col), bc: int32(start_col), ec: int32(end_col), meta_char: int32('#'), line_skip: int32(0))
   if one_based:
@@ -102,20 +107,19 @@ proc wopen_bgzi*(path: string, seq_col: int, start_col: int, end_col: int, zero_
   var b: BGZ
   b.open(path, "w" & $compression_level)
   var bgzi = BGZI(bgz:b, csi: new_csi(seq_col, start_col, end_col, zero_based), path:path)
-  bgzi.chroms = new_seq[string]()
   bgzi.last_start = -100000
   return bgzi
 
 proc write_interval*(b: BGZI, line: string, chrom: string, start: int, stop: int): int =
   if b.last_start < 0:
-    b.chroms.add(chrom)
-  if chrom != b.chroms[len(b.chroms)-1]:
-    b.chroms.add(chrom)
+    b.csi.chroms.add(chrom)
+  if chrom != b.csi.chroms[len(b.csi.chroms)-1]:
+    b.csi.chroms.add(chrom)
   elif start < b.last_start:
     stderr.write_line("[hts-nim] starts out of order for:", b.path, " in:", line)
   b.last_start = start
   var r = b.bgz.write_line(line)
-  if b.csi.add(len(b.chroms) - 1, start, stop, b.bgz.tell()) < 0:
+  if b.csi.add(len(b.csi.chroms) - 1, start, stop, b.bgz.tell()) < 0:
     stderr.write_line("[hts-nim] error adding to csi index")
     quit()
   return r
@@ -123,7 +127,7 @@ proc write_interval*(b: BGZI, line: string, chrom: string, start: int, stop: int
 proc close*(b: BGZI): int =
    discard b.bgz.flush()
    b.csi.finish(b.bgz.tell())
-   if b.csi.set_meta(b.chroms) != 0:
+   if b.csi.set_meta(b.csi.chroms) != 0:
      stderr.write_line("[hts-nim] error writing CSI meta")
      quit()
    if b.bgz.close() < 0:
@@ -131,4 +135,3 @@ proc close*(b: BGZI): int =
      quit()
  
    b.csi.save(b.path)
-   hts_idx_destroy(b.csi.idx)
