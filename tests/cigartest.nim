@@ -15,7 +15,8 @@ suite "flag cigar-suite":
     check $Op(4096) == "256M"
 
   test "ref coverage":
-    var b = hts.open_hts("tests/HG02002.bam")
+    var b:hts.Bam
+    open(b, "tests/HG02002.bam")
     for rec in b:
       if rec.flag.unmapped: continue
       var pieces = rec.cigar.ref_coverage(ipos=rec.start)

@@ -2,7 +2,8 @@ import unittest, hts
 
 suite "flag hts-suite":
   test "test hts":
-    var b = open_hts("tests/HG02002.bam")
+    var b: Bam
+    open(b, "tests/HG02002.bam")
     for rec in b:
       for cig in rec.cigar:
         discard cig.op

@@ -4,5 +4,5 @@ import strutils
 include hts/flag
 include hts/cigar
 include hts/bam
-include hts/bgzf_mod
 include hts/csi
+include hts/bgzf_mod

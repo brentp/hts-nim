@@ -145,7 +145,7 @@ proc finalize_bam(bam: Bam) =
 proc finalize_record(rec: Record) =
   bam_destroy1(rec.b)
 
-proc open_hts*(path: cstring, threads: int=0, fai: cstring=nil, index: bool=false): Bam =
+proc open*(bam: var Bam, path: cstring, threads: int=0, fai: cstring=nil, index: bool=false) =
   ## `open_hts` returns a bam object for the given path. If CRAM, then fai must be given.
   ## if index is true, then it will attempt to open an index file for regional queries.
   var hts = hts_open(path, "r")
@@ -166,7 +166,6 @@ proc open_hts*(path: cstring, threads: int=0, fai: cstring=nil, index: bool=fals
   new(rec, finalize_record)
   rec.b = b
   rec.hdr = hdr
-  var bam: Bam
   new(bam, finalize_bam)
   bam.hts = hts
   bam.hdr = hdr
@@ -178,8 +177,6 @@ proc open_hts*(path: cstring, threads: int=0, fai: cstring=nil, index: bool=fals
         bam.idx = idx
     else:
       stderr.write_line "index not found for:", path
-
-  return bam
 
 proc hts_set_opt*(fp: ptr htsFile; opt: FormatOption): cint {.varargs, cdecl,
     importc: "hts_set_opt", dynlib: libname.}
@@ -209,7 +206,8 @@ iterator items*(bam: Bam): Record =
 
 proc main() =
 
-  var bam = open_hts("tests/HG02002.bam", index=true)
+  var bam: Bam
+  open(bam, "tests/HG02002.bam", index=true)
   #var bam = open_hts("/tmp/t.cram", fai="/data/human/g1k_v37_decoy.fa", index=true)
 
   var recs = newSeq[Record]()
