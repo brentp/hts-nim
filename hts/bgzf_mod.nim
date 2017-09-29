@@ -121,7 +121,7 @@ proc write_interval*(b: BGZI, line: string, chrom: string, start: int, stop: int
   var r = b.bgz.write_line(line)
   if b.csi.add(len(b.csi.chroms) - 1, start, stop, b.bgz.tell()) < 0:
     stderr.write_line("[hts-nim] error adding to csi index")
-    quit()
+    quit(1)
   return r
 
 proc close*(b: BGZI): int =
@@ -129,9 +129,9 @@ proc close*(b: BGZI): int =
    b.csi.finish(b.bgz.tell())
    if b.csi.set_meta(b.csi.chroms) != 0:
      stderr.write_line("[hts-nim] error writing CSI meta")
-     quit()
+     quit(1)
    if b.bgz.close() < 0:
      stderr.write_line("[hts-nim] error closing bgzf")
-     quit()
+     quit(1)
  
    b.csi.save(b.path)
