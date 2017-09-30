@@ -11,13 +11,14 @@ type
     path: string
     last_start: int
 
+proc close*(b: BGZ): int =
+  if b.cptr != nil:
+    return int(bgzf_close(b.cptr))
+
 proc open*(b: var BGZ, path: string, mode: string) =
   if b == nil:
     b = BGZ()
   b.cptr = bgzf_open(cstring(path), cstring(mode))
-
-proc close*(b: BGZ): int =
-  return int(bgzf_close(b.cptr))
 
 proc write*(b: BGZ, line: string): int64 {.inline.} =
   bgzf_write(b.cptr, cstring(line), csize(line.len))
@@ -42,12 +43,45 @@ proc tell*(b: BGZ): uint64 {.inline.} =
   return uint64(bgzf_tell(b.cptr))
 
 proc wopen_bgzi*(path: string, seq_col: int, start_col: int, end_col: int, zero_based: bool, compression_level:int=1): BGZI =
-  var b: BGZ
+  var b : BGZ
   b.open(path, "w" & $compression_level)
   var bgzi = BGZI(bgz:b, csi: new_csi(seq_col, start_col, end_col, zero_based), path:path)
   bgzi.last_start = -100000
   return bgzi
 
+proc ropen_bgzi(path: string): BGZI =
+  var b: BGZ
+  b.open(path, "r")
+  var c: CSI
+  if not c.open(path):
+    stderr.write_line("[hts-nim] error opening csi file for:", path)
+    quit(1)
+  return BGZI(bgz: b, csi:c, path:path)
+
+type
+  interval = tuple[chrom: string, start: int, stop: int, line: string]
+
+iterator query(bi: BGZI, chrom: string, start:int, stop:int): string =
+  var tid = -1
+  var fn: hts_readrec_func = hts_readrec_func(tbx_readrec)
+  for i, cchrom in bi.csi.chroms:
+    if chrom == cchrom:
+      tid = i
+      break
+  if tid == -1:
+    stderr.write_line("[hts-nim] no intervals for ", chrom, " found in ", bi.path)
+  var itr:ptr hts_itr_t = hts_itr_query(bi.csi.tbx.idx, cint(tid), cint(start), cint(stop), fn.addr)
+
+  var kstr:kstring_t
+  kstr.l = 0
+  kstr.m = 0
+  kstr.s = nil
+
+  while hts_itr_next(bi.bgz.cptr, itr, bi.csi.tbx.addr, kstr.addr) > 0:
+    yield $kstr.s
+  hts_itr_destroy(itr)
+  free(kstr.s)
+     
 proc write_interval*(b: BGZI, line: string, chrom: string, start: int, stop: int): int =
   if b.last_start < 0:
     b.csi.chroms.add(chrom)

@@ -307,7 +307,7 @@ proc hts_idx_get_n_no_coor*(idx: ptr hts_idx_t): uint64 {.cdecl,
     importc: "hts_idx_get_n_no_coor", dynlib: libname.}
 proc hts_parse_reg*(s: cstring; beg: ptr cint; `end`: ptr cint): cstring {.cdecl,
     importc: "hts_parse_reg", dynlib: libname.}
-proc hts_itr_query*(idx: ptr hts_idx_t; tid: cint; beg: cint; `end`: cint;
+proc hts_itr_query*(idx: ptr hts_idx_t; tid: cint; beg: cint; stop: cint;
                    readrec: ptr hts_readrec_func): ptr hts_itr_t {.cdecl,
     importc: "hts_itr_query", dynlib: libname.}
 proc hts_itr_destroy*(iter: ptr hts_itr_t) {.cdecl, importc: "hts_itr_destroy",
@@ -340,11 +340,22 @@ proc tbx_index_build*(fn: cstring; min_shift: cint; conf: ptr tbx_conf_t): cint 
     importc: "tbx_index_build", dynlib: libname.}
 proc tbx_index_load*(fn: cstring): ptr tbx_t {.cdecl, importc: "tbx_index_load",
     dynlib: libname.}
+proc tbx_index_load2*(fn: cstring; fnidx: cstring): ptr tbx_t {.cdecl,
+    importc: "tbx_index_load2", dynlib: libname.}
 proc tbx_seqnames*(tbx: ptr tbx_t; n: ptr cint): cstringArray {.cdecl,
     importc: "tbx_seqnames", dynlib: libname.}
 ##  free the array but not the values
 
 proc tbx_destroy*(tbx: ptr tbx_t) {.cdecl, importc: "tbx_destroy", dynlib: libname.}
+proc tbx_readrec*(fp: ptr BGZF; tbxv: pointer; sv: pointer; tid: ptr cint; beg: ptr cint;
+                 `end`: ptr cint): cint {.cdecl, importc: "tbx_readrec",
+                                      dynlib: libname.}
+template tbx_itr_queryx*(idx, tid, beg, `end`: untyped): untyped =
+  hts_itr_query(idx, (tid), (beg), (stop), tbx_readrec)
+
+template tbx_itr_queryi*(tbx, tid, beg, `end`: untyped): untyped =
+  hts_itr_query((tbx).idx, (tid), (beg), (stop), tbx_readrec)
+
 proc tbx_itr_querys*(tbx: ptr tbx_t; a3: cstring): ptr hts_itr_t {.cdecl,
     importc: "tbx_itr_querys", dynlib: libname.}
 proc tbx_itr_next*(fp: ptr htsFile; tbx: ptr tbx_t; iter: ptr hts_itr_t; data: pointer): cint {.
@@ -595,7 +606,7 @@ proc faidx_has_seq*(fai: ptr faidx_t; seq: cstring): cint {.cdecl,
 ## 
 
 type
-  INNER_C_UNION_3026867523* {.bycopy.} = object {.union.}
+  INNER_C_UNION_3415423421* {.bycopy.} = object {.union.}
     i*: int32                  ##  integer value
     f*: cfloat                 ##  float value
   
@@ -625,7 +636,7 @@ type
     key*: cint                 ##  key: numeric tag id, the corresponding string is bcf_hdr_t::id[BCF_DT_ID][$key].key
     `type`*: cint
     len*: cint                 ##  type: one of BCF_BT_* types; len: vector length, 1 for scalars
-    v1*: INNER_C_UNION_3026867523 ##  only set if $len==1; for easier access
+    v1*: INNER_C_UNION_3415423421 ##  only set if $len==1; for easier access
     vptr*: ptr uint8            ##  pointer to data array in bcf1_t->shared.s, excluding the size+type and tag id bytes
     vptr_len*: uint32          ##  length of the vptr block or, when set, of the vptr_mod block, excluding offset
     vptr_off* {.bitsize: 31.}: uint32 ##  vptr offset, i.e., the size of the INFO key plus size+type bytes
