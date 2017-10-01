@@ -1,5 +1,6 @@
 import "hts_concat"
 import strutils
+import os
 
 type
   BGZ* = ref object of RootObj
@@ -49,7 +50,7 @@ proc wopen_bgzi*(path: string, seq_col: int, start_col: int, end_col: int, zero_
   bgzi.last_start = -100000
   return bgzi
 
-proc ropen_bgzi(path: string): BGZI =
+proc ropen_bgzi*(path: string): BGZI =
   var b: BGZ
   b.open(path, "r")
   var c: CSI
@@ -61,27 +62,26 @@ proc ropen_bgzi(path: string): BGZI =
 type
   interval = tuple[chrom: string, start: int, stop: int, line: string]
 
-iterator query(bi: BGZI, chrom: string, start:int, stop:int): string =
+iterator query*(bi: BGZI, chrom: string, start:int, stop:int): string =
   var tid = -1
-  var fn: hts_readrec_func = hts_readrec_func(tbx_readrec)
+  var fn: hts_readrec_func = tbx_readrec
   for i, cchrom in bi.csi.chroms:
     if chrom == cchrom:
       tid = i
       break
   if tid == -1:
     stderr.write_line("[hts-nim] no intervals for ", chrom, " found in ", bi.path)
-  var itr:ptr hts_itr_t = hts_itr_query(bi.csi.tbx.idx, cint(tid), cint(start), cint(stop), fn.addr)
+  var itr = hts_itr_query(bi.csi.tbx.idx, cint(tid), cint(start), cint(stop), fn)
 
-  var kstr:kstring_t
-  kstr.l = 0
-  kstr.m = 0
-  kstr.s = nil
+  var kstr = kstring_t(s:nil, m:0, l:0)
 
-  while hts_itr_next(bi.bgz.cptr, itr, bi.csi.tbx.addr, kstr.addr) > 0:
+  while hts_itr_next(bi.bgz.cptr, itr, kstr.addr, bi.csi.tbx.addr) > 0:
     yield $kstr.s
   hts_itr_destroy(itr)
+  assert kstr.l >= 0
   free(kstr.s)
-     
+  assert fn.addr != nil
+
 proc write_interval*(b: BGZI, line: string, chrom: string, start: int, stop: int): int =
   if b.last_start < 0:
     b.csi.chroms.add(chrom)
@@ -105,5 +105,4 @@ proc close*(b: BGZI): int =
    if b.bgz.close() < 0:
      stderr.write_line("[hts-nim] error closing bgzf")
      quit(1)
- 
    b.csi.save(b.path)

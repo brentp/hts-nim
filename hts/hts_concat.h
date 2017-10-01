@@ -246,7 +246,7 @@ int hts_idx_get_stat(const hts_idx_t* idx, int tid, uint64_t* mapped, uint64_t* 
 uint64_t hts_idx_get_n_no_coor(const hts_idx_t* idx);
 
 const char *hts_parse_reg(const char *s, int *beg, int *end);
-hts_itr_t *hts_itr_query(const hts_idx_t *idx, int tid, int beg, int end, hts_readrec_func *readrec);
+hts_itr_t *hts_itr_query(const hts_idx_t *idx, int tid, int beg, int stop, hts_readrec_func readrec);
 void hts_itr_destroy(hts_itr_t *iter);
 
 int hts_itr_next(BGZF *fp, hts_itr_t *iter, void *r, void *data);
@@ -272,9 +272,15 @@ typedef struct {
 
 int tbx_index_build(const char *fn, int min_shift, const tbx_conf_t *conf);
 tbx_t *tbx_index_load(const char *fn);
+tbx_t *tbx_index_load2(const char *fn, const char *fnidx);
+
 const char **tbx_seqnames(tbx_t *tbx, int *n);  // free the array but not the values
 void tbx_destroy(tbx_t *tbx);
 
+int tbx_readrec(BGZF *fp, void *tbxv, void *sv, int *tid, int *beg, int *end);
+#define tbx_itr_queryx(idx, tid, beg, end) hts_itr_query(idx, (tid), (beg), (stop), tbx_readrec)
+
+#define tbx_itr_queryi(tbx, tid, beg, end) hts_itr_query((tbx)->idx, (tid), (beg), (stop), tbx_readrec)
 
 hts_itr_t * tbx_itr_querys(tbx_t *tbx, char *);
 

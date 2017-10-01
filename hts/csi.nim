@@ -28,7 +28,6 @@ proc new_csi*(seq_col: int, start_col: int, end_col: int, one_based: bool): CSI 
   new(c, finalize_csi)
   var tbx: tbx_t
   tbx.idx = hts_idx_init(0, HTS_FMT_CSI, 0, 14, 5)
-  # NOTE: added back idx directly onto c because it gets lost from tbx.idx
   if tbx.idx == nil:
     stderr.write_line("[hts-nim] error creating index in new_csi")
     quit(1)
