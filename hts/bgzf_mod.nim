@@ -1,5 +1,6 @@
 import "hts_concat"
 import strutils
+import os
 
 type
   BGZ* = ref object of RootObj
@@ -11,13 +12,14 @@ type
     path: string
     last_start: int
 
+proc close*(b: BGZ): int =
+  if b.cptr != nil:
+    return int(bgzf_close(b.cptr))
+
 proc open*(b: var BGZ, path: string, mode: string) =
   if b == nil:
     b = BGZ()
   b.cptr = bgzf_open(cstring(path), cstring(mode))
-
-proc close*(b: BGZ): int =
-  return int(bgzf_close(b.cptr))
 
 proc write*(b: BGZ, line: string): int64 {.inline.} =
   bgzf_write(b.cptr, cstring(line), csize(line.len))
@@ -42,11 +44,43 @@ proc tell*(b: BGZ): uint64 {.inline.} =
   return uint64(bgzf_tell(b.cptr))
 
 proc wopen_bgzi*(path: string, seq_col: int, start_col: int, end_col: int, zero_based: bool, compression_level:int=1): BGZI =
-  var b: BGZ
+  var b : BGZ
   b.open(path, "w" & $compression_level)
   var bgzi = BGZI(bgz:b, csi: new_csi(seq_col, start_col, end_col, zero_based), path:path)
   bgzi.last_start = -100000
   return bgzi
+
+proc ropen_bgzi*(path: string): BGZI =
+  var b: BGZ
+  b.open(path, "r")
+  var c: CSI
+  if not c.open(path):
+    stderr.write_line("[hts-nim] error opening csi file for:", path)
+    quit(1)
+  return BGZI(bgz: b, csi:c, path:path)
+
+type
+  interval = tuple[chrom: string, start: int, stop: int, line: string]
+
+iterator query*(bi: BGZI, chrom: string, start:int, stop:int): string =
+  var tid = -1
+  var fn: hts_readrec_func = tbx_readrec
+  for i, cchrom in bi.csi.chroms:
+    if chrom == cchrom:
+      tid = i
+      break
+  if tid == -1:
+    stderr.write_line("[hts-nim] no intervals for ", chrom, " found in ", bi.path)
+  var itr = hts_itr_query(bi.csi.tbx.idx, cint(tid), cint(start), cint(stop), fn)
+
+  var kstr = kstring_t(s:nil, m:0, l:0)
+
+  while hts_itr_next(bi.bgz.cptr, itr, kstr.addr, bi.csi.tbx.addr) > 0:
+    yield $kstr.s
+  hts_itr_destroy(itr)
+  assert kstr.l >= 0
+  free(kstr.s)
+  assert fn.addr != nil
 
 proc write_interval*(b: BGZI, line: string, chrom: string, start: int, stop: int): int =
   if b.last_start < 0:
@@ -71,5 +105,4 @@ proc close*(b: BGZI): int =
    if b.bgz.close() < 0:
      stderr.write_line("[hts-nim] error closing bgzf")
      quit(1)
- 
    b.csi.save(b.path)

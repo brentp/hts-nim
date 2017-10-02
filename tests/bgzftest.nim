@@ -1,4 +1,5 @@
 import unittest, hts as hts
+import os
 
 suite "bgzf-suite":
   test "test-write":
@@ -32,23 +33,35 @@ suite "bgzf-suite":
     check b.close() == 0
 
   test "write-with-index":
-
     var bx = wopen_bgzi("ti.txt.gz", 1, 2, 3, true)
     check bx.write_interval("aaa\t4\t10", "aaa", 4, 10) > 0
+    check bx.write_interval("aaa\t40\t100", "aaa", 40, 100) > 0
     check bx.write_interval("bbbbb\t2\t20", "bbbbb", 2, 20) > 0
     check bx.write_interval("c\t2\t20", "c", 2, 20) > 0
     check bx.close() == 0
 
   test "read-new-index":
-    var csi: CSI
-    check open(csi, "ti.txt.gz")
+    var c: CSI
+    check open(c, "ti.txt.gz")
 
-    check csi.chroms[0] == "aaa"
-    check csi.chroms[1] == "bbbbb"
-    check csi.chroms[2] == "c"
-    check len(csi.chroms) == 3
+    check c.chroms[0] == "aaa"
+    check c.chroms[1] == "bbbbb"
+    check c.chroms[2] == "c"
+    check len(c.chroms) == 3
 
-    check csi.cnf.sc == 1
-    check csi.cnf.bc == 2
-    check csi.cnf.ec == 3
-    check csi.cnf.metachar == 35
+    var xc = c.tbx.conf
+    check xc.sc == 1
+    check xc.bc == 2
+    check xc.ec == 3
+    check xc.metachar == 35
+
+    var t = c
+
+  test "csi-iterator":
+    var rx = ropen_bgzi("ti.txt.gz")
+
+    var found = 0
+    for reg in rx.query("aaa", 1, 5):
+      found += 1
+      check reg == "aaa\t4\t10"
+    check found == 1
