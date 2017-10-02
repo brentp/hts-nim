@@ -308,7 +308,7 @@ proc hts_idx_get_n_no_coor*(idx: ptr hts_idx_t): uint64 {.cdecl,
 proc hts_parse_reg*(s: cstring; beg: ptr cint; `end`: ptr cint): cstring {.cdecl,
     importc: "hts_parse_reg", dynlib: libname.}
 proc hts_itr_query*(idx: ptr hts_idx_t; tid: cint; beg: cint; stop: cint;
-                   readrec: ptr hts_readrec_func): ptr hts_itr_t {.cdecl,
+                   readrec: hts_readrec_func): ptr hts_itr_t {.cdecl,
     importc: "hts_itr_query", dynlib: libname.}
 proc hts_itr_destroy*(iter: ptr hts_itr_t) {.cdecl, importc: "hts_itr_destroy",
     dynlib: libname.}
