@@ -4,6 +4,7 @@ suite "flag hts-suite":
   test "test hts":
     var b: Bam
     open(b, "tests/HG02002.bam")
+    var i: int
     for rec in b:
       for cig in rec.cigar:
         discard cig.op
@@ -17,6 +18,10 @@ suite "flag hts-suite":
 
       discard rec.isize
       discard rec.qual
+      var s = ""
+      if i == 0:
+        check rec.sequence(s) == "AGGACTTCAGTACTATGTTGAATAGGAGTAATGAGAGGGGGCATTCTTGTCTTCTGCCAGTTTTCAAGGGGAATGCTTCCAGCTTTTGCCCATTCAGTATG"
+        i += 1
     check b.hdr.targets[0].name == "1"
     check b.hdr.targets[0].length == 249250621
     check len(b.hdr.targets) == b.hdr.hdr.n_targets

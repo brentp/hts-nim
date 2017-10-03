@@ -349,9 +349,6 @@ void bam_destroy1(bam1_t *b);
 #define bam_is_mrev(b) (((b)->core.flag&BAM_FMREVERSE) != 0)
 #define bam_get_qname(b) ((char*)(b)->data)
 
-uint8_t *bam_get_seq(bam1_t *b);
-
-uint8_t bam_seqi(uint8_t *c, int i);
 
 uint8_t *bam_get_qual(bam1_t *b);
 
