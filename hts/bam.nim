@@ -39,11 +39,9 @@ proc sequence*(r: Record, s: var string): string =
   if len(s) != r.b.core.l_qseq:
     s.set_len(r.b.core.l_qseq)
   var bseq = bam_get_seq(r.b)
-  #var v = safe(cast[CPtr[uint8]](bseq), len(s))
   for i in 0..<int(r.b.core.l_qseq):
       s[i] = "=ACMGRSVTWYHKDBN"[uint8(bseq[i shr 1]) shr uint8((not (i) and 1) shl 2) and uint8(0xF)]
   return s
-
 
 proc targets*(h: Header): seq[Target] =
   var n = int(h.hdr.n_targets)

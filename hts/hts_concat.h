@@ -284,6 +284,8 @@ int tbx_readrec(BGZF *fp, void *tbxv, void *sv, int *tid, int *beg, int *end);
 
 hts_itr_t * tbx_itr_querys(tbx_t *tbx, char *);
 
+
+
 int tbx_itr_next(htsFile *fp, tbx_t *tbx, hts_itr_t *iter, void *data);
 
 //#####################################

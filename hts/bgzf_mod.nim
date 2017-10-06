@@ -62,7 +62,13 @@ proc ropen_bgzi*(path: string): BGZI =
 type
   interval = tuple[chrom: string, start: int, stop: int, line: string]
 
-iterator query*(bi: BGZI, chrom: string, start:int, stop:int): string =
+proc fastSubStr(dest: var string; src: cstring, a, b: int) {.inline.} =
+  # once the stdlib uses TR macros, these things should not be necessary
+  template `+!`(src, a): expr = cast[pointer](cast[int](src) + a)
+  setLen(dest, b-a)
+  copyMem(addr dest[0], src+!a, b-a)
+
+iterator query*(bi: BGZI, chrom: string, start:int, stop:int): string {.inline.} =
   var tid = -1
   var fn: hts_readrec_func = tbx_readrec
   for i, cchrom in bi.csi.chroms:
@@ -71,12 +77,16 @@ iterator query*(bi: BGZI, chrom: string, start:int, stop:int): string =
       break
   if tid == -1:
     stderr.write_line("[hts-nim] no intervals for ", chrom, " found in ", bi.path)
+  # TODO: make itr an attribute on BGZI
   var itr = hts_itr_query(bi.csi.tbx.idx, cint(tid), cint(start), cint(stop), fn)
 
   var kstr = kstring_t(s:nil, m:0, l:0)
+  var outstr = newStringOfCap(10000)
+  shallow(outstr)
 
   while hts_itr_next(bi.bgz.cptr, itr, kstr.addr, bi.csi.tbx.addr) > 0:
-    yield $kstr.s
+    fastSubStr(outstr, kstr.s, 0, int(kstr.l))
+    yield outstr
   hts_itr_destroy(itr)
   assert kstr.l >= 0
   free(kstr.s)
