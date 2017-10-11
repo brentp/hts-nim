@@ -92,7 +92,7 @@ iterator query*(bi: BGZI, chrom: string, start:int, stop:int): string {.inline.}
   free(kstr.s)
   assert fn.addr != nil
 
-proc write_interval*(b: BGZI, line: string, chrom: string, start: int, stop: int): int =
+proc write_interval*(b: BGZI, line: string, chrom: string, start: int, stop: int): int {.inline.} =
   if b.last_start < 0:
     b.csi.chroms.add(chrom)
   if chrom != b.csi.chroms[len(b.csi.chroms)-1]:
