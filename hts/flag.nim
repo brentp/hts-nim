@@ -48,3 +48,6 @@ proc dup*(f: Flag): bool =
 
 proc supplementary*(f: Flag): bool =
   return f.has_flag(BAM_FSUPPLEMENTARY)
+
+proc `$`*(f:Flag): string =
+  return $(bam_flag2str(cint(f)))

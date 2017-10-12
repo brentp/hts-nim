@@ -15,3 +15,5 @@ suite "flag test-suite":
     check Flag(512).qcfail
     check Flag(1024).dup
     check Flag(2048).supplementary
+
+    check $Flag(1 or 256) == "PAIRED,SECONDARY"

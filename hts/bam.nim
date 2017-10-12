@@ -23,8 +23,16 @@ type
     length*: uint32
     tid*: int
 
+  IndexStats* = tuple[mapped: uint64, unmapped: uint64]
+
 proc finalize_header(h: Header) =
   bam_hdr_destroy(h.hdr)
+
+
+proc stats*(idx: ptr hts_idx_t, tid: int): IndexStats =
+  var v: IndexStats = (0'u64, 0'u64)
+  discard hts_idx_get_stat(idx, cint(tid), v.mapped.addr, v.unmapped.addr)
+  return v
 
 proc copy*(h: Header): Header =
   var hdr: Header
