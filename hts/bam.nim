@@ -126,7 +126,7 @@ iterator queryi*(bam: Bam, tid:int, start:int, stop:int): Record =
   ## overwritten on each iteration so use `Record.copy` to retain.
   var qiter = sam_itr_queryi(bam.idx, cint(tid), cint(start), cint(stop));
   var slen = sam_itr_next(bam.hts, qiter, bam.rec.b)
-  while slen > 0:
+  while slen >= 0:
     yield bam.rec
     slen = sam_itr_next(bam.hts, qiter, bam.rec.b)
   hts_itr_destroy(qiter)
