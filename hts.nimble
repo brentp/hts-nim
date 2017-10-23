@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.1.3"
+version       = "0.1.4"
 author        = "Brent Pedersen"
 description   = "hts (bam/sam) for nim"
 license       = "MIT"
@@ -12,7 +12,7 @@ requires "nim >= 0.17.2" #, "nim-lang/c2nim>=0.9.13"
 skipDirs = @["tests"]
 
 task test, "run the tests":
-  exec "nim c -r tests/all"
+  exec "nim c --lineDir:on --debuginfo -r tests/all"
 
 before test:
   exec "c2nim hts/hts_concat.h"

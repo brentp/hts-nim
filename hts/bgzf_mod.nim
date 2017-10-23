@@ -20,6 +20,8 @@ proc open*(b: var BGZ, path: string, mode: string) =
   if b == nil:
     b = BGZ()
   b.cptr = bgzf_open(cstring(path), cstring(mode))
+  if b.cptr == nil:
+    stderr.write_line("[hts-nim] error opening file:", path)
 
 proc write*(b: BGZ, line: string): int64 {.inline.} =
   bgzf_write(b.cptr, cstring(line), csize(line.len))

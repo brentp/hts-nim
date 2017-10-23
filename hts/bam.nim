@@ -104,33 +104,42 @@ iterator querys*(bam: Bam, region: string): Record =
   ## query iterates over the given region. A single element is used and
   ## overwritten on each iteration so use `Record.copy` to retain.
   var qiter = sam_itr_querys(bam.idx, bam.hdr.hdr, region);
-  var slen = sam_itr_next(bam.hts, qiter, bam.rec.b)
-  while slen > 0:
-    yield bam.rec
-    slen = sam_itr_next(bam.hts, qiter, bam.rec.b)
-  hts_itr_destroy(qiter)
+  if qiter != nil:
+    var slen = sam_itr_next(bam.hts, qiter, bam.rec.b)
+    while slen > 0:
+      yield bam.rec
+      slen = sam_itr_next(bam.hts, qiter, bam.rec.b)
+    hts_itr_destroy(qiter)
+    if slen < -1:
+      stderr.write_line("[hts-nim] error reading region:", region)
 
 iterator query*(bam: Bam, chrom:string, start:int, stop:int): Record =
   ## query iterates over the given region. A single element is used and
   ## overwritten on each iteration so use `Record.copy` to retain.
   var region = format("$1:$2-$3", chrom, intToStr(start+1), intToStr(stop))
   var qiter = sam_itr_querys(bam.idx, bam.hdr.hdr, region);
-  var slen = sam_itr_next(bam.hts, qiter, bam.rec.b)
-  while slen > 0:
-    yield bam.rec
-    slen = sam_itr_next(bam.hts, qiter, bam.rec.b)
-  hts_itr_destroy(qiter)
+  if qiter != nil:
+    var slen = sam_itr_next(bam.hts, qiter, bam.rec.b)
+    while slen > 0:
+      yield bam.rec
+      slen = sam_itr_next(bam.hts, qiter, bam.rec.b)
+    hts_itr_destroy(qiter)
+    if slen < -1:
+      stderr.write_line("[hts-nim] error in bam.query")
 
 iterator queryi*(bam: Bam, tid:int, start:int, stop:int): Record =
   ## query iterates over the given region. A single element is used and
   ## overwritten on each iteration so use `Record.copy` to retain.
   var qiter = sam_itr_queryi(bam.idx, cint(tid), cint(start), cint(stop));
-  var slen = sam_itr_next(bam.hts, qiter, bam.rec.b)
-  while slen >= 0:
-    yield bam.rec
-    slen = sam_itr_next(bam.hts, qiter, bam.rec.b)
-  hts_itr_destroy(qiter)
-
+  if qiter != nil:
+    var slen = sam_itr_next(bam.hts, qiter, bam.rec.b)
+    while slen >= 0:
+      yield bam.rec
+      slen = sam_itr_next(bam.hts, qiter, bam.rec.b)
+    hts_itr_destroy(qiter)
+    if slen < -1:
+      stderr.write_line("[hts-nim] error in bam.queri")
+  
 proc `$`*(r: Record): string =
     return format("Record($1:$2-$3):$4", [r.chrom, intToStr(r.start), intToStr(r.stop), r.qname])
 
