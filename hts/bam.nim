@@ -28,7 +28,6 @@ type
 proc finalize_header(h: Header) =
   bam_hdr_destroy(h.hdr)
 
-
 proc stats*(idx: ptr hts_idx_t, tid: int): IndexStats =
   var v: IndexStats = (0'u64, 0'u64)
   discard hts_idx_get_stat(idx, cint(tid), v.mapped.addr, v.unmapped.addr)
@@ -50,6 +49,9 @@ proc sequence*(r: Record, s: var string): string =
   for i in 0..<int(r.b.core.l_qseq):
       s[i] = "=ACMGRSVTWYHKDBN"[uint8(bseq[i shr 1]) shr uint8((not (i) and 1) shl 2) and uint8(0xF)]
   return s
+
+proc base_qualities*(r: Record): ptr uint8 {.inline.} =
+  return bam_get_qual(r.b)
 
 proc targets*(h: Header): seq[Target] =
   var n = int(h.hdr.n_targets)
