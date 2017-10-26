@@ -33,4 +33,5 @@ proc get*(fai: Fai, region: string, start:int=0, stop:int=0): string =
     quit(1)
   if int(rlen) == -1:
     stderr.write_line("[hts-nim] error reading sequence ", region)
-  return $res
+  result = $res
+  free(res)
