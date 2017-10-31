@@ -7,3 +7,4 @@ include hts/bam
 include hts/csi
 include hts/bgzf_mod
 include hts/fai
+include hts/aux
