@@ -3,25 +3,25 @@ import strutils
 # https://forum.nim-lang.org/t/567 (by Jehan)
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 type CArray{.unchecked.}[T] = array[0..0, T]
-type CPtr[T] = ptr CArray[T]
+type CPtr*[T] = ptr CArray[T]
 
-type SafeCPtr[T] =
+type SafeCPtr*[T] =
   object
     size: int
     mem: CPtr[T]
 
-proc safe[T](p: CPtr[T], k: int): SafeCPtr[T] =
+proc safe*[T](p: CPtr[T], k: int): SafeCPtr[T] =
     SafeCPtr[T](mem: p, size: k)
 
 proc safe[T](a: var openarray[T], k: int): SafeCPtr[T] =
   safe(cast[CPtr[T]](addr(a)), k)
 
-proc `[]`[T](p: SafeCPtr[T], k: int): T =
+proc `[]`*[T](p: SafeCPtr[T], k: int): T =
   when not defined(release):
     assert k < p.size
   result = p.mem[k]
 
-proc `[]=`[T](p: SafeCPtr[T], k: int, val: T) =
+proc `[]=`*[T](p: SafeCPtr[T], k: int, val: T) =
   when not defined(release):
     assert k < p.size
   p.mem[k] = val

@@ -5,6 +5,7 @@ suite "flag hts-suite":
     var b: Bam
     open(b, "tests/HG02002.bam")
     var i: int
+    var bqs = new_seq[uint8]()
     for rec in b:
       for cig in rec.cigar:
         discard cig.op
@@ -15,6 +16,13 @@ suite "flag hts-suite":
 
       if rec.cigar.len() > 0:
         check uint32(rec.copy().cigar[0]) == uint32(rec.cigar[0])
+      check rec.base_qualities(bqs) != nil
+      for v in bqs:
+        check v > 0'u8 and v < 100'u8
+      if i == 0:
+        for k, v in bqs:
+          bqs[k] = 33'u8 + v
+        check cast[string](bqs) == "3NOFEHFHHIHEGIFHIHGHGKHFKKIKGEJHJILHLJKKKJJIIKJGIIIIIKKKKKJKGGFFJIMKKGJGEGONOCIJIIJJCCCJJHJIHCHIGFBED"
 
       discard rec.isize
       discard rec.qual
@@ -28,3 +36,4 @@ suite "flag hts-suite":
 
     check b.set_fields(SamField.SAM_POS, SamField.SAM_RNEXT) == 0
     check b.set_option(FormatOption.CRAM_OPT_DECODE_MD, 0) == 0
+

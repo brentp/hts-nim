@@ -352,8 +352,6 @@ void bam_destroy1(bam1_t *b);
 #define bam_get_qname(b) ((char*)(b)->data)
 
 
-uint8_t *bam_get_qual(bam1_t *b);
-
 uint8_t *bam_get_aux(bam1_t *b);
 int bam_get_l_aux(bam1_t *b);
 uint8_t *bam_aux_get(const bam1_t *b, const char tag[2]);

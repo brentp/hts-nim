@@ -427,8 +427,6 @@ template bam_is_mrev*(b: untyped): untyped =
 template bam_get_qname*(b: untyped): untyped =
   (cast[cstring]((b).data))
 
-proc bam_get_qual*(b: ptr bam1_t): ptr uint8 {.cdecl, importc: "bam_get_qual",
-    dynlib: libname.}
 proc bam_get_aux*(b: ptr bam1_t): ptr uint8 {.cdecl, importc: "bam_get_aux",
                                         dynlib: libname.}
 proc bam_get_l_aux*(b: ptr bam1_t): cint {.cdecl, importc: "bam_get_l_aux",
@@ -603,7 +601,7 @@ proc faidx_has_seq*(fai: ptr faidx_t; seq: cstring): cint {.cdecl,
 ## 
 
 type
-  INNER_C_UNION_2634836222* {.bycopy.} = object {.union.}
+  INNER_C_UNION_1073661824* {.bycopy.} = object {.union.}
     i*: int32                  ##  integer value
     f*: cfloat                 ##  float value
   
@@ -633,7 +631,7 @@ type
     key*: cint                 ##  key: numeric tag id, the corresponding string is bcf_hdr_t::id[BCF_DT_ID][$key].key
     `type`*: cint
     len*: cint                 ##  type: one of BCF_BT_* types; len: vector length, 1 for scalars
-    v1*: INNER_C_UNION_2634836222 ##  only set if $len==1; for easier access
+    v1*: INNER_C_UNION_1073661824 ##  only set if $len==1; for easier access
     vptr*: ptr uint8            ##  pointer to data array in bcf1_t->shared.s, excluding the size+type and tag id bytes
     vptr_len*: uint32          ##  length of the vptr block or, when set, of the vptr_mod block, excluding offset
     vptr_off* {.bitsize: 31.}: uint32 ##  vptr offset, i.e., the size of the INFO key plus size+type bytes

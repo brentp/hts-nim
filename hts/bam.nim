@@ -1,5 +1,6 @@
 import strutils
 
+
 type
   Header* = ref object of RootObj
     ## Header wraps the bam header info.
@@ -50,8 +51,17 @@ proc sequence*(r: Record, s: var string): string =
       s[i] = "=ACMGRSVTWYHKDBN"[uint8(bseq[i shr 1]) shr uint8((not (i) and 1) shl 2) and uint8(0xF)]
   return s
 
-proc base_qualities*(r: Record): ptr uint8 {.inline.} =
-  return bam_get_qual(r.b)
+template bam_get_qual(b: untyped): untyped =
+  cast[CPtr[uint8]](cast[uint]((b).data) + uint(uint((b).core.n_cigar shl 2) + uint((b).core.l_qname) + uint((b.core.l_qseq + 1) shr 1)))
+
+proc base_qualities*(r: Record, q: var seq[uint8]): seq[uint8] =
+  if len(q) != r.b.core.l_qseq:
+    q.set_len(r.b.core.l_qseq)
+
+  var bqual = bam_get_qual(r.b)
+  for i in 0..<int(r.b.core.l_qseq):
+    q[i] = bqual[i]
+  return q
 
 proc targets*(h: Header): seq[Target] =
   var n = int(h.hdr.n_targets)
