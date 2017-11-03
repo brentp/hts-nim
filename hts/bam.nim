@@ -49,7 +49,7 @@ proc sequence*(r: Record, s: var string): string =
   var bseq = bam_get_seq(r.b)
   for i in 0..<int(r.b.core.l_qseq):
       s[i] = "=ACMGRSVTWYHKDBN"[uint8(bseq[i shr 1]) shr uint8((not (i) and 1) shl 2) and uint8(0xF)]
-  return s
+  result = s
 
 template bam_get_qual(b: untyped): untyped =
   cast[CPtr[uint8]](cast[uint]((b).data) + uint(uint((b).core.n_cigar shl 2) + uint((b).core.l_qname) + uint((b.core.l_qseq + 1) shr 1)))

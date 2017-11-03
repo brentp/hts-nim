@@ -15,31 +15,39 @@ Here is an example of the syntax in this library:
 import hts
 
 # open a bam and look for the index.
-var bam = open_hts("test/HG02002.bam", index=true)
+var b:Bam
+assert open(b, "test/HG02002.bam", index=true)
 
-for record in bam:
+for record in b:
   if record.qual > 10:
     echo record.chrom, record.start, record.stop
 
 # regional queries:
-for record in bam.query('6', 30816675, 32816675):
+for record in b.query('6', 30816675, 32816675):
   if record.flag.proper_pair and record.flag.reverse:
     # cigar is an iterable of operations:
     for op in record.cigar:
       # $op gives the string repr of the operation, e.g. '151M'
       echo $op, op.consumes.reference, op.consumes.query
 
+    # tags are pulled with `aux`
+    var mismatches = rec.aux("NM")
+    if mismatches != nil and mismatches.integer() < 3:
+      var rg = rec.aux("RG")
+      echo rg.tostring()
+
 # cram requires an fasta to decode:
-var cram = open_hts("/tmp/t.cram", fai="/data/human/g1k_v37_decoy.fa")
+var cram:Bam
+open_hts(cram, "/tmp/t.cram", fai="/data/human/g1k_v37_decoy.fa")
 for record in cram:
+  # now record is same as from bam above
   echo record.qname, record.isize
 ```
 
 ## bgzip with csi
 
-A nice thing that is facilitate through this library is creating a .csi index while writing sorted
-intervals to a file.
-This can be done as:
+A nice thing that is facilitated with this library is creating a .csi index while writing sorted
+intervals to a file.  This can be done as:
 
 ```nim
 import hts
