@@ -4,7 +4,7 @@
 #  if defined(windows)
 #    define libname "libhts.dll"
 #  elif defined(macosx)
-#    define libname "libhhts.dylib"
+#    define libname "libhts.dylib"
 #  else
 #    define libname "libhts.so"
 #  endif

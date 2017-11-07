@@ -4,7 +4,7 @@ when defined(windows):
     libname* = "libhts.dll"
 elif defined(macosx):
   const
-    libname* = "libhhts.dylib"
+    libname* = "libhts.dylib"
 else:
   const
     libname* = "libhts.so"
