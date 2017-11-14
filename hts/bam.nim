@@ -199,7 +199,7 @@ proc open*(bam: var Bam, path: cstring, threads: int=0, fai: cstring=nil, index:
   var hdr: Header
   new(hdr, finalize_header)
   hdr.hdr = sam_hdr_read(hts)
-      
+
   var b   = bam_init1()
   # the record is attached to the bam, but it takes care of it's own finalizer.
   var rec: Record
@@ -217,6 +217,7 @@ proc open*(bam: var Bam, path: cstring, threads: int=0, fai: cstring=nil, index:
         bam.idx = idx
     else:
       stderr.write_line "index not found for:", path
+      quit(2)
 
 proc hts_set_opt*(fp: ptr htsFile; opt: FormatOption): cint {.varargs, cdecl,
     importc: "hts_set_opt", dynlib: libname.}
