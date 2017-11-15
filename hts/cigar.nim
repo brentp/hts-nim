@@ -37,7 +37,7 @@ type
 
   Consume* = distinct uint32
 
-type CigarOp* = enum
+type CigarOp* {.pure.} = enum
   match, insert, deletion, ref_skip, soft_clip, hard_clip, pad, equal, diff, back
 
 proc newCigar(p: ptr uint32, n: uint32): Cigar =
@@ -96,7 +96,7 @@ type
   Range* = tuple[start: int, stop: int]
 
 proc ref_coverage*(c: Cigar, ipos: int = 0): seq[Range] =
-  if c.len == 1 and c[0].op == CigarOp(match):
+  if c.len == 1 and c[0].op == CigarOp.match:
     return @[(ipos, ipos + c[0].len)]
 
   var pos = ipos

@@ -10,6 +10,7 @@ license       = "MIT"
 requires "nim >= 0.17.2" #, "nim-lang/c2nim>=0.9.13"
 
 skipDirs = @["tests"]
+skipFiles = @["teloage.nim"]
 
 task test, "run the tests":
   exec "nim c --lineDir:on --debuginfo -r tests/all"
