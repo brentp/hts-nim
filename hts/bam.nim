@@ -88,11 +88,11 @@ proc mate_chrom*(r: Record): string =
     return ""
   return $r.hdr.hdr.target_name[tid]
 
-proc start*(r: Record): int =
+proc start*(r: Record): int {.inline.} =
   ## `start` returns 0-based start position.
   return r.b.core.pos
 
-proc stop*(r: Record): int =
+proc stop*(r: Record): int {.inline.} =
   ## `stop` returns end position of the read.
   return bam_endpos(r.b)
 
