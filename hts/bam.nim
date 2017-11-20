@@ -48,7 +48,7 @@ proc sequence*(r: Record, s: var string): string =
     s.set_len(r.b.core.l_qseq)
   var bseq = bam_get_seq(r.b)
   for i in 0..<int(r.b.core.l_qseq):
-      s[i] = "=ACMGRSVTWYHKDBN"[uint8(bseq[i shr 1]) shr uint8((not (i) and 1) shl 2) and uint8(0xF)]
+      s[i] = "=ACMGRSVTWYHKDBN"[int(uint8(bseq[i shr 1]) shr uint8((not (i) and 1) shl 2) and uint8(0xF))]
   result = s
 
 template bam_get_qual(b: untyped): untyped =

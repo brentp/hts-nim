@@ -59,7 +59,7 @@ template bam_get_cigar*(b: untyped): untyped =
   (cast[ptr uint32](((cast[int]((b).data)) + cast[int]((b).core.l_qname))))
 
 proc bam_cigar_type(o: CigarOp): uint8 =
-  return BAM_CIGAR_TYPE shr (uint32(o) shl 1) and 3
+  return uint8(BAM_CIGAR_TYPE shr (uint32(o) shl 1) and 3)
 
 proc op*(o: Op): CigarOp =
   ## `op` gives the operation of the cigar.
