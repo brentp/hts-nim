@@ -591,21 +591,47 @@ typedef struct {
 bcf1_t *bcf_init(void);
 
 
+#define bcf_hdr_nsamples(hdr) (hdr)->n[BCF_DT_SAMPLE]
 
-bcf_hdr_t *bcf_hdr_read(htsFile *fp);
-int bcf_hdr_set_samples(bcf_hdr_t *hdr, const char *samples, int is_file);
+int bcf_hdr_id2int(const bcf_hdr_t *hdr, int type, const char *id);
+
+/*
+#define bcf_hdr_int2id(hdr,type,int_id) ((hdr)->id[type][int_id].key)
+
+static inline int bcf_hdr_name2id(const bcf_hdr_t *hdr, const char *id) { return bcf_hdr_id2int(hdr, BCF_DT_CTG, id); }
+static inline const char *bcf_hdr_id2name(const bcf_hdr_t *hdr, int rid) { return hdr->id[BCF_DT_CTG][rid].key; }
+static inline const char *bcf_seqname(const bcf_hdr_t *hdr, bcf1_t *rec) { return hdr->id[BCF_DT_CTG][rec->rid].key; }
+*/
+
+#define bcf_float_missing 0x7F800001
+
+static inline int bcf_float_is_missing(float f) {
+     union { uint32_t i; float f; } u;
+     u.f = f;
+     return u.i==bcf_float_missing ? 1 : 0;
+}
+
 
 int bcf_read(htsFile *fp, const bcf_hdr_t *h, bcf1_t *v);
 
-static inline const char *bcf_hdr_id2name(const bcf_hdr_t *hdr, int rid);
-
-int bcf_unpack(bcf1_t *b, int which);
-
+//static inline const char *bcf_hdr_id2name(const bcf_hdr_t *hdr, int rid);
 #define BCF_DT_ID       0 // dictionary type
 #define BCF_DT_CTG      1
 #define BCF_DT_SAMPLE   2
 
 
+#define BCF_UN_STR  1       // up to ALT inclusive
+#define BCF_UN_FLT  2       // up to FILTER
+#define BCF_UN_INFO 4       // up to INFO
+#define BCF_UN_SHR  (BCF_UN_STR|BCF_UN_FLT|BCF_UN_INFO) // all shared       information
+#define BCF_UN_FMT  8                           // unpack format and        each sample
+#define BCF_UN_IND  BCF_UN_FMT                  // a synonymo of            BCF_UN_FMT
+#define BCF_UN_ALL  (BCF_UN_SHR|BCF_UN_FMT)
+
+int bcf_unpack(bcf1_t *b, int which);
+bcf_hdr_t *bcf_hdr_read(htsFile *fp);
+
+int bcf_hdr_set_samples(bcf_hdr_t *hdr, const char *samples, int is_file);
 int bcf_get_genotypes(const bcf_hdr_t *hdr, bcf1_t *line, int **dst, int *ndst);
 int bcf_get_format_values(const bcf_hdr_t *hdr, bcf1_t *line, const char *tag, void **dst, int *ndst, int type);
 //typedef htsFile vcfFile;

@@ -702,21 +702,49 @@ type
   
 
 proc bcf_init*(): ptr bcf1_t {.cdecl, importc: "bcf_init", dynlib: libname.}
-proc bcf_hdr_read*(fp: ptr htsFile): ptr bcf_hdr_t {.cdecl, importc: "bcf_hdr_read",
-    dynlib: libname.}
-proc bcf_hdr_set_samples*(hdr: ptr bcf_hdr_t; samples: cstring; is_file: cint): cint {.
-    cdecl, importc: "bcf_hdr_set_samples", dynlib: libname.}
+template bcf_hdr_nsamples*(hdr: untyped): untyped =
+  (hdr).n[BCF_DT_SAMPLE]
+
+proc bcf_hdr_id2int*(hdr: ptr bcf_hdr_t; `type`: cint; id: cstring): cint {.cdecl,
+    importc: "bcf_hdr_id2int", dynlib: libname.}
+## 
+## #define bcf_hdr_int2id(hdr,type,int_id) ((hdr)->id[type][int_id].key)
+## 
+## static inline int bcf_hdr_name2id(const bcf_hdr_t *hdr, const char *id) { return bcf_hdr_id2int(hdr, BCF_DT_CTG, id); }
+## static inline const char *bcf_hdr_id2name(const bcf_hdr_t *hdr, int rid) { return hdr->id[BCF_DT_CTG][rid].key; }
+## static inline const char *bcf_seqname(const bcf_hdr_t *hdr, bcf1_t *rec) { return hdr->id[BCF_DT_CTG][rec->rid].key; }
+## 
+
+const
+  bcf_float_missing* = 0x7F800001
+
+proc bcf_float_is_missing*(f: cfloat): cint {.inline, cdecl.} =
+  var u: tuple[i: uint32, f: cfloat]
+  u.f = f
+  return if u.i == bcf_float_missing: 1 else: 0
+
 proc bcf_read*(fp: ptr htsFile; h: ptr bcf_hdr_t; v: ptr bcf1_t): cint {.cdecl,
     importc: "bcf_read", dynlib: libname.}
-proc bcf_hdr_id2name*(hdr: ptr bcf_hdr_t; rid: cint): cstring {.inline, cdecl,
-    importc: "bcf_hdr_id2name", dynlib: libname.}
-proc bcf_unpack*(b: ptr bcf1_t; which: cint): cint {.cdecl, importc: "bcf_unpack",
-    dynlib: libname.}
+## static inline const char *bcf_hdr_id2name(const bcf_hdr_t *hdr, int rid);
+
 const
   BCF_DT_ID* = 0
   BCF_DT_CTG* = 1
   BCF_DT_SAMPLE* = 2
+  BCF_UN_STR* = 1
+  BCF_UN_FLT* = 2
+  BCF_UN_INFO* = 4
+  BCF_UN_SHR* = (BCF_UN_STR or BCF_UN_FLT or BCF_UN_INFO) ##  all shared       information
+  BCF_UN_FMT* = 8
+  BCF_UN_IND* = BCF_UN_FMT
+  BCF_UN_ALL* = (BCF_UN_SHR or BCF_UN_FMT)
 
+proc bcf_unpack*(b: ptr bcf1_t; which: cint): cint {.cdecl, importc: "bcf_unpack",
+    dynlib: libname.}
+proc bcf_hdr_read*(fp: ptr htsFile): ptr bcf_hdr_t {.cdecl, importc: "bcf_hdr_read",
+    dynlib: libname.}
+proc bcf_hdr_set_samples*(hdr: ptr bcf_hdr_t; samples: cstring; is_file: cint): cint {.
+    cdecl, importc: "bcf_hdr_set_samples", dynlib: libname.}
 proc bcf_get_genotypes*(hdr: ptr bcf_hdr_t; line: ptr bcf1_t; dst: ptr ptr cint;
                        ndst: ptr cint): cint {.cdecl, importc: "bcf_get_genotypes",
     dynlib: libname.}
