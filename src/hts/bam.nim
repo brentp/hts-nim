@@ -1,5 +1,8 @@
+import hts/hts_concat
+include "./bam/enums"
 import strutils
-
+include "./bam/flag"
+include "./bam/cigar"
 
 type
   Header* = ref object of RootObj
@@ -244,6 +247,8 @@ iterator items*(bam: Bam): Record =
   while ret > 0:
     yield bam.rec
     ret = sam_read1(bam.hts, bam.hdr.hdr, bam.rec.b)
+
+include "./bam/auxtags"
 
 proc main() =
 

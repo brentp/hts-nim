@@ -1,4 +1,4 @@
-import unittest, hts
+import unittest, hts/bam as hts
 
 suite "flag hts-suite":
   test "test hts":

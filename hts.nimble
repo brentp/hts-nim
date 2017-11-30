@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.1.4"
+version       = "0.1.5"
 author        = "Brent Pedersen"
 description   = "hts (bam/sam) for nim"
 license       = "MIT"
@@ -8,6 +8,7 @@ license       = "MIT"
 # Dependencies
 
 requires "nim >= 0.17.2" #, "nim-lang/c2nim>=0.9.13"
+srcDir = "src"
 
 skipDirs = @["tests"]
 skipFiles = @["teloage.nim"]
@@ -16,7 +17,7 @@ task test, "run the tests":
   exec "nim c --lineDir:on --debuginfo -r tests/all"
 
 before test:
-  exec "c2nim hts/hts_concat.h"
+  exec "c2nim src/hts/hts_concat.h"
 
 task docs, "make docs":
-  exec "nim doc2 hts; mkdir -p docs; mv hts.html docs/index.html"
+  exec "nim doc2 src/hts; mkdir -p docs; mv hts.html docs/index.html"

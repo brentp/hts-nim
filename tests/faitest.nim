@@ -1,4 +1,4 @@
-import unittest, hts as hts
+import unittest, hts/fai
 
 suite "fai-suite":
   test "fai-read":

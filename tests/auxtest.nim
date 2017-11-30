@@ -1,4 +1,4 @@
-import unittest, hts
+import unittest, hts/bam
 
 suite "aux-test":
   test "test aux":

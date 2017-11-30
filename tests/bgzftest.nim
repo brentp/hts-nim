@@ -1,4 +1,5 @@
-import unittest, hts as hts
+import unittest, hts/bgzf, hts/hts_concat, hts/csi
+import hts/bgzf/bgzi
 import os
 
 suite "bgzf-suite":

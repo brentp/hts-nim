@@ -1,5 +1,5 @@
 import unittest
-import hts/flag
+import hts/bam/flag
 
 suite "flag test-suite":
   test "test flags":

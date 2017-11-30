@@ -1,4 +1,5 @@
-import unittest, hts as hts
+import unittest
+import "hts/bam" as hts
 
 suite "flag cigar-suite":
   test "test op":
