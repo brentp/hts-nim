@@ -94,24 +94,42 @@ iterator items*(v:VCF): Variant =
     stderr.write_line "hts-nim/vcf bcf_read error:" & $v.c.errcode
     quit(2)
 
-iterator at*(v:VCF, region: string): Variant =
+iterator query*(v:VCF, region: string): Variant =
   # TODO: index
+  #
+  var fn: hts_readrec_func # = bcf_readrec
+  var isVCF = false
   v.idx = hts_idx_load(v.fname, v.hts.format.format.cint)
+  if v.hts.format.format == htsExactFormat.vcf:
+    fn = tbx_readrec
+    echo "formatVCF"
+    isVCF = true
+  else:
+    fn = bcf_readrec
   if v.idx == nil:
     stderr.write_line("hts-nim no index found for " & v.fname)
     quit(2)
 
   var
-    itr = tbx_itr_querys(v.idx, region.cstring)
+    rstart: cint
+    rstop: cint
+    rtid: cint = 0 # TODO
+    rchrom:cstring = hts_parse_reg(region.cstring, rstart.addr, rstop.addr)
     slen: int
     ret: int
     s = kstring_t()
+    itr = hts_itr_query(v.idx, rtid, rstart, rstop, fn)
+
   while true:
-    slen = hts_itr_next(v.hts, v.idx, itr, s.addr)
+    if isVCF:
+      slen = hts_itr_next(v.hts.fp.bgzf, itr, s.addr, v.idx)
+      if slen < 0:
+        break
+      ret = vcf_parse(s.addr, v.header.hdr, v.c)
+      if ret > 0: break
+    else:
+      slen = hts_itr_next(v.hts.fp.bgzf, itr, v.c, v.idx)
     if slen < 0:
-      break
-    ret = vcf_parse(s.addr, v.hdr, v.c)
-    if ret > 0:
       break
 
     yield Variant(c:v.c, vcf:v)
@@ -119,7 +137,8 @@ iterator at*(v:VCF, region: string): Variant =
   free(s.s)
   hts_itr_destroy(itr)
   if ret > 0:
-    raise "hts-nim/vcf: error parsing "
+    stderr.write_line "hts-nim/vcf: error parsing "
+    quit(2)
 
 
 proc POS*(v:Variant): int {.inline.} =
@@ -174,9 +193,14 @@ when isMainModule:
 
   var v:VCF
   var tsamples = @["101976-101976", "100920-100920", "100231-100231", "100232-100232", "100919-100919"]
-  assert open(v, "tests/test.vcf", samples=tsamples)
+  assert open(v, "tests/test.vcf.gz", samples=tsamples)
 
   for rec in v:
     echo rec, " qual:", rec.QUAL, " filter:", rec.FILTER
 
   echo v.samples
+
+
+  echo "QUERY"
+  for rec in v.query("1:15600-18250"):
+    echo rec.CHROM, ":", $rec.POS
