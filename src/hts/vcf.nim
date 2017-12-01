@@ -85,16 +85,42 @@ iterator items*(v:VCF): Variant =
   var ret = 0
   while true:
     ret = bcf_read(v.hts, v.header.hdr, v.c)
-    if ret < 0:
+    if ret ==  -1:
       break
     #discard bcf_unpack(v.c, 1 or 2 or 4)
     discard bcf_unpack(v.c, BCF_UN_ALL)
     yield Variant(c:v.c, vcf:v)
-  # TODO: check ret
+  if v.c.errcode != 0:
+    stderr.write_line "hts-nim/vcf bcf_read error:" & $v.c.errcode
+    quit(2)
 
 iterator at*(v:VCF, region: string): Variant =
   # TODO: index
-  discard
+  v.idx = hts_idx_load(v.fname, v.hts.format.format.cint)
+  if v.idx == nil:
+    stderr.write_line("hts-nim no index found for " & v.fname)
+    quit(2)
+
+  var
+    itr = tbx_itr_querys(v.idx, region.cstring)
+    slen: int
+    ret: int
+    s = kstring_t()
+  while true:
+    slen = hts_itr_next(v.hts, v.idx, itr, s.addr)
+    if slen < 0:
+      break
+    ret = vcf_parse(s.addr, v.hdr, v.c)
+    if ret > 0:
+      break
+
+    yield Variant(c:v.c, vcf:v)
+
+  free(s.s)
+  hts_itr_destroy(itr)
+  if ret > 0:
+    raise "hts-nim/vcf: error parsing "
+
 
 proc POS*(v:Variant): int {.inline.} =
   ## return the 1-based position of the start of the variant
