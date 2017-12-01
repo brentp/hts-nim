@@ -10,7 +10,8 @@ type
     hts: ptr htsFile
     header*: Header
     c: ptr bcf1_t
-    idx: ptr hts_idx_t
+    bidx: ptr hts_idx_t
+    tidx: ptr tbx_t
     n_samples*: int ## number of samples in the VCF
     fname: string
 
@@ -44,9 +45,18 @@ proc samples*(v:VCF): seq[string] =
   for i in 0..<v.n_samples:
     result[i] = $v.header.hdr.samples[i]
 
+proc destroy_vcf(v:VCF) =
+  bcf_hdr_destroy(v.header.hdr)
+  if v.tidx != nil:
+    tbx_destroy(v.tidx)
+  if v.bidx != nil:
+    hts_idx_destroy(v.bidx)
+  if v.fname != "-" and v.fname != "/dev/stdin":
+    discard hts_close(v.hts)
+  bcf_destroy(v.c)
+
 proc open*(v:var VCF, fname:string, mode:string="r", samples:seq[string]=empty_samples, threads:int=0): bool =
-  if v == nil:
-    v = VCF()
+  new(v, destroy_vcf)
   v.hts = hts_open(fname.cstring, mode.cstring)
   if v.hts == nil:
     stderr.write_line "hts-nim/vcf: error opening file:" & fname
@@ -81,7 +91,8 @@ proc CHROM*(v:Variant): cstring {.inline.} =
   return bcf_hdr_id2name(v.vcf.header.hdr, v.c.rid)
 
 iterator items*(v:VCF): Variant =
-  ## note that each item yielded is only valid for that iteration.
+  ## Each returned Variant has a pointer in the underlying iterator
+  ## that is updated each iteration; use .copy to keep it in memory
   var ret = 0
   while true:
     ret = bcf_read(v.hts, v.header.hdr, v.c)
@@ -94,52 +105,85 @@ iterator items*(v:VCF): Variant =
     stderr.write_line "hts-nim/vcf bcf_read error:" & $v.c.errcode
     quit(2)
 
-iterator query*(v:VCF, region: string): Variant =
-  # TODO: index
-  #
-  var fn: hts_readrec_func # = bcf_readrec
-  var isVCF = false
-  v.idx = hts_idx_load(v.fname, v.hts.format.format.cint)
-  if v.hts.format.format == htsExactFormat.vcf:
-    fn = tbx_readrec
-    echo "formatVCF"
-    isVCF = true
-  else:
-    fn = bcf_readrec
-  if v.idx == nil:
-    stderr.write_line("hts-nim no index found for " & v.fname)
+iterator vquery(v:VCF, region:string): Variant =
+  ## internal iterator for VCF regions called from query()
+  if v.tidx == nil:
+    v.tidx = tbx_index_load(v.fname)
+  if v.tidx == nil:
+    stderr.write_line("hts-nim/vcf no index found for " & v.fname)
     quit(2)
 
-  var
-    rstart: cint
-    rstop: cint
-    rtid: cint = 0 # TODO
-    rchrom:cstring = hts_parse_reg(region.cstring, rstart.addr, rstop.addr)
-    slen: int
-    ret: int
+  var 
+    fn:hts_readrec_func = tbx_readrec
+    ret = 0
+    slen = 0
     s = kstring_t()
-    itr = hts_itr_query(v.idx, rtid, rstart, rstop, fn)
+    start: cint
+    stop: cint
+    tid:cint = 0
 
+  discard hts_parse_reg(region.cstring, start.addr, stop.addr)
+  var itr = hts_itr_query(v.tidx.idx, tid.cint, start, stop, fn)
+    #itr = tbx_itr_querys(v.tidx, region)
   while true:
-    if isVCF:
-      slen = hts_itr_next(v.hts.fp.bgzf, itr, s.addr, v.idx)
-      if slen < 0:
-        break
-      ret = vcf_parse(s.addr, v.header.hdr, v.c)
-      if ret > 0: break
-    else:
-      slen = hts_itr_next(v.hts.fp.bgzf, itr, v.c, v.idx)
-    if slen < 0:
+    slen = hts_itr_next(v.hts.fp.bgzf, itr, s.addr, v.tidx)
+    if slen <= 0: break
+    ret = vcf_parse(s.addr, v.header.hdr, v.c)
+    if ret > 0:
       break
-
     yield Variant(c:v.c, vcf:v)
 
-  free(s.s)
   hts_itr_destroy(itr)
-  if ret > 0:
-    stderr.write_line "hts-nim/vcf: error parsing "
-    quit(2)
+  free(s.s)
 
+iterator query*(v:VCF, region: string): Variant =
+  ## iterate over variants in a VCF/BCF for the given region.
+  ## Each returned Variant has a pointer in the underlying iterator
+  ## that is updated each iteration; use .copy to keep it in memory
+  if v.hts.format.format == htsExactFormat.vcf:
+    for v in v.vquery(region):
+      yield v
+  else:
+    if v.bidx == nil:
+      v.bidx = hts_idx_load(v.fname, HTS_FMT_CSI)
+
+    if v.bidx == nil:
+      stderr.write_line("hts-nim/vcf no index found for " & v.fname)
+      quit(2)
+    var
+      start: cint
+      stop: cint
+      tid:cint = 0
+      fn:hts_readrec_func = bcf_readrec
+
+    discard hts_parse_reg(region.cstring, start.addr, stop.addr)
+    var itr = hts_itr_query(v.bidx, tid.cint, start, stop, fn)
+    var ret = 0
+    while true:
+        #ret = bcf_itr_next(v.hts, itr, v.c)
+        ret = hts_itr_next(v.hts.fp.bgzf, itr, v.c, nil)
+        if ret < 0: break
+        yield Variant(c:v.c, vcf:v)
+
+    hts_itr_destroy(itr)
+    if ret > 0:
+      stderr.write_line "hts-nim/vcf: error parsing "
+      quit(2)
+
+  if v.c.errcode != 0:
+    stderr.write_line "hts-nim/vcf bcf_read error:" & $v.c.errcode
+
+proc destroy_variant(v:Variant) =
+  if v.c != nil:
+    bcf_destroy(v.c)
+
+proc copy*(v:Variant): Variant =
+  ## make a copy of the variant and the underlying pointer.
+  var v2: Variant
+  new(v2, destroy_variant)
+  v2.c = bcf_dup(v.c)
+  v2.vcf = v.vcf
+  return v2
 
 proc POS*(v:Variant): int {.inline.} =
   ## return the 1-based position of the start of the variant
@@ -193,13 +237,12 @@ when isMainModule:
 
   var v:VCF
   var tsamples = @["101976-101976", "100920-100920", "100231-100231", "100232-100232", "100919-100919"]
-  assert open(v, "tests/test.vcf.gz", samples=tsamples)
+  assert open(v, "tests/test.bcf", samples=tsamples)
 
   for rec in v:
     echo rec, " qual:", rec.QUAL, " filter:", rec.FILTER
 
   echo v.samples
-
 
   echo "QUERY"
   for rec in v.query("1:15600-18250"):

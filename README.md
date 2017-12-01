@@ -9,10 +9,12 @@ This is a wrapper for [htslib](https://github.com/samtools/htslib) in [nim](http
 Nim is a fast, garbage collected language that compiles to C and has a syntax that's not
 too different to python.
 
-Here is an example of the syntax in this library:
+Here are examples of the syntax in this library:
+
+## BAM
 
 ```nim
-import hts
+import hts/bam
 
 # open a bam and look for the index.
 var b:Bam
@@ -42,6 +44,27 @@ open_hts(cram, "/tmp/t.cram", fai="/data/human/g1k_v37_decoy.fa")
 for record in cram:
   # now record is same as from bam above
   echo record.qname, record.isize
+```
+
+## VCF/BCF
+
+```nim
+import hts/vcf
+
+var tsamples = @["101976-101976", "100920-100920", "100231-100231", "100232-100232", "100919-100919"]
+
+# VCF and BCF supported
+var v:VCF
+assert open(v, "tests/test.bcf", samples=tsamples)
+
+for rec in v:
+  echo rec, " qual:", rec.QUAL, " filter:", rec.FILTER
+
+echo v.samples
+
+# regional queries look for index. worsk for VCF and BCF
+for rec in v.query("1:15600-18250"):
+  echo rec.CHROM, ":", $rec.POS
 ```
 
 ## bgzip with csi

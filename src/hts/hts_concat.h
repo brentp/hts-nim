@@ -252,6 +252,9 @@ void hts_itr_destroy(hts_itr_t *iter);
 int hts_itr_next(BGZF *fp, hts_itr_t *iter, void *r, void *data);
 const char **hts_idx_seqnames(const hts_idx_t *idx, int *n, hts_id2name_f getid, void *hdr);
 
+typedef hts_itr_t *hts_itr_query_func(const hts_idx_t *idx, int tid, int beg, int end, hts_readrec_func *readrec);
+typedef int (*hts_name2id_f)(void*, const char*);
+hts_itr_t *hts_itr_querys(const hts_idx_t *idx, const char *reg, hts_name2id_f getid, void *hdr, hts_itr_query_func *itr_query, hts_readrec_func *readrec);
 
 //###########################
 //# tbx
@@ -270,9 +273,11 @@ typedef struct {
 } tbx_t;
 
 
+int tbx_name2id(tbx_t *tbx, const char *ss);
 int tbx_index_build(const char *fn, int min_shift, const tbx_conf_t *conf);
 tbx_t *tbx_index_load(const char *fn);
 tbx_t *tbx_index_load2(const char *fn, const char *fnidx);
+ #define tbx_itr_querys(tbx, s) hts_itr_querys((tbx)->idx, (s), (hts_name2id_f)(tbx_name2id), (tbx), hts_itr_query, tbx_readrec)
 
 const char **tbx_seqnames(tbx_t *tbx, int *n);  // free the array but not the values
 void tbx_destroy(tbx_t *tbx);
@@ -282,11 +287,7 @@ int tbx_readrec(BGZF *fp, void *tbxv, void *sv, int *tid, int *beg, int *end);
 
 #define tbx_itr_queryi(tbx, tid, beg, end) hts_itr_query((tbx)->idx, (tid), (beg), (stop), tbx_readrec)
 
-hts_itr_t * tbx_itr_querys(tbx_t *tbx, char *);
 
-
-
-int tbx_itr_next(htsFile *fp, tbx_t *tbx, hts_itr_t *iter, void *data);
 
 //#####################################
 //# sam.h
@@ -381,7 +382,6 @@ hts_itr_t * sam_itr_querys(hts_idx_t*, bam_hdr_t *h, char * region);
 hts_itr_t *sam_itr_queryi(const hts_idx_t *idx, int tid, int beg, int end);
 
 
-//int tbx_itr_next(htsFile *fp, tbx_t *tbx, hts_itr_t *iter, void *data);
 #define sam_itr_next(htsfp, itr, r) hts_itr_next((htsfp)->fp.bgzf, (itr), (r), (htsfp))
 
 
@@ -630,12 +630,23 @@ int bcf_read(htsFile *fp, const bcf_hdr_t *h, bcf1_t *v);
 
 int bcf_unpack(bcf1_t *b, int which);
 bcf_hdr_t *bcf_hdr_read(htsFile *fp);
+void bcf_hdr_destroy(bcf_hdr_t *h);
+bcf1_t *bcf_dup(bcf1_t *src);
+void bcf_destroy(bcf1_t *v);
 
 int bcf_hdr_set_samples(bcf_hdr_t *hdr, const char *samples, int is_file);
 int bcf_get_genotypes(const bcf_hdr_t *hdr, bcf1_t *line, int **dst, int *ndst);
 int bcf_get_format_values(const bcf_hdr_t *hdr, bcf1_t *line, const char *tag, void **dst, int *ndst, int type);
 //typedef htsFile vcfFile;
 
+int vcf_parse(kstring_t *s, const bcf_hdr_t *h, bcf1_t *v); 
+
+hts_idx_t *bcf_index_load(char *fn);
+#define bcf_itr_queryi(idx, tid, beg, end) hts_itr_query((idx), (tid), (beg), (end), bcf_readrec)
+
+int bcf_itr_next(htsFile *, hts_itr_t* iter, bcf1_t*);
+
+int bcf_readrec(BGZF *fp, void *null, void *v, int *tid, int *beg, int *end);
 
 
 

@@ -317,6 +317,15 @@ proc hts_itr_next*(fp: ptr BGZF; iter: ptr hts_itr_t; r: pointer; data: pointer)
 proc hts_idx_seqnames*(idx: ptr hts_idx_t; n: ptr cint; getid: hts_id2name_f;
                       hdr: pointer): cstringArray {.cdecl,
     importc: "hts_idx_seqnames", dynlib: libname.}
+type
+  hts_itr_query_func* = proc (idx: ptr hts_idx_t; tid: cint; beg: cint; `end`: cint;
+                           readrec: ptr hts_readrec_func): ptr hts_itr_t {.cdecl.}
+  hts_name2id_f* = proc (a2: pointer; a3: cstring): cint {.cdecl.}
+
+proc hts_itr_querys*(idx: ptr hts_idx_t; reg: cstring; getid: hts_name2id_f;
+                    hdr: pointer; itr_query: ptr hts_itr_query_func;
+                    readrec: ptr hts_readrec_func): ptr hts_itr_t {.cdecl,
+    importc: "hts_itr_querys", dynlib: libname.}
 ## ###########################
 ## # tbx
 ## ###########################
@@ -336,12 +345,18 @@ type
     dict*: pointer
 
 
+proc tbx_name2id*(tbx: ptr tbx_t; ss: cstring): cint {.cdecl, importc: "tbx_name2id",
+    dynlib: libname.}
 proc tbx_index_build*(fn: cstring; min_shift: cint; conf: ptr tbx_conf_t): cint {.cdecl,
     importc: "tbx_index_build", dynlib: libname.}
 proc tbx_index_load*(fn: cstring): ptr tbx_t {.cdecl, importc: "tbx_index_load",
     dynlib: libname.}
 proc tbx_index_load2*(fn: cstring; fnidx: cstring): ptr tbx_t {.cdecl,
     importc: "tbx_index_load2", dynlib: libname.}
+template tbx_itr_querys*(tbx, s: untyped): untyped =
+  hts_itr_querys((tbx).idx, (s), (hts_name2id_f)(tbx_name2id), (tbx), hts_itr_query,
+                 tbx_readrec)
+
 proc tbx_seqnames*(tbx: ptr tbx_t; n: ptr cint): cstringArray {.cdecl,
     importc: "tbx_seqnames", dynlib: libname.}
 ##  free the array but not the values
@@ -356,10 +371,6 @@ template tbx_itr_queryx*(idx, tid, beg, `end`: untyped): untyped =
 template tbx_itr_queryi*(tbx, tid, beg, `end`: untyped): untyped =
   hts_itr_query((tbx).idx, (tid), (beg), (stop), tbx_readrec)
 
-proc tbx_itr_querys*(tbx: ptr tbx_t; a3: cstring): ptr hts_itr_t {.cdecl,
-    importc: "tbx_itr_querys", dynlib: libname.}
-proc tbx_itr_next*(fp: ptr htsFile; tbx: ptr tbx_t; iter: ptr hts_itr_t; data: pointer): cint {.
-    cdecl, importc: "tbx_itr_next", dynlib: libname.}
 ## #####################################
 ## # sam.h
 ## #####################################
@@ -465,8 +476,6 @@ proc sam_itr_querys*(a2: ptr hts_idx_t; h: ptr bam_hdr_t; region: cstring): ptr 
     cdecl, importc: "sam_itr_querys", dynlib: libname.}
 proc sam_itr_queryi*(idx: ptr hts_idx_t; tid: cint; beg: cint; `end`: cint): ptr hts_itr_t {.
     cdecl, importc: "sam_itr_queryi", dynlib: libname.}
-## int tbx_itr_next(htsFile *fp, tbx_t *tbx, hts_itr_t *iter, void *data);
-
 template sam_itr_next*(htsfp, itr, r: untyped): untyped =
   hts_itr_next((htsfp).fp.bgzf, (itr), (r), (htsfp))
 
@@ -743,6 +752,10 @@ proc bcf_unpack*(b: ptr bcf1_t; which: cint): cint {.cdecl, importc: "bcf_unpack
     dynlib: libname.}
 proc bcf_hdr_read*(fp: ptr htsFile): ptr bcf_hdr_t {.cdecl, importc: "bcf_hdr_read",
     dynlib: libname.}
+proc bcf_hdr_destroy*(h: ptr bcf_hdr_t) {.cdecl, importc: "bcf_hdr_destroy",
+                                      dynlib: libname.}
+proc bcf_dup*(src: ptr bcf1_t): ptr bcf1_t {.cdecl, importc: "bcf_dup", dynlib: libname.}
+proc bcf_destroy*(v: ptr bcf1_t) {.cdecl, importc: "bcf_destroy", dynlib: libname.}
 proc bcf_hdr_set_samples*(hdr: ptr bcf_hdr_t; samples: cstring; is_file: cint): cint {.
     cdecl, importc: "bcf_hdr_set_samples", dynlib: libname.}
 proc bcf_get_genotypes*(hdr: ptr bcf_hdr_t; line: ptr bcf1_t; dst: ptr ptr cint;
@@ -752,6 +765,19 @@ proc bcf_get_format_values*(hdr: ptr bcf_hdr_t; line: ptr bcf1_t; tag: cstring;
                            dst: ptr pointer; ndst: ptr cint; `type`: cint): cint {.cdecl,
     importc: "bcf_get_format_values", dynlib: libname.}
 ## typedef htsFile vcfFile;
+
+proc vcf_parse*(s: ptr kstring_t; h: ptr bcf_hdr_t; v: ptr bcf1_t): cint {.cdecl,
+    importc: "vcf_parse", dynlib: libname.}
+proc bcf_index_load*(fn: cstring): ptr hts_idx_t {.cdecl, importc: "bcf_index_load",
+    dynlib: libname.}
+template bcf_itr_queryi*(idx, tid, beg, `end`: untyped): untyped =
+  hts_itr_query((idx), (tid), (beg), (`end`), bcf_readrec)
+
+proc bcf_itr_next*(a2: ptr htsFile; iter: ptr hts_itr_t; a4: ptr bcf1_t): cint {.cdecl,
+    importc: "bcf_itr_next", dynlib: libname.}
+proc bcf_readrec*(fp: ptr BGZF; null: pointer; v: pointer; tid: ptr cint; beg: ptr cint;
+                 `end`: ptr cint): cint {.cdecl, importc: "bcf_readrec",
+                                      dynlib: libname.}
 ## ##############################################
 ## # hts_extra
 ## ##############################################
