@@ -8,16 +8,16 @@ suite "aux-test":
     for rec in b:
 
       var v = rec.aux("SM")
-      check v.asint == 37
+      check v.asint.get == 37
 
-      expect Exception:
-        check v.asfloat == 37
+      check v.asfloat.get == 37.float64
 
-      expect Exception:
-        check v.asstring == "37"
+      check v.asstring.isNone
 
       var rg = rec.aux("RG")
-      check rg.asstring == "SRR741410"
+      check rg.asstring.get == "SRR741410"
+      check rg.asint.isNone
+      check rg.asfloat.isNone
 
       var missing = rec.aux("UA")
       check missing == nil

@@ -1,11 +1,27 @@
+import hts/simpleoption
+export simpleoption
 
 type 
   AuxKind = enum akString, akFloat, akInt
   Aux* = ref object
     case kind: AuxKind
-    of akString: asString*: string
-    of akFloat: asFloat*: float64
-    of akInt: asInt*: int
+    of akString: xString*: string
+    of akFloat: xFloat*: float64
+    of akInt: xInt*: int
+
+proc asString*(a: Aux): Option[string] =
+  if a.kind == akString:
+    return some(a.xString)
+
+proc asInt*(a:Aux): Option[int] =
+  if a.kind == akInt:
+    return some(a.xInt)
+  
+proc asFloat*(a:Aux): Option[float64] =
+  if a.kind == akFloat:
+    return some(a.xFloat)
+  if a.kind == akInt:
+    return some(float64(a.xInt))
 
 proc aux*(r:Record, tag: string): Aux =
   ## get the aux tag from the record.
@@ -18,12 +34,12 @@ proc aux*(r:Record, tag: string): Aux =
   case safe(cast[CPtr[char]](b), 1)[0]:
     of 'c', 'C', 's', 'S', 'i', 'I':
       var i = bam_aux2i(b)
-      return Aux(kind: akInt, asInt: int(i))
+      return Aux(kind: akInt, xInt: int(i))
     of 'f', 'd':
       var f = bam_aux2f(b)
-      return Aux(kind: akFloat, asFloat: float64(f))
+      return Aux(kind: akFloat, xFloat: float64(f))
     of 'A', 'Z', 'H':
       var z = bam_aux2Z(b).cstring
-      return Aux(kind:akString, asString: $(z))
+      return Aux(kind:akString, xString: $(z))
     else:
       return nil
