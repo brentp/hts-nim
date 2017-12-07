@@ -3,32 +3,9 @@ type
   AuxKind = enum akString, akFloat, akInt
   Aux* = ref object
     case kind: AuxKind
-    of akString: strVal: string
-    of akFloat: floatVal: float64
-    of akInt: intval: int
-
-proc float*(a:Aux): float64 =
-  case a.kind
-  of akFloat:
-    return a.floatVal
-  of akInt:
-    return a.intVal.float64
-  else:
-    return 0
-
-proc integer*(a:Aux): int =
-  case a.kind
-  of akInt:
-    return a.intVal
-  else:
-    return 0
-
-proc tostring*(a:Aux): string =
-  case a.kind
-  of akString:
-    return a.strval
-  else:
-    return ""
+    of akString: asString*: string
+    of akFloat: asFloat*: float64
+    of akInt: asInt*: int
 
 proc aux*(r:Record, tag: string): Aux =
   ## get the aux tag from the record.
@@ -41,12 +18,12 @@ proc aux*(r:Record, tag: string): Aux =
   case safe(cast[CPtr[char]](b), 1)[0]:
     of 'c', 'C', 's', 'S', 'i', 'I':
       var i = bam_aux2i(b)
-      return Aux(kind: akInt, intVal: int(i))
+      return Aux(kind: akInt, asInt: int(i))
     of 'f', 'd':
       var f = bam_aux2f(b)
-      return Aux(kind: akFloat, floatVal: float64(f))
+      return Aux(kind: akFloat, asFloat: float64(f))
     of 'A', 'Z', 'H':
       var z = bam_aux2Z(b).cstring
-      return Aux(kind:akString, strVal: $(z))
+      return Aux(kind:akString, asString: $(z))
     else:
       return nil
