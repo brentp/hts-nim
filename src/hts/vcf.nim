@@ -1,5 +1,6 @@
 import hts/hts_concat
 import strutils
+import system
 
 type
   Header* = ref object of RootObj
@@ -15,17 +16,21 @@ type
     n_samples*: int ## number of samples in the VCF
     fname: string
 
-  INFO* = ref object of RootObj
-    ## INFO of the VCF
-    c_info: ptr bcf_info_t
-    c_hdr: ptr bcf_hdr_t
-    i: int
-
   Variant* = ref object of RootObj
     ## Variant is a single line from a VCF
     c: ptr bcf1_t
-    info*: INFO
     vcf: VCF
+    own: bool # this seems to protect against a bug in the gc
+
+  INFO* = ref object
+    ## INFO of a variant
+    v: Variant
+    i: int
+
+type CArray{.unchecked.}[T] = array[0..0, T]
+type CPtr*[T] = ptr CArray[T]
+
+include "hts/value.nim"
 
 var empty_samples:seq[string]
 
@@ -44,6 +49,44 @@ proc samples*(v:VCF): seq[string] =
   result = new_seq[string](v.n_samples)
   for i in 0..<v.n_samples:
     result[i] = $v.header.hdr.samples[i]
+
+proc info*(v:Variant): INFO =
+  return INFO(v:v, i:0)
+
+proc get*(i:INFO, key:string): Value {.raises: [KeyError], inline.} =
+  var info = bcf_get_info(i.v.vcf.header.hdr, i.v.c, key.cstring)
+  if info == nil:
+    raise newException(KeyError, key)
+
+  if info.len == 1:
+    case info.type:
+      of BCF_BT_INT8:
+        if info.v1.i == INT8_MIN:
+          return Value(kind:typNone, xNone: true)
+        return Value(kind:typInt, oInt: info.v1.i.int)
+      of BCF_BT_INT16:
+        if info.v1.i == INT16_MIN:
+          return Value(kind:typNone, xNone: true)
+        return Value(kind:typInt, oInt: info.v1.i.int)
+      of BCF_BT_INT32:
+        if info.v1.i == INT32_MIN:
+          return Value(kind:typNone, xNone: true)
+        return Value(kind:typInt, oInt: info.v1.i.int)
+      of BCF_BT_FLOAT:
+        if bcf_float_is_missing(info.v1.f) != 0:
+          return Value(kind:typNone, xNone: true)
+        return Value(kind:typFloat, oFloat: info.v1.f.float64)
+      else:
+        raise newException(KeyError, "unknown type: " & $int(info.type))
+
+  if info.type == BCF_BT_CHAR:
+    var t = cast[CPtr[char]](info.vptr)
+    if info.vptr_len.int > 0 and t[0] == char(0x7):
+      return Value(kind:typNone, xNone: true)
+    # TODO: avoid copy
+    var s = new_string(info.vptr_len)
+    copyMem(s[0].addr.pointer, t[0].addr.pointer, info.vptr_len)
+    return Value(kind:typString, oString:s)
 
 proc destroy_vcf(v:VCF) =
   bcf_hdr_destroy(v.header.hdr)
@@ -72,9 +115,6 @@ proc open*(v:var VCF, fname:string, mode:string="r", samples:seq[string]=empty_s
   v.fname = fname
 
   return true
-
-type CArray{.unchecked.}[T] = array[0..0, T]
-type CPtr*[T] = ptr CArray[T]
 
 proc bcf_hdr_id2name(hdr: ptr bcf_hdr_t, rid: cint): cstring {.inline.} =
   var v = cast[CPtr[bcf_idpair_t]](hdr.id[1])
@@ -173,9 +213,11 @@ iterator query*(v:VCF, region: string): Variant =
   if v.c.errcode != 0:
     stderr.write_line "hts-nim/vcf bcf_read error:" & $v.c.errcode
 
+
 proc destroy_variant(v:Variant) =
-  if v.c != nil:
+  if v != nil and v.c != nil and v.own:
     bcf_destroy(v.c)
+    v.c = nil
 
 proc copy*(v:Variant): Variant =
   ## make a copy of the variant and the underlying pointer.
@@ -183,6 +225,7 @@ proc copy*(v:Variant): Variant =
   new(v2, destroy_variant)
   v2.c = bcf_dup(v.c)
   v2.vcf = v.vcf
+  v2.own = true
   return v2
 
 proc POS*(v:Variant): int {.inline.} =
@@ -240,10 +283,16 @@ when isMainModule:
   assert open(v, "tests/test.bcf", samples=tsamples)
 
   for rec in v:
-    echo rec, " qual:", rec.QUAL, " filter:", rec.FILTER
+    echo rec, " qual:", rec.QUAL, " filter:", rec.FILTER, "  AC (int):",  rec.info.get("AC").asints()
+    var info = rec.info
+    echo info.get("CSQ").asstring()
+    echo info.get("AF").asfloat()
 
   echo v.samples
 
   echo "QUERY"
   for rec in v.query("1:15600-18250"):
     echo rec.CHROM, ":", $rec.POS
+    var info = rec.info()
+    echo info.get("AC").asint()
+

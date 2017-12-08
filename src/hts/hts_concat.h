@@ -628,6 +628,17 @@ int bcf_read(htsFile *fp, const bcf_hdr_t *h, bcf1_t *v);
 #define BCF_UN_IND  BCF_UN_FMT                  // a synonymo of            BCF_UN_FMT
 #define BCF_UN_ALL  (BCF_UN_SHR|BCF_UN_FMT)
 
+#define BCF_BT_NULL     0
+#define BCF_BT_INT8     1
+#define BCF_BT_INT16    2
+#define BCF_BT_INT32    3
+#define BCF_BT_FLOAT    5
+#define BCF_BT_CHAR     7
+
+#define INT8_MIN -128
+#define INT16_MIN -32768
+#define INT32_MIN -2147483648
+
 int bcf_unpack(bcf1_t *b, int which);
 bcf_hdr_t *bcf_hdr_read(htsFile *fp);
 void bcf_hdr_destroy(bcf_hdr_t *h);
@@ -649,7 +660,8 @@ int bcf_itr_next(htsFile *, hts_itr_t* iter, bcf1_t*);
 int bcf_readrec(BGZF *fp, void *null, void *v, int *tid, int *beg, int *end);
 
 
-
+bcf_fmt_t *bcf_get_fmt(const bcf_hdr_t *hdr, bcf1_t *line, const char *key);
+bcf_info_t *bcf_get_info(const bcf_hdr_t *hdr, bcf1_t *line, const char *key);
 
 //##############################################
 //# hts_extra

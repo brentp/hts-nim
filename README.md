@@ -59,6 +59,11 @@ assert open(v, "tests/test.bcf", samples=tsamples)
 
 for rec in v:
   echo rec, " qual:", rec.QUAL, " filter:", rec.FILTER
+  var info = rec.info
+  echo info.get("CSQ").asstring() # some[string]
+  echo info.get("AF").asfloat() # some[float]
+  echo info.get("AF").asstring() # none
+
 
 echo v.samples
 

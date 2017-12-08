@@ -747,6 +747,15 @@ const
   BCF_UN_FMT* = 8
   BCF_UN_IND* = BCF_UN_FMT
   BCF_UN_ALL* = (BCF_UN_SHR or BCF_UN_FMT)
+  BCF_BT_NULL* = 0
+  BCF_BT_INT8* = 1
+  BCF_BT_INT16* = 2
+  BCF_BT_INT32* = 3
+  BCF_BT_FLOAT* = 5
+  BCF_BT_CHAR* = 7
+  INT8_MIN* = - 128
+  INT16_MIN* = - 32768
+  INT32_MIN* = - 2147483648'i64
 
 proc bcf_unpack*(b: ptr bcf1_t; which: cint): cint {.cdecl, importc: "bcf_unpack",
     dynlib: libname.}
@@ -778,6 +787,10 @@ proc bcf_itr_next*(a2: ptr htsFile; iter: ptr hts_itr_t; a4: ptr bcf1_t): cint {
 proc bcf_readrec*(fp: ptr BGZF; null: pointer; v: pointer; tid: ptr cint; beg: ptr cint;
                  `end`: ptr cint): cint {.cdecl, importc: "bcf_readrec",
                                       dynlib: libname.}
+proc bcf_get_fmt*(hdr: ptr bcf_hdr_t; line: ptr bcf1_t; key: cstring): ptr bcf_fmt_t {.
+    cdecl, importc: "bcf_get_fmt", dynlib: libname.}
+proc bcf_get_info*(hdr: ptr bcf_hdr_t; line: ptr bcf1_t; key: cstring): ptr bcf_info_t {.
+    cdecl, importc: "bcf_get_info", dynlib: libname.}
 ## ##############################################
 ## # hts_extra
 ## ##############################################

@@ -7,7 +7,6 @@ type
     ## An optional type that stores its value and state separately in a boolean.
     val: T
     has: bool
-  KeyError* = ref object of ValueError
 
 proc some*[T](val: T): Option[T] {.inline.} =
   ## Returns a ``Option`` that has this value.
@@ -28,7 +27,7 @@ proc get*[T](self: Option[T]): T {.inline.} =
   ## Returns contents of the Option. If it is none, then an exception is
   ## thrown.
   if self.isNone:
-    raise KeyError(msg : "Can't obtain a value from a `none`")
+    raise newException(KeyError, "Can't obtain a value from a `none`")
   self.val
 
 proc get*[T](self: Option[T], otherwise: T): T {.inline.} =
