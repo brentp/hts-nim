@@ -29,6 +29,8 @@ type
 
   IndexStats* = tuple[mapped: uint64, unmapped: uint64]
 
+  BamError* = ref object of ValueError
+
 proc finalize_header(h: Header) =
   bam_hdr_destroy(h.hdr)
 
@@ -240,13 +242,16 @@ proc set_option*(b: Bam, f: FormatOption, val: int): int =
     stderr.write_line("couldn't set opts")
   return ret
 
-iterator items*(bam: Bam): Record =
+iterator items*(bam: Bam): Record {.raises: [BamError]}=
   ## items iterates over a bam. A single element is used and overwritten
   ## on each iteration so use `Record.copy` to retain.
   var ret = sam_read1(bam.hts, bam.hdr.hdr, bam.rec.b)
   while ret > 0:
     yield bam.rec
     ret = sam_read1(bam.hts, bam.hdr.hdr, bam.rec.b)
+  if ret < -1:
+    raise BamError(msg:"hts/bam: error in iteration")
+
 
 include "./bam/auxtags"
 
