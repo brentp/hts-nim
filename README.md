@@ -59,14 +59,14 @@ assert open(v, "tests/test.bcf", samples=tsamples)
 
 var afs = new_seq[float32](5) # size doesn't matter. this will be re-sized as needed
 var acs = new_seq[int32](5) # size doesn't matter. this will be re-sized as needed
+var csq = new_string_of_cap(20)
 for rec in v:
   echo rec, " qual:", rec.QUAL, " filter:", rec.FILTER
   var info = rec.info
-  #echo info.get("CSQ").asstring() # some[string]
+  info.strings("CSQ", csq)
   info.ints("AC", acs)
   info.floats("AF", afs)
-  echo acs, afs
-
+  echo acs, afs, csq, info.has_flag("IN_EXAC")
 
 echo v.samples
 
