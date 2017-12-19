@@ -57,12 +57,15 @@ var tsamples = @["101976-101976", "100920-100920", "100231-100231", "100232-1002
 var v:VCF
 assert open(v, "tests/test.bcf", samples=tsamples)
 
+var afs = new_seq[float32](5) # size doesn't matter. this will be re-sized as needed
+var acs = new_seq[int32](5) # size doesn't matter. this will be re-sized as needed
 for rec in v:
   echo rec, " qual:", rec.QUAL, " filter:", rec.FILTER
   var info = rec.info
-  echo info.get("CSQ").asstring() # some[string]
-  echo info.get("AF").asfloat() # some[float]
-  echo info.get("AF").asstring() # none
+  #echo info.get("CSQ").asstring() # some[string]
+  info.ints("AC", acs)
+  info.floats("AF", afs)
+  echo acs, afs
 
 
 echo v.samples

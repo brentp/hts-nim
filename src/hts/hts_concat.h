@@ -81,6 +81,11 @@ enum hts_fmt_option {
 #define HTS_FMT_TBI 2
 #define HTS_FMT_CRAI 3
 
+#define BCF_HT_FLAG 0 // header type
+#define BCF_HT_INT  1
+#define BCF_HT_REAL 2
+#define BCF_HT_STR  3
+
 
 void *malloc(size_t size);
 void free(void *);
@@ -662,6 +667,8 @@ int bcf_readrec(BGZF *fp, void *null, void *v, int *tid, int *beg, int *end);
 
 bcf_fmt_t *bcf_get_fmt(const bcf_hdr_t *hdr, bcf1_t *line, const char *key);
 bcf_info_t *bcf_get_info(const bcf_hdr_t *hdr, bcf1_t *line, const char *key);
+int bcf_get_info_values(const bcf_hdr_t *hdr, bcf1_t *line, const char *tag, void **dst, int *ndst, int type);
+
 
 //##############################################
 //# hts_extra

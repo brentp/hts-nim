@@ -19,6 +19,7 @@ type
   Variant* = ref object of RootObj
     ## Variant is a single line from a VCF
     c: ptr bcf1_t
+    p: pointer
     vcf: VCF
     own: bool # this seems to protect against a bug in the gc
 
@@ -26,9 +27,36 @@ type
     ## INFO of a variant
     v: Variant
     i: int
+    p: pointer
 
 type CArray{.unchecked.}[T] = array[0..0, T]
 type CPtr*[T] = ptr CArray[T]
+
+type SafeCPtr*[T] =
+  object
+    size: int
+    mem: CPtr[T]
+
+proc safe*[T](p: CPtr[T], k: int): SafeCPtr[T] {.inline.} =
+    SafeCPtr[T](mem: p, size: k)
+
+proc `[]`*[T](p: SafeCPtr[T], k: int): T {.inline.} =
+  when not defined(release):
+    assert k < p.size
+  result = p.mem[k]
+
+proc `[]=`*[T](p: SafeCPtr[T], k: int, val: T) {.inline.} =
+  when not defined(release):
+    assert k < p.size
+  p.mem[k] = val
+
+proc `$`*[T](p: SafeCPtr[T]): string =
+  result = new_string_of_cap(40)
+  result.add("[")
+  for i in 0..<p.size:
+    result.add(intToStr(int(p[i])) & ", ")
+  result[result.len - 2] = ']'
+  result.set_len(result.len-1)
 
 include "hts/value.nim"
 
@@ -50,43 +78,73 @@ proc samples*(v:VCF): seq[string] =
   for i in 0..<v.n_samples:
     result[i] = $v.header.hdr.samples[i]
 
-proc info*(v:Variant): INFO =
-  return INFO(v:v, i:0)
+proc info*(v:Variant): INFO {.inline.} =
+  return INFO(i:0, v:v)
 
-proc get*(i:INFO, key:string): Value {.raises: [KeyError], inline.} =
+proc bcf_array_to_object(info:ptr bcf_info_t): Value =
+  return Value(kind:typInt, oInt: 22)
+
+proc ints*(i:INFO, key:string, data:var seq[int32]=nil): bool {.inline.} =
+  ## ints fills the given data with ints associated with the key.
+  var n:cint = 0
+
+  var ret = bcf_get_info_values(i.v.vcf.header.hdr, i.v.c, key.cstring,
+     i.v.p.addr, n.addr, BCF_HT_INT.cint)
+  if ret < 0:
+    return false
+
+  if data == nil:
+    data = new_seq[int32](n)
+  elif data.len != n:
+    data.set_len(n)
+
+  var tmp = cast[ptr CArray[int32]](i.v.p)
+  for i in 0..n:
+    data[i] = tmp[i]
+  return true
+
+proc floats*(i:INFO, key:string, data:var seq[float32]=nil): bool {.inline.} =
+  ## floats fills the given data with ints associated with the key.
+  var n:cint = 0
+
+  var ret = bcf_get_info_values(i.v.vcf.header.hdr, i.v.c, key.cstring,
+     i.v.p.addr, n.addr, BCF_HT_REAL.cint)
+  if ret < 0:
+    return false
+
+  if data == nil:
+    data = new_seq[float32](n)
+  elif data.len != n:
+    data.set_len(n)
+
+  var tmp = cast[ptr CArray[float32]](i.v.p)
+  for i in 0..n:
+    data[i] = tmp[i]
+  return true
+      
+#[
+proc get_string*(i:INFO, key:string): Option[string] =
   var info = bcf_get_info(i.v.vcf.header.hdr, i.v.c, key.cstring)
-  if info == nil:
-    raise newException(KeyError, key)
+  if info == nil or info.type != BCF_BT_CHAR:
+    return none(string)
 
-  if info.len == 1:
-    case info.type:
-      of BCF_BT_INT8:
-        if info.v1.i == INT8_MIN:
-          return Value(kind:typNone, xNone: true)
-        return Value(kind:typInt, oInt: info.v1.i.int)
-      of BCF_BT_INT16:
-        if info.v1.i == INT16_MIN:
-          return Value(kind:typNone, xNone: true)
-        return Value(kind:typInt, oInt: info.v1.i.int)
-      of BCF_BT_INT32:
-        if info.v1.i == INT32_MIN:
-          return Value(kind:typNone, xNone: true)
-        return Value(kind:typInt, oInt: info.v1.i.int)
-      of BCF_BT_FLOAT:
-        if bcf_float_is_missing(info.v1.f) != 0:
-          return Value(kind:typNone, xNone: true)
-        return Value(kind:typFloat, oFloat: info.v1.f.float64)
-      else:
-        raise newException(KeyError, "unknown type: " & $int(info.type))
+  var t = cast[CPtr[char]](info.vptr)
+  if info.vptr_len.int > 0 and t[0] == char(0x7):
+      return none(string)
+  var s = new_string(info.vptr_len)
+  copyMem(s[0].addr.pointer, t[0].addr.pointer, info.vptr_len)
+  return some(s)
 
-  if info.type == BCF_BT_CHAR:
-    var t = cast[CPtr[char]](info.vptr)
-    if info.vptr_len.int > 0 and t[0] == char(0x7):
-      return Value(kind:typNone, xNone: true)
-    # TODO: avoid copy
-    var s = new_string(info.vptr_len)
-    copyMem(s[0].addr.pointer, t[0].addr.pointer, info.vptr_len)
-    return Value(kind:typString, oString:s)
+proc get_flag*(i:INFO, key:string): bool =
+  var info = bcf_get_info(i.v.vcf.header.hdr, i.v.c, key.cstring)
+  if info == nil or info.len != 0:
+    return false
+  return true
+#  if bcf_hdr_id2type(info.v.vcf.header.hdr, BCF_HL_INFO, info.key) == BCF_HT_FLAG:
+#      return true
+#  return false
+#
+]#
 
 proc destroy_vcf(v:VCF) =
   bcf_hdr_destroy(v.header.hdr)
@@ -112,6 +170,10 @@ proc open*(v:var VCF, fname:string, mode:string="r", samples:seq[string]=empty_s
   v.n_samples = bcf_hdr_nsamples(v.header.hdr)
   v.c = bcf_init()
 
+  if v.c == nil:
+    stderr.write_line "hts-nim/vcf: error opening file:" & fname
+    return false
+    
   v.fname = fname
 
   return true
@@ -119,6 +181,8 @@ proc open*(v:var VCF, fname:string, mode:string="r", samples:seq[string]=empty_s
 proc bcf_hdr_id2name(hdr: ptr bcf_hdr_t, rid: cint): cstring {.inline.} =
   var v = cast[CPtr[bcf_idpair_t]](hdr.id[1])
   return v[rid.int].key
+
+
 
 #define bcf_hdr_int2id(hdr,type,int_id) ((hdr)->id[type][int_id].key)
 
@@ -134,13 +198,14 @@ iterator items*(v:VCF): Variant =
   ## Each returned Variant has a pointer in the underlying iterator
   ## that is updated each iteration; use .copy to keep it in memory
   var ret = 0
+
   while true:
     ret = bcf_read(v.hts, v.header.hdr, v.c)
     if ret ==  -1:
       break
     #discard bcf_unpack(v.c, 1 or 2 or 4)
     discard bcf_unpack(v.c, BCF_UN_ALL)
-    yield Variant(c:v.c, vcf:v)
+    yield Variant(c:v.c, vcf:v, own:false)
   if v.c.errcode != 0:
     stderr.write_line "hts-nim/vcf bcf_read error:" & $v.c.errcode
     quit(2)
@@ -203,7 +268,7 @@ iterator query*(v:VCF, region: string): Variant =
         #ret = bcf_itr_next(v.hts, itr, v.c)
         ret = hts_itr_next(v.hts.fp.bgzf, itr, v.c, nil)
         if ret < 0: break
-        yield Variant(c:v.c, vcf:v)
+        yield Variant(c:v.c, vcf:v, own:false)
 
     hts_itr_destroy(itr)
     if ret > 0:
@@ -218,6 +283,8 @@ proc destroy_variant(v:Variant) =
   if v != nil and v.c != nil and v.own:
     bcf_destroy(v.c)
     v.c = nil
+    if v.p != nil:
+      free(v.p)
 
 proc copy*(v:Variant): Variant =
   ## make a copy of the variant and the underlying pointer.
@@ -226,6 +293,7 @@ proc copy*(v:Variant): Variant =
   v2.c = bcf_dup(v.c)
   v2.vcf = v.vcf
   v2.own = true
+  v2.p = nil
   return v2
 
 proc POS*(v:Variant): int {.inline.} =
@@ -278,21 +346,30 @@ proc `$`*(v:Variant): string =
 
 when isMainModule:
 
-  var v:VCF
   var tsamples = @["101976-101976", "100920-100920", "100231-100231", "100232-100232", "100919-100919"]
-  assert open(v, "tests/test.bcf", samples=tsamples)
 
-  for rec in v:
-    echo rec, " qual:", rec.QUAL, " filter:", rec.FILTER, "  AC (int):",  rec.info.get("AC").asints()
-    var info = rec.info
-    echo info.get("CSQ").asstring()
-    echo info.get("AF").asfloat()
+  for k in 0..2000:
+    var v:VCF
+    stderr.write_line $k
+    discard open(v, "tests/test.vcf.gz", samples=tsamples)
+    var ac = new_seq[int32](10)
+    var af = new_seq[float32](10)
+    for rec in v:
+      discard rec.info.ints("AC", ac)
+      discard rec.info.floats("AF", af)
+      echo rec, " qual:", rec.QUAL, " filter:", rec.FILTER, "  AC (int):",  ac, " AF(float):", af
+      #if rec.info.get_flag("in_exac_flag"):
+      #  echo "FOUND"
+      #var info = rec.info
+      #echo info.get("CSQ").asstring()
+      #echo info.get("AF").asfloat()
 
-  echo v.samples
+    echo v.samples
+    #[
 
-  echo "QUERY"
-  for rec in v.query("1:15600-18250"):
-    echo rec.CHROM, ":", $rec.POS
-    var info = rec.info()
-    echo info.get("AC").asint()
-
+    echo "QUERY"
+    for rec in v.query("1:15600-18250"):
+      echo rec.CHROM, ":", $rec.POS
+      var info = rec.info()
+      echo info.get_int("AC")
+    ]#
