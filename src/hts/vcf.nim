@@ -28,6 +28,11 @@ type
     v: Variant
     i: int
 
+  FORMAT* = ref object
+    ## FORMAT exposes access to the sample format fields in the VCF
+    v*: Variant
+    p*: pointer
+
 type CArray{.unchecked.}[T] = array[0..0, T]
 type CPtr*[T] = ptr CArray[T]
 
@@ -80,8 +85,43 @@ proc samples*(v:VCF): seq[string] =
 proc info*(v:Variant): INFO {.inline.} =
   return INFO(i:0, v:v)
 
-proc bcf_array_to_object(info:ptr bcf_info_t): Value =
-  return Value(kind:typInt, oInt: 22)
+proc destroy_format(f:Format) =
+  if f != nil and f.p != nil:
+    free(f.p)
+
+proc format*(v:Variant): FORMAT {.inline.} =
+  var f:FORMAT
+  new(f, destroy_format)
+  f.v = v
+  return f
+
+proc toseq[T](data: var seq[T], p:pointer, n:int): bool {.inline.} =
+  ## helper function to fill a sequence with data from a pointer
+  if data == nil:
+    data = new_seq[T](n)
+  elif data.len != n:
+    data.set_len(n)
+
+  var tmp = cast[ptr CArray[T]](p)
+  for i in 0..<n:
+    data[i] = tmp[i]
+  return true
+
+proc ints*(f:FORMAT, key:string, data:var seq[int32]): bool =
+  ## fill data with integer values for each sample with the given key
+  var n:cint = 0
+  var ret = bcf_get_format_values(f.v.vcf.header.hdr, f.v.c, key.cstring,
+     f.p.addr, n.addr, BCF_HT_INT.cint)
+  if ret < 0: return false
+  return toSeq[int32](data, f.p, ret.int)
+
+proc floats*(f:FORMAT, key:string, data:var seq[float32]): bool =
+  ## fill data with integer values for each sample with the given key
+  var n:cint = 0
+  var ret = bcf_get_format_values(f.v.vcf.header.hdr, f.v.c, key.cstring,
+     f.p.addr, n.addr, BCF_HT_REAL.cint)
+  if ret < 0: return false
+  return toSeq[float32](data, f.p, ret.int)
 
 proc ints*(i:INFO, key:string, data:var seq[int32]): bool {.inline.} =
   ## ints fills the given data with ints associated with the key.
@@ -92,15 +132,7 @@ proc ints*(i:INFO, key:string, data:var seq[int32]): bool {.inline.} =
   if ret < 0:
     return false
 
-  if data == nil:
-    data = new_seq[int32](n)
-  elif data.len != n:
-    data.set_len(n)
-
-  var tmp = cast[ptr CArray[int32]](i.v.p)
-  for i in 0..<n:
-    data[i] = tmp[i]
-  return true
+  return toSeq[int32](data, i.v.p, ret.int)
 
 proc floats*(i:INFO, key:string, data:var seq[float32]): bool {.inline.} =
   ## floats fills the given data with ints associated with the key.
@@ -113,16 +145,7 @@ proc floats*(i:INFO, key:string, data:var seq[float32]): bool {.inline.} =
   if ret < 0:
     return false
 
-  if data == nil:
-    data = new_seq[float32](n)
-  elif data.len != n:
-    data.set_len(n)
-
-  var tmp = cast[ptr CArray[float32]](i.v.p)
-  for i in 0..<n:
-    data[i] = tmp[i]
-  return true
-      
+  return toSeq[float32](data, i.v.p, ret.int)
 
 proc strings*(i:INFO, key:string, data:var string): bool {.inline.} =
   ## strings fills the data with the value for the key and returns a bool indicating if the key was found.
@@ -366,6 +389,9 @@ when isMainModule:
     discard open(v, "tests/test.vcf.gz", samples=tsamples)
     var ac = new_seq[int32](10)
     var af = new_seq[float32](10)
+    var dps = new_seq[int32](20)
+    var ads = new_seq[int32](20)
+    var bad = new_seq[float32](20)
     var csq = new_string_of_cap(1000)
     for rec in v:
       discard rec.info.ints("AC", ac)
@@ -374,6 +400,12 @@ when isMainModule:
       echo rec, " qual:", rec.QUAL, " filter:", rec.FILTER, "  AC (int):",  ac, " AF(float):", af, " CSQ:", csq
       if rec.info.has_flag("in_exac_flag"):
         echo "FOUND"
+      var f = rec.format()
+      discard f.ints("DP", dps)
+      discard f.ints("AD", ads)
+      echo dps, " ads:", ads
+      if f.floats("BAD", bad):
+        quit(2)
 
     echo v.samples
 

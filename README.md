@@ -63,10 +63,18 @@ var csq = new_string_of_cap(20)
 for rec in v:
   echo rec, " qual:", rec.QUAL, " filter:", rec.FILTER
   var info = rec.info
+  # accessing stuff from the INFO field is meant to be as fast as possible, allowing
+  # the user to re-use memory as needed.
   info.strings("CSQ", csq)
   info.ints("AC", acs)
   info.floats("AF", afs)
   echo acs, afs, csq, info.has_flag("IN_EXAC")
+
+  # accessing format fields is similar
+  var format = ref.format
+  var dps = new_seq[int32](len(v.samples))
+  assert format.ints("DP", dps)
+  echo dps
 
 echo v.samples
 
