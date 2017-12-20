@@ -1,6 +1,7 @@
 import hts/hts_concat
 import strutils
 import system
+import sequtils
 
 type
   Header* = ref object of RootObj
@@ -47,6 +48,12 @@ type
     UnexpectedType = -2  ## E.g. user requested int when type was float.
     UndefinedTag = -1 ## Tag is not present in the Header
     OK = 0 ## Tag was found
+
+  GT_TYPE {.pure.} = enum
+    HOM_REF
+    HET
+    HOM_ALT
+    UNKNOWN
 
 proc safe*[T](p: CPtr[T], k: int): SafeCPtr[T] {.inline.} =
     SafeCPtr[T](mem: p, size: k)
@@ -171,11 +178,14 @@ proc strings*(i:INFO, key:string, data:var string): Status {.inline.} =
   return Status.OK
 
 proc has_flag(i:INFO, key:string): bool {.inline.} =
-  ## return if the flag is found in the INFO.
+  ## return indicates whether the flag is found in the INFO.
   var info = bcf_get_info(i.v.vcf.header.hdr, i.v.c, key.cstring)
   if info == nil or info.len != 0:
     return false
   return true
+
+proc n_samples*(v:Variant): int {.inline.} =
+  return v.c.n_sample.int
 
 proc destroy_variant(v:Variant) =
   if v != nil and v.c != nil and v.own:
@@ -195,6 +205,7 @@ proc destroy_vcf(v:VCF) =
   bcf_destroy(v.c)
 
 proc open*(v:var VCF, fname:string, mode:string="r", samples:seq[string]=empty_samples, threads:int=0): bool =
+  ## open a VCF at the given path
   new(v, destroy_vcf)
   v.hts = hts_open(fname.cstring, mode.cstring)
   if v.hts == nil:
@@ -213,7 +224,6 @@ proc open*(v:var VCF, fname:string, mode:string="r", samples:seq[string]=empty_s
     return false
     
   v.fname = fname
-
   return true
 
 proc bcf_hdr_id2name(hdr: ptr bcf_hdr_t, rid: cint): cstring {.inline.} =
@@ -347,7 +357,7 @@ proc start*(v:Variant): int {.inline.} =
   return v.c.pos
 
 proc stop*(v:Variant): int {.inline.} =
-  ## return the 0-based position of the start of the variant
+  ## return the 0-based position of the end of the variant
   return v.c.pos + v.c.rlen
 
 proc ID*(v:Variant): cstring {.inline.} =
@@ -383,6 +393,114 @@ proc ALT*(v:Variant): seq[string] {.inline.} =
   for i in 1..<v.c.n_allele.int:
     result[i-1] = $(v.c.d.allele[i])
 
+type
+  Genotypes* = ref object
+    ## Genotypes are the genotype calls for each sample.
+    gts: seq[int32]
+    ploidy: int
+
+  Allele* = distinct int32
+  ## An allele represents each element of a genotype.
+
+  Genotype* = seq[Allele]
+  ## A genotype is a sequence of alleles
+
+
+proc copy*(g: Genotypes): Genotypes =
+  ## make a copy of the genotypes
+  var gts = new_seq[int32](g.gts.len)
+  copyMem(gts[0].addr.pointer, g.gts[0].addr.pointer, gts.len * sizeof(int32))
+  return Genotypes(gts:gts, ploidy:g.ploidy)
+
+proc phased*(a:Allele): bool {.inline.} =
+  return (int32(a) and 1) == 1
+
+proc value*(a:Allele): int {.inline.} =
+  return (int32(a) shr 1) - 1
+
+proc `[]`*(g:Genotypes, i:int): seq[Allele] {.inline.} =
+  var alleles = new_seq[Allele](g.ploidy)
+  for k, v in g.gts[i*g.ploidy..<(i+1)*g.ploidy]:
+    alleles[k] = Allele(v)
+
+  return alleles
+
+proc len*(g:Genotypes): int {.inline.} =
+  return int(len(g.gts) / g.ploidy)
+
+iterator items*(g:Genotypes): Genotype =
+  for k in 0..<g.len:
+    yield g[k]
+
+proc `$`*(a:Allele): string {.inline.} =
+  ## string representation of a single allele.
+  (if a.value < 0: "." else: intToStr(a.value)) & (if a.phased: '|' else: '/')
+
+proc `$`*(g:Genotype): string {.inline.} =
+  ## string representation of a genotype. removes trailing phase value.
+  result = join(map(g, proc(a:Allele): string = $a), "")
+  if result[result.len - 1] == '/' or result[result.len - 1] == '|':
+    result.set_len(result.len - 1)
+
+proc type*(g:Genotype): GT_TYPE {.inline.} =
+  if g.len == 2:
+    if g[0].value == 0 and g[1].value == 1:
+      return GT_TYPE.HET
+    elif g[0].value == 0 and g[1].value == 0:
+      return GT_TYPE.HOM_REF
+    elif g[0].value == 1 and g[1].value == 1:
+      return GT_TYPE.HOM_ALT
+    elif g[0].value == 0 and g[1].value == -1:
+      return GT_TYPE.HOM_REF
+    elif g[0].value == -1 or g[1].value == -1:
+      return GT_TYPE.UNKNOWN
+    elif g[0].value != g[1].value:
+      return GT_TYPE.HET
+
+  var counts: seq[int] = @[0, 0, 0, 0, 0]
+  var unknowns = 0
+  for a in g:
+    if a.value < 0:
+      unknowns += 1
+    else:
+      counts[a.value] += 1
+  if counts[0] == len(g):
+    return GT_TYPE.HOM_REF
+  if counts[1] == len(g):
+    return GT_TYPE.HOM_ALT
+  if counts[0] + counts[1] == len(g):
+    return GT_TYPE.HET
+  if unknowns == len(g):
+    return GT_TYPE.UNKNOWN
+  if counts[0] + unknowns == len(g):
+    return GT_TYPE.HOM_REF
+  var n = 0
+  for k in 2..<len(counts):
+    if counts[k] == len(g):
+      return GT_TYPE.HOM_ALT
+    if counts[k] > 0:
+      n += 1
+  if n > 1:
+    return GT_TYPE.HET
+  raise newException(OSError, "not implemented for:" & $g)
+
+proc genotypes*(f:FORMAT, gts: var seq[int32]): Genotypes =
+  ## give sequence of genotypes (using the underlying array given in gts)
+  if f.ints("GT", gts) != Status.OK:
+    return nil
+  result = Genotypes(gts: gts, ploidy: int(gts.len/f.v.n_samples))
+
+proc `$`*(gs:Genotypes): string =
+  var x = new_seq_of_cap[string](gs.len)
+  for g in gs:
+    x.add($g)
+  return '[' & join(x, ", ") & ']'
+
+proc types*(gs:Genotypes): seq[GT_TYPE] =
+  result = new_seq_of_cap[GT_TYPE](gs.len)
+  for g in gs:
+    result.add(g.type)
+
 proc `$`*(v:Variant): string =
   return format("Variant($#:$# $#/$#)" % [$v.CHROM, $v.POS, $v.REF, join(v.ALT, ",")])
 
@@ -401,6 +519,8 @@ when isMainModule:
     var bad = new_seq[float32](20)
     var csq = new_string_of_cap(1000)
     for rec in v:
+      if rec.n_samples != tsamples.len:
+        quit(2)
       discard rec.info.ints("AC", ac)
       discard rec.info.floats("AF", af)
       discard rec.info.strings("CSQ", csq)
@@ -413,6 +533,10 @@ when isMainModule:
       echo dps, " ads:", ads
       if f.floats("BAD", bad) != Status.UndefinedTag:
         quit(2)
+      var gts = f.genotypes(ac)
+      echo gts
+      echo gts.copy()
+      echo gts.types
 
     echo v.samples
 
@@ -421,4 +545,3 @@ when isMainModule:
       echo rec.CHROM, ":", $rec.POS
       var info = rec.info()
       discard info.ints("AC", ac)
-      echo ac
