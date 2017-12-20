@@ -33,13 +33,20 @@ type
     v*: Variant
     p*: pointer
 
-type CArray{.unchecked.}[T] = array[0..0, T]
-type CPtr*[T] = ptr CArray[T]
+  CArray{.unchecked.}[T] = array[0..0, T]
+  CPtr*[T] = ptr CArray[T]
 
-type SafeCPtr*[T] =
-  object
-    size: int
-    mem: CPtr[T]
+  SafeCPtr*[T] =
+    object
+      size: int
+      mem: CPtr[T]
+
+  Status {.pure.} = enum
+    ## contains the values returned from the INFO for FORMAT fields.
+    NotFound = -3 ## Tag is not present in the Record
+    UnexpectedType = -2  ## E.g. user requested int when type was float.
+    UndefinedTag = -1 ## Tag is not present in the Header
+    OK = 0 ## Tag was found
 
 proc safe*[T](p: CPtr[T], k: int): SafeCPtr[T] {.inline.} =
     SafeCPtr[T](mem: p, size: k)
@@ -95,7 +102,7 @@ proc format*(v:Variant): FORMAT {.inline.} =
   f.v = v
   return f
 
-proc toseq[T](data: var seq[T], p:pointer, n:int): bool {.inline.} =
+proc toseq[T](data: var seq[T], p:pointer, n:int): Status {.inline.} =
   ## helper function to fill a sequence with data from a pointer
   if data == nil:
     data = new_seq[T](n)
@@ -105,36 +112,36 @@ proc toseq[T](data: var seq[T], p:pointer, n:int): bool {.inline.} =
   var tmp = cast[ptr CArray[T]](p)
   for i in 0..<n:
     data[i] = tmp[i]
-  return true
+  return Status.OK
 
-proc ints*(f:FORMAT, key:string, data:var seq[int32]): bool =
+proc ints*(f:FORMAT, key:string, data:var seq[int32]): Status =
   ## fill data with integer values for each sample with the given key
   var n:cint = 0
   var ret = bcf_get_format_values(f.v.vcf.header.hdr, f.v.c, key.cstring,
      f.p.addr, n.addr, BCF_HT_INT.cint)
-  if ret < 0: return false
+  if ret < 0: return Status(ret.int)
   return toSeq[int32](data, f.p, ret.int)
 
-proc floats*(f:FORMAT, key:string, data:var seq[float32]): bool =
+proc floats*(f:FORMAT, key:string, data:var seq[float32]): Status =
   ## fill data with integer values for each sample with the given key
   var n:cint = 0
   var ret = bcf_get_format_values(f.v.vcf.header.hdr, f.v.c, key.cstring,
      f.p.addr, n.addr, BCF_HT_REAL.cint)
-  if ret < 0: return false
+  if ret < 0: return Status(ret.int)
   return toSeq[float32](data, f.p, ret.int)
 
-proc ints*(i:INFO, key:string, data:var seq[int32]): bool {.inline.} =
+proc ints*(i:INFO, key:string, data:var seq[int32]): Status {.inline.} =
   ## ints fills the given data with ints associated with the key.
   var n:cint = 0
 
   var ret = bcf_get_info_values(i.v.vcf.header.hdr, i.v.c, key.cstring,
      i.v.p.addr, n.addr, BCF_HT_INT.cint)
   if ret < 0:
-    return false
+    return Status(ret.int)
 
   return toSeq[int32](data, i.v.p, ret.int)
 
-proc floats*(i:INFO, key:string, data:var seq[float32]): bool {.inline.} =
+proc floats*(i:INFO, key:string, data:var seq[float32]): Status {.inline.} =
   ## floats fills the given data with ints associated with the key.
   ## in many cases, the user will want only a single value; in that case
   ## data will have length 1 with the single value.
@@ -143,11 +150,11 @@ proc floats*(i:INFO, key:string, data:var seq[float32]): bool {.inline.} =
   var ret = bcf_get_info_values(i.v.vcf.header.hdr, i.v.c, key.cstring,
      i.v.p.addr, n.addr, BCF_HT_REAL.cint)
   if ret < 0:
-    return false
+    return Status(ret.int)
 
   return toSeq[float32](data, i.v.p, ret.int)
 
-proc strings*(i:INFO, key:string, data:var string): bool {.inline.} =
+proc strings*(i:INFO, key:string, data:var string): Status {.inline.} =
   ## strings fills the data with the value for the key and returns a bool indicating if the key was found.
   var n:cint = 0
 
@@ -155,13 +162,13 @@ proc strings*(i:INFO, key:string, data:var string): bool {.inline.} =
      i.v.p.addr, n.addr, BCF_HT_STR.cint)
   if ret < 0:
     if data.len != 0: data.set_len(0)
-    return false
+    return Status(ret.int)
   data.set_len(ret.int)
   #var tmp = cast[ptr CArray[char]](i.v.p)
   #for i in 0..<ret.int:
   #  data[i] = tmp[i]
   copyMem(data[0].addr.pointer, i.v.p, ret.int)
-  return true
+  return Status.OK
 
 proc has_flag(i:INFO, key:string): bool {.inline.} =
   ## return if the flag is found in the INFO.
@@ -404,7 +411,7 @@ when isMainModule:
       discard f.ints("DP", dps)
       discard f.ints("AD", ads)
       echo dps, " ads:", ads
-      if f.floats("BAD", bad):
+      if f.floats("BAD", bad) != Status.UndefinedTag:
         quit(2)
 
     echo v.samples
