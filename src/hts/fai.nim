@@ -1,4 +1,4 @@
-import hts/hts_concat
+import ./hts_concat
 type
   Fai* = ref object of RootObj
     ## Header wraps the bam header info.

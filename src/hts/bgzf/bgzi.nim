@@ -1,6 +1,6 @@
-import hts/hts_concat
-import hts/bgzf
-import hts/csi
+import ../hts_concat
+import ../bgzf
+import ../csi
 import strutils
 import os
 

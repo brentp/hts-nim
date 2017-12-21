@@ -1,4 +1,4 @@
-import hts/hts_concat
+import "./hts_concat"
 import strutils
 import system
 import sequtils
@@ -50,13 +50,11 @@ type
     OK = 0 ## Tag was found
 
   GT_TYPE {.pure.} = enum
+    ## types return from genotype.types
     HOM_REF
     HET
     HOM_ALT
     UNKNOWN
-
-proc safe*[T](p: CPtr[T], k: int): SafeCPtr[T] {.inline.} =
-    SafeCPtr[T](mem: p, size: k)
 
 proc `[]`*[T](p: SafeCPtr[T], k: int): T {.inline.} =
   when not defined(release):
@@ -67,16 +65,6 @@ proc `[]=`*[T](p: SafeCPtr[T], k: int, val: T) {.inline.} =
   when not defined(release):
     assert k < p.size
   p.mem[k] = val
-
-proc `$`*[T](p: SafeCPtr[T]): string =
-  result = new_string_of_cap(40)
-  result.add("[")
-  for i in 0..<p.size:
-    result.add(intToStr(int(p[i])) & ", ")
-  result[result.len - 2] = ']'
-  result.set_len(result.len-1)
-
-include "hts/value.nim"
 
 var empty_samples:seq[string]
 
@@ -213,7 +201,7 @@ proc open*(v:var VCF, fname:string, mode:string="r", samples:seq[string]=empty_s
     return false
   
   v.header = Header(hdr:bcf_hdr_read(v.hts))
-  if samples != nil:
+  if samples != nil and samples != empty_samples:
     v.set_samples(samples)
 
   v.n_samples = bcf_hdr_nsamples(v.header.hdr)
@@ -396,6 +384,9 @@ proc ALT*(v:Variant): seq[string] {.inline.} =
 type
   Genotypes* = ref object
     ## Genotypes are the genotype calls for each sample.
+    ## These are represented efficiently with the int32 values used in the underlying
+    ## representation. However, we are able to efficiently manipulate them by adding
+    ## methods to the base type.
     gts: seq[int32]
     ploidy: int
 
@@ -413,9 +404,11 @@ proc copy*(g: Genotypes): Genotypes =
   return Genotypes(gts:gts, ploidy:g.ploidy)
 
 proc phased*(a:Allele): bool {.inline.} =
+  ## is the allele pahsed.
   return (int32(a) and 1) == 1
 
 proc value*(a:Allele): int {.inline.} =
+  ## e.g. 0 for REF, 1 for first alt, -1 for unknown.
   return (int32(a) shr 1) - 1
 
 proc `[]`*(g:Genotypes, i:int): seq[Allele] {.inline.} =
@@ -426,6 +419,7 @@ proc `[]`*(g:Genotypes, i:int): seq[Allele] {.inline.} =
   return alleles
 
 proc len*(g:Genotypes): int {.inline.} =
+  ## this should match the number of samples.
   return int(len(g.gts) / g.ploidy)
 
 iterator items*(g:Genotypes): Genotype =
@@ -443,6 +437,7 @@ proc `$`*(g:Genotype): string {.inline.} =
     result.set_len(result.len - 1)
 
 proc type*(g:Genotype): GT_TYPE {.inline.} =
+  ## return the type of variant (hom ref/het/etc).
   if g.len == 2:
     if g[0].value == 0 and g[1].value == 1:
       return GT_TYPE.HET
@@ -497,6 +492,7 @@ proc `$`*(gs:Genotypes): string =
   return '[' & join(x, ", ") & ']'
 
 proc types*(gs:Genotypes): seq[GT_TYPE] =
+  ## return the types (HOM_REF/HET, etc) for each sample.
   result = new_seq_of_cap[GT_TYPE](gs.len)
   for g in gs:
     result.add(g.type)

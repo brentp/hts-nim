@@ -1,4 +1,4 @@
-import hts/simpleoption
+import ../simpleoption
 export simpleoption
 
 type 

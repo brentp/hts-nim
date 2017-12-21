@@ -1,5 +1,5 @@
-import hts/hts_concat
-import hts/bgzf
+import ./hts_concat
+import ./bgzf
 type
   CSI* = ref object of RootObj
     tbx*: tbx_t

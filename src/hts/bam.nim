@@ -1,4 +1,4 @@
-import hts/hts_concat
+import ./hts_concat
 include "./bam/enums"
 import strutils
 include "./bam/flag"
@@ -21,7 +21,7 @@ type
     rec: Record
     idx*: ptr hts_idx_t
 
-  Target* = ref object of RootObj
+  Target* = ref object
     ## Target is a chromosome or contig from the bam header.
     name*: string
     length*: uint32
@@ -35,11 +35,13 @@ proc finalize_header(h: Header) =
   bam_hdr_destroy(h.hdr)
 
 proc stats*(idx: ptr hts_idx_t, tid: int): IndexStats =
+  ## get the stats from the index.
   var v: IndexStats = (0'u64, 0'u64)
   discard hts_idx_get_stat(idx, cint(tid), v.mapped.addr, v.unmapped.addr)
   return v
 
 proc copy*(h: Header): Header =
+  ## make a copy of the bam Header and underlying pointer.
   var hdr: Header
   new(hdr, finalize_header)
   hdr.hdr = bam_hdr_dup(h.hdr)
@@ -49,6 +51,7 @@ template bam_get_seq(b: untyped): untyped =
   cast[CPtr[uint8]](cast[uint]((b).data) + uint(((b).core.n_cigar shl 2) + (b).core.l_qname))
 
 proc sequence*(r: Record, s: var string): string =
+  ## fill the given string with the read sequence
   if len(s) != r.b.core.l_qseq:
     s.set_len(r.b.core.l_qseq)
   var bseq = bam_get_seq(r.b)
@@ -60,6 +63,7 @@ template bam_get_qual(b: untyped): untyped =
   cast[CPtr[uint8]](cast[uint]((b).data) + uint(uint((b).core.n_cigar shl 2) + uint((b).core.l_qname) + uint((b.core.l_qseq + 1) shr 1)))
 
 proc base_qualities*(r: Record, q: var seq[uint8]): seq[uint8] =
+  ## fill the given seq with the base-qualities.
   if len(q) != r.b.core.l_qseq:
     q.set_len(r.b.core.l_qseq)
 
@@ -69,6 +73,7 @@ proc base_qualities*(r: Record, q: var seq[uint8]): seq[uint8] =
   return q
 
 proc targets*(h: Header): seq[Target] =
+  ## The targets (chromosomes) from the header.
   var n = int(h.hdr.n_targets)
   var ts = newSeq[Target](n)
   var arr = safe(cast[CPtr[uint32]](h.hdr.target_len), n)
@@ -161,16 +166,18 @@ proc `$`*(r: Record): string =
     return format("Record($1:$2-$3):$4", [r.chrom, intToStr(r.start), intToStr(r.stop), r.qname])
 
 proc qual*(r: Record): uint8 =
+  ## mapping quality
   return r.b.core.qual
 
 proc isize*(r: Record): int32 =
+  ## insert size
   return r.b.core.isize
 
 proc mate_pos*(r: Record): int32 =
+  ## mate position
   return r.b.core.mpos
 
 proc tostring*(r: Record): string =
-  #var kstr: ptr kstring_t
   var kstr : kstring_t
   kstr.l = 0
   kstr.m = 0
