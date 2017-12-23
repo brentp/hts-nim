@@ -1,4 +1,4 @@
-import ./hts_concat
+import ./private/hts_concat
 include "./bam/enums"
 import strutils
 include "./bam/flag"

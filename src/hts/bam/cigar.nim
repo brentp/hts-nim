@@ -1,4 +1,4 @@
-import ../hts_concat
+import ../private/hts_concat
 import strutils
 # https://forum.nim-lang.org/t/567 (by Jehan)
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@

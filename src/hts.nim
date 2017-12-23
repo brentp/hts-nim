@@ -1,0 +1,16 @@
+import ./hts/utils
+import ./hts/private/hts_concat
+export kstring_t, free, hts_open, hts_close, hts_getline
+export utils
+import ./hts/bam
+export bam
+import ./hts/vcf
+export vcf
+import ./hts/fai
+export fai
+import ./hts/bgzf
+export bgzf
+import ./hts/bgzf/bgzi
+export bgzi
+import hts/csi
+export csi

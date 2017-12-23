@@ -17,7 +17,7 @@ task test, "run the tests":
   exec "nim c --lineDir:on --debuginfo -r tests/all"
 
 before test:
-  exec "c2nim src/hts/hts_concat.h"
+  exec "c2nim src/hts/private/hts_concat.h"
 
 task docs, "make docs":
   exec "nim doc2 src/hts; mkdir -p docs; mv hts.html docs/index.html"

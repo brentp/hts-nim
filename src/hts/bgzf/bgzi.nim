@@ -1,4 +1,4 @@
-import ../hts_concat
+import ../private/hts_concat
 import ../bgzf
 import ../csi
 import strutils
