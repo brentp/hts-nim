@@ -258,15 +258,6 @@ type
     format*: htsFormat
 
 
-## !
-##   @abstract  Sets a specified CRAM option on the open file handle.
-##   @param fp  The file handle open the open file.
-##   @param opt The CRAM_OPT_* option.
-##   @param ... Optional arguments, dependent on the option used.
-##   @return    0 for success, or negative if an error occurred.
-## int hts_set_opt(htsFile *fp, enum hts_fmt_option opt, ...);
-## 
-
 proc hts_open*(fn: cstring; mode: cstring): ptr htsFile {.cdecl, importc: "hts_open",
     dynlib: libname.}
 proc hts_close*(fp: ptr htsFile): cint {.cdecl, importc: "hts_close", dynlib: libname.}
@@ -274,8 +265,6 @@ proc hts_check_EOF*(fp: ptr htsFile): cint {.cdecl, importc: "hts_check_EOF",
                                         dynlib: libname.}
 proc hts_getline*(fp: ptr htsFile; delimiter: cint; str: ptr kstring_t): cint {.cdecl,
     importc: "hts_getline", dynlib: libname.}
-## char **hts_readlines(const char *fn, int *_n);
-
 proc hts_set_threads*(fp: ptr htsFile; n: cint): cint {.cdecl,
     importc: "hts_set_threads", dynlib: libname.}
 proc hts_set_fai_filename*(fp: ptr htsFile; fn_aux: cstring): cint {.cdecl,
@@ -614,7 +603,7 @@ proc faidx_has_seq*(fai: ptr faidx_t; seq: cstring): cint {.cdecl,
 ## 
 
 type
-  INNER_C_UNION_681630523* {.bycopy.} = object {.union.}
+  INNER_C_UNION_3837033530* {.bycopy.} = object {.union.}
     i*: int32                  ##  integer value
     f*: cfloat                 ##  float value
   
@@ -644,7 +633,7 @@ type
     key*: cint                 ##  key: numeric tag id, the corresponding string is bcf_hdr_t::id[BCF_DT_ID][$key].key
     `type`*: cint
     len*: cint                 ##  type: one of BCF_BT_* types; len: vector length, 1 for scalars
-    v1*: INNER_C_UNION_681630523 ##  only set if $len==1; for easier access
+    v1*: INNER_C_UNION_3837033530 ##  only set if $len==1; for easier access
     vptr*: ptr uint8            ##  pointer to data array in bcf1_t->shared.s, excluding the size+type and tag id bytes
     vptr_len*: uint32          ##  length of the vptr block or, when set, of the vptr_mod block, excluding offset
     vptr_off* {.bitsize: 31.}: uint32 ##  vptr offset, i.e., the size of the INFO key plus size+type bytes
@@ -720,14 +709,6 @@ template bcf_hdr_nsamples*(hdr: untyped): untyped =
 
 proc bcf_hdr_id2int*(hdr: ptr bcf_hdr_t; `type`: cint; id: cstring): cint {.cdecl,
     importc: "bcf_hdr_id2int", dynlib: libname.}
-## 
-## #define bcf_hdr_int2id(hdr,type,int_id) ((hdr)->id[type][int_id].key)
-## 
-## static inline int bcf_hdr_name2id(const bcf_hdr_t *hdr, const char *id) { return bcf_hdr_id2int(hdr, BCF_DT_CTG, id); }
-## static inline const char *bcf_hdr_id2name(const bcf_hdr_t *hdr, int rid) { return hdr->id[BCF_DT_CTG][rid].key; }
-## static inline const char *bcf_seqname(const bcf_hdr_t *hdr, bcf1_t *rec) { return hdr->id[BCF_DT_CTG][rec->rid].key; }
-## 
-
 const
   bcf_float_missing* = 0x7F800001
 
@@ -738,8 +719,6 @@ proc bcf_float_is_missing*(f: cfloat): cint {.inline, cdecl.} =
 
 proc bcf_read*(fp: ptr htsFile; h: ptr bcf_hdr_t; v: ptr bcf1_t): cint {.cdecl,
     importc: "bcf_read", dynlib: libname.}
-## static inline const char *bcf_hdr_id2name(const bcf_hdr_t *hdr, int rid);
-
 const
   BCF_DT_ID* = 0
   BCF_DT_CTG* = 1
@@ -798,7 +777,3 @@ proc bcf_get_info*(hdr: ptr bcf_hdr_t; line: ptr bcf1_t; key: cstring): ptr bcf_
 proc bcf_get_info_values*(hdr: ptr bcf_hdr_t; line: ptr bcf1_t; tag: cstring;
                          dst: ptr pointer; ndst: ptr cint; `type`: cint): cint {.cdecl,
     importc: "bcf_get_info_values", dynlib: libname.}
-## ##############################################
-## # hts_extra
-## ##############################################
-## int bam_get_read_seq(bam1_t *b, kstring_t *str);

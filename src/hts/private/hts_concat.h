@@ -209,21 +209,11 @@ typedef struct {
 } htsFile;
 
 
-/*!
-  @abstract  Sets a specified CRAM option on the open file handle.
-  @param fp  The file handle open the open file.
-  @param opt The CRAM_OPT_* option.
-  @param ... Optional arguments, dependent on the option used.
-  @return    0 for success, or negative if an error occurred.
-int hts_set_opt(htsFile *fp, enum hts_fmt_option opt, ...);
-*/
-
 htsFile *hts_open(const char *fn, const char *mode);
 int hts_close(htsFile *fp);
 int hts_check_EOF(htsFile *fp);
 
 int hts_getline(htsFile *fp, int delimiter, kstring_t *str);
-//char **hts_readlines(const char *fn, int *_n);
 int hts_set_threads(htsFile *fp, int n);
 int hts_set_fai_filename(htsFile *fp, const char *fn_aux);
 
@@ -600,13 +590,6 @@ bcf1_t *bcf_init(void);
 
 int bcf_hdr_id2int(const bcf_hdr_t *hdr, int type, const char *id);
 
-/*
-#define bcf_hdr_int2id(hdr,type,int_id) ((hdr)->id[type][int_id].key)
-
-static inline int bcf_hdr_name2id(const bcf_hdr_t *hdr, const char *id) { return bcf_hdr_id2int(hdr, BCF_DT_CTG, id); }
-static inline const char *bcf_hdr_id2name(const bcf_hdr_t *hdr, int rid) { return hdr->id[BCF_DT_CTG][rid].key; }
-static inline const char *bcf_seqname(const bcf_hdr_t *hdr, bcf1_t *rec) { return hdr->id[BCF_DT_CTG][rec->rid].key; }
-*/
 
 #define bcf_float_missing 0x7F800001
 
@@ -619,7 +602,6 @@ static inline int bcf_float_is_missing(float f) {
 
 int bcf_read(htsFile *fp, const bcf_hdr_t *h, bcf1_t *v);
 
-//static inline const char *bcf_hdr_id2name(const bcf_hdr_t *hdr, int rid);
 #define BCF_DT_ID       0 // dictionary type
 #define BCF_DT_CTG      1
 #define BCF_DT_SAMPLE   2
@@ -670,7 +652,3 @@ bcf_info_t *bcf_get_info(const bcf_hdr_t *hdr, bcf1_t *line, const char *key);
 int bcf_get_info_values(const bcf_hdr_t *hdr, bcf1_t *line, const char *tag, void **dst, int *ndst, int type);
 
 
-//##############################################
-//# hts_extra
-//##############################################
-//int bam_get_read_seq(bam1_t *b, kstring_t *str);

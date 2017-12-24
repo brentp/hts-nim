@@ -5,6 +5,7 @@ author        = "Brent Pedersen"
 description   = "hts (bam/sam) for nim"
 license       = "MIT"
 
+
 # Dependencies
 
 requires "nim >= 0.17.2" #, "nim-lang/c2nim>=0.9.13"
@@ -13,11 +14,21 @@ srcDir = "src"
 skipDirs = @["tests"]
 skipFiles = @["teloage.nim"]
 
+import ospaths,strutils
+
 task test, "run the tests":
   exec "nim c --lineDir:on --debuginfo -r tests/all"
 
 before test:
   exec "c2nim src/hts/private/hts_concat.h"
 
-task docs, "make docs":
-  exec "nim doc2 src/hts; mkdir -p docs; mv hts.html docs/index.html"
+
+task docs, "Builds documentation":
+  mkDir("docs"/"hts")
+  exec "nim doc2 --verbosity:0 --hints:off -o:docs/index.html  src/hts.nim"
+  for file in listfiles("src/hts"):
+    if file.endswith("value.nim"): continue
+    if splitfile(file).ext == ".nim":
+      exec "nim doc2 --verbosity:0 --hints:off -o:" & "docs" /../ file.changefileext("html").split("/", 1)[1] & " " & file
+  echo "DONE - Look inside /docs, possibly serve it to a browser."
+

@@ -14,7 +14,7 @@ Here are examples of the syntax in this library:
 ## BAM
 
 ```nim
-import hts/bam
+import hts
 
 # open a bam and look for the index.
 var b:Bam
@@ -49,7 +49,7 @@ for record in cram:
 ## VCF/BCF
 
 ```nim
-import hts/vcf
+import hts
 
 var tsamples = @["101976-101976", "100920-100920", "100231-100231", "100232-100232", "100919-100919"]
 

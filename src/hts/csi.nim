@@ -1,5 +1,6 @@
 import ./private/hts_concat
 import ./bgzf
+
 type
   CSI* = ref object of RootObj
     tbx*: tbx_t
