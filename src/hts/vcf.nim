@@ -506,7 +506,8 @@ when isMainModule:
 
   for k in 0..2000:
     var v:VCF
-    stderr.write_line $k
+    if k mod 200 == 0:
+      stderr.write_line $k
     discard open(v, "tests/test.vcf.gz", samples=tsamples)
     var ac = new_seq[int32](10)
     var af = new_seq[float32](10)

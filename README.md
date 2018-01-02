@@ -3,6 +3,8 @@ hts-nim
 
 [![badge](https://img.shields.io/badge/docs-latest-blue.svg)](https://brentp.github.io/hts-nim/)
 
+[![Build Status](https://travis-ci.org/brentp/hts-nim.svg?branch=master)](https://travis-ci.org/brentp/hts-nim)
+
 
 This is a wrapper for [htslib](https://github.com/samtools/htslib) in [nim](https://nim-lang.org). 
 

@@ -1,0 +1,22 @@
+language: c
+env:
+  - BRANCH=devel
+
+before_install:
+  - export PATH="$HOME/nim-$BRANCH/bin/nim/bin:${PATH:+:$PATH}"
+  - export LD_LIBRARY_PATH=$HOME/htslib/
+  - export PATH="$HOME/nim-$BRANCH/bin${PATH:+:$PATH}"
+  - export PATH="$HOME/nimble/src:$PATH::~/.nimble/bin"
+
+install:
+  - bash ./scripts/install.sh
+script:
+  - nimble test
+  - nim c -r src/hts/vcf.nim > /dev/null
+cache:
+  directories:
+    - nim-master
+    - nim-devel
+branches:
+  except:
+    - gh-pages
