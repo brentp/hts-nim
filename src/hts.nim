@@ -12,5 +12,5 @@ import ./hts/bgzf
 export bgzf
 import ./hts/bgzf/bgzi
 export bgzi
-import hts/csi
+import ./hts/csi
 export csi

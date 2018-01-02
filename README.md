@@ -11,9 +11,9 @@ This is a wrapper for [htslib](https://github.com/samtools/htslib) in [nim](http
 Nim is a fast, garbage collected language that compiles to C and has a syntax that's not
 too different to python.
 
-Here are examples of the syntax in this library:
+below are examples of the syntax in this library see the [docs](https://brentp.github.io/hts-nim/) for more info:
 
-## BAM
+## BAM / CRAM / SAM
 
 ```nim
 import hts
@@ -48,7 +48,7 @@ for record in cram:
   echo record.qname, record.isize
 ```
 
-## VCF/BCF
+## VCF / BCF
 
 ```nim
 import hts
@@ -80,7 +80,7 @@ for rec in v:
 
 echo v.samples
 
-# regional queries look for index. worsk for VCF and BCF
+# regional queries look for index. works for VCF and BCF
 for rec in v.query("1:15600-18250"):
   echo rec.CHROM, ":", $rec.POS
 ```

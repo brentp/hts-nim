@@ -24,7 +24,7 @@ task test, "run the tests":
 
 task docs, "Builds documentation":
   mkDir("docs"/"hts")
-  exec "nim doc2 --verbosity:0 --hints:off -o:docs/index.html  src/hts.nim"
+  #exec "nim doc2 --verbosity:0 --hints:off -o:docs/index.html  src/hts.nim"
   for file in listfiles("src/hts"):
     if file.endswith("value.nim"): continue
     if splitfile(file).ext == ".nim":
