@@ -165,15 +165,15 @@ iterator queryi*(bam: Bam, tid:int, start:int, stop:int): Record =
 proc `$`*(r: Record): string =
     return format("Record($1:$2-$3):$4", [r.chrom, intToStr(r.start), intToStr(r.stop), r.qname])
 
-proc qual*(r: Record): uint8 =
+proc qual*(r: Record): uint8 {.inline.} =
   ## mapping quality
   return r.b.core.qual
 
-proc isize*(r: Record): int32 =
+proc isize*(r: Record): int32 {.inline.} =
   ## insert size
   return r.b.core.isize
 
-proc mate_pos*(r: Record): int32 =
+proc mate_pos*(r: Record): int32 {.inline.} =
   ## mate position
   return r.b.core.mpos
 
@@ -192,22 +192,46 @@ proc tostring*(r: Record): string =
 proc finalize_bam(bam: Bam) =
   if bam.idx != nil:
       hts_idx_destroy(bam.idx)
-  discard htsClose(bam.hts)
+  discard hts_close(bam.hts)
 
 proc finalize_record(rec: Record) =
   bam_destroy1(rec.b)
 
-proc open*(bam: var Bam, path: cstring, threads: int=0, fai: cstring=nil, index: bool=false) =
+proc write_header*(bam: var Bam, header: Header) =
+  ## write the bam the the bam stream. useful when a bam is opened in write mode.
+  ## this also sets the header.
+  bam.hdr = header.copy()
+  if sam_hdr_write(bam.hts, bam.hdr.hdr) != 0:
+    raise newException(ValueError, "[hts-nim/bam] error writing new header")
+
+proc write*(bam: var Bam, rec: Record) {.inline.} =
+  ## write the record to the bam which must be writeable.
+  # @return >= 0 on successfully reading a new record, -1 on end of stream, < -1 on error
+  if sam_write1(bam.hts, bam.hdr.hdr, rec.b) < -1:
+    raise newException(ValueError, "error writing to file:")
+
+proc close*(bam: Bam) =
+  discard hts_close(bam.hts)
+
+proc open*(bam: var Bam, path: cstring, threads: int=0, mode:string="r", fai: cstring=nil, index: bool=false) =
   ## `open_hts` returns a bam object for the given path. If CRAM, then fai must be given.
   ## if index is true, then it will attempt to open an index file for regional queries.
-  var hts = hts_open(path, "r")
-  if hts_check_EOF(hts) != 1:
-    raise newException(ValueError, "invalid bgzf file")
+  var hts = hts_open(path, mode)
+  new(bam, finalize_bam)
+  bam.hts = hts
 
   if fai != nil:
-    discard hts_set_fai_filename(hts, fai);
-  if 0 != threads and 0 != hts_set_threads(hts, cint(threads)):
+    discard hts_set_fai_filename(hts, fai)
+
+  if mode[0] == 'r' and 0 != threads and 0 != hts_set_threads(hts, cint(threads)):
       raise newException(ValueError, "error setting number of threads")
+
+  if mode[0] == 'r' and hts_check_EOF(hts) != 1:
+    raise newException(ValueError, "invalid bgzf file")
+
+  if mode[0] == 'w':
+    return
+
   var hdr: Header
   new(hdr, finalize_header)
   hdr.hdr = sam_hdr_read(hts)
@@ -218,8 +242,6 @@ proc open*(bam: var Bam, path: cstring, threads: int=0, fai: cstring=nil, index:
   new(rec, finalize_record)
   rec.b = b
   rec.hdr = hdr
-  new(bam, finalize_bam)
-  bam.hts = hts
   bam.hdr = hdr
   bam.rec = rec
 

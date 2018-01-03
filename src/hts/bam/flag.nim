@@ -13,40 +13,40 @@ proc `==`*(o: uint16, f: Flag): bool {. borrow, inline .}
 proc has_flag*(f: Flag, o: uint16): bool {. inline .} =
   return (f and o) != 0
 
-proc pair*(f: Flag): bool =
+proc pair*(f: Flag): bool {.inline.} =
   return f.has_flag(BAM_FPAIRED)
 
-proc proper_pair*(f: Flag): bool =
+proc proper_pair*(f: Flag): bool {.inline.} =
   return f.has_flag(BAM_FPROPER_PAIR)
 
-proc unmapped*(f: Flag): bool =
+proc unmapped*(f: Flag): bool {.inline.} =
   return f.has_flag(BAM_FUNMAP)
 
-proc mate_unmapped*(f: Flag): bool =
+proc mate_unmapped*(f: Flag): bool {.inline.} =
   return f.has_flag(BAM_FMUNMAP)
 
-proc reverse*(f: Flag): bool =
+proc reverse*(f: Flag): bool {.inline.} =
   return f.has_flag(BAM_FREVERSE)
 
-proc mate_reverse*(f: Flag): bool =
+proc mate_reverse*(f: Flag): bool {.inline.} =
   return f.has_flag(BAM_FMREVERSE)
 
-proc read1*(f: Flag): bool =
+proc read1*(f: Flag): bool {.inline.} =
   return f.has_flag(BAM_FREAD1)
 
-proc read2*(f: Flag): bool =
+proc read2*(f: Flag): bool {.inline.} =
   return f.has_flag(BAM_FREAD2)
 
-proc secondary*(f: Flag): bool =
+proc secondary*(f: Flag): bool {.inline.} =
   return f.has_flag(BAM_FSECONDARY)
 
-proc qcfail*(f: Flag): bool =
+proc qcfail*(f: Flag): bool {.inline.} =
   return f.has_flag(BAM_FQCFAIL)
 
-proc dup*(f: Flag): bool =
+proc dup*(f: Flag): bool {.inline.} =
   return f.has_flag(BAM_FDUP)
 
-proc supplementary*(f: Flag): bool =
+proc supplementary*(f: Flag): bool {.inline.} =
   return f.has_flag(BAM_FSUPPLEMENTARY)
 
 proc `$`*(f:Flag): string =
