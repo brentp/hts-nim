@@ -11,6 +11,15 @@ This is a wrapper for [htslib](https://github.com/samtools/htslib) in [nim](http
 Nim is a fast, garbage collected language that compiles to C and has a syntax that's not
 too different to python.
 
+## Installation
+
+`hts-nim` requires that [htslib](https://github.com/samtools/htslib) is installed and the shared library is available
+(use `LD_LIBRARY_PATH` if it is not in a standard location).
+Users can also either follow or run [scripts/simple-install.sh](https://github.com/brentp/hts-nim/blob/master/scripts/simple-install.sh) which sets up Nim and nimble ready for use and shows the needed adjustments to `$PATH`.
+Then `hts-nim` can be installed with `nimble install -y` from the root of this repository.
+
+# Usage
+
 below are examples of the syntax in this library see the [docs](https://brentp.github.io/hts-nim/) for more info:
 
 ## BAM / CRAM / SAM
