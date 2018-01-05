@@ -215,11 +215,13 @@ table.line-nums-table {
 /* Links */
 a {
   color: #0077b3;
-  text-decoration: none; }
+  outline: thin dotted #2d2d2d;
+  text-decoration: underline; }
 
 a:hover,
 a:focus {
-  color: #00334d;
+  color: #09739d;
+  background-color: #e0bdbd;
   text-decoration: underline; }
 
 a:visited {

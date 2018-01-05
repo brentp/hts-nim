@@ -20,6 +20,8 @@ Then `hts-nim` can be installed with `nimble install -y` from the root of this r
 
 # Usage
 
+Examples of `hts-nim` tools are available in the [hts-nim-tools repo](https://github.com/brentp/hts-nim-tools)
+
 below are examples of the syntax in this library see the [docs](https://brentp.github.io/hts-nim/) for more info:
 
 ## BAM / CRAM / SAM
