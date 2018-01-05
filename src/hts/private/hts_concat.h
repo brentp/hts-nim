@@ -93,6 +93,9 @@ void free(void *);
 char *strncpy(char *dst, char *src, size_t size);
 long int strtol (const char* str, char** endptr, int base);
 
+#define BCF_DT_ID       0 // dictionary type
+#define BCF_DT_CTG      1
+#define BCF_DT_SAMPLE   2
 
 struct hFILE;
 
@@ -589,6 +592,7 @@ bcf1_t *bcf_init(void);
 #define bcf_hdr_nsamples(hdr) (hdr)->n[BCF_DT_SAMPLE]
 
 int bcf_hdr_id2int(const bcf_hdr_t *hdr, int type, const char *id);
+static inline int bcf_hdr_name2id(const bcf_hdr_t *hdr, const char *id) { return bcf_hdr_id2int(hdr, BCF_DT_CTG, id); }
 
 
 #define bcf_float_missing 0x7F800001
@@ -601,10 +605,6 @@ static inline int bcf_float_is_missing(float f) {
 
 
 int bcf_read(htsFile *fp, const bcf_hdr_t *h, bcf1_t *v);
-
-#define BCF_DT_ID       0 // dictionary type
-#define BCF_DT_CTG      1
-#define BCF_DT_SAMPLE   2
 
 
 #define BCF_UN_STR  1       // up to ALT inclusive

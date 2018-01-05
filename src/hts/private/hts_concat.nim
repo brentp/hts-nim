@@ -114,6 +114,11 @@ proc strncpy*(dst: cstring; src: cstring; size: csize): cstring {.cdecl,
     importc: "strncpy", dynlib: libname.}
 proc strtol*(str: cstring; endptr: cstringArray; base: cint): clong {.cdecl,
     importc: "strtol", dynlib: libname.}
+const
+  BCF_DT_ID* = 0
+  BCF_DT_CTG* = 1
+  BCF_DT_SAMPLE* = 2
+
 type
   hFILE* {.bycopy.} = object
   
@@ -216,14 +221,14 @@ type
 
 
 type
-  INNER_C_STRUCT_3689225739* {.bycopy.} = object
+  INNER_C_STRUCT_1736020040* {.bycopy.} = object
     major*: cshort
     minor*: cshort
 
   htsFormat* {.bycopy.} = object
     category*: htsFormatCategory
     format*: htsExactFormat
-    version*: INNER_C_STRUCT_3689225739
+    version*: INNER_C_STRUCT_1736020040
     compression*: htsCompression
     compression_level*: cshort ##  currently unused
     specific*: pointer         ##  format specific options; see struct hts_opt.
@@ -234,7 +239,7 @@ type
 ## ###########################
 
 type
-  INNER_C_UNION_2754066045* {.bycopy.} = object {.union.}
+  INNER_C_UNION_800860346* {.bycopy.} = object {.union.}
     bgzf*: ptr BGZF
     cram*: ptr cram_fd
     hfile*: ptr hFILE
@@ -254,7 +259,7 @@ type
     line*: kstring_t
     fn*: cstring
     fn_aux*: cstring
-    fp*: INNER_C_UNION_2754066045
+    fp*: INNER_C_UNION_800860346
     format*: htsFormat
 
 
@@ -603,7 +608,7 @@ proc faidx_has_seq*(fai: ptr faidx_t; seq: cstring): cint {.cdecl,
 ## 
 
 type
-  INNER_C_UNION_3837033530* {.bycopy.} = object {.union.}
+  INNER_C_UNION_3807454722* {.bycopy.} = object {.union.}
     i*: int32                  ##  integer value
     f*: cfloat                 ##  float value
   
@@ -633,7 +638,7 @@ type
     key*: cint                 ##  key: numeric tag id, the corresponding string is bcf_hdr_t::id[BCF_DT_ID][$key].key
     `type`*: cint
     len*: cint                 ##  type: one of BCF_BT_* types; len: vector length, 1 for scalars
-    v1*: INNER_C_UNION_3837033530 ##  only set if $len==1; for easier access
+    v1*: INNER_C_UNION_3807454722 ##  only set if $len==1; for easier access
     vptr*: ptr uint8            ##  pointer to data array in bcf1_t->shared.s, excluding the size+type and tag id bytes
     vptr_len*: uint32          ##  length of the vptr block or, when set, of the vptr_mod block, excluding offset
     vptr_off* {.bitsize: 31.}: uint32 ##  vptr offset, i.e., the size of the INFO key plus size+type bytes
@@ -709,6 +714,9 @@ template bcf_hdr_nsamples*(hdr: untyped): untyped =
 
 proc bcf_hdr_id2int*(hdr: ptr bcf_hdr_t; `type`: cint; id: cstring): cint {.cdecl,
     importc: "bcf_hdr_id2int", dynlib: libname.}
+proc bcf_hdr_name2id*(hdr: ptr bcf_hdr_t; id: cstring): cint {.inline, cdecl.} =
+  return bcf_hdr_id2int(hdr, BCF_DT_CTG, id)
+
 const
   bcf_float_missing* = 0x7F800001
 
@@ -720,9 +728,6 @@ proc bcf_float_is_missing*(f: cfloat): cint {.inline, cdecl.} =
 proc bcf_read*(fp: ptr htsFile; h: ptr bcf_hdr_t; v: ptr bcf1_t): cint {.cdecl,
     importc: "bcf_read", dynlib: libname.}
 const
-  BCF_DT_ID* = 0
-  BCF_DT_CTG* = 1
-  BCF_DT_SAMPLE* = 2
   BCF_UN_STR* = 1
   BCF_UN_FLT* = 2
   BCF_UN_INFO* = 4

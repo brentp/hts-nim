@@ -42,14 +42,14 @@ type
       size: int
       mem: CPtr[T]
 
-  Status {.pure.} = enum
+  Status* {.pure.} = enum
     ## contains the values returned from the INFO for FORMAT fields.
     NotFound = -3 ## Tag is not present in the Record
     UnexpectedType = -2  ## E.g. user requested int when type was float.
     UndefinedTag = -1 ## Tag is not present in the Header
     OK = 0 ## Tag was found
 
-  GT_TYPE {.pure.} = enum
+  GT_TYPE* {.pure.} = enum
     ## types return from genotype.types
     HOM_REF
     HET
@@ -267,6 +267,7 @@ iterator vquery(v:VCF, region:string): Variant =
     tid:cint = 0
 
   discard hts_parse_reg(region.cstring, start.addr, stop.addr)
+  tid = tbx_name2id(v.tidx, region)
   var itr = hts_itr_query(v.tidx.idx, tid.cint, start, stop, fn)
     #itr = tbx_itr_querys(v.tidx, region)
   var variant: Variant
@@ -306,7 +307,8 @@ iterator query*(v:VCF, region: string): Variant =
       fn:hts_readrec_func = bcf_readrec
 
     discard hts_parse_reg(region.cstring, start.addr, stop.addr)
-    var itr = hts_itr_query(v.bidx, tid.cint, start, stop, fn)
+    tid = bcf_hdr_name2id(v.header.hdr, region.split(":")[0].cstring)
+    var itr = hts_itr_query(v.bidx, tid, start, stop, fn)
     var ret = 0
     var variant: Variant
     new(variant, destroy_variant)
