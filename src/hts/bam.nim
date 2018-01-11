@@ -118,7 +118,7 @@ proc flag*(r: Record): Flag =
   ## `flag` returns a `Flag` object.
   return Flag(r.b.core.flag)
 
-proc cigar*(r: Record): Cigar =
+proc cigar*(r: Record): Cigar {.inline.} =
   ## `cigar` returns a `Cigar` object.
   return newCigar(bam_get_cigar(r.b), r.b.core.n_cigar)
 

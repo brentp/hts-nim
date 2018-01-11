@@ -40,7 +40,7 @@ type
 type CigarOp* {.pure.} = enum
   match, insert, deletion, ref_skip, soft_clip, hard_clip, pad, equal, diff, back
 
-proc newCigar(p: ptr uint32, n: uint32): Cigar =
+proc newCigar(p: ptr uint32, n: uint32): Cigar {.inline.} =
   return Cigar(cig: safe(cast[CPtr[uint32]](p), int(n)), n:n)
 
 proc len*(c: Cigar): int {. inline .} =
