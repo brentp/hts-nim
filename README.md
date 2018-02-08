@@ -53,7 +53,7 @@ for record in b.query('6', 30816675, 32816675):
 
 # cram requires an fasta to decode:
 var cram:Bam
-open_hts(cram, "/tmp/t.cram", fai="/data/human/g1k_v37_decoy.fa")
+open(cram, "/tmp/t.cram", fai="/data/human/g1k_v37_decoy.fa")
 for record in cram:
   # now record is same as from bam above
   echo record.qname, record.isize

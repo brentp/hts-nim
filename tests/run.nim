@@ -2,7 +2,8 @@ import hts
 
 proc main() =
 
-  var bam = open_hts("tests/HG02002.bam", index=true)
+  var bam:Bam
+  open(bam, "tests/HG02002.bam", index=true)
   #var bam = open_hts("/tmp/t.cram", fai="/data/human/g1k_v37_decoy.fa", index=true)
 
   var recs = newSeq[Record]()
