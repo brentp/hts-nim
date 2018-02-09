@@ -183,7 +183,7 @@ proc has_flag*(i:INFO, key:string): bool {.inline.} =
 proc bcf_hdr_id2type(hdr:ptr bcf_hdr_t, htype:int, int_id:int): int {.inline.}=
   # translation of htslib macro.
   var d = cast[CPtr[bcf_idpair_t]](hdr.id[0])
-  var v = d[int_id.cint].val.info[htype]
+  var v = d[int_id.cint].val.info[htype].int
   return (v shr 4) and 0xf
 
 proc delete*(i:INFO, key:string): Status {.inline.} =
