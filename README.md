@@ -135,6 +135,8 @@ Or you can copy the [Dockerfile from this repo](https://github.com/brentp/hts-ni
 
 If you don't use docker, you can use [choosenim](https://github.com/dom96/choosenim) to quickly install Nim and nimble.
 
+In all cases, it's recommended to use **nim version 0.17.2** which is the latest release.
+
 Then, from this repo you can run `nimble test` and `nimble install` and then you can save the above snippets into `some.nim`
 
 and run them with `nim c -d:release -r some.nim`. This will run them and save an executable named `some`.
