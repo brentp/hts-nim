@@ -50,7 +50,7 @@ type
     OK = 0 ## Tag was found
 
   GT_TYPE* {.pure.} = enum
-    ## types return from genotype.types
+    ## types returned from genotype.types
     HOM_REF
     HET
     HOM_ALT
@@ -188,17 +188,35 @@ proc destroy_vcf(v:VCF) =
     tbx_destroy(v.tidx)
   if v.bidx != nil:
     hts_idx_destroy(v.bidx)
-  if v.fname != "-" and v.fname != "/dev/stdin":
+  if v.fname != "-" and v.fname != "/dev/stdin" and v.hts != nil:
     discard hts_close(v.hts)
   bcf_destroy(v.c)
+
+proc close*(v:VCF) =
+  discard hts_close(v.hts)
+  v.hts = nil
+
+proc `header=`*(v: var VCF, hdr: Header) =
+  v.header = Header(hdr:bcf_hdr_dup(hdr.hdr))
+
+proc write_header*(v: VCF): bool =
+  ## write a the header to the file (must have been opened in write mode) and return a bool for success.
+  return bcf_hdr_write(v.hts, v.header.hdr) == 0
+
+proc write_variant*(v:VCF, variant:Variant): bool =
+  ## write a variant to the VCF opened in write mode and return a bool indicating success.
+  return bcf_write(v.hts, v.header.hdr, variant.c) == 0
 
 proc open*(v:var VCF, fname:string, mode:string="r", samples:seq[string]=empty_samples, threads:int=0): bool =
   ## open a VCF at the given path
   new(v, destroy_vcf)
   v.hts = hts_open(fname.cstring, mode.cstring)
+  v.fname = fname
   if v.hts == nil:
     stderr.write_line "hts-nim/vcf: error opening file:" & fname
     return false
+
+  if mode == "w": return true
   
   v.header = Header(hdr:bcf_hdr_read(v.hts))
   if samples != nil and samples != empty_samples:
@@ -211,7 +229,6 @@ proc open*(v:var VCF, fname:string, mode:string="r", samples:seq[string]=empty_s
     stderr.write_line "hts-nim/vcf: error opening file:" & fname
     return false
     
-  v.fname = fname
   return true
 
 proc bcf_hdr_id2name(hdr: ptr bcf_hdr_t, rid: cint): cstring {.inline.} =

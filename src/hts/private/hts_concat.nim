@@ -741,14 +741,20 @@ const
   BCF_BT_INT32* = 3
   BCF_BT_FLOAT* = 5
   BCF_BT_CHAR* = 7
-  INT8_MIN* = - 128
-  INT16_MIN* = - 32768
-  INT32_MIN* = - 2147483648'i64
+  INT8_MIN* = -128
+  INT16_MIN* = -32768
+  INT32_MIN* = -2147483648'i64
 
 proc bcf_unpack*(b: ptr bcf1_t; which: cint): cint {.cdecl, importc: "bcf_unpack",
     dynlib: libname.}
 proc bcf_hdr_read*(fp: ptr htsFile): ptr bcf_hdr_t {.cdecl, importc: "bcf_hdr_read",
     dynlib: libname.}
+proc bcf_hdr_dup*(hdr: ptr bcf_hdr_t): ptr bcf_hdr_t {.cdecl, importc: "bcf_hdr_dup",
+    dynlib: libname.}
+proc bcf_hdr_write*(fp: ptr htsFile; h: ptr bcf_hdr_t): cint {.cdecl,
+    importc: "bcf_hdr_write", dynlib: libname.}
+proc bcf_write*(fp: ptr htsFile; h: ptr bcf_hdr_t; v: ptr bcf1_t): cint {.cdecl,
+    importc: "bcf_write", dynlib: libname.}
 proc bcf_hdr_destroy*(h: ptr bcf_hdr_t) {.cdecl, importc: "bcf_hdr_destroy",
                                       dynlib: libname.}
 proc bcf_dup*(src: ptr bcf1_t): ptr bcf1_t {.cdecl, importc: "bcf_dup", dynlib: libname.}

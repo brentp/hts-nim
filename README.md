@@ -91,9 +91,19 @@ for rec in v:
 
 echo v.samples
 
+# open a VCF for writing
+var wtr:VCF
+open(wtr, "tests/outv.vcf", mode="w")
+# set and write the header.
+wtr.header = v.header
+assert wtr.write_header()
+
 # regional queries look for index. works for VCF and BCF
 for rec in v.query("1:15600-18250"):
   echo rec.CHROM, ":", $rec.POS
+  assert wtr.write_variant(rec)
+
+wtr.close()
 ```
 
 ## bgzip with csi

@@ -1,1 +1,1 @@
-import flagtest, cigartest, htstest, bgzftest, faitest, auxtest
+import flagtest, cigartest, htstest, bgzftest, faitest, auxtest, vcftest

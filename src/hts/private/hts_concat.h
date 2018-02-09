@@ -628,6 +628,9 @@ int bcf_read(htsFile *fp, const bcf_hdr_t *h, bcf1_t *v);
 
 int bcf_unpack(bcf1_t *b, int which);
 bcf_hdr_t *bcf_hdr_read(htsFile *fp);
+bcf_hdr_t *bcf_hdr_dup(const bcf_hdr_t *hdr);
+int bcf_hdr_write(htsFile *fp, bcf_hdr_t *h);
+int bcf_write(htsFile *fp, bcf_hdr_t *h, bcf1_t *v);
 void bcf_hdr_destroy(bcf_hdr_t *h);
 bcf1_t *bcf_dup(bcf1_t *src);
 void bcf_destroy(bcf1_t *v);
