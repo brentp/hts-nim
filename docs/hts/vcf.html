@@ -12,7 +12,7 @@
 <link rel="shortcut icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AAAAAAUAAAAF////AP///wD///8A////AP///wD///8A////AP///wD///8A////AAAAAAIAAABbAAAAlQAAAKIAAACbAAAAmwAAAKIAAACVAAAAWwAAAAL///8A////AP///wD///8A////AAAAABQAAADAAAAAYwAAAA3///8A////AP///wD///8AAAAADQAAAGMAAADAAAAAFP///wD///8A////AP///wAAAACdAAAAOv///wD///8A////AP///wD///8A////AP///wD///8AAAAAOgAAAJ3///8A////AP///wAAAAAnAAAAcP///wAAAAAoAAAASv///wD///8A////AP///wAAAABKAAAAKP///wAAAABwAAAAJ////wD///8AAAAAgQAAABwAAACIAAAAkAAAAJMAAACtAAAAFQAAABUAAACtAAAAkwAAAJAAAACIAAAAHAAAAIH///8A////AAAAAKQAAACrAAAAaP///wD///8AAAAARQAAANIAAADSAAAARf///wD///8AAAAAaAAAAKsAAACk////AAAAADMAAACcAAAAnQAAABj///8A////AP///wAAAAAYAAAAGP///wD///8A////AAAAABgAAACdAAAAnAAAADMAAAB1AAAAwwAAAP8AAADpAAAAsQAAAE4AAAAb////AP///wAAAAAbAAAATgAAALEAAADpAAAA/wAAAMMAAAB1AAAAtwAAAOkAAAD/AAAA/wAAAP8AAADvAAAA3gAAAN4AAADeAAAA3gAAAO8AAAD/AAAA/wAAAP8AAADpAAAAtwAAAGUAAAA/AAAA3wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAADfAAAAPwAAAGX///8A////AAAAAEgAAADtAAAAvwAAAL0AAADGAAAA7wAAAO8AAADGAAAAvQAAAL8AAADtAAAASP///wD///8A////AP///wD///8AAAAAO////wD///8A////AAAAAIcAAACH////AP///wD///8AAAAAO////wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A//8AAP//AAD4HwAA7/cAAN/7AAD//wAAoYUAAJ55AACf+QAAh+EAAAAAAADAAwAA4AcAAP5/AAD//wAA//8AAA=="/>
 
 <!-- Google fonts -->
-<link href='https://fonts.googleapis.com/css?family=Lato:400,600,900' rel='stylesheet' type='text/css'/>
+<link href='https://fonts.googleapis.com/css?family=Raleway:400,600,900' rel='stylesheet' type='text/css'/>
 <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro:400,500,600' rel='stylesheet' type='text/css'/>
 
 <!-- CSS -->
@@ -45,19 +45,18 @@ html {
 
 /* Where we want fancier font if available */
 h1, h2, h3, h4, h5, h6, p.module-desc, table.docinfo + blockquote p, table.docinfo blockquote p, h1 + blockquote p {
-  font-family: "Lato", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif !important; }
+  font-family: "Raleway", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif !important; }
 
 h1.title {
   font-weight: 900; }
 
 body {
-  font-family: "Lato", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue", "HelveticaNeue", "Raleway", Helvetica, Arial, sans-serif;
   font-weight: 400;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 20px;
-  color: #444;
-  letter-spacing: 0.15px;
-  background-color: rgba(252, 248, 244, 0.45); }
+  color: #666;
+  background-color: rgba(252, 248, 244, 0.75); }
 
 /* Skeleton grid */
 .container {
@@ -173,8 +172,8 @@ cite {
   font-style: italic !important; }
 
 dt > pre {
-  border-color: rgba(0, 0, 0, 0.1);
-  background-color: rgba(255, 255, 255, 0.3);
+  border-color: rgba(0, 0, 0, 0.15);
+  background-color: transparent;
   margin: 15px 0px 5px; }
 
 dd > pre {
@@ -190,17 +189,6 @@ dd > pre {
 .line-nums-table {
   width: 100%;
   table-layout: fixed; }
-
-/* Nim search input */
-div#searchInput {
-  margin-bottom: 8px;
-}
-div#searchInput input#searchInput {
-  width: 10em;
-}
-div.search-groupby {
-  margin-bottom: 8px;
-}
 
 table.line-nums-table {
   border-radius: 4px;
@@ -345,7 +333,7 @@ img {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); }
 
 p {
-  margin: 0 0 8px; }
+  margin: 0 0 12px; }
 
 small {
   font-size: 85%; }
@@ -365,7 +353,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "Lato", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue", "HelveticaNeue", "Raleway", Helvetica, Arial, sans-serif;
   font-weight: 600;
   line-height: 20px;
   color: inherit;
@@ -373,7 +361,6 @@ h6 {
 
 h1 {
   font-size: 2em;
-  font-weight: 400;
   padding-bottom: .15em;
   border-bottom: 1px solid #aaaaaa;
   margin-top: 1.0em;
@@ -504,13 +491,13 @@ pre {
   box-sizing: border-box;
   min-width: calc(100% - 19.5px);
   padding: 9.5px;
-  margin: 0.25em 10px 10px 10px;
-  font-size: 15px;
+  margin: 0.25em 10px 0.25em 10px;
+  font-size: 14px;
   line-height: 20px;
   white-space: pre !important;
   overflow-y: hidden;
   overflow-x: visible;
-  background-color: rgba(0, 0, 0, 0.01);
+  background-color: whitesmoke;
   border: 1px solid #cccccc;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
@@ -789,14 +776,14 @@ div.admonition p.admonition-title, div.hint p.admonition-title,
 div.important p.admonition-title, div.note p.admonition-title,
 div.tip p.admonition-title {
   font-weight: bold;
-  font-family: "Lato", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif; }
+  font-family: "Helvetica Neue", "HelveticaNeue", "Raleway", Helvetica, Arial, sans-serif; }
 
 div.attention p.admonition-title, div.caution p.admonition-title,
 div.danger p.admonition-title, div.error p.admonition-title,
 div.warning p.admonition-title, .code .error {
   color: #b30000;
   font-weight: bold;
-  font-family: "Lato", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif; }
+  font-family: "Helvetica Neue", "HelveticaNeue", "Raleway", Helvetica, Arial, sans-serif; }
 
 /* Uncomment (and remove this text!) to get reduced vertical space in
    compound paragraphs.
@@ -843,7 +830,7 @@ div.sidebar {
   clear: right; }
 
 div.sidebar p.rubric {
-  font-family: "Lato", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue", "HelveticaNeue", "Raleway", Helvetica, Arial, sans-serif;
   font-size: medium; }
 
 div.system-messages {
@@ -950,12 +937,12 @@ p.rubric {
   text-align: center; }
 
 p.sidebar-title {
-  font-family: "Lato", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue", "HelveticaNeue", "Raleway", Helvetica, Arial, sans-serif;
   font-weight: bold;
   font-size: larger; }
 
 p.sidebar-subtitle {
-  font-family: "Lato", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue", "HelveticaNeue", "Raleway", Helvetica, Arial, sans-serif;
   font-weight: bold; }
 
 p.topic-title {
@@ -997,15 +984,15 @@ pre.code .inserted, code .inserted {
   background-color: #A3D289; }
 
 span.classifier {
-  font-family: "Lato", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue", "HelveticaNeue", "Raleway", Helvetica, Arial, sans-serif;
   font-style: oblique; }
 
 span.classifier-delimiter {
-  font-family: "Lato", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue", "HelveticaNeue", "Raleway", Helvetica, Arial, sans-serif;
   font-weight: bold; }
 
 span.interpreted {
-  font-family: "Lato", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif; }
+  font-family: "Helvetica Neue", "HelveticaNeue", "Raleway", Helvetica, Arial, sans-serif; }
 
 span.option {
   white-space: nowrap; }
@@ -1028,7 +1015,7 @@ table.docinfo {
   margin: 0em;
   margin-top: 2em;
   margin-bottom: 2em;
-  font-family: "Lato", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif !important;
+  font-family: "Raleway", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif !important;
   color: #444444; }
 
 table.docutils {
@@ -1158,26 +1145,21 @@ dt pre > span.Operator ~ span.Identifier, dt pre > span.Operator ~ span.Operator
   background-repeat: no-repeat;
   background-image: url("data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AAAAAAUAAAAF////AP///wD///8A////AP///wD///8A////AP///wD///8A////AAAAAAIAAABbAAAAlQAAAKIAAACbAAAAmwAAAKIAAACVAAAAWwAAAAL///8A////AP///wD///8A////AAAAABQAAADAAAAAYwAAAA3///8A////AP///wD///8AAAAADQAAAGMAAADAAAAAFP///wD///8A////AP///wAAAACdAAAAOv///wD///8A////AP///wD///8A////AP///wD///8AAAAAOgAAAJ3///8A////AP///wAAAAAnAAAAcP///wAAAAAoAAAASv///wD///8A////AP///wAAAABKAAAAKP///wAAAABwAAAAJ////wD///8AAAAAgQAAABwAAACIAAAAkAAAAJMAAACtAAAAFQAAABUAAACtAAAAkwAAAJAAAACIAAAAHAAAAIH///8A////AAAAAKQAAACrAAAAaP///wD///8AAAAARQAAANIAAADSAAAARf///wD///8AAAAAaAAAAKsAAACk////AAAAADMAAACcAAAAnQAAABj///8A////AP///wAAAAAYAAAAGP///wD///8A////AAAAABgAAACdAAAAnAAAADMAAAB1AAAAwwAAAP8AAADpAAAAsQAAAE4AAAAb////AP///wAAAAAbAAAATgAAALEAAADpAAAA/wAAAMMAAAB1AAAAtwAAAOkAAAD/AAAA/wAAAP8AAADvAAAA3gAAAN4AAADeAAAA3gAAAO8AAAD/AAAA/wAAAP8AAADpAAAAtwAAAGUAAAA/AAAA3wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAADfAAAAPwAAAGX///8A////AAAAAEgAAADtAAAAvwAAAL0AAADGAAAA7wAAAO8AAADGAAAAvQAAAL8AAADtAAAASP///wD///8A////AP///wD///8AAAAAO////wD///8A////AAAAAIcAAACH////AP///wD///8AAAAAO////wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A//8AAP//AAD4HwAA7/cAAN/7AAD//wAAoYUAAJ55AACf+QAAh+EAAAAAAADAAwAA4AcAAP5/AAD//wAA//8AAA==");
   margin-bottom: -5px; }
-div.pragma {
-  display: none;
-}
-span.pragmabegin {
-  cursor: pointer;
-}
-span.pragmaend {
-  cursor: pointer;
-}
+  div.pragma {
+    display: none;
+  }
+  span.pragmabegin {
+    cursor: pointer;
+  }
+  span.pragmaend {
+    cursor: pointer;
+  }
 
 div.search_results {
   background-color: antiquewhite;
   margin: 3em;
   padding: 1em;
   border: 1px solid #4d4d4d;
-}
-
-div#global-links ul {
-  margin-left: 0;
-  list-style-type: none;
 }
 </style>
 
@@ -1216,11 +1198,7 @@ function main() {
     <h1 class="title">Module vcf</h1>
     <div class="row">
   <div class="three columns">
-  <div id="global-links">
-    <ul class="simple">
-    </ul>
-  </div>
-  <div id="searchInput">
+  <div>
     Search: <input type="text" id="searchInput"
       onkeyup="search()" />
   </div>
@@ -1273,6 +1251,18 @@ function main() {
     title="SafeCPtr[T] = object
   size: int
   mem: CPtr[T]"><wbr />Safe<wbr />CPtr<span class="attachedType" style="visibility:hidden"></span></a></li>
+  <li><a class="reference" href="#Status"
+    title="Status = enum
+  NotFound = - 3,                ## Tag is not present in the Record
+  UnexpectedType = - 2,          ## E.g. user requested int when type was float.
+  UndefinedTag = - 1,            ## Tag is not present in the Header
+  OK = 0                        ## Tag was found"><wbr />Status<span class="attachedType" style="visibility:hidden"></span></a></li>
+  <li><a class="reference" href="#GT_TYPE"
+    title="GT_TYPE = enum
+  HOM_REF, HET, HOM_ALT, UNKNOWN"><wbr />GT_<wbr />TYPE<span class="attachedType" style="visibility:hidden"></span></a></li>
+  <li><a class="reference" href="#BCF_HEADER_LINE"
+    title="BCF_HEADER_LINE = enum
+  BCF_HL_FLT, BCF_HL_INFO, BCF_HL_FMT, BCF_HL_CTG, BCF_HL_STR, BCF_HL_GEN"><wbr />BCF_<wbr />HEADER_<wbr />LINE<span class="attachedType" style="visibility:hidden"></span></a></li>
   <li><a class="reference" href="#Genotypes"
     title="Genotypes = ref object
   gts: seq[int32]
@@ -1309,8 +1299,28 @@ function main() {
     title="floats(i: INFO; key: string; data: var seq[float32]): Status"><wbr />floats<span class="attachedType" style="visibility:hidden">INFO</span></a></li>
   <li><a class="reference" href="#strings,INFO,string,string"
     title="strings(i: INFO; key: string; data: var string): Status"><wbr />strings<span class="attachedType" style="visibility:hidden">INFO</span></a></li>
+  <li><a class="reference" href="#has_flag,INFO,string"
+    title="has_flag(i: INFO; key: string): bool"><wbr />has_<wbr />flag<span class="attachedType" style="visibility:hidden">INFO</span></a></li>
+  <li><a class="reference" href="#delete,INFO,string"
+    title="delete(i: INFO; key: string): Status"><wbr />delete<span class="attachedType" style="visibility:hidden">INFO</span></a></li>
+  <li><a class="reference" href="#set,INFO,string,T"
+    title="set[T: float32 | float | float64](i: INFO; key: string; value: var T): Status"><wbr />set<span class="attachedType" style="visibility:hidden">INFO</span></a></li>
+  <li><a class="reference" href="#set,INFO,string,T_2"
+    title="set[T: int32 | int | int64](i: INFO; key: string; value: var T): Status"><wbr />set<span class="attachedType" style="visibility:hidden">INFO</span></a></li>
+  <li><a class="reference" href="#set,INFO,string,seq[float32]"
+    title="set(i: INFO; key: string; values: var seq[float32]): Status"><wbr />set<span class="attachedType" style="visibility:hidden">INFO</span></a></li>
+  <li><a class="reference" href="#set,INFO,string,seq[int32]"
+    title="set(i: INFO; key: string; values: var seq[int32]): Status"><wbr />set<span class="attachedType" style="visibility:hidden">INFO</span></a></li>
   <li><a class="reference" href="#n_samples,Variant"
     title="n_samples(v: Variant): int"><wbr />n_<wbr />samples<span class="attachedType" style="visibility:hidden">Variant</span></a></li>
+  <li><a class="reference" href="#close,VCF"
+    title="close(v: VCF)"><wbr />close<span class="attachedType" style="visibility:hidden">VCF</span></a></li>
+  <li><a class="reference" href="#header=,VCF,Header"
+    title="header=(v: var VCF; hdr: Header)"><wbr />header=<span class="attachedType" style="visibility:hidden">VCF</span></a></li>
+  <li><a class="reference" href="#write_header,VCF"
+    title="write_header(v: VCF): bool"><wbr />write_<wbr />header<span class="attachedType" style="visibility:hidden">VCF</span></a></li>
+  <li><a class="reference" href="#write_variant,VCF,Variant"
+    title="write_variant(v: VCF; variant: Variant): bool"><wbr />write_<wbr />variant<span class="attachedType" style="visibility:hidden">VCF</span></a></li>
   <li><a class="reference" href="#open,VCF,string,string,seq[string],int"
     title="open(v: var VCF; fname: string; mode: string = &quot;r&quot;; samples: seq[string] = empty_samples;
      threads: int = 0): bool"><wbr />open<span class="attachedType" style="visibility:hidden">VCF</span></a></li>
@@ -1362,7 +1372,7 @@ function main() {
   </ul>
 </li>
 <li>
-  <a class="reference reference-toplevel" href="#15" id="65">Iterators</a>
+  <a class="reference reference-toplevel" href="#14" id="64">Iterators</a>
   <ul class="simple simple-toc-section">
       <li><a class="reference" href="#items.i,VCF"
     title="items(v: VCF): Variant"><wbr />items<span class="attachedType" style="visibility:hidden">VCF</span></a></li>
@@ -1447,6 +1457,27 @@ FORMAT exposes access to the sample format fields in the VCF
 
 
 </dd>
+<dt id="Status"><a name="Status"></a><pre><span class="Identifier">Status</span> <span class="Other">=</span> <span class="Keyword">enum</span>
+  <span class="Identifier">NotFound</span> <span class="Other">=</span> <span class="Operator">-</span> <span class="DecNumber">3</span><span class="Other">,</span>                <span class="Comment">## Tag is not present in the Record</span>
+  <span class="Identifier">UnexpectedType</span> <span class="Other">=</span> <span class="Operator">-</span> <span class="DecNumber">2</span><span class="Other">,</span>          <span class="Comment">## E.g. user requested int when type was float.</span>
+  <span class="Identifier">UndefinedTag</span> <span class="Other">=</span> <span class="Operator">-</span> <span class="DecNumber">1</span><span class="Other">,</span>            <span class="Comment">## Tag is not present in the Header</span>
+  <span class="Identifier">OK</span> <span class="Other">=</span> <span class="DecNumber">0</span>                        <span class="Comment">## Tag was found</span></pre></dt>
+<dd>
+contains the values returned from the INFO for FORMAT fields.
+
+</dd>
+<dt id="GT_TYPE"><a name="GT_TYPE"></a><pre><span class="Identifier">GT_TYPE</span> <span class="Other">=</span> <span class="Keyword">enum</span>
+  <span class="Identifier">HOM_REF</span><span class="Other">,</span> <span class="Identifier">HET</span><span class="Other">,</span> <span class="Identifier">HOM_ALT</span><span class="Other">,</span> <span class="Identifier">UNKNOWN</span></pre></dt>
+<dd>
+types returned from genotype.types
+
+</dd>
+<dt id="BCF_HEADER_LINE"><a name="BCF_HEADER_LINE"></a><pre><span class="Identifier">BCF_HEADER_LINE</span> <span class="Other">=</span> <span class="Keyword">enum</span>
+  <span class="Identifier">BCF_HL_FLT</span><span class="Other">,</span> <span class="Identifier">BCF_HL_INFO</span><span class="Other">,</span> <span class="Identifier">BCF_HL_FMT</span><span class="Other">,</span> <span class="Identifier">BCF_HL_CTG</span><span class="Other">,</span> <span class="Identifier">BCF_HL_STR</span><span class="Other">,</span> <span class="Identifier">BCF_HL_GEN</span></pre></dt>
+<dd>
+
+
+</dd>
 <dt id="Genotypes"><a name="Genotypes"></a><pre><span class="Identifier">Genotypes</span> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Keyword">object</span>
   <span class="Identifier">gts</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">int32</span><span class="Other">]</span>
   <span class="Identifier">ploidy</span><span class="Other">:</span> <span class="Identifier">int</span>
@@ -1527,9 +1558,61 @@ floats fills the given data with ints associated with the key. in many cases, th
 strings fills the data with the value for the key and returns a bool indicating if the key was found.
 
 </dd>
+<dt id="has_flag"><a name="has_flag,INFO,string"></a><pre><span class="Keyword">proc</span> <span class="Identifier">has_flag</span><span class="Other">(</span><span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">INFO</span><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dd>
+return indicates whether the flag is found in the INFO.
+
+</dd>
+<dt id="delete"><a name="delete,INFO,string"></a><pre><span class="Keyword">proc</span> <span class="Identifier">delete</span><span class="Other">(</span><span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">INFO</span><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Status</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dd>
+delete the value from the INFO field  
+
+</dd>
+<dt id="set"><a name="set,INFO,string,T"></a><pre><span class="Keyword">proc</span> <span class="Identifier">set</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">float32</span> <span class="Operator">|</span> <span class="Identifier">float</span> <span class="Operator">|</span> <span class="Identifier">float64</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">INFO</span><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">T</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Status</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dd>
+set the info key with the given float value).
+
+</dd>
+<dt id="set"><a name="set,INFO,string,T_2"></a><pre><span class="Keyword">proc</span> <span class="Identifier">set</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">int32</span> <span class="Operator">|</span> <span class="Identifier">int</span> <span class="Operator">|</span> <span class="Identifier">int64</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">INFO</span><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">T</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Status</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dd>
+set the info key with the given int value).
+
+</dd>
+<dt id="set"><a name="set,INFO,string,seq[float32]"></a><pre><span class="Keyword">proc</span> <span class="Identifier">set</span><span class="Other">(</span><span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">INFO</span><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">values</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">float32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Status</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dd>
+set the info key with the given float value(s).
+
+</dd>
+<dt id="set"><a name="set,INFO,string,seq[int32]"></a><pre><span class="Keyword">proc</span> <span class="Identifier">set</span><span class="Other">(</span><span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">INFO</span><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">values</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">int32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Status</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dd>
+set the info key with the given int values.
+
+</dd>
 <dt id="n_samples"><a name="n_samples,Variant"></a><pre><span class="Keyword">proc</span> <span class="Identifier">n_samples</span><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <span class="Identifier">Variant</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
 
+
+</dd>
+<dt id="close"><a name="close,VCF"></a><pre><span class="Keyword">proc</span> <span class="Identifier">close</span><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <span class="Identifier">VCF</span><span class="Other">)</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dd>
+
+
+</dd>
+<dt id="header="><a name="header=,VCF,Header"></a><pre><span class="Keyword">proc</span> <span class="Identifier">header=</span><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">VCF</span><span class="Other">;</span> <span class="Identifier">hdr</span><span class="Other">:</span> <span class="Identifier">Header</span><span class="Other">)</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dd>
+
+
+</dd>
+<dt id="write_header"><a name="write_header,VCF"></a><pre><span class="Keyword">proc</span> <span class="Identifier">write_header</span><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <span class="Identifier">VCF</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dd>
+write a the header to the file (must have been opened in write mode) and return a bool for success.
+
+</dd>
+<dt id="write_variant"><a name="write_variant,VCF,Variant"></a><pre><span class="Keyword">proc</span> <span class="Identifier">write_variant</span><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <span class="Identifier">VCF</span><span class="Other">;</span> <span class="Identifier">variant</span><span class="Other">:</span> <span class="Identifier">Variant</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dd>
+write a variant to the VCF opened in write mode and return a bool indicating success.
 
 </dd>
 <dt id="open"><a name="open,VCF,string,string,seq[string],int"></a><pre><span class="Keyword">proc</span> <span class="Identifier">open</span><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">VCF</span><span class="Other">;</span> <span class="Identifier">fname</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">mode</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Other">=</span> <span class="StringLit">&quot;r&quot;</span><span class="Other">;</span>
@@ -1651,16 +1734,16 @@ return the types (HOM_REF/HET, etc) for each sample.
 </dd>
 
 </dl></div>
-<div class="section" id="15">
-<h1><a class="toc-backref" href="#15">Iterators</a></h1>
+<div class="section" id="14">
+<h1><a class="toc-backref" href="#14">Iterators</a></h1>
 <dl class="item">
 <dt id="items"><a name="items.i,VCF"></a><pre><span class="Keyword">iterator</span> <span class="Identifier">items</span><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <span class="Identifier">VCF</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Variant</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">WriteIOEffect</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
 Each returned Variant has a pointer in the underlying iterator that is updated each iteration; use .copy to keep it in memory
 
 </dd>
-<dt id="query"><a name="query.i,VCF,string"></a><pre><span class="Keyword">iterator</span> <span class="Identifier">query</span><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <span class="Identifier">VCF</span><span class="Other">;</span> <span class="Identifier">region</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Variant</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dt id="query"><a name="query.i,VCF,string"></a><pre><span class="Keyword">iterator</span> <span class="Identifier">query</span><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <span class="Identifier">VCF</span><span class="Other">;</span> <span class="Identifier">region</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Variant</span> <span class="Other pragmabegin">{.</span><div class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">AssertionError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
 iterate over variants in a VCF/BCF for the given region. Each returned Variant has a pointer in the underlying iterator that is updated each iteration; use .copy to keep it in memory
 
@@ -1680,7 +1763,7 @@ iterate over variants in a VCF/BCF for the given region. Each returned Variant h
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small>Made with Nim. Generated: 2018-01-02 14:52:15 UTC</small>
+        <small>Made with Nim. Generated: 2018-02-09 09:07:01 UTC</small>
       </div>
     </div>
   </div>

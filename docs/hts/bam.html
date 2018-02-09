@@ -12,7 +12,7 @@
 <link rel="shortcut icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AAAAAAUAAAAF////AP///wD///8A////AP///wD///8A////AP///wD///8A////AAAAAAIAAABbAAAAlQAAAKIAAACbAAAAmwAAAKIAAACVAAAAWwAAAAL///8A////AP///wD///8A////AAAAABQAAADAAAAAYwAAAA3///8A////AP///wD///8AAAAADQAAAGMAAADAAAAAFP///wD///8A////AP///wAAAACdAAAAOv///wD///8A////AP///wD///8A////AP///wD///8AAAAAOgAAAJ3///8A////AP///wAAAAAnAAAAcP///wAAAAAoAAAASv///wD///8A////AP///wAAAABKAAAAKP///wAAAABwAAAAJ////wD///8AAAAAgQAAABwAAACIAAAAkAAAAJMAAACtAAAAFQAAABUAAACtAAAAkwAAAJAAAACIAAAAHAAAAIH///8A////AAAAAKQAAACrAAAAaP///wD///8AAAAARQAAANIAAADSAAAARf///wD///8AAAAAaAAAAKsAAACk////AAAAADMAAACcAAAAnQAAABj///8A////AP///wAAAAAYAAAAGP///wD///8A////AAAAABgAAACdAAAAnAAAADMAAAB1AAAAwwAAAP8AAADpAAAAsQAAAE4AAAAb////AP///wAAAAAbAAAATgAAALEAAADpAAAA/wAAAMMAAAB1AAAAtwAAAOkAAAD/AAAA/wAAAP8AAADvAAAA3gAAAN4AAADeAAAA3gAAAO8AAAD/AAAA/wAAAP8AAADpAAAAtwAAAGUAAAA/AAAA3wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAADfAAAAPwAAAGX///8A////AAAAAEgAAADtAAAAvwAAAL0AAADGAAAA7wAAAO8AAADGAAAAvQAAAL8AAADtAAAASP///wD///8A////AP///wD///8AAAAAO////wD///8A////AAAAAIcAAACH////AP///wD///8AAAAAO////wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A//8AAP//AAD4HwAA7/cAAN/7AAD//wAAoYUAAJ55AACf+QAAh+EAAAAAAADAAwAA4AcAAP5/AAD//wAA//8AAA=="/>
 
 <!-- Google fonts -->
-<link href='https://fonts.googleapis.com/css?family=Lato:400,600,900' rel='stylesheet' type='text/css'/>
+<link href='https://fonts.googleapis.com/css?family=Raleway:400,600,900' rel='stylesheet' type='text/css'/>
 <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro:400,500,600' rel='stylesheet' type='text/css'/>
 
 <!-- CSS -->
@@ -45,19 +45,18 @@ html {
 
 /* Where we want fancier font if available */
 h1, h2, h3, h4, h5, h6, p.module-desc, table.docinfo + blockquote p, table.docinfo blockquote p, h1 + blockquote p {
-  font-family: "Lato", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif !important; }
+  font-family: "Raleway", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif !important; }
 
 h1.title {
   font-weight: 900; }
 
 body {
-  font-family: "Lato", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue", "HelveticaNeue", "Raleway", Helvetica, Arial, sans-serif;
   font-weight: 400;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 20px;
-  color: #444;
-  letter-spacing: 0.15px;
-  background-color: rgba(252, 248, 244, 0.45); }
+  color: #666;
+  background-color: rgba(252, 248, 244, 0.75); }
 
 /* Skeleton grid */
 .container {
@@ -173,8 +172,8 @@ cite {
   font-style: italic !important; }
 
 dt > pre {
-  border-color: rgba(0, 0, 0, 0.1);
-  background-color: rgba(255, 255, 255, 0.3);
+  border-color: rgba(0, 0, 0, 0.15);
+  background-color: transparent;
   margin: 15px 0px 5px; }
 
 dd > pre {
@@ -190,17 +189,6 @@ dd > pre {
 .line-nums-table {
   width: 100%;
   table-layout: fixed; }
-
-/* Nim search input */
-div#searchInput {
-  margin-bottom: 8px;
-}
-div#searchInput input#searchInput {
-  width: 10em;
-}
-div.search-groupby {
-  margin-bottom: 8px;
-}
 
 table.line-nums-table {
   border-radius: 4px;
@@ -345,7 +333,7 @@ img {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); }
 
 p {
-  margin: 0 0 8px; }
+  margin: 0 0 12px; }
 
 small {
   font-size: 85%; }
@@ -365,7 +353,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "Lato", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue", "HelveticaNeue", "Raleway", Helvetica, Arial, sans-serif;
   font-weight: 600;
   line-height: 20px;
   color: inherit;
@@ -373,7 +361,6 @@ h6 {
 
 h1 {
   font-size: 2em;
-  font-weight: 400;
   padding-bottom: .15em;
   border-bottom: 1px solid #aaaaaa;
   margin-top: 1.0em;
@@ -504,13 +491,13 @@ pre {
   box-sizing: border-box;
   min-width: calc(100% - 19.5px);
   padding: 9.5px;
-  margin: 0.25em 10px 10px 10px;
-  font-size: 15px;
+  margin: 0.25em 10px 0.25em 10px;
+  font-size: 14px;
   line-height: 20px;
   white-space: pre !important;
   overflow-y: hidden;
   overflow-x: visible;
-  background-color: rgba(0, 0, 0, 0.01);
+  background-color: whitesmoke;
   border: 1px solid #cccccc;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
@@ -789,14 +776,14 @@ div.admonition p.admonition-title, div.hint p.admonition-title,
 div.important p.admonition-title, div.note p.admonition-title,
 div.tip p.admonition-title {
   font-weight: bold;
-  font-family: "Lato", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif; }
+  font-family: "Helvetica Neue", "HelveticaNeue", "Raleway", Helvetica, Arial, sans-serif; }
 
 div.attention p.admonition-title, div.caution p.admonition-title,
 div.danger p.admonition-title, div.error p.admonition-title,
 div.warning p.admonition-title, .code .error {
   color: #b30000;
   font-weight: bold;
-  font-family: "Lato", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif; }
+  font-family: "Helvetica Neue", "HelveticaNeue", "Raleway", Helvetica, Arial, sans-serif; }
 
 /* Uncomment (and remove this text!) to get reduced vertical space in
    compound paragraphs.
@@ -843,7 +830,7 @@ div.sidebar {
   clear: right; }
 
 div.sidebar p.rubric {
-  font-family: "Lato", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue", "HelveticaNeue", "Raleway", Helvetica, Arial, sans-serif;
   font-size: medium; }
 
 div.system-messages {
@@ -950,12 +937,12 @@ p.rubric {
   text-align: center; }
 
 p.sidebar-title {
-  font-family: "Lato", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue", "HelveticaNeue", "Raleway", Helvetica, Arial, sans-serif;
   font-weight: bold;
   font-size: larger; }
 
 p.sidebar-subtitle {
-  font-family: "Lato", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue", "HelveticaNeue", "Raleway", Helvetica, Arial, sans-serif;
   font-weight: bold; }
 
 p.topic-title {
@@ -997,15 +984,15 @@ pre.code .inserted, code .inserted {
   background-color: #A3D289; }
 
 span.classifier {
-  font-family: "Lato", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue", "HelveticaNeue", "Raleway", Helvetica, Arial, sans-serif;
   font-style: oblique; }
 
 span.classifier-delimiter {
-  font-family: "Lato", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue", "HelveticaNeue", "Raleway", Helvetica, Arial, sans-serif;
   font-weight: bold; }
 
 span.interpreted {
-  font-family: "Lato", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif; }
+  font-family: "Helvetica Neue", "HelveticaNeue", "Raleway", Helvetica, Arial, sans-serif; }
 
 span.option {
   white-space: nowrap; }
@@ -1028,7 +1015,7 @@ table.docinfo {
   margin: 0em;
   margin-top: 2em;
   margin-bottom: 2em;
-  font-family: "Lato", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif !important;
+  font-family: "Raleway", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif !important;
   color: #444444; }
 
 table.docutils {
@@ -1158,26 +1145,21 @@ dt pre > span.Operator ~ span.Identifier, dt pre > span.Operator ~ span.Operator
   background-repeat: no-repeat;
   background-image: url("data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AAAAAAUAAAAF////AP///wD///8A////AP///wD///8A////AP///wD///8A////AAAAAAIAAABbAAAAlQAAAKIAAACbAAAAmwAAAKIAAACVAAAAWwAAAAL///8A////AP///wD///8A////AAAAABQAAADAAAAAYwAAAA3///8A////AP///wD///8AAAAADQAAAGMAAADAAAAAFP///wD///8A////AP///wAAAACdAAAAOv///wD///8A////AP///wD///8A////AP///wD///8AAAAAOgAAAJ3///8A////AP///wAAAAAnAAAAcP///wAAAAAoAAAASv///wD///8A////AP///wAAAABKAAAAKP///wAAAABwAAAAJ////wD///8AAAAAgQAAABwAAACIAAAAkAAAAJMAAACtAAAAFQAAABUAAACtAAAAkwAAAJAAAACIAAAAHAAAAIH///8A////AAAAAKQAAACrAAAAaP///wD///8AAAAARQAAANIAAADSAAAARf///wD///8AAAAAaAAAAKsAAACk////AAAAADMAAACcAAAAnQAAABj///8A////AP///wAAAAAYAAAAGP///wD///8A////AAAAABgAAACdAAAAnAAAADMAAAB1AAAAwwAAAP8AAADpAAAAsQAAAE4AAAAb////AP///wAAAAAbAAAATgAAALEAAADpAAAA/wAAAMMAAAB1AAAAtwAAAOkAAAD/AAAA/wAAAP8AAADvAAAA3gAAAN4AAADeAAAA3gAAAO8AAAD/AAAA/wAAAP8AAADpAAAAtwAAAGUAAAA/AAAA3wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAADfAAAAPwAAAGX///8A////AAAAAEgAAADtAAAAvwAAAL0AAADGAAAA7wAAAO8AAADGAAAAvQAAAL8AAADtAAAASP///wD///8A////AP///wD///8AAAAAO////wD///8A////AAAAAIcAAACH////AP///wD///8AAAAAO////wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A//8AAP//AAD4HwAA7/cAAN/7AAD//wAAoYUAAJ55AACf+QAAh+EAAAAAAADAAwAA4AcAAP5/AAD//wAA//8AAA==");
   margin-bottom: -5px; }
-div.pragma {
-  display: none;
-}
-span.pragmabegin {
-  cursor: pointer;
-}
-span.pragmaend {
-  cursor: pointer;
-}
+  div.pragma {
+    display: none;
+  }
+  span.pragmabegin {
+    cursor: pointer;
+  }
+  span.pragmaend {
+    cursor: pointer;
+  }
 
 div.search_results {
   background-color: antiquewhite;
   margin: 3em;
   padding: 1em;
   border: 1px solid #4d4d4d;
-}
-
-div#global-links ul {
-  margin-left: 0;
-  list-style-type: none;
 }
 </style>
 
@@ -1216,11 +1198,7 @@ function main() {
     <h1 class="title">Module bam</h1>
     <div class="row">
   <div class="three columns">
-  <div id="global-links">
-    <ul class="simple">
-    </ul>
-  </div>
-  <div id="searchInput">
+  <div>
     Search: <input type="text" id="searchInput"
       onkeyup="search()" />
   </div>
@@ -1421,8 +1399,15 @@ function main() {
     title="mate_pos(r: Record): int32"><wbr />mate_<wbr />pos<span class="attachedType" style="visibility:hidden">Record</span></a></li>
   <li><a class="reference" href="#tostring,Record"
     title="tostring(r: Record): string"><wbr />tostring<span class="attachedType" style="visibility:hidden">Record</span></a></li>
-  <li><a class="reference" href="#open,Bam,cstring,int,cstring,bool"
-    title="open(bam: var Bam; path: cstring; threads: int = 0; fai: cstring = nil; index: bool = false)"><wbr />open<span class="attachedType" style="visibility:hidden">Bam</span></a></li>
+  <li><a class="reference" href="#write_header,Bam,Header"
+    title="write_header(bam: var Bam; header: Header)"><wbr />write_<wbr />header<span class="attachedType" style="visibility:hidden">Bam</span></a></li>
+  <li><a class="reference" href="#write,Bam,Record"
+    title="write(bam: var Bam; rec: Record)"><wbr />write<span class="attachedType" style="visibility:hidden">Bam</span></a></li>
+  <li><a class="reference" href="#close,Bam"
+    title="close(bam: Bam)"><wbr />close<span class="attachedType" style="visibility:hidden">Bam</span></a></li>
+  <li><a class="reference" href="#open,Bam,cstring,int,string,cstring,bool"
+    title="open(bam: var Bam; path: cstring; threads: int = 0; mode: string = &quot;r&quot;; fai: cstring = nil;
+     index: bool = false)"><wbr />open<span class="attachedType" style="visibility:hidden">Bam</span></a></li>
   <li><a class="reference" href="#hts_set_opt,ptr.htsFile,FormatOption"
     title="hts_set_opt(fp: ptr htsFile; opt: FormatOption): cint"><wbr />hts_<wbr />set_<wbr />opt<span class="attachedType" style="visibility:hidden">FormatOption</span></a></li>
   <li><a class="reference" href="#set_fields,Bam,varargs[SamField]"
@@ -1441,7 +1426,7 @@ function main() {
   </ul>
 </li>
 <li>
-  <a class="reference reference-toplevel" href="#15" id="65">Iterators</a>
+  <a class="reference reference-toplevel" href="#14" id="64">Iterators</a>
   <ul class="simple simple-toc-section">
       <li><a class="reference" href="#items.i,Cigar"
     title="items(c: Cigar): Op"><wbr />items<span class="attachedType" style="visibility:hidden">Cigar</span></a></li>
@@ -1457,7 +1442,7 @@ function main() {
   </ul>
 </li>
 <li>
-  <a class="reference reference-toplevel" href="#18" id="68">Templates</a>
+  <a class="reference reference-toplevel" href="#17" id="67">Templates</a>
   <ul class="simple simple-toc-section">
       <li><a class="reference" href="#bam_get_cigar.t,untyped"
     title="bam_get_cigar(b: untyped): untyped"><wbr />bam_<wbr />get_<wbr />cigar<span class="attachedType" style="visibility:hidden"></span></a></li>
@@ -1650,62 +1635,62 @@ Target is a chromosome or contig from the bam header.
 
 
 </dd>
-<dt id="pair"><a name="pair,Flag"></a><pre><span class="Keyword">proc</span> <span class="Identifier">pair</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <span class="Identifier">Flag</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dt id="pair"><a name="pair,Flag"></a><pre><span class="Keyword">proc</span> <span class="Identifier">pair</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <span class="Identifier">Flag</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
 
 
 </dd>
-<dt id="proper_pair"><a name="proper_pair,Flag"></a><pre><span class="Keyword">proc</span> <span class="Identifier">proper_pair</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <span class="Identifier">Flag</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dt id="proper_pair"><a name="proper_pair,Flag"></a><pre><span class="Keyword">proc</span> <span class="Identifier">proper_pair</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <span class="Identifier">Flag</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
 
 
 </dd>
-<dt id="unmapped"><a name="unmapped,Flag"></a><pre><span class="Keyword">proc</span> <span class="Identifier">unmapped</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <span class="Identifier">Flag</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dt id="unmapped"><a name="unmapped,Flag"></a><pre><span class="Keyword">proc</span> <span class="Identifier">unmapped</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <span class="Identifier">Flag</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
 
 
 </dd>
-<dt id="mate_unmapped"><a name="mate_unmapped,Flag"></a><pre><span class="Keyword">proc</span> <span class="Identifier">mate_unmapped</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <span class="Identifier">Flag</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dt id="mate_unmapped"><a name="mate_unmapped,Flag"></a><pre><span class="Keyword">proc</span> <span class="Identifier">mate_unmapped</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <span class="Identifier">Flag</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
 
 
 </dd>
-<dt id="reverse"><a name="reverse,Flag"></a><pre><span class="Keyword">proc</span> <span class="Identifier">reverse</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <span class="Identifier">Flag</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dt id="reverse"><a name="reverse,Flag"></a><pre><span class="Keyword">proc</span> <span class="Identifier">reverse</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <span class="Identifier">Flag</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
 
 
 </dd>
-<dt id="mate_reverse"><a name="mate_reverse,Flag"></a><pre><span class="Keyword">proc</span> <span class="Identifier">mate_reverse</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <span class="Identifier">Flag</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dt id="mate_reverse"><a name="mate_reverse,Flag"></a><pre><span class="Keyword">proc</span> <span class="Identifier">mate_reverse</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <span class="Identifier">Flag</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
 
 
 </dd>
-<dt id="read1"><a name="read1,Flag"></a><pre><span class="Keyword">proc</span> <span class="Identifier">read1</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <span class="Identifier">Flag</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dt id="read1"><a name="read1,Flag"></a><pre><span class="Keyword">proc</span> <span class="Identifier">read1</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <span class="Identifier">Flag</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
 
 
 </dd>
-<dt id="read2"><a name="read2,Flag"></a><pre><span class="Keyword">proc</span> <span class="Identifier">read2</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <span class="Identifier">Flag</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dt id="read2"><a name="read2,Flag"></a><pre><span class="Keyword">proc</span> <span class="Identifier">read2</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <span class="Identifier">Flag</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
 
 
 </dd>
-<dt id="secondary"><a name="secondary,Flag"></a><pre><span class="Keyword">proc</span> <span class="Identifier">secondary</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <span class="Identifier">Flag</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dt id="secondary"><a name="secondary,Flag"></a><pre><span class="Keyword">proc</span> <span class="Identifier">secondary</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <span class="Identifier">Flag</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
 
 
 </dd>
-<dt id="qcfail"><a name="qcfail,Flag"></a><pre><span class="Keyword">proc</span> <span class="Identifier">qcfail</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <span class="Identifier">Flag</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dt id="qcfail"><a name="qcfail,Flag"></a><pre><span class="Keyword">proc</span> <span class="Identifier">qcfail</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <span class="Identifier">Flag</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
 
 
 </dd>
-<dt id="dup"><a name="dup,Flag"></a><pre><span class="Keyword">proc</span> <span class="Identifier">dup</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <span class="Identifier">Flag</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dt id="dup"><a name="dup,Flag"></a><pre><span class="Keyword">proc</span> <span class="Identifier">dup</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <span class="Identifier">Flag</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
 
 
 </dd>
-<dt id="supplementary"><a name="supplementary,Flag"></a><pre><span class="Keyword">proc</span> <span class="Identifier">supplementary</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <span class="Identifier">Flag</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dt id="supplementary"><a name="supplementary,Flag"></a><pre><span class="Keyword">proc</span> <span class="Identifier">supplementary</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <span class="Identifier">Flag</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
 
 
@@ -1845,7 +1830,7 @@ The targets (chromosomes) from the header.
 <cite>flag</cite> returns a <cite>Flag</cite> object.
 
 </dd>
-<dt id="cigar"><a name="cigar,Record"></a><pre><span class="Keyword">proc</span> <span class="Identifier">cigar</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <span class="Identifier">Record</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Cigar</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dt id="cigar"><a name="cigar,Record"></a><pre><span class="Keyword">proc</span> <span class="Identifier">cigar</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <span class="Identifier">Record</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Cigar</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
 <cite>cigar</cite> returns a <cite>Cigar</cite> object.
 
@@ -1855,17 +1840,17 @@ The targets (chromosomes) from the header.
 
 
 </dd>
-<dt id="qual"><a name="qual,Record"></a><pre><span class="Keyword">proc</span> <span class="Identifier">qual</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <span class="Identifier">Record</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint8</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dt id="qual"><a name="qual,Record"></a><pre><span class="Keyword">proc</span> <span class="Identifier">qual</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <span class="Identifier">Record</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint8</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
 mapping quality
 
 </dd>
-<dt id="isize"><a name="isize,Record"></a><pre><span class="Keyword">proc</span> <span class="Identifier">isize</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <span class="Identifier">Record</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int32</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dt id="isize"><a name="isize,Record"></a><pre><span class="Keyword">proc</span> <span class="Identifier">isize</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <span class="Identifier">Record</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int32</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
 insert size
 
 </dd>
-<dt id="mate_pos"><a name="mate_pos,Record"></a><pre><span class="Keyword">proc</span> <span class="Identifier">mate_pos</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <span class="Identifier">Record</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int32</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dt id="mate_pos"><a name="mate_pos,Record"></a><pre><span class="Keyword">proc</span> <span class="Identifier">mate_pos</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <span class="Identifier">Record</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int32</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
 mate position
 
@@ -1875,10 +1860,26 @@ mate position
 
 
 </dd>
-<dt id="open"><a name="open,Bam,cstring,int,cstring,bool"></a><pre><span class="Keyword">proc</span> <span class="Identifier">open</span><span class="Other">(</span><span class="Identifier">bam</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">Bam</span><span class="Other">;</span> <span class="Identifier">path</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span> <span class="Identifier">threads</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> <span class="Identifier">fai</span><span class="Other">:</span> <span class="Identifier">cstring</span> <span class="Other">=</span> <span class="Keyword">nil</span><span class="Other">;</span>
-         <span class="Identifier">index</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other">=</span> <span class="Identifier">false</span><span class="Other">)</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">WriteIOEffect</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dt id="write_header"><a name="write_header,Bam,Header"></a><pre><span class="Keyword">proc</span> <span class="Identifier">write_header</span><span class="Other">(</span><span class="Identifier">bam</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">Bam</span><span class="Other">;</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="Identifier">Header</span><span class="Other">)</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
-<cite>open</cite> returns a bam object for the given path. If CRAM, then fasta must be given. if index is true, then it will attempt to open an index file for regional queries.
+write the bam the the bam stream. useful when a bam is opened in write mode. this also sets the header.
+
+</dd>
+<dt id="write"><a name="write,Bam,Record"></a><pre><span class="Keyword">proc</span> <span class="Identifier">write</span><span class="Other">(</span><span class="Identifier">bam</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">Bam</span><span class="Other">;</span> <span class="Identifier">rec</span><span class="Other">:</span> <span class="Identifier">Record</span><span class="Other">)</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dd>
+write the record to the bam which must be writeable.
+
+</dd>
+<dt id="close"><a name="close,Bam"></a><pre><span class="Keyword">proc</span> <span class="Identifier">close</span><span class="Other">(</span><span class="Identifier">bam</span><span class="Other">:</span> <span class="Identifier">Bam</span><span class="Other">)</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dd>
+
+
+</dd>
+<dt id="open"><a name="open,Bam,cstring,int,string,cstring,bool"></a><pre><span class="Keyword">proc</span> <span class="Identifier">open</span><span class="Other">(</span><span class="Identifier">bam</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">Bam</span><span class="Other">;</span> <span class="Identifier">path</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span> <span class="Identifier">threads</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> <span class="Identifier">mode</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Other">=</span> <span class="StringLit">&quot;r&quot;</span><span class="Other">;</span>
+         <span class="Identifier">fai</span><span class="Other">:</span> <span class="Identifier">cstring</span> <span class="Other">=</span> <span class="Keyword">nil</span><span class="Other">;</span> <span class="Identifier">index</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other">=</span> <span class="Identifier">false</span><span class="Other">)</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">WriteIOEffect</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dd>
+<cite>open_hts</cite> returns a bam object for the given path. If CRAM, then fai must be given. if index is true, then it will attempt to open an index file for regional queries.
 
 </dd>
 <dt id="hts_set_opt"><a name="hts_set_opt,ptr.htsFile,FormatOption"></a><pre><span class="Keyword">proc</span> <span class="Identifier">hts_set_opt</span><span class="Other">(</span><span class="Identifier">fp</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">htsFile</span><span class="Other">;</span> <span class="Identifier">opt</span><span class="Other">:</span> <span class="Identifier">FormatOption</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cint</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">varargs</span><span class="Other">,</span> <span class="Identifier">cdecl</span><span class="Other">,</span>
@@ -1921,8 +1922,8 @@ get the aux tag from the record.
 </dd>
 
 </dl></div>
-<div class="section" id="15">
-<h1><a class="toc-backref" href="#15">Iterators</a></h1>
+<div class="section" id="14">
+<h1><a class="toc-backref" href="#14">Iterators</a></h1>
 <dl class="item">
 <dt id="items"><a name="items.i,Cigar"></a><pre><span class="Keyword">iterator</span> <span class="Identifier">items</span><span class="Other">(</span><span class="Identifier">c</span><span class="Other">:</span> <span class="Identifier">Cigar</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Op</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
@@ -1954,8 +1955,8 @@ items iterates over a bam. A single element is used and overwritten on each iter
 </dd>
 
 </dl></div>
-<div class="section" id="18">
-<h1><a class="toc-backref" href="#18">Templates</a></h1>
+<div class="section" id="17">
+<h1><a class="toc-backref" href="#17">Templates</a></h1>
 <dl class="item">
 <dt id="bam_get_cigar"><a name="bam_get_cigar.t,untyped"></a><pre><span class="Keyword">template</span> <span class="Identifier">bam_get_cigar</span><span class="Other">(</span><span class="Identifier">b</span><span class="Other">:</span> <span class="Identifier">untyped</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
 <dd>
@@ -1972,7 +1973,7 @@ items iterates over a bam. A single element is used and overwritten on each iter
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small>Made with Nim. Generated: 2018-01-02 14:52:14 UTC</small>
+        <small>Made with Nim. Generated: 2018-02-09 09:07:00 UTC</small>
       </div>
     </div>
   </div>
