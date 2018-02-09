@@ -101,6 +101,9 @@ assert wtr.write_header()
 # regional queries look for index. works for VCF and BCF
 for rec in v.query("1:15600-18250"):
   echo rec.CHROM, ":", $rec.POS
+  # adjust some values in the INFO
+  var val = 22.3
+  check rec.info.set("VQSLOD", val)
   assert wtr.write_variant(rec)
 
 wtr.close()

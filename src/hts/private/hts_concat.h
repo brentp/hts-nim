@@ -634,6 +634,7 @@ int bcf_write(htsFile *fp, bcf_hdr_t *h, bcf1_t *v);
 void bcf_hdr_destroy(bcf_hdr_t *h);
 bcf1_t *bcf_dup(bcf1_t *src);
 void bcf_destroy(bcf1_t *v);
+int bcf_update_info(const bcf_hdr_t *hdr, bcf1_t *line, const char *key, const void *values, int n, int type);
 
 int bcf_hdr_set_samples(bcf_hdr_t *hdr, const char *samples, int is_file);
 int bcf_get_genotypes(const bcf_hdr_t *hdr, bcf1_t *line, int **dst, int *ndst);

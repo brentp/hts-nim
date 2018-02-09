@@ -172,6 +172,32 @@ proc has_flag(i:INFO, key:string): bool {.inline.} =
     return false
   return true
 
+proc set*[T: float32|float|float64](i:INFO, key:string, value:var T): Status {.inline.} =
+  ## set the info key with the given float value).
+  var tmp = float32(value)
+  var ret = bcf_update_info(i.v.vcf.header.hdr, i.v.c, key.cstring,
+      tmp.addr.pointer, 1.cint, BCF_HT_REAL.cint)
+  return Status(ret.int)
+
+proc set*[T: int32|int|int64](i:INFO, key:string, value:var T): Status {.inline.} =
+  ## set the info key with the given int value).
+  var tmp = int32(value)
+  var ret = bcf_update_info(i.v.vcf.header.hdr, i.v.c, key.cstring,
+      tmp.addr.pointer, 1.cint, BCF_HT_INT.cint)
+  return Status(ret.int)
+
+proc set*(i:INFO, key:string, values:var seq[float32]): Status {.inline.} =
+  ## set the info key with the given float value(s).
+  var ret = bcf_update_info(i.v.vcf.header.hdr, i.v.c, key.cstring,
+      values[0].addr.pointer, len(values).cint, BCF_HT_REAL.cint)
+  return Status(ret.int)
+
+proc set*(i:INFO, key:string, values:var seq[int32]): Status {.inline.} =
+  ## set the info key with the given int values.
+  var ret = bcf_update_info(i.v.vcf.header.hdr, i.v.c, key.cstring,
+      values[0].addr.pointer, len(values).cint, BCF_HT_INT.cint)
+  return Status(ret.int)
+
 proc n_samples*(v:Variant): int {.inline.} =
   return v.c.n_sample.int
 

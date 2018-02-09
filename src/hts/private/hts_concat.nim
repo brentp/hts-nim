@@ -759,6 +759,9 @@ proc bcf_hdr_destroy*(h: ptr bcf_hdr_t) {.cdecl, importc: "bcf_hdr_destroy",
                                       dynlib: libname.}
 proc bcf_dup*(src: ptr bcf1_t): ptr bcf1_t {.cdecl, importc: "bcf_dup", dynlib: libname.}
 proc bcf_destroy*(v: ptr bcf1_t) {.cdecl, importc: "bcf_destroy", dynlib: libname.}
+proc bcf_update_info*(hdr: ptr bcf_hdr_t; line: ptr bcf1_t; key: cstring;
+                     values: pointer; n: cint; `type`: cint): cint {.cdecl,
+    importc: "bcf_update_info", dynlib: libname.}
 proc bcf_hdr_set_samples*(hdr: ptr bcf_hdr_t; samples: cstring; is_file: cint): cint {.
     cdecl, importc: "bcf_hdr_set_samples", dynlib: libname.}
 proc bcf_get_genotypes*(hdr: ptr bcf_hdr_t; line: ptr bcf1_t; dst: ptr ptr cint;
