@@ -125,3 +125,16 @@ check bx.close() == 0
 ```
 
 After this, `ti.txt.gz.csi` will be usable by tabix.
+
+
+## Setup / Installation
+
+If you use docker, you can use one of [these images](https://hub.docker.com/r/nimlang/nim/) to get Nim installed.
+
+Or you can copy the [Dockerfile from this repo](https://github.com/brentp/hts-nim/blob/master/Dockerfile)
+
+If you don't use docker, you can use [choosenim](https://github.com/dom96/choosenim) to quickly install Nim and nimble.
+
+Then, from this repo you can run `nimble test` and `nimble install` and then you can save the above snippets into `some.nim`
+
+and run them with `nim c -d:release -r some.nim`. This will run them and save an executable named `some`.
