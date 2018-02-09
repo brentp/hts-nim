@@ -641,6 +641,7 @@ int bcf_get_genotypes(const bcf_hdr_t *hdr, bcf1_t *line, int **dst, int *ndst);
 int bcf_get_format_values(const bcf_hdr_t *hdr, bcf1_t *line, const char *tag, void **dst, int *ndst, int type);
 //typedef htsFile vcfFile;
 
+
 int vcf_parse(kstring_t *s, const bcf_hdr_t *h, bcf1_t *v); 
 
 hts_idx_t *bcf_index_load(char *fn);

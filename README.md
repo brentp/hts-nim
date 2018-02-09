@@ -103,8 +103,10 @@ for rec in v.query("1:15600-18250"):
   echo rec.CHROM, ":", $rec.POS
   # adjust some values in the INFO
   var val = 22.3
-  check rec.info.set("VQSLOD", val)
+  check rec.info.set("VQSLOD", val) == Status.OK
   assert wtr.write_variant(rec)
+
+  check rec.info.delete("CSQ") == Status.OK
 
 wtr.close()
 ```

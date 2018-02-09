@@ -56,6 +56,14 @@ type
     HOM_ALT
     UNKNOWN
 
+  BCF_HEADER_LINE* {.pure.} = enum
+    BCF_HL_FLT  #0 // header line
+    BCF_HL_INFO #1
+    BCF_HL_FMT  #2
+    BCF_HL_CTG  #3
+    BCF_HL_STR  #4 // structured header line TAG=<A=..,B=..>
+    BCF_HL_GEN  #5 // generic header line
+
 proc `[]`*[T](p: SafeCPtr[T], k: int): T {.inline.} =
   when not defined(release):
     assert k < p.size
@@ -165,12 +173,28 @@ proc strings*(i:INFO, key:string, data:var string): Status {.inline.} =
   copyMem(data[0].addr.pointer, i.v.p, ret.int)
   return Status.OK
 
-proc has_flag(i:INFO, key:string): bool {.inline.} =
+proc has_flag*(i:INFO, key:string): bool {.inline.} =
   ## return indicates whether the flag is found in the INFO.
   var info = bcf_get_info(i.v.vcf.header.hdr, i.v.c, key.cstring)
   if info == nil or info.len != 0:
     return false
   return true
+
+proc bcf_hdr_id2type(hdr:ptr bcf_hdr_t, htype:int, int_id:int): int {.inline.}=
+  # translation of htslib macro.
+  var d = cast[CPtr[bcf_idpair_t]](hdr.id[0])
+  var v = d[int_id.cint].val.info[htype]
+  return (v shr 4) and 0xf
+
+proc delete*(i:INFO, key:string): Status {.inline.} =
+  ## delete the value from the INFO field  
+  var info = bcf_get_info(i.v.vcf.header.hdr, i.v.c, key.cstring)
+  if info == nil:
+    raise newException(KeyError, "hts-nim/info: key not found:" & key)
+
+  var htype = bcf_hdr_id2type(i.v.vcf.header.hdr, BCF_HEADER_LINE.BCF_HL_INFO.cint, info.key)
+  var ret = bcf_update_info(i.v.vcf.header.hdr, i.v.c, key.cstring,nil,0,htype.cint)
+  return Status(ret.int)
 
 proc set*[T: float32|float|float64](i:INFO, key:string, value:var T): Status {.inline.} =
   ## set the info key with the given float value).
@@ -260,7 +284,6 @@ proc open*(v:var VCF, fname:string, mode:string="r", samples:seq[string]=empty_s
 proc bcf_hdr_id2name(hdr: ptr bcf_hdr_t, rid: cint): cstring {.inline.} =
   var v = cast[CPtr[bcf_idpair_t]](hdr.id[1])
   return v[rid.int].key
-
 
 proc bcf_hdr_int2id(hdr: ptr bcf_hdr_t, typ: int, rid:int): cstring {.inline.} =
   var v = cast[CPtr[bcf_idpair_t]](hdr.id[typ])
