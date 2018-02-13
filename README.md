@@ -31,14 +31,14 @@ import hts
 
 # open a bam and look for the index.
 var b:Bam
-assert open(b, "test/HG02002.bam", index=true)
+open(b, "tests/HG02002.bam", index=true)
 
 for record in b:
-  if record.qual > 10:
+  if record.qual > 10u:
     echo record.chrom, record.start, record.stop
 
 # regional queries:
-for record in b.query('6', 30816675, 32816675):
+for record in b.query("6", 30816675, 32816675):
   if record.flag.proper_pair and record.flag.reverse:
     # cigar is an iterable of operations:
     for op in record.cigar:
@@ -47,9 +47,9 @@ for record in b.query('6', 30816675, 32816675):
 
     # tags are pulled with `aux`
     var mismatches = rec.aux("NM")
-    if mismatches != nil and mismatches.integer() < 3:
+    if mismatches != nil and mismatches.asInt.get < 3:
       var rg = rec.aux("RG")
-      echo rg.tostring()
+      echo rg.asString
 
 # cram requires an fasta to decode:
 var cram:Bam
