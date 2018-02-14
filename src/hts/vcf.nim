@@ -196,6 +196,10 @@ proc delete*(i:INFO, key:string): Status {.inline.} =
   var ret = bcf_update_info(i.v.vcf.header.hdr, i.v.c, key.cstring,nil,0,htype.cint)
   return Status(ret.int)
 
+proc set*[T: string](i:INFO, key:string, value:var T): Status {.inline.} =
+    var ret = bcf_update_info(i.v.vcf.header.hdr, i.v.c, key.cstring, value.cstring, 1, BCF_HT_STR.cint)
+    return Status(ret.int)
+
 proc set*[T: float32|float|float64](i:INFO, key:string, value:var T): Status {.inline.} =
   ## set the info key with the given float value).
   var tmp = float32(value)

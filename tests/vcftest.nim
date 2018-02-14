@@ -24,6 +24,9 @@ suite "vcf suite":
 
       var mq0 = @[10000'i32]
       check variant.info.set("MQ0", mq0) == Status.OK
+
+      var culprit = "Test"
+      check variant.info.set("culprit", culprit) == Status.OK
       check wtr.write_variant(variant)
 
       if i == 0:
