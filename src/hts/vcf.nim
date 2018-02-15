@@ -572,6 +572,14 @@ proc types*(gs:Genotypes): seq[GT_TYPE] =
 proc `$`*(v:Variant): string =
   return format("Variant($#:$# $#/$#)" % [$v.CHROM, $v.POS, $v.REF, join(v.ALT, ",")])
 
+proc tostring*(v:Variant): string =
+  ## return the full variant string including new-line from vcf_format.
+  var s = kstring_t(s:nil, l:0, m:0)
+  if vcf_format(v.vcf.header.hdr, v.c, s.addr) != 0:
+    raise newException(ValueError, "hts-nim/format error for variant")
+  result = $s.s
+  free(s.s)
+
 when isMainModule:
 
   var tsamples = @["101976-101976", "100920-100920", "100231-100231", "100232-100232", "100919-100919"]
@@ -590,6 +598,7 @@ when isMainModule:
     for rec in v:
       if rec.n_samples != tsamples.len:
         quit(2)
+      echo rec.tostring()
       discard rec.info.ints("AC", ac)
       discard rec.info.floats("AF", af)
       discard rec.info.strings("CSQ", csq)

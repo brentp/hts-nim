@@ -1,4 +1,4 @@
-import unittest, hts
+import unittest, hts, strutils
 
 suite "vcf suite":
   test "test writer":
@@ -25,9 +25,14 @@ suite "vcf suite":
       var mq0 = @[10000'i32]
       check variant.info.set("MQ0", mq0) == Status.OK
 
+      var found = variant.tostring().contains("culprint")
+      check (not found)
+
       var culprit = "Test"
       check variant.info.set("culprit", culprit) == Status.OK
       check wtr.write_variant(variant)
+
+      check ("culprit" in variant.tostring())
 
       if i == 0:
         try:

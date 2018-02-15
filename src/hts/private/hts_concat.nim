@@ -774,6 +774,8 @@ proc bcf_get_format_values*(hdr: ptr bcf_hdr_t; line: ptr bcf1_t; tag: cstring;
 
 proc vcf_parse*(s: ptr kstring_t; h: ptr bcf_hdr_t; v: ptr bcf1_t): cint {.cdecl,
     importc: "vcf_parse", dynlib: libname.}
+proc vcf_format*(h: ptr bcf_hdr_t; v: ptr bcf1_t; s: ptr kstring_t): cint {.cdecl,
+    importc: "vcf_format", dynlib: libname.}
 proc bcf_index_load*(fn: cstring): ptr hts_idx_t {.cdecl, importc: "bcf_index_load",
     dynlib: libname.}
 template bcf_itr_queryi*(idx, tid, beg, `end`: untyped): untyped =

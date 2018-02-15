@@ -643,6 +643,7 @@ int bcf_get_format_values(const bcf_hdr_t *hdr, bcf1_t *line, const char *tag, v
 
 
 int vcf_parse(kstring_t *s, const bcf_hdr_t *h, bcf1_t *v); 
+int vcf_format(const bcf_hdr_t *h, const bcf1_t *v, kstring_t *s);
 
 hts_idx_t *bcf_index_load(char *fn);
 #define bcf_itr_queryi(idx, tid, beg, end) hts_itr_query((idx), (tid), (beg), (end), bcf_readrec)
