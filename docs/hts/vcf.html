@@ -1304,8 +1304,10 @@ function main() {
   <li><a class="reference" href="#delete,INFO,string"
     title="delete(i: INFO; key: string): Status"><wbr />delete<span class="attachedType" style="visibility:hidden">INFO</span></a></li>
   <li><a class="reference" href="#set,INFO,string,T"
-    title="set[T: float32 | float | float64](i: INFO; key: string; value: var T): Status"><wbr />set<span class="attachedType" style="visibility:hidden">INFO</span></a></li>
+    title="set[T: string](i: INFO; key: string; value: var T): Status"><wbr />set<span class="attachedType" style="visibility:hidden">INFO</span></a></li>
   <li><a class="reference" href="#set,INFO,string,T_2"
+    title="set[T: float32 | float | float64](i: INFO; key: string; value: var T): Status"><wbr />set<span class="attachedType" style="visibility:hidden">INFO</span></a></li>
+  <li><a class="reference" href="#set,INFO,string,T_3"
     title="set[T: int32 | int | int64](i: INFO; key: string; value: var T): Status"><wbr />set<span class="attachedType" style="visibility:hidden">INFO</span></a></li>
   <li><a class="reference" href="#set,INFO,string,seq[float32]"
     title="set(i: INFO; key: string; values: var seq[float32]): Status"><wbr />set<span class="attachedType" style="visibility:hidden">INFO</span></a></li>
@@ -1368,6 +1370,8 @@ function main() {
     title="types(gs: Genotypes): seq[GT_TYPE]"><wbr />types<span class="attachedType" style="visibility:hidden">Genotypes</span></a></li>
   <li><a class="reference" href="#$,Variant"
     title="`$`(v: Variant): string"><wbr />`$`<span class="attachedType" style="visibility:hidden">Variant</span></a></li>
+  <li><a class="reference" href="#tostring,Variant"
+    title="tostring(v: Variant): string"><wbr />tostring<span class="attachedType" style="visibility:hidden">Variant</span></a></li>
 
   </ul>
 </li>
@@ -1568,12 +1572,17 @@ return indicates whether the flag is found in the INFO.
 delete the value from the INFO field  
 
 </dd>
-<dt id="set"><a name="set,INFO,string,T"></a><pre><span class="Keyword">proc</span> <span class="Identifier">set</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">float32</span> <span class="Operator">|</span> <span class="Identifier">float</span> <span class="Operator">|</span> <span class="Identifier">float64</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">INFO</span><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">T</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Status</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dt id="set"><a name="set,INFO,string,T"></a><pre><span class="Keyword">proc</span> <span class="Identifier">set</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">INFO</span><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">T</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Status</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dd>
+
+
+</dd>
+<dt id="set"><a name="set,INFO,string,T_2"></a><pre><span class="Keyword">proc</span> <span class="Identifier">set</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">float32</span> <span class="Operator">|</span> <span class="Identifier">float</span> <span class="Operator">|</span> <span class="Identifier">float64</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">INFO</span><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">T</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Status</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
 set the info key with the given float value).
 
 </dd>
-<dt id="set"><a name="set,INFO,string,T_2"></a><pre><span class="Keyword">proc</span> <span class="Identifier">set</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">int32</span> <span class="Operator">|</span> <span class="Identifier">int</span> <span class="Operator">|</span> <span class="Identifier">int64</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">INFO</span><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">T</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Status</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dt id="set"><a name="set,INFO,string,T_3"></a><pre><span class="Keyword">proc</span> <span class="Identifier">set</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">int32</span> <span class="Operator">|</span> <span class="Identifier">int</span> <span class="Operator">|</span> <span class="Identifier">int64</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">INFO</span><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">T</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Status</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
 set the info key with the given int value).
 
@@ -1732,6 +1741,11 @@ return the types (HOM_REF/HET, etc) for each sample.
 
 
 </dd>
+<dt id="tostring"><a name="tostring,Variant"></a><pre><span class="Keyword">proc</span> <span class="Identifier">tostring</span><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <span class="Identifier">Variant</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dd>
+return the full variant string including new-line from vcf_format.
+
+</dd>
 
 </dl></div>
 <div class="section" id="14">
@@ -1763,7 +1777,7 @@ iterate over variants in a VCF/BCF for the given region. Each returned Variant h
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small>Made with Nim. Generated: 2018-02-09 09:07:01 UTC</small>
+        <small>Made with Nim. Generated: 2018-02-15 10:35:59 UTC</small>
       </div>
     </div>
   </div>
