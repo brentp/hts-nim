@@ -1253,11 +1253,11 @@ function main() {
   mem: CPtr[T]"><wbr />Safe<wbr />CPtr<span class="attachedType" style="visibility:hidden"></span></a></li>
   <li><a class="reference" href="#Status"
     title="Status = enum
+  IncorrectNumberOfValues = - 10, ## when setting a FORMAT field, the number of values must be a multiple of the number of samples
   NotFound = - 3,                ## Tag is not present in the Record
   UnexpectedType = - 2,          ## E.g. user requested int when type was float.
   UndefinedTag = - 1,            ## Tag is not present in the Header
-  OK = 0,                       ## Tag was found
-  IncorrectNumberOfValues     ## when setting a FORMAT field, the number of values must be a multiple of the number of samples"><wbr />Status<span class="attachedType" style="visibility:hidden"></span></a></li>
+  OK = 0                        ## Tag was found"><wbr />Status<span class="attachedType" style="visibility:hidden"></span></a></li>
   <li><a class="reference" href="#GT_TYPE"
     title="GT_TYPE = enum
   HOM_REF, HET, HOM_ALT, UNKNOWN"><wbr />GT_<wbr />TYPE<span class="attachedType" style="visibility:hidden"></span></a></li>
@@ -1286,6 +1286,12 @@ function main() {
     title="set_samples(v: VCF; samples: seq[string])"><wbr />set_<wbr />samples<span class="attachedType" style="visibility:hidden">VCF</span></a></li>
   <li><a class="reference" href="#samples,VCF"
     title="samples(v: VCF): seq[string]"><wbr />samples<span class="attachedType" style="visibility:hidden">VCF</span></a></li>
+  <li><a class="reference" href="#add_string,Header,string"
+    title="add_string(h: Header; header: string): Status"><wbr />add_<wbr />string<span class="attachedType" style="visibility:hidden">Header</span></a></li>
+  <li><a class="reference" href="#add_info,Header,string,string,string,string"
+    title="add_info(h: Header; ID: string; Number: string; Type: string; Description: string): Status"><wbr />add_<wbr />info<span class="attachedType" style="visibility:hidden">Header</span></a></li>
+  <li><a class="reference" href="#add_format,Header,string,string,string,string"
+    title="add_format(h: Header; ID: string; Number: string; Type: string; Description: string): Status"><wbr />add_<wbr />format<span class="attachedType" style="visibility:hidden">Header</span></a></li>
   <li><a class="reference" href="#info,Variant"
     title="info(v: Variant): INFO"><wbr />info<span class="attachedType" style="visibility:hidden">Variant</span></a></li>
   <li><a class="reference" href="#format,Variant"
@@ -1467,11 +1473,11 @@ FORMAT exposes access to the sample format fields in the VCF
 
 </dd>
 <dt id="Status"><a name="Status"></a><pre><span class="Identifier">Status</span> <span class="Other">=</span> <span class="Keyword">enum</span>
+  <span class="Identifier">IncorrectNumberOfValues</span> <span class="Other">=</span> <span class="Operator">-</span> <span class="DecNumber">10</span><span class="Other">,</span> <span class="Comment">## when setting a FORMAT field, the number of values must be a multiple of the number of samples</span>
   <span class="Identifier">NotFound</span> <span class="Other">=</span> <span class="Operator">-</span> <span class="DecNumber">3</span><span class="Other">,</span>                <span class="Comment">## Tag is not present in the Record</span>
   <span class="Identifier">UnexpectedType</span> <span class="Other">=</span> <span class="Operator">-</span> <span class="DecNumber">2</span><span class="Other">,</span>          <span class="Comment">## E.g. user requested int when type was float.</span>
   <span class="Identifier">UndefinedTag</span> <span class="Other">=</span> <span class="Operator">-</span> <span class="DecNumber">1</span><span class="Other">,</span>            <span class="Comment">## Tag is not present in the Header</span>
-  <span class="Identifier">OK</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">,</span>                       <span class="Comment">## Tag was found</span>
-  <span class="Identifier">IncorrectNumberOfValues</span>     <span class="Comment">## when setting a FORMAT field, the number of values must be a multiple of the number of samples</span></pre></dt>
+  <span class="Identifier">OK</span> <span class="Other">=</span> <span class="DecNumber">0</span>                        <span class="Comment">## Tag was found</span></pre></dt>
 <dd>
 contains the values returned from the INFO for FORMAT fields.
 
@@ -1532,9 +1538,26 @@ set the samples that will be decoded
 
 
 </dd>
+<dt id="add_string"><a name="add_string,Header,string"></a><pre><span class="Keyword">proc</span> <span class="Identifier">add_string</span><span class="Other">(</span><span class="Identifier">h</span><span class="Other">:</span> <span class="Identifier">Header</span><span class="Other">;</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Status</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dd>
+add the full string header to the VCF.
+
+</dd>
+<dt id="add_info"><a name="add_info,Header,string,string,string,string"></a><pre><span class="Keyword">proc</span> <span class="Identifier">add_info</span><span class="Other">(</span><span class="Identifier">h</span><span class="Other">:</span> <span class="Identifier">Header</span><span class="Other">;</span> <span class="Identifier">ID</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">Number</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">Type</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">Description</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Status</span> <span class="Other pragmabegin">{.</span><div class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dd>
+add an INFO field to the header with the given values
+
+</dd>
+<dt id="add_format"><a name="add_format,Header,string,string,string,string"></a><pre><span class="Keyword">proc</span> <span class="Identifier">add_format</span><span class="Other">(</span><span class="Identifier">h</span><span class="Other">:</span> <span class="Identifier">Header</span><span class="Other">;</span> <span class="Identifier">ID</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">Number</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">Type</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">Description</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Status</span> <span class="Other pragmabegin">{.</span><div class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dd>
+add a FORMAT field to the header with the given values
+
+</dd>
 <dt id="info"><a name="info,Variant"></a><pre><span class="Keyword">proc</span> <span class="Identifier">info</span><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <span class="Identifier">Variant</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">INFO</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
-
+return the INFO object for the given varnat.
 
 </dd>
 <dt id="format"><a name="format,Variant"></a><pre><span class="Keyword">proc</span> <span class="Identifier">format</span><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <span class="Identifier">Variant</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">FORMAT</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
@@ -1795,7 +1818,7 @@ iterate over variants in a VCF/BCF for the given region. Each returned Variant h
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small>Made with Nim. Generated: 2018-02-16 09:20:27 UTC</small>
+        <small>Made with Nim. Generated: 2018-02-16 09:44:17 UTC</small>
       </div>
     </div>
   </div>

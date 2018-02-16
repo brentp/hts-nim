@@ -63,3 +63,28 @@ suite "vcf suite":
 
       var val2 = @[2'i32, 2, 2, 2]
       check variant.format.set("MIN_DP", val2) == Status.IncorrectNumberOfValues
+
+  test "add string to header":
+    var vcf:VCF
+    check open(vcf, "tests/test.vcf.gz")
+    check vcf.header.add_string("##contig=<ID=8,length=146364022,assembly=b37>") == Status.OK
+
+  test "add info to header":
+    var vcf:VCF
+    check open(vcf, "tests/test.vcf.gz")
+    check vcf.header.add_info("hello", "1", "String", "New string field") == Status.OK
+
+    var val = "world"
+    for variant in vcf:
+      check variant.info.set("hello", val) == Status.OK
+
+  test "add format to header":
+    var vcf:VCF
+    check open(vcf, "tests/test.vcf.gz")
+    check vcf.header.add_format("hello", "1", "Integer", "New int format field") == Status.OK
+    var val = new_seq[int32](vcf.n_samples)
+    for variant in vcf:
+      check variant.format.set("hello", val) == Status.OK
+
+      # note that we can't set the INFO with this new field.
+      check variant.info.set("hello", val) == Status.UndefinedTag

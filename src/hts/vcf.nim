@@ -44,11 +44,11 @@ type
 
   Status* {.pure.} = enum
     ## contains the values returned from the INFO for FORMAT fields.
+    IncorrectNumberOfValues = -10 ## when setting a FORMAT field, the number of values must be a multiple of the number of samples
     NotFound = -3 ## Tag is not present in the Record
     UnexpectedType = -2  ## E.g. user requested int when type was float.
     UndefinedTag = -1 ## Tag is not present in the Header
     OK = 0 ## Tag was found
-    IncorrectNumberOfValues ## when setting a FORMAT field, the number of values must be a multiple of the number of samples
 
   GT_TYPE* {.pure.} = enum
     ## types returned from genotype.types
@@ -93,7 +93,23 @@ proc samples*(v:VCF): seq[string] =
   for i in 0..<v.n_samples:
     result[i] = $v.header.hdr.samples[i]
 
+proc add_string*(h:Header, header:string): Status =
+  ## add the full string header to the VCF.
+  var ret = bcf_hdr_append(h.hdr, header.cstring)
+  if ret != 0:
+    return Status(ret)
+  return Status(bcf_hdr_sync(h.hdr))
+
+proc add_info*(h:Header, ID:string, Number:string, Type:string, Description: string): Status =
+  ## add an INFO field to the header with the given values
+  return h.add_string(format("##INFO=<ID=$#,Number=$#,Type=$#,Description=\"$#\">", ID, Number, Type, Description))
+
+proc add_format*(h:Header, ID:string, Number:string, Type:string, Description: string): Status =
+  ## add a FORMAT field to the header with the given values
+  return h.add_string(format("##FORMAT=<ID=$#,Number=$#,Type=$#,Description=\"$#\">", ID, Number, Type, Description))
+
 proc info*(v:Variant): INFO {.inline.} =
+  ## return the INFO object for the given varnat.
   return INFO(i:0, v:v)
 
 proc destroy_format(f:Format) =

@@ -772,6 +772,13 @@ proc bcf_get_format_values*(hdr: ptr bcf_hdr_t; line: ptr bcf1_t; tag: cstring;
     importc: "bcf_get_format_values", dynlib: libname.}
 ## typedef htsFile vcfFile;
 
+proc bcf_hdr_append*(h: ptr bcf_hdr_t; line: cstring): cint {.cdecl,
+    importc: "bcf_hdr_append", dynlib: libname.}
+proc bcf_hdr_sync*(h: ptr bcf_hdr_t): cint {.cdecl, importc: "bcf_hdr_sync",
+                                        dynlib: libname.}
+proc bcf_update_format*(hdr: ptr bcf_hdr_t; line: ptr bcf1_t; key: cstring;
+                       values: pointer; n: cint; `type`: cint): cint {.cdecl,
+    importc: "bcf_update_format", dynlib: libname.}
 proc vcf_parse*(s: ptr kstring_t; h: ptr bcf_hdr_t; v: ptr bcf1_t): cint {.cdecl,
     importc: "vcf_parse", dynlib: libname.}
 proc vcf_format*(h: ptr bcf_hdr_t; v: ptr bcf1_t; s: ptr kstring_t): cint {.cdecl,

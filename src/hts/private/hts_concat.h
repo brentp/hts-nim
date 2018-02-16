@@ -640,6 +640,10 @@ int bcf_hdr_set_samples(bcf_hdr_t *hdr, const char *samples, int is_file);
 int bcf_get_genotypes(const bcf_hdr_t *hdr, bcf1_t *line, int **dst, int *ndst);
 int bcf_get_format_values(const bcf_hdr_t *hdr, bcf1_t *line, const char *tag, void **dst, int *ndst, int type);
 //typedef htsFile vcfFile;
+int bcf_hdr_append(bcf_hdr_t *h, const char *line);
+int bcf_hdr_sync(bcf_hdr_t *h);
+
+int bcf_update_format(const bcf_hdr_t *hdr, bcf1_t *line, const char *key, const void *values, int n, int type);
 
 
 int vcf_parse(kstring_t *s, const bcf_hdr_t *h, bcf1_t *v); 
