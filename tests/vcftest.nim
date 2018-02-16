@@ -44,3 +44,22 @@ suite "vcf suite":
 
 
     wtr.close()
+
+
+  test "test format setting":
+    var tsamples = @["101976-101976", "100920-100920", "100231-100231", "100232-100232", "100919-100919"]
+    var vcf:VCF
+    check open(vcf, "tests/test.vcf.gz", samples=tsamples)
+
+    var val = @[2'i32, 2, 2, 2, 2]
+    var vout = new_seq[int32](5)
+    for variant in vcf:
+      check variant.format.set("MIN_DP", val) == Status.OK
+
+      check variant.format.ints("MIN_DP", vout) == Status.OK
+
+      check vout == val
+
+
+      var val2 = @[2'i32, 2, 2, 2]
+      check variant.format.set("MIN_DP", val2) == Status.IncorrectNumberOfValues

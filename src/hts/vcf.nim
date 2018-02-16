@@ -48,6 +48,7 @@ type
     UnexpectedType = -2  ## E.g. user requested int when type was float.
     UndefinedTag = -1 ## Tag is not present in the Header
     OK = 0 ## Tag was found
+    IncorrectNumberOfValues ## when setting a FORMAT field, the number of values must be a multiple of the number of samples
 
   GT_TYPE* {.pure.} = enum
     ## types returned from genotype.types
@@ -143,6 +144,20 @@ proc ints*(i:INFO, key:string, data:var seq[int32]): Status {.inline.} =
     return Status(ret.int)
 
   return toSeq[int32](data, i.v.p, ret.int)
+
+proc set*(f:FORMAT, key:string, values: var seq[int32]): Status {.inline.} =
+  ## set the sample fields. values must be a multiple of number of samples.
+  if values.len mod f.v.vcf.n_samples != 0:
+    return Status.IncorrectNumberOfValues
+  var ret = bcf_update_format(f.v.vcf.header.hdr, f.v.c, key.cstring, values[0].addr.pointer, values.len.cint, BCF_HT_INT.cint)
+  return Status(ret.int)
+
+proc set*(f:FORMAT, key:string, values: var seq[float32]): Status {.inline.} =
+  ## set the sample fields. values must be a multiple of number of samples.
+  if values.len mod f.v.vcf.n_samples != 0:
+    return Status.IncorrectNumberOfValues
+  var ret = bcf_update_format(f.v.vcf.header.hdr, f.v.c, key.cstring, values[0].addr.pointer, values.len.cint, BCF_HT_REAL.cint)
+  return Status(ret.int)
 
 proc floats*(i:INFO, key:string, data:var seq[float32]): Status {.inline.} =
   ## floats fills the given data with ints associated with the key.

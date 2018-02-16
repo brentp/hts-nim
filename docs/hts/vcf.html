@@ -1256,7 +1256,8 @@ function main() {
   NotFound = - 3,                ## Tag is not present in the Record
   UnexpectedType = - 2,          ## E.g. user requested int when type was float.
   UndefinedTag = - 1,            ## Tag is not present in the Header
-  OK = 0                        ## Tag was found"><wbr />Status<span class="attachedType" style="visibility:hidden"></span></a></li>
+  OK = 0,                       ## Tag was found
+  IncorrectNumberOfValues     ## when setting a FORMAT field, the number of values must be a multiple of the number of samples"><wbr />Status<span class="attachedType" style="visibility:hidden"></span></a></li>
   <li><a class="reference" href="#GT_TYPE"
     title="GT_TYPE = enum
   HOM_REF, HET, HOM_ALT, UNKNOWN"><wbr />GT_<wbr />TYPE<span class="attachedType" style="visibility:hidden"></span></a></li>
@@ -1295,6 +1296,10 @@ function main() {
     title="floats(f: FORMAT; key: string; data: var seq[float32]): Status"><wbr />floats<span class="attachedType" style="visibility:hidden">FORMAT</span></a></li>
   <li><a class="reference" href="#ints,INFO,string,seq[int32]"
     title="ints(i: INFO; key: string; data: var seq[int32]): Status"><wbr />ints<span class="attachedType" style="visibility:hidden">INFO</span></a></li>
+  <li><a class="reference" href="#set,FORMAT,string,seq[int32]"
+    title="set(f: FORMAT; key: string; values: var seq[int32]): Status"><wbr />set<span class="attachedType" style="visibility:hidden">FORMAT</span></a></li>
+  <li><a class="reference" href="#set,FORMAT,string,seq[float32]"
+    title="set(f: FORMAT; key: string; values: var seq[float32]): Status"><wbr />set<span class="attachedType" style="visibility:hidden">FORMAT</span></a></li>
   <li><a class="reference" href="#floats,INFO,string,seq[float32]"
     title="floats(i: INFO; key: string; data: var seq[float32]): Status"><wbr />floats<span class="attachedType" style="visibility:hidden">INFO</span></a></li>
   <li><a class="reference" href="#strings,INFO,string,string"
@@ -1303,11 +1308,11 @@ function main() {
     title="has_flag(i: INFO; key: string): bool"><wbr />has_<wbr />flag<span class="attachedType" style="visibility:hidden">INFO</span></a></li>
   <li><a class="reference" href="#delete,INFO,string"
     title="delete(i: INFO; key: string): Status"><wbr />delete<span class="attachedType" style="visibility:hidden">INFO</span></a></li>
+  <li><a class="reference" href="#set,INFO,string,string"
+    title="set(i: INFO; key: string; value: var string): Status"><wbr />set<span class="attachedType" style="visibility:hidden">INFO</span></a></li>
   <li><a class="reference" href="#set,INFO,string,T"
-    title="set[T: string](i: INFO; key: string; value: var T): Status"><wbr />set<span class="attachedType" style="visibility:hidden">INFO</span></a></li>
-  <li><a class="reference" href="#set,INFO,string,T_2"
     title="set[T: float32 | float | float64](i: INFO; key: string; value: var T): Status"><wbr />set<span class="attachedType" style="visibility:hidden">INFO</span></a></li>
-  <li><a class="reference" href="#set,INFO,string,T_3"
+  <li><a class="reference" href="#set,INFO,string,T_2"
     title="set[T: int32 | int | int64](i: INFO; key: string; value: var T): Status"><wbr />set<span class="attachedType" style="visibility:hidden">INFO</span></a></li>
   <li><a class="reference" href="#set,INFO,string,seq[float32]"
     title="set(i: INFO; key: string; values: var seq[float32]): Status"><wbr />set<span class="attachedType" style="visibility:hidden">INFO</span></a></li>
@@ -1465,7 +1470,8 @@ FORMAT exposes access to the sample format fields in the VCF
   <span class="Identifier">NotFound</span> <span class="Other">=</span> <span class="Operator">-</span> <span class="DecNumber">3</span><span class="Other">,</span>                <span class="Comment">## Tag is not present in the Record</span>
   <span class="Identifier">UnexpectedType</span> <span class="Other">=</span> <span class="Operator">-</span> <span class="DecNumber">2</span><span class="Other">,</span>          <span class="Comment">## E.g. user requested int when type was float.</span>
   <span class="Identifier">UndefinedTag</span> <span class="Other">=</span> <span class="Operator">-</span> <span class="DecNumber">1</span><span class="Other">,</span>            <span class="Comment">## Tag is not present in the Header</span>
-  <span class="Identifier">OK</span> <span class="Other">=</span> <span class="DecNumber">0</span>                        <span class="Comment">## Tag was found</span></pre></dt>
+  <span class="Identifier">OK</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">,</span>                       <span class="Comment">## Tag was found</span>
+  <span class="Identifier">IncorrectNumberOfValues</span>     <span class="Comment">## when setting a FORMAT field, the number of values must be a multiple of the number of samples</span></pre></dt>
 <dd>
 contains the values returned from the INFO for FORMAT fields.
 
@@ -1551,6 +1557,18 @@ fill data with integer values for each sample with the given key
 ints fills the given data with ints associated with the key.
 
 </dd>
+<dt id="set"><a name="set,FORMAT,string,seq[int32]"></a><pre><span class="Keyword">proc</span> <span class="Identifier">set</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <span class="Identifier">FORMAT</span><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">values</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">int32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Status</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dd>
+set the sample fields. values must be a multiple of number of samples.
+
+</dd>
+<dt id="set"><a name="set,FORMAT,string,seq[float32]"></a><pre><span class="Keyword">proc</span> <span class="Identifier">set</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <span class="Identifier">FORMAT</span><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">values</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">float32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Status</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dd>
+set the sample fields. values must be a multiple of number of samples.
+
+</dd>
 <dt id="floats"><a name="floats,INFO,string,seq[float32]"></a><pre><span class="Keyword">proc</span> <span class="Identifier">floats</span><span class="Other">(</span><span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">INFO</span><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">data</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">float32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Status</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
@@ -1572,17 +1590,17 @@ return indicates whether the flag is found in the INFO.
 delete the value from the INFO field  
 
 </dd>
-<dt id="set"><a name="set,INFO,string,T"></a><pre><span class="Keyword">proc</span> <span class="Identifier">set</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">INFO</span><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">T</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Status</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dt id="set"><a name="set,INFO,string,string"></a><pre><span class="Keyword">proc</span> <span class="Identifier">set</span><span class="Other">(</span><span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">INFO</span><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Status</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
 
 
 </dd>
-<dt id="set"><a name="set,INFO,string,T_2"></a><pre><span class="Keyword">proc</span> <span class="Identifier">set</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">float32</span> <span class="Operator">|</span> <span class="Identifier">float</span> <span class="Operator">|</span> <span class="Identifier">float64</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">INFO</span><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">T</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Status</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dt id="set"><a name="set,INFO,string,T"></a><pre><span class="Keyword">proc</span> <span class="Identifier">set</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">float32</span> <span class="Operator">|</span> <span class="Identifier">float</span> <span class="Operator">|</span> <span class="Identifier">float64</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">INFO</span><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">T</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Status</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
 set the info key with the given float value).
 
 </dd>
-<dt id="set"><a name="set,INFO,string,T_3"></a><pre><span class="Keyword">proc</span> <span class="Identifier">set</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">int32</span> <span class="Operator">|</span> <span class="Identifier">int</span> <span class="Operator">|</span> <span class="Identifier">int64</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">INFO</span><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">T</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Status</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dt id="set"><a name="set,INFO,string,T_2"></a><pre><span class="Keyword">proc</span> <span class="Identifier">set</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">int32</span> <span class="Operator">|</span> <span class="Identifier">int</span> <span class="Operator">|</span> <span class="Identifier">int64</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">INFO</span><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">T</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Status</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
 set the info key with the given int value).
 
@@ -1777,7 +1795,7 @@ iterate over variants in a VCF/BCF for the given region. Each returned Variant h
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small>Made with Nim. Generated: 2018-02-15 10:35:59 UTC</small>
+        <small>Made with Nim. Generated: 2018-02-16 09:20:27 UTC</small>
       </div>
     </div>
   </div>
