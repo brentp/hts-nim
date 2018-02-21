@@ -109,7 +109,6 @@ proc add_format*(h:Header, ID:string, Number:string, Type:string, Description: s
   return h.add_string(format("##FORMAT=<ID=$#,Number=$#,Type=$#,Description=\"$#\">", ID, Number, Type, Description))
 
 proc info*(v:Variant): INFO {.inline.} =
-  ## return the INFO object for the given varnat.
   return INFO(i:0, v:v)
 
 proc destroy_format(f:Format) =
@@ -472,6 +471,9 @@ proc QUAL*(v:Variant, default:float=0): float {.inline.} =
   ## variant quality; returns default if it was unspecified in the VCF
   result = v.c.qual
   if 0 != bcf_float_is_missing(result): return default
+
+proc `QUAL=`*(v:Variant, value: float) {.inline.} =
+  v.c.qual = value
 
 proc REF*(v:Variant): string {.inline.} =
   ## the reference allele

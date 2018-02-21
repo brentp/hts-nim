@@ -1,5 +1,18 @@
 import unittest, hts, strutils
 
+
+var global_vcf:VCF
+if not open(global_vcf, "tests/test.vcf.gz"):
+  quit "error opening vcf"
+
+
+var global_variant:Variant
+
+for v in global_vcf:
+  global_variant = v.copy()
+  break
+
+
 suite "vcf suite":
   test "test writer":
 
@@ -88,3 +101,8 @@ suite "vcf suite":
 
       # note that we can't set the INFO with this new field.
       check variant.info.set("hello", val) == Status.UndefinedTag
+
+  test "set qual":
+
+    global_variant.QUAL = 55
+    check global_variant.QUAL == 55
