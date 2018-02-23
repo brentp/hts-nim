@@ -297,9 +297,9 @@ type Splitter* = ref object
     aln*: Record
     chrom*: string
     start*: int
-    cigar: string
-    qual: uint8
-    NM: uint16
+    cigar*: string
+    qual*: uint8
+    NM*: uint16
 
 let consumes_ref = {'M', 'D', 'N', '=', 'X'}
 
