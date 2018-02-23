@@ -30,6 +30,9 @@ suite "flag hts-suite":
       if i == 0:
         check rec.sequence(s) == "AGGACTTCAGTACTATGTTGAATAGGAGTAATGAGAGGGGGCATTCTTGTCTTCTGCCAGTTTTCAAGGGGAATGCTTCCAGCTTTTGCCCATTCAGTATG"
         i += 1
+        check rec.tid == 5
+        check rec.mate_tid == 5
+
     check b.hdr.targets[0].name == "1"
     check b.hdr.targets[0].length == 249250621
     check len(b.hdr.targets) == b.hdr.hdr.n_targets

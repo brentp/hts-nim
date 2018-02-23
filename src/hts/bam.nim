@@ -84,19 +84,27 @@ proc targets*(h: Header): seq[Target] =
 proc `$`*(t: Target): string =
   return format("Target($1:$2)", t.name, t.length)
  
-proc chrom*(r: Record): string =
+proc chrom*(r: Record): string {.inline.} =
   ## `chrom` returns the chromosome or '' if not mapped.
   let tid = r.b.core.tid
   if tid == -1:
     return ""
   return $r.hdr.hdr.target_name[tid]
 
-proc mate_chrom*(r: Record): string =
+proc mate_chrom*(r: Record): string {.inline.} =
   ## `mate_chrom` returns the chromosome of the mate or '' if not mapped.
   let tid = r.b.core.mtid
   if tid == -1:
     return ""
   return $r.hdr.hdr.target_name[tid]
+
+proc mate_tid*(r: Record): int {.inline.} =
+  ## `mate_tid` returns the tid of the mate or -1 if not mapped.
+  result = r.b.core.mtid
+
+proc tid*(r: Record): int {.inline.} =
+  ## `tid` returns the tid of the alignment or -1 if not mapped.
+  result = r.b.core.tid
 
 proc start*(r: Record): int {.inline.} =
   ## `start` returns 0-based start position.
