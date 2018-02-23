@@ -1258,9 +1258,6 @@ function main() {
   UnexpectedType = - 2,          ## E.g. user requested int when type was float.
   UndefinedTag = - 1,            ## Tag is not present in the Header
   OK = 0                        ## Tag was found"><wbr />Status<span class="attachedType" style="visibility:hidden"></span></a></li>
-  <li><a class="reference" href="#GT_TYPE"
-    title="GT_TYPE = enum
-  HOM_REF, HET, HOM_ALT, UNKNOWN"><wbr />GT_<wbr />TYPE<span class="attachedType" style="visibility:hidden"></span></a></li>
   <li><a class="reference" href="#BCF_HEADER_LINE"
     title="BCF_HEADER_LINE = enum
   BCF_HL_FLT, BCF_HL_INFO, BCF_HL_FMT, BCF_HL_CTG, BCF_HL_STR, BCF_HL_GEN"><wbr />BCF_<wbr />HEADER_<wbr />LINE<span class="attachedType" style="visibility:hidden"></span></a></li>
@@ -1353,6 +1350,8 @@ function main() {
     title="FILTER(v: Variant): string"><wbr />FILTER<span class="attachedType" style="visibility:hidden">Variant</span></a></li>
   <li><a class="reference" href="#QUAL,Variant,float"
     title="QUAL(v: Variant; default: float = 0): float"><wbr />QUAL<span class="attachedType" style="visibility:hidden">Variant</span></a></li>
+  <li><a class="reference" href="#QUAL=,Variant,float"
+    title="QUAL=(v: Variant; value: float)"><wbr />QUAL=<span class="attachedType" style="visibility:hidden">Variant</span></a></li>
   <li><a class="reference" href="#REF,Variant"
     title="REF(v: Variant): string"><wbr />REF<span class="attachedType" style="visibility:hidden">Variant</span></a></li>
   <li><a class="reference" href="#ALT,Variant"
@@ -1371,14 +1370,14 @@ function main() {
     title="`$`(a: Allele): string"><wbr />`$`<span class="attachedType" style="visibility:hidden">Allele</span></a></li>
   <li><a class="reference" href="#$,Genotype"
     title="`$`(g: Genotype): string"><wbr />`$`<span class="attachedType" style="visibility:hidden">Genotype</span></a></li>
-  <li><a class="reference" href="#type,Genotype"
-    title="`type`(g: Genotype): GT_TYPE"><wbr />`type`<span class="attachedType" style="visibility:hidden">Genotype</span></a></li>
+  <li><a class="reference" href="#alts,Genotype"
+    title="alts(g: Genotype): int8"><wbr />alts<span class="attachedType" style="visibility:hidden">Genotype</span></a></li>
   <li><a class="reference" href="#genotypes,FORMAT,seq[int32]"
     title="genotypes(f: FORMAT; gts: var seq[int32]): Genotypes"><wbr />genotypes<span class="attachedType" style="visibility:hidden">FORMAT</span></a></li>
   <li><a class="reference" href="#$,Genotypes"
     title="`$`(gs: Genotypes): string"><wbr />`$`<span class="attachedType" style="visibility:hidden">Genotypes</span></a></li>
-  <li><a class="reference" href="#types,Genotypes"
-    title="types(gs: Genotypes): seq[GT_TYPE]"><wbr />types<span class="attachedType" style="visibility:hidden">Genotypes</span></a></li>
+  <li><a class="reference" href="#alts,Genotypes"
+    title="alts(gs: Genotypes): seq[int8]"><wbr />alts<span class="attachedType" style="visibility:hidden">Genotypes</span></a></li>
   <li><a class="reference" href="#$,Variant"
     title="`$`(v: Variant): string"><wbr />`$`<span class="attachedType" style="visibility:hidden">Variant</span></a></li>
   <li><a class="reference" href="#tostring,Variant"
@@ -1482,12 +1481,6 @@ FORMAT exposes access to the sample format fields in the VCF
 contains the values returned from the INFO for FORMAT fields.
 
 </dd>
-<dt id="GT_TYPE"><a name="GT_TYPE"></a><pre><span class="Identifier">GT_TYPE</span> <span class="Other">=</span> <span class="Keyword">enum</span>
-  <span class="Identifier">HOM_REF</span><span class="Other">,</span> <span class="Identifier">HET</span><span class="Other">,</span> <span class="Identifier">HOM_ALT</span><span class="Other">,</span> <span class="Identifier">UNKNOWN</span></pre></dt>
-<dd>
-types returned from genotype.types
-
-</dd>
 <dt id="BCF_HEADER_LINE"><a name="BCF_HEADER_LINE"></a><pre><span class="Identifier">BCF_HEADER_LINE</span> <span class="Other">=</span> <span class="Keyword">enum</span>
   <span class="Identifier">BCF_HL_FLT</span><span class="Other">,</span> <span class="Identifier">BCF_HL_INFO</span><span class="Other">,</span> <span class="Identifier">BCF_HL_FMT</span><span class="Other">,</span> <span class="Identifier">BCF_HL_CTG</span><span class="Other">,</span> <span class="Identifier">BCF_HL_STR</span><span class="Other">,</span> <span class="Identifier">BCF_HL_GEN</span></pre></dt>
 <dd>
@@ -1557,7 +1550,7 @@ add a FORMAT field to the header with the given values
 </dd>
 <dt id="info"><a name="info,Variant"></a><pre><span class="Keyword">proc</span> <span class="Identifier">info</span><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <span class="Identifier">Variant</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">INFO</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
-return the INFO object for the given varnat.
+
 
 </dd>
 <dt id="format"><a name="format,Variant"></a><pre><span class="Keyword">proc</span> <span class="Identifier">format</span><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <span class="Identifier">Variant</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">FORMAT</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
@@ -1712,6 +1705,11 @@ Return a string representation of the FILTER will be ';' delimited for multiple 
 variant quality; returns default if it was unspecified in the VCF
 
 </dd>
+<dt id="QUAL="><a name="QUAL=,Variant,float"></a><pre><span class="Keyword">proc</span> <span class="Identifier">QUAL=</span><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <span class="Identifier">Variant</span><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">)</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dd>
+
+
+</dd>
 <dt id="REF"><a name="REF,Variant"></a><pre><span class="Keyword">proc</span> <span class="Identifier">REF</span><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <span class="Identifier">Variant</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
 the reference allele
@@ -1757,9 +1755,9 @@ string representation of a single allele.
 string representation of a genotype. removes trailing phase value.
 
 </dd>
-<dt id="type"><a name="type,Genotype"></a><pre><span class="Keyword">proc</span> <span class="Identifier">`type`</span><span class="Other">(</span><span class="Identifier">g</span><span class="Other">:</span> <span class="Identifier">Genotype</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">GT_TYPE</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">OSError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dt id="alts"><a name="alts,Genotype"></a><pre><span class="Keyword">proc</span> <span class="Identifier">alts</span><span class="Other">(</span><span class="Identifier">g</span><span class="Other">:</span> <span class="Identifier">Genotype</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int8</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">OSError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
-return the type of variant (hom ref/het/etc).
+the number of alternate alleles in the genotype. only makes sense for bi-allelics. ./1 == 1 0/. == 0 ./. -&gt; -1 1/1 -&gt; 2
 
 </dd>
 <dt id="genotypes"><a name="genotypes,FORMAT,seq[int32]"></a><pre><span class="Keyword">proc</span> <span class="Identifier">genotypes</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <span class="Identifier">FORMAT</span><span class="Other">;</span> <span class="Identifier">gts</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">int32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Genotypes</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
@@ -1772,9 +1770,9 @@ give sequence of genotypes (using the underlying array given in gts)
 
 
 </dd>
-<dt id="types"><a name="types,Genotypes"></a><pre><span class="Keyword">proc</span> <span class="Identifier">types</span><span class="Other">(</span><span class="Identifier">gs</span><span class="Other">:</span> <span class="Identifier">Genotypes</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">GT_TYPE</span><span class="Other">]</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">OSError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dt id="alts"><a name="alts,Genotypes"></a><pre><span class="Keyword">proc</span> <span class="Identifier">alts</span><span class="Other">(</span><span class="Identifier">gs</span><span class="Other">:</span> <span class="Identifier">Genotypes</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">int8</span><span class="Other">]</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">OSError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
-return the types (HOM_REF/HET, etc) for each sample.
+return the number of alternate alleles. Unknown is -1.
 
 </dd>
 <dt id="$"><a name="$,Variant"></a><pre><span class="Keyword">proc</span> <span class="Identifier">`$`</span><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <span class="Identifier">Variant</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
@@ -1818,7 +1816,7 @@ iterate over variants in a VCF/BCF for the given region. Each returned Variant h
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small>Made with Nim. Generated: 2018-02-16 09:44:17 UTC</small>
+        <small>Made with Nim. Generated: 2018-02-23 14:01:40 UTC</small>
       </div>
     </div>
   </div>

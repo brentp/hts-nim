@@ -50,13 +50,6 @@ type
     UndefinedTag = -1 ## Tag is not present in the Header
     OK = 0 ## Tag was found
 
-  GT_TYPE* {.pure.} = enum
-    ## types returned from genotype.types
-    HOM_REF
-    HET
-    HOM_ALT
-    UNKNOWN
-
   BCF_HEADER_LINE* {.pure.} = enum
     BCF_HL_FLT  #0 // header line
     BCF_HL_INFO #1
@@ -541,47 +534,37 @@ proc `$`*(g:Genotype): string {.inline.} =
   if result[result.len - 1] == '/' or result[result.len - 1] == '|':
     result.set_len(result.len - 1)
 
-proc type*(g:Genotype): GT_TYPE {.inline.} =
-  ## return the type of variant (hom ref/het/etc).
+proc alts*(g:Genotype): int8 {.inline.} =
+  ## the number of alternate alleles in the genotype. only makes sense for bi-allelics.
+  ## ./1 == 1
+  ## 0/. == 0
+  ## ./. -> -1
+  ## 1/1 -> 2
   if g.len == 2:
-    if g[0].value == 0 and g[1].value == 1:
-      return GT_TYPE.HET
-    elif g[0].value == 0 and g[1].value == 0:
-      return GT_TYPE.HOM_REF
-    elif g[0].value == 1 and g[1].value == 1:
-      return GT_TYPE.HOM_ALT
-    elif g[0].value == 0 and g[1].value == -1:
-      return GT_TYPE.HOM_REF
-    elif g[0].value == -1 or g[1].value == -1:
-      return GT_TYPE.UNKNOWN
-    elif g[0].value != g[1].value:
-      return GT_TYPE.HET
+    var g0 = g[0].value
+    var g1 = g[1].value
+    if g0 != -1 and g1 != -1:
+      return int8(g0 + g1)
+    # only unknown if both are unknown
+    if g0 == -1 and g1 == -1:
+      return -1
 
-  var counts: seq[int] = @[0, 0, 0, 0, 0]
-  var unknowns = 0
+    if g0 == -1:
+      return int8(g1)
+    if g1 == -1:
+      return int8(g0)
+
+  var has_unknown = false
   for a in g:
-    if a.value < 0:
-      unknowns += 1
-    else:
-      counts[a.value] += 1
-  if counts[0] == len(g):
-    return GT_TYPE.HOM_REF
-  if counts[1] == len(g):
-    return GT_TYPE.HOM_ALT
-  if counts[0] + counts[1] == len(g):
-    return GT_TYPE.HET
-  if unknowns == len(g):
-    return GT_TYPE.UNKNOWN
-  if counts[0] + unknowns == len(g):
-    return GT_TYPE.HOM_REF
-  var n = 0
-  for k in 2..<len(counts):
-    if counts[k] == len(g):
-      return GT_TYPE.HOM_ALT
-    if counts[k] > 0:
-      n += 1
-  if n > 1:
-    return GT_TYPE.HET
+    if a.value == -1:
+      has_unknown = true
+      break
+
+  if not has_unknown:
+    var nalts = 0
+    for a in g:
+      nalts += a.value
+    return int8(nalts)
   raise newException(OSError, "not implemented for:" & $g)
 
 proc genotypes*(f:FORMAT, gts: var seq[int32]): Genotypes =
@@ -596,11 +579,11 @@ proc `$`*(gs:Genotypes): string =
     x.add($g)
   return '[' & join(x, ", ") & ']'
 
-proc types*(gs:Genotypes): seq[GT_TYPE] =
-  ## return the types (HOM_REF/HET, etc) for each sample.
-  result = new_seq_of_cap[GT_TYPE](gs.len)
+proc alts*(gs:Genotypes): seq[int8] =
+  ## return the number of alternate alleles. Unknown is -1.
+  result = new_seq_of_cap[int8](gs.len)
   for g in gs:
-    result.add(g.type)
+    result.add(g.alts)
 
 proc `$`*(v:Variant): string =
   return format("Variant($#:$# $#/$#)" % [$v.CHROM, $v.POS, $v.REF, join(v.ALT, ",")])
@@ -647,7 +630,7 @@ when isMainModule:
       var gts = f.genotypes(ac)
       echo gts
       echo gts.copy()
-      echo gts.types
+      echo gts.alts
 
     echo v.samples
 
