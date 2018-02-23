@@ -292,6 +292,50 @@ iterator items*(bam: Bam): Record {.raises: [BamError]}=
 
 include "./bam/auxtags"
 
+type Splitter* = ref object
+    ## A splitter represents one item from an SA tag
+    aln*: Record
+    chrom*: string
+    start*: int
+    cigar: string
+    qual: uint8
+    NM: uint16
+
+let consumes_ref = {'M', 'D', 'N', '=', 'X'}
+
+proc stop*(s: Splitter): int {.inline.} =
+  ## calculate the stop value for the splitter
+  result = s.start
+  var last_i = 0
+  for i, c in s.cigar:
+    if not c.isDigit:
+      if c in consumes_ref:
+        var num = s.cigar[last_i..<i]
+        result += parseInt(num)
+      last_i = i + 1
+
+proc `$`*(s: Splitter): string =
+  return format("Splitter($# $#..$# ($#))" % [s.chrom, $s.start, $s.stop, s.cigar])
+
+iterator splitters*(r: Record, tag:string="SA"): Splitter =
+  ## generate splitters from SA tag.
+  var aux = r.aux(tag)
+  if aux != nil:
+    var splo = aux.asString
+    var spls = ";"
+    if splo.isSome:
+      spls = splo.get
+    if spls.len != 1:
+      for s in spls[0..<len(spls)-1].split(";"):
+        var toks = s.split(",")
+        if len(toks) == 4: # XA == chr,[strand]pos,CIGAR,NM
+          yield Splitter(aln:r, chrom: toks[0], start: -1 + parseInt(toks[1][1..<len(toks[1])]), cigar: toks[2], NM:uint16(parseInt(toks[3])))
+        else:
+          yield Splitter(aln:r, chrom:toks[0], start: -1 + parseInt(toks[1]), cigar: toks[3],
+                           qual: uint8(parseInt(toks[4])),
+                           NM: uint16(parseInt(toks[5])))
+
+
 proc main() =
 
   var bam: Bam

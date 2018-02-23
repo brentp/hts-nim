@@ -23,6 +23,8 @@ suite "flag hts-suite":
         for k, v in bqs:
           bqs[k] = 33'u8 + v
         check cast[string](bqs) == "3NOFEHFHHIHEGIFHIHGHGKHFKKIKGEJHJILHLJKKKJJIIKJGIIIIIKKKKKJKGGFFJIMKKGJGEGONOCIJIIJJCCCJJHJIHCHIGFBED"
+      #for s in rec.splitters("XA"):
+      #  echo s
 
       discard rec.isize
       discard rec.qual
@@ -39,4 +41,5 @@ suite "flag hts-suite":
 
     check b.set_fields(SamField.SAM_POS, SamField.SAM_RNEXT) == 0
     check b.set_option(FormatOption.CRAM_OPT_DECODE_MD, 0) == 0
+
 

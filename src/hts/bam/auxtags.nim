@@ -9,21 +9,21 @@ type
     of akFloat: xFloat*: float64
     of akInt: xInt*: int
 
-proc asString*(a: Aux): Option[string] =
+proc asString*(a: Aux): Option[string] {.inline.} =
   if a.kind == akString:
     return some(a.xString)
 
-proc asInt*(a:Aux): Option[int] =
+proc asInt*(a:Aux): Option[int] {.inline.} =
   if a.kind == akInt:
     return some(a.xInt)
   
-proc asFloat*(a:Aux): Option[float64] =
+proc asFloat*(a:Aux): Option[float64] {.inline.} =
   if a.kind == akFloat:
     return some(a.xFloat)
   if a.kind == akInt:
     return some(float64(a.xInt))
 
-proc aux*(r:Record, tag: string): Aux =
+proc aux*(r:Record, tag: string): Aux {.inline.} =
   ## get the aux tag from the record.
   var c: array[2, char]
   c[0]= tag[0]

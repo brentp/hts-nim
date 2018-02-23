@@ -1287,6 +1287,14 @@ function main() {
   of akString: xString*: string
   of akFloat: xFloat*: float64
   of akInt: xInt*: int"><wbr />Aux<span class="attachedType" style="visibility:hidden"></span></a></li>
+  <li><a class="reference" href="#Splitter"
+    title="Splitter = ref object
+  aln*: Record
+  chrom*: string
+  start*: int
+  cigar: string
+  qual: uint8
+  NM: uint16"><wbr />Splitter<span class="attachedType" style="visibility:hidden"></span></a></li>
 
   </ul>
 </li>
@@ -1377,6 +1385,10 @@ function main() {
     title="chrom(r: Record): string"><wbr />chrom<span class="attachedType" style="visibility:hidden">Record</span></a></li>
   <li><a class="reference" href="#mate_chrom,Record"
     title="mate_chrom(r: Record): string"><wbr />mate_<wbr />chrom<span class="attachedType" style="visibility:hidden">Record</span></a></li>
+  <li><a class="reference" href="#mate_tid,Record"
+    title="mate_tid(r: Record): int"><wbr />mate_<wbr />tid<span class="attachedType" style="visibility:hidden">Record</span></a></li>
+  <li><a class="reference" href="#tid,Record"
+    title="tid(r: Record): int"><wbr />tid<span class="attachedType" style="visibility:hidden">Record</span></a></li>
   <li><a class="reference" href="#start,Record"
     title="start(r: Record): int"><wbr />start<span class="attachedType" style="visibility:hidden">Record</span></a></li>
   <li><a class="reference" href="#stop,Record"
@@ -1422,6 +1434,10 @@ function main() {
     title="asFloat(a: Aux): Option[float64]"><wbr />as<wbr />Float<span class="attachedType" style="visibility:hidden">Aux</span></a></li>
   <li><a class="reference" href="#aux,Record,string"
     title="aux(r: Record; tag: string): Aux"><wbr />aux<span class="attachedType" style="visibility:hidden">Record</span></a></li>
+  <li><a class="reference" href="#stop,Splitter"
+    title="stop(s: Splitter): int"><wbr />stop<span class="attachedType" style="visibility:hidden">Splitter</span></a></li>
+  <li><a class="reference" href="#$,Splitter"
+    title="`$`(s: Splitter): string"><wbr />`$`<span class="attachedType" style="visibility:hidden">Splitter</span></a></li>
 
   </ul>
 </li>
@@ -1438,6 +1454,8 @@ function main() {
     title="queryi(bam: Bam; tid: int; start: int; stop: int): Record"><wbr />queryi<span class="attachedType" style="visibility:hidden">Bam</span></a></li>
   <li><a class="reference" href="#items.i,Bam"
     title="items(bam: Bam): Record"><wbr />items<span class="attachedType" style="visibility:hidden">Bam</span></a></li>
+  <li><a class="reference" href="#splitters.i,Record,string"
+    title="splitters(r: Record; tag: string = &quot;SA&quot;): Splitter"><wbr />splitters<span class="attachedType" style="visibility:hidden">Record</span></a></li>
 
   </ul>
 </li>
@@ -1588,6 +1606,18 @@ Target is a chromosome or contig from the bam header.
   </pre></dt>
 <dd>
 
+
+</dd>
+<dt id="Splitter"><a name="Splitter"></a><pre><span class="Identifier">Splitter</span> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Keyword">object</span>
+  <span class="Identifier">aln</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">Record</span>
+  <span class="Identifier">chrom</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">string</span>
+  <span class="Identifier">start</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int</span>
+  <span class="Identifier">cigar</span><span class="Other">:</span> <span class="Identifier">string</span>
+  <span class="Identifier">qual</span><span class="Other">:</span> <span class="Identifier">uint8</span>
+  <span class="Identifier">NM</span><span class="Other">:</span> <span class="Identifier">uint16</span>
+</pre></dt>
+<dd>
+A splitter represents one item from an SA tag
 
 </dd>
 
@@ -1795,14 +1825,24 @@ The targets (chromosomes) from the header.
 
 
 </dd>
-<dt id="chrom"><a name="chrom,Record"></a><pre><span class="Keyword">proc</span> <span class="Identifier">chrom</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <span class="Identifier">Record</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dt id="chrom"><a name="chrom,Record"></a><pre><span class="Keyword">proc</span> <span class="Identifier">chrom</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <span class="Identifier">Record</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
 <cite>chrom</cite> returns the chromosome or '' if not mapped.
 
 </dd>
-<dt id="mate_chrom"><a name="mate_chrom,Record"></a><pre><span class="Keyword">proc</span> <span class="Identifier">mate_chrom</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <span class="Identifier">Record</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dt id="mate_chrom"><a name="mate_chrom,Record"></a><pre><span class="Keyword">proc</span> <span class="Identifier">mate_chrom</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <span class="Identifier">Record</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
 <cite>mate_chrom</cite> returns the chromosome of the mate or '' if not mapped.
+
+</dd>
+<dt id="mate_tid"><a name="mate_tid,Record"></a><pre><span class="Keyword">proc</span> <span class="Identifier">mate_tid</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <span class="Identifier">Record</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dd>
+<cite>mate_tid</cite> returns the tid of the mate or -1 if not mapped.
+
+</dd>
+<dt id="tid"><a name="tid,Record"></a><pre><span class="Keyword">proc</span> <span class="Identifier">tid</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <span class="Identifier">Record</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dd>
+<cite>tid</cite> returns the tid of the alignment or -1 if not mapped.
 
 </dd>
 <dt id="start"><a name="start,Record"></a><pre><span class="Keyword">proc</span> <span class="Identifier">start</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <span class="Identifier">Record</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
@@ -1900,24 +1940,34 @@ write the record to the bam which must be writeable.
 
 
 </dd>
-<dt id="asString"><a name="asString,Aux"></a><pre><span class="Keyword">proc</span> <span class="Identifier">asString</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">Aux</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dt id="asString"><a name="asString,Aux"></a><pre><span class="Keyword">proc</span> <span class="Identifier">asString</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">Aux</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
 
 
 </dd>
-<dt id="asInt"><a name="asInt,Aux"></a><pre><span class="Keyword">proc</span> <span class="Identifier">asInt</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">Aux</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">int</span><span class="Other">]</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dt id="asInt"><a name="asInt,Aux"></a><pre><span class="Keyword">proc</span> <span class="Identifier">asInt</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">Aux</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">int</span><span class="Other">]</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
 
 
 </dd>
-<dt id="asFloat"><a name="asFloat,Aux"></a><pre><span class="Keyword">proc</span> <span class="Identifier">asFloat</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">Aux</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">float64</span><span class="Other">]</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dt id="asFloat"><a name="asFloat,Aux"></a><pre><span class="Keyword">proc</span> <span class="Identifier">asFloat</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">Aux</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">float64</span><span class="Other">]</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
 
 
 </dd>
-<dt id="aux"><a name="aux,Record,string"></a><pre><span class="Keyword">proc</span> <span class="Identifier">aux</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <span class="Identifier">Record</span><span class="Other">;</span> <span class="Identifier">tag</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Aux</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dt id="aux"><a name="aux,Record,string"></a><pre><span class="Keyword">proc</span> <span class="Identifier">aux</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <span class="Identifier">Record</span><span class="Other">;</span> <span class="Identifier">tag</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Aux</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
 get the aux tag from the record.
+
+</dd>
+<dt id="stop"><a name="stop,Splitter"></a><pre><span class="Keyword">proc</span> <span class="Identifier">stop</span><span class="Other">(</span><span class="Identifier">s</span><span class="Other">:</span> <span class="Identifier">Splitter</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">OverflowError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dd>
+calculate the stop value for the splitter
+
+</dd>
+<dt id="$"><a name="$,Splitter"></a><pre><span class="Keyword">proc</span> <span class="Identifier">`$`</span><span class="Other">(</span><span class="Identifier">s</span><span class="Other">:</span> <span class="Identifier">Splitter</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OverflowError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dd>
+
 
 </dd>
 
@@ -1953,6 +2003,12 @@ query iterates over the given region. A single element is used and overwritten o
 items iterates over a bam. A single element is used and overwritten on each iteration so use <cite>Record.copy</cite> to retain.
 
 </dd>
+<dt id="splitters"><a name="splitters.i,Record,string"></a><pre><span class="Keyword">iterator</span> <span class="Identifier">splitters</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <span class="Identifier">Record</span><span class="Other">;</span> <span class="Identifier">tag</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Other">=</span> <span class="StringLit">&quot;SA&quot;</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Splitter</span> <span class="Other pragmabegin">{.</span><div class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">AssertionError</span><span class="Other">,</span> <span class="Identifier">OverflowError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dd>
+generate splitters from SA tag.
+
+</dd>
 
 </dl></div>
 <div class="section" id="17">
@@ -1973,7 +2029,7 @@ items iterates over a bam. A single element is used and overwritten on each iter
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small>Made with Nim. Generated: 2018-02-16 09:44:16 UTC</small>
+        <small>Made with Nim. Generated: 2018-02-23 11:24:05 UTC</small>
       </div>
     </div>
   </div>
