@@ -121,16 +121,16 @@ proc format*(v:Variant): FORMAT {.inline.} =
   f.v = v
   return f
 
-proc toseq[T](data: var seq[T], p:pointer, n:int): Status {.inline.} =
-  ## helper function to fill a sequence with data from a pointer
-  if data == nil:
-    data = new_seq[T](n)
-  elif data.len != n:
-    data.set_len(n)
+proc c_memcpy(a, b: pointer, size: csize) {.importc: "memcpy", header: "<string.h>", inline.}
 
-  var tmp = cast[ptr CArray[T]](p)
-  for i in 0..<n:
-    data[i] = tmp[i]
+proc toSeq[T](data: var seq[T], p:pointer, n:int): Status {.inline.} =
+  ## helper function to fill a sequence with data from a pointer
+  ## `n` is number of elements.
+  # this makes a copy but the cost of this over using the underlying directly is only ~10% for 2500 samples and
+  # < 2% for 3 samples.
+  if data.len != n:
+    data.set_len(n)
+  c_memcpy(data[0].addr.pointer, p, (n * sizeof(T)).csize)
   return Status.OK
 
 proc ints*(f:FORMAT, key:string, data:var seq[int32]): Status =
