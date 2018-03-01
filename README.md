@@ -8,15 +8,12 @@ hts-nim
 
 This is a wrapper for [htslib](https://github.com/samtools/htslib) in [nim](https://nim-lang.org). 
 
-Nim is a fast, garbage collected language that compiles to C and has a syntax that's not
+Nim is a fast, garbage-collected language that compiles to C and has a syntax that's not
 too different to python.
 
 ## Installation
 
-`hts-nim` requires that [htslib](https://github.com/samtools/htslib) is installed and the shared library is available
-(use `LD_LIBRARY_PATH` if it is not in a standard location).
-Users can also either follow or run [scripts/simple-install.sh](https://github.com/brentp/hts-nim/blob/master/scripts/simple-install.sh) which sets up Nim and nimble ready for use and shows the needed adjustments to `$PATH`.
-Then `hts-nim` can be installed with `nimble install -y` from the root of this repository.
+See Section Below
 
 # Usage
 
@@ -131,14 +128,21 @@ After this, `ti.txt.gz.csi` will be usable by tabix.
 
 ## Setup / Installation
 
+`hts-nim` requires that [htslib](https://github.com/samtools/htslib) is installed and the shared library is available
+(use `LD_LIBRARY_PATH` if it is not in a standard location).
+
+
 If you use docker, you can use one of [these images](https://hub.docker.com/r/nimlang/nim/) to get Nim installed.
 
 Or you can copy the [Dockerfile from this repo](https://github.com/brentp/hts-nim/blob/master/Dockerfile)
 
 If you don't use docker, you can use [choosenim](https://github.com/dom96/choosenim) to quickly install Nim and nimble.
 
+Users can also either follow or run [scripts/simple-install.sh](https://github.com/brentp/hts-nim/blob/master/scripts/simple-install.sh) which sets up Nim and nimble ready for use and shows the needed adjustments to `$PATH`.
+
+Once Nim is set up, `hts-nim` can be installed with `nimble install -y` from the root of this repository.
+
 In all cases, it's recommended to use **nim version 0.17.2** which is the latest release.
 
 Then, from this repo you can run `nimble test` and `nimble install` and then you can save the above snippets into `some.nim`
-
 and run them with `nim c -d:release -r some.nim`. This will run them and save an executable named `some`.
