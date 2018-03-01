@@ -109,7 +109,7 @@ function main() {
 
 # open a bam and look for the index.
 var b:Bam
-assert open(b, "test/HG02002.bam", index=true)
+open(b, "test/HG02002.bam", index=true)
 
 for record in b:
   if record.qual > 10:
