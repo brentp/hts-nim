@@ -122,11 +122,14 @@ proc toSeq[T](data: var seq[T], p:pointer, n:int): Status {.inline.} =
   # this makes a copy but the cost of this over using the underlying directly is only ~10% for 2500 samples and
   # < 2% for 3 samples.
   if data.len != n:
-    data.set_len(n)
+    if data != nil:
+      data.set_len(n)
+    else:
+      data = new_seq[T](n)
   c_memcpy(data[0].addr.pointer, p, (n * sizeof(T)).csize)
   return Status.OK
 
-proc ints*(f:FORMAT, key:string, data:var seq[int32]): Status =
+proc ints*(f:FORMAT, key:string, data:var seq[int32]): Status {.inline.} =
   ## fill data with integer values for each sample with the given key
   var n:cint = 0
   var ret = bcf_get_format_values(f.v.vcf.header.hdr, f.v.c, key.cstring,

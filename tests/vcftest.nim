@@ -106,3 +106,20 @@ suite "vcf suite":
 
     global_variant.QUAL = 55
     check global_variant.QUAL == 55
+
+
+suite "genotypes suite":
+  test "test alts":
+
+    var v:VCF
+    check open(v, "tests/decomposed.vcf")
+    var x :seq[int32]
+
+    # 0/.	./0	1/.	./1	./.
+    for variant in v:
+      var a = variant.format.genotypes(x).alts
+      check a[0] == 0
+      check a[1] == 0
+      check a[2] == 1
+      check a[3] == 1
+      check a[4] == -1
