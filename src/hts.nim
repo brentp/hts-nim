@@ -1,6 +1,6 @@
 import ./hts/utils
 import ./hts/private/hts_concat
-export kstring_t, free, hts_open, hts_close, hts_getline
+export kstring_t, free, hts_open, hts_close, hts_getline, htsFile
 export utils
 import ./hts/bam
 export bam

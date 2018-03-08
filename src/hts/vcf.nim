@@ -510,6 +510,8 @@ proc phased*(a:Allele): bool {.inline.} =
 
 proc value*(a:Allele): int {.inline.} =
   ## e.g. 0 for REF, 1 for first alt, -1 for unknown.
+  if int32(a) < 0:
+    return int(a)
   return (int32(a) shr 1) - 1
 
 proc `[]`*(g:Genotypes, i:int): seq[Allele] {.inline.} =
@@ -529,12 +531,16 @@ iterator items*(g:Genotypes): Genotype =
 
 proc `$`*(a:Allele): string {.inline.} =
   ## string representation of a single allele.
-  (if a.value < 0: "." else: intToStr(a.value)) & (if a.phased: '|' else: '/')
+  if a.value < 0:
+    # set end to / so it is removed in '$'
+    result = if int32(a) == 0: "." else: "$"
+  else:
+    result = intToStr(a.value) & (if a.phased: '|' else: '/')
 
 proc `$`*(g:Genotype): string {.inline.} =
   ## string representation of a genotype. removes trailing phase value.
   result = join(map(g, proc(a:Allele): string = $a), "")
-  if result[result.len - 1] == '/' or result[result.len - 1] == '|':
+  if result[result.len - 1] in {'/', '|', '$'}:
     result.set_len(result.len - 1)
 
 proc alts*(g:Genotype): int8 {.inline.} =
@@ -546,10 +552,10 @@ proc alts*(g:Genotype): int8 {.inline.} =
   if g.len == 2:
     var g0 = g[0].value
     var g1 = g[1].value
-    if g0 != -1 and g1 != -1:
+    if g0 > 0 and g1 > 0:
       return int8(g0 + g1)
     # only unknown if both are unknown
-    if g0 == -1 and g1 == -1:
+    if (g0 == -1 and g1 == -1) or g1 < -1:
       return -1
 
     if g0 == -1:
@@ -568,6 +574,9 @@ proc alts*(g:Genotype): int8 {.inline.} =
     for a in g:
       nalts += a.value
     return int8(nalts)
+
+  if g.len == 1 and g[0].value == -1:
+    return -1
   raise newException(OSError, "not implemented for:" & $g)
 
 proc genotypes*(f:FORMAT, gts: var seq[int32]): Genotypes =
