@@ -22,7 +22,7 @@ suite "flag cigar-suite":
       if rec.flag.unmapped: continue
       var pieces = rec.cigar.ref_coverage(ipos=rec.start)
       if len(pieces) == 0:
-        check rec.qual == 0
+        check rec.mapping_quality == 0
         continue
 
       check pieces[0].start >= rec.start
