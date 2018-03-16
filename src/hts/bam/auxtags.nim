@@ -24,6 +24,22 @@ proc asFloat*(a:Aux): Option[float64] {.inline.} =
   if a.kind == akInt:
     return some(float64(a.xInt))
 
+proc tag*[T: int|float|string](r:Record, itag:string): Option[T] =
+  ## get the aux tag from the record.
+  var c: array[2, char]
+  c[0]= itag[0]
+  c[1] = itag[1]
+  var b = bam_aux_get(r.b, c)
+
+  case safe(cast[CPtr[char]](b), 1)[0]:
+    of 'c', 'C', 's', 'S', 'i', 'I':
+      when T is int:
+        var i = bam_aux2i(b)
+        return some(T(i))
+      return none(T)
+    else:
+      return none(T)
+
 proc int_tag*(r:Record, itag:string): Option[int] {.inline.} =
   ## get the aux tag from the record as an int.
   var c: array[2, char]

@@ -29,11 +29,11 @@ proc `[]=`*[T](p: SafeCPtr[T], k: int, val: T) =
 
 type
   Cigar* = ref object of RootObj
-    ## `Cigar` represents ths SAM Cigar type. It consists of one or more `Op`.
+    ## `Cigar` represents ths SAM Cigar type. It consists of one or more `Element`s.
     cig: SafeCPtr[uint32]
     n: uint32
 
-  Op* = distinct uint32 ## `Op` holds the operation (length and type) of each element of a `Cigar`.
+  Element* = distinct uint32 ## `Element` holds the operation (length and type) of each element of a `Cigar`.
 
   Consume* = distinct uint32
 
@@ -47,13 +47,13 @@ proc len*(c: Cigar): int {. inline .} =
   ## returns the number of operations in the cigar.
   return int(c.n)
 
-proc `[]`*(c:Cigar, i:int): Op =
-  return Op(c.cig[i])
+proc `[]`*(c:Cigar, i:int): Element =
+  return Element(c.cig[i])
 
-iterator items*(c: Cigar): Op =
+iterator items*(c: Cigar): Element =
   ## iterates over the ops in the cigar.
   for i in 0..<c.cig.size:
-    yield Op(c.cig[i])
+    yield Element(c.cig[i])
 
 template bam_get_cigar*(b: untyped): untyped =
   (cast[ptr uint32](((cast[int]((b).data)) + cast[int]((b).core.l_qname))))
@@ -61,16 +61,16 @@ template bam_get_cigar*(b: untyped): untyped =
 proc bam_cigar_type(o: CigarOp): uint8 =
   return uint8(BAM_CIGAR_TYPE shr (uint32(o) shl 1) and 3)
 
-proc op*(o: Op): CigarOp =
+proc op*(o: Element): CigarOp =
   ## `op` gives the operation of the cigar.
   return CigarOp(uint8(uint32(o) and BAM_CIGAR_MASK))
 
-proc len*(o: Op): int {. inline .} =
+proc len*(o: Element): int {. inline .} =
   ## `len` gives the length of the cigar op.
   return int(uint32(o) shr BAM_CIGAR_SHIFT)
 
-proc `$`*(o: Op): string =
-  ## shows the string representation of the cigar op.
+proc `$`*(o: Element): string =
+  ## shows the string representation of the cigar element.
   var opstr = BAM_CIGAR_STR[int(o.op)]
   var oplen = o.len
   return intToStr(oplen) & $opstr
@@ -81,7 +81,7 @@ proc `$`*(c: Cigar): string =
     s &= $o
   return s
 
-proc consumes*(o: Op): Consume {. inline .} =
+proc consumes*(o: Element): Consume {. inline .} =
   return Consume(bam_cigar_type(o.op))
 
 proc query*(c: Consume): bool {. inline .} =
