@@ -3,17 +3,17 @@ import "hts/bam" as hts
 
 suite "flag cigar-suite":
   test "test op":
-    check $Element(2048) == "128M"
-    check $Element(2049) == "128I"
-    check $Element(2050) == "128D"
-    check $Element(2051) == "128N"
-    check $Element(2052) == "128S"
-    check $Element(2053) == "128H"
-    check $Element(2054) == "128P"
-    check $Element(2055) == "128="
-    check $Element(2056) == "128X"
-    check $Element(2057) == "128B"
-    check $Element(4096) == "256M"
+    check $CigarElement(2048) == "128M"
+    check $CigarElement(2049) == "128I"
+    check $CigarElement(2050) == "128D"
+    check $CigarElement(2051) == "128N"
+    check $CigarElement(2052) == "128S"
+    check $CigarElement(2053) == "128H"
+    check $CigarElement(2054) == "128P"
+    check $CigarElement(2055) == "128="
+    check $CigarElement(2056) == "128X"
+    check $CigarElement(2057) == "128B"
+    check $CigarElement(4096) == "256M"
 
   test "ref coverage":
     var b:hts.Bam
