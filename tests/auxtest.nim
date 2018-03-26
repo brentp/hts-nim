@@ -29,17 +29,17 @@ suite "aux-test":
     open(b, "tests/HG02002.bam")
     for rec in b:
 
-      var v = rec.int_tag("SM")
+      var v = tag[int](rec, "SM")
       check v.get == 37
 
-      var f = rec.float_tag("SM")
-      check f.get == 37.float
+      # SM exists, but it's a float.
+      var f = tag[float](rec, "SM")
+      check f.isNone
 
-      var rg = rec.string_tag("RG")
+      var rg = tag[string](rec, "RG")
       check rg.get == "SRR741410"
 
-
-      check rec.int_tag("XXX").isNone
+      check tag[int](rec, "XXX").isNone
 
       break
     b.close()

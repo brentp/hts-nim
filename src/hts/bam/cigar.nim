@@ -29,7 +29,7 @@ proc `[]=`*[T](p: SafeCPtr[T], k: int, val: T) =
 
 type
   Cigar* = ref object of RootObj
-    ## `Cigar` represents ths SAM Cigar type. It consists of one or more `CigarElement`s.
+    ## `Cigar` represents ths SAM Cigar type. It consists of one or more `CigarElement` s.
     cig: SafeCPtr[uint32]
     n: uint32
 
