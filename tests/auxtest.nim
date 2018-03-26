@@ -22,3 +22,24 @@ suite "aux-test":
       var missing = rec.aux("UA")
       check missing == nil
       break
+    b.close()
+
+  test "tag":
+    var b: Bam
+    open(b, "tests/HG02002.bam")
+    for rec in b:
+
+      var v = tag[int](rec, "SM")
+      check v.get == 37
+
+      # SM exists, but it's a float.
+      var f = tag[float](rec, "SM")
+      check f.isNone
+
+      var rg = tag[string](rec, "RG")
+      check rg.get == "SRR741410"
+
+      check tag[int](rec, "XXX").isNone
+
+      break
+    b.close()

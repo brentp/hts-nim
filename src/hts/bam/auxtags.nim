@@ -10,21 +10,58 @@ type
     of akInt: xInt*: int
 
 proc asString*(a: Aux): Option[string] {.inline.} =
+  ## get the value as a string. return none if not found.
   if a.kind == akString:
     return some(a.xString)
 
 proc asInt*(a:Aux): Option[int] {.inline.} =
+  ## get the value as an int. return none if not found.
   if a.kind == akInt:
     return some(a.xInt)
   
 proc asFloat*(a:Aux): Option[float64] {.inline.} =
+  ## get the value as a float. return none if not found.
   if a.kind == akFloat:
     return some(a.xFloat)
   if a.kind == akInt:
     return some(float64(a.xInt))
 
+proc tag*[T: int|float|string](r:Record, itag:string): Option[T] =
+  ## Get the aux tag from the record.
+  ## Due to `nim` language limitations, this must be used as, e.g.:
+  ## `tag[int](rec, "NM")`. It will return `none` if the tag does
+  ## not exist or if it is not of the requested type.
+  ## This can be a shorter alternative to rec.aux() which requires
+  ## first checking if the value is nil and then getting the return type.
+  var c: array[2, char]
+  c[0]= itag[0]
+  c[1] = itag[1]
+  var b = bam_aux_get(r.b, c)
+  if b == nil:
+    return none(T)
+
+  case safe(cast[CPtr[char]](b), 1)[0]:
+    of 'i', 'I', 'c', 'C', 's', 'S':
+      when T is int:
+        var i = bam_aux2i(b)
+        return some(T(i))
+      return none(T)
+    of 'f', 'd':
+      when T is float:
+        var f = bam_aux2f(b)
+        return some(T(f))
+      return none(T)
+    of 'Z', 'A', 'H':
+      when T is string:
+        var z = $bam_aux2Z(b)
+        return some(z)
+      return none(T)
+    else:
+      return none(T)
+
 proc aux*(r:Record, tag: string): Aux {.inline.} =
   ## get the aux tag from the record.
+  ## if the tag is not found, this will return nil.
   var c: array[2, char]
   c[0]= tag[0]
   c[1] = tag[1]

@@ -1250,8 +1250,8 @@ function main() {
     title="Cigar = ref object of RootObj
   cig: SafeCPtr[uint32]
   n: uint32"><wbr />Cigar<span class="attachedType" style="visibility:hidden"></span></a></li>
-  <li><a class="reference" href="#Op"
-    title="Op = distinct uint32"><wbr />Op<span class="attachedType" style="visibility:hidden"></span></a></li>
+  <li><a class="reference" href="#CigarElement"
+    title="CigarElement = distinct uint32"><wbr />Cigar<wbr />Element<span class="attachedType" style="visibility:hidden"></span></a></li>
   <li><a class="reference" href="#Consume"
     title="Consume = distinct uint32"><wbr />Consume<span class="attachedType" style="visibility:hidden"></span></a></li>
   <li><a class="reference" href="#CigarOp"
@@ -1352,17 +1352,17 @@ function main() {
   <li><a class="reference" href="#len,Cigar"
     title="len(c: Cigar): int"><wbr />len<span class="attachedType" style="visibility:hidden">Cigar</span></a></li>
   <li><a class="reference" href="#[],Cigar,int"
-    title="`[]`(c: Cigar; i: int): Op"><wbr />`[]`<span class="attachedType" style="visibility:hidden">Cigar</span></a></li>
-  <li><a class="reference" href="#op,Op"
-    title="op(o: Op): CigarOp"><wbr />op<span class="attachedType" style="visibility:hidden">Op</span></a></li>
-  <li><a class="reference" href="#len,Op"
-    title="len(o: Op): int"><wbr />len<span class="attachedType" style="visibility:hidden">Op</span></a></li>
-  <li><a class="reference" href="#$,Op"
-    title="`$`(o: Op): string"><wbr />`$`<span class="attachedType" style="visibility:hidden">Op</span></a></li>
+    title="`[]`(c: Cigar; i: int): CigarElement"><wbr />`[]`<span class="attachedType" style="visibility:hidden">Cigar</span></a></li>
+  <li><a class="reference" href="#op,CigarElement"
+    title="op(o: CigarElement): CigarOp"><wbr />op<span class="attachedType" style="visibility:hidden">CigarElement</span></a></li>
+  <li><a class="reference" href="#len,CigarElement"
+    title="len(o: CigarElement): int"><wbr />len<span class="attachedType" style="visibility:hidden">CigarElement</span></a></li>
+  <li><a class="reference" href="#$,CigarElement"
+    title="`$`(o: CigarElement): string"><wbr />`$`<span class="attachedType" style="visibility:hidden">CigarElement</span></a></li>
   <li><a class="reference" href="#$,Cigar"
     title="`$`(c: Cigar): string"><wbr />`$`<span class="attachedType" style="visibility:hidden">Cigar</span></a></li>
-  <li><a class="reference" href="#consumes,Op"
-    title="consumes(o: Op): Consume"><wbr />consumes<span class="attachedType" style="visibility:hidden">Op</span></a></li>
+  <li><a class="reference" href="#consumes,CigarElement"
+    title="consumes(o: CigarElement): Consume"><wbr />consumes<span class="attachedType" style="visibility:hidden">CigarElement</span></a></li>
   <li><a class="reference" href="#query,Consume"
     title="query(c: Consume): bool"><wbr />query<span class="attachedType" style="visibility:hidden">Consume</span></a></li>
   <li><a class="reference" href="#reference,Consume"
@@ -1405,6 +1405,8 @@ function main() {
     title="`$`(r: Record): string"><wbr />`$`<span class="attachedType" style="visibility:hidden">Record</span></a></li>
   <li><a class="reference" href="#qual,Record"
     title="qual(r: Record): uint8"><wbr />qual<span class="attachedType" style="visibility:hidden">Record</span></a></li>
+  <li><a class="reference" href="#mapping_quality,Record"
+    title="mapping_quality(r: Record): uint8"><wbr />mapping_<wbr />quality<span class="attachedType" style="visibility:hidden">Record</span></a></li>
   <li><a class="reference" href="#isize,Record"
     title="isize(r: Record): int32"><wbr />isize<span class="attachedType" style="visibility:hidden">Record</span></a></li>
   <li><a class="reference" href="#mate_pos,Record"
@@ -1432,6 +1434,8 @@ function main() {
     title="asInt(a: Aux): Option[int]"><wbr />as<wbr />Int<span class="attachedType" style="visibility:hidden">Aux</span></a></li>
   <li><a class="reference" href="#asFloat,Aux"
     title="asFloat(a: Aux): Option[float64]"><wbr />as<wbr />Float<span class="attachedType" style="visibility:hidden">Aux</span></a></li>
+  <li><a class="reference" href="#tag,Record,string"
+    title="tag[T: int | float | string](r: Record; itag: string): Option[T]"><wbr />tag<span class="attachedType" style="visibility:hidden">Record</span></a></li>
   <li><a class="reference" href="#aux,Record,string"
     title="aux(r: Record; tag: string): Aux"><wbr />aux<span class="attachedType" style="visibility:hidden">Record</span></a></li>
   <li><a class="reference" href="#stop,Splitter"
@@ -1445,7 +1449,7 @@ function main() {
   <a class="reference reference-toplevel" href="#14" id="64">Iterators</a>
   <ul class="simple simple-toc-section">
       <li><a class="reference" href="#items.i,Cigar"
-    title="items(c: Cigar): Op"><wbr />items<span class="attachedType" style="visibility:hidden">Cigar</span></a></li>
+    title="items(c: Cigar): CigarElement"><wbr />items<span class="attachedType" style="visibility:hidden">Cigar</span></a></li>
   <li><a class="reference" href="#querys.i,Bam,string"
     title="querys(bam: Bam; region: string): Record"><wbr />querys<span class="attachedType" style="visibility:hidden">Bam</span></a></li>
   <li><a class="reference" href="#query.i,Bam,string,int,int"
@@ -1530,12 +1534,12 @@ CRAM specific
   <span class="Identifier">n</span><span class="Other">:</span> <span class="Identifier">uint32</span>
 </pre></dt>
 <dd>
-<cite>Cigar</cite> represents ths SAM Cigar type. It consists of one or more <cite>Op</cite>.
+<cite>Cigar</cite> represents ths SAM Cigar type. It consists of one or more <cite>CigarElement</cite> s.
 
 </dd>
-<dt id="Op"><a name="Op"></a><pre><span class="Identifier">Op</span> <span class="Other">=</span> <span class="Keyword">distinct</span> <span class="Identifier">uint32</span></pre></dt>
+<dt id="CigarElement"><a name="CigarElement"></a><pre><span class="Identifier">CigarElement</span> <span class="Other">=</span> <span class="Keyword">distinct</span> <span class="Identifier">uint32</span></pre></dt>
 <dd>
-<cite>Op</cite> holds the operation (length and type) of each element of a <cite>Cigar</cite>.
+<cite>CigarElement</cite> encodes the operation (length and type) of each element of a <cite>Cigar</cite>.
 
 </dd>
 <dt id="Consume"><a name="Consume"></a><pre><span class="Identifier">Consume</span> <span class="Other">=</span> <span class="Keyword">distinct</span> <span class="Identifier">uint32</span></pre></dt>
@@ -1750,24 +1754,24 @@ A splitter represents one item from an SA tag
 returns the number of operations in the cigar.
 
 </dd>
-<dt id="[]"><a name="[],Cigar,int"></a><pre><span class="Keyword">proc</span> <span class="Identifier">`[]`</span><span class="Other">(</span><span class="Identifier">c</span><span class="Other">:</span> <span class="Identifier">Cigar</span><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Op</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dt id="[]"><a name="[],Cigar,int"></a><pre><span class="Keyword">proc</span> <span class="Identifier">`[]`</span><span class="Other">(</span><span class="Identifier">c</span><span class="Other">:</span> <span class="Identifier">Cigar</span><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">CigarElement</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
 
 
 </dd>
-<dt id="op"><a name="op,Op"></a><pre><span class="Keyword">proc</span> <span class="Identifier">op</span><span class="Other">(</span><span class="Identifier">o</span><span class="Other">:</span> <span class="Identifier">Op</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">CigarOp</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dt id="op"><a name="op,CigarElement"></a><pre><span class="Keyword">proc</span> <span class="Identifier">op</span><span class="Other">(</span><span class="Identifier">o</span><span class="Other">:</span> <span class="Identifier">CigarElement</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">CigarOp</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
 <cite>op</cite> gives the operation of the cigar.
 
 </dd>
-<dt id="len"><a name="len,Op"></a><pre><span class="Keyword">proc</span> <span class="Identifier">len</span><span class="Other">(</span><span class="Identifier">o</span><span class="Other">:</span> <span class="Identifier">Op</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dt id="len"><a name="len,CigarElement"></a><pre><span class="Keyword">proc</span> <span class="Identifier">len</span><span class="Other">(</span><span class="Identifier">o</span><span class="Other">:</span> <span class="Identifier">CigarElement</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
 <cite>len</cite> gives the length of the cigar op.
 
 </dd>
-<dt id="$"><a name="$,Op"></a><pre><span class="Keyword">proc</span> <span class="Identifier">`$`</span><span class="Other">(</span><span class="Identifier">o</span><span class="Other">:</span> <span class="Identifier">Op</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dt id="$"><a name="$,CigarElement"></a><pre><span class="Keyword">proc</span> <span class="Identifier">`$`</span><span class="Other">(</span><span class="Identifier">o</span><span class="Other">:</span> <span class="Identifier">CigarElement</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
-shows the string representation of the cigar op.
+shows the string representation of the cigar element.
 
 </dd>
 <dt id="$"><a name="$,Cigar"></a><pre><span class="Keyword">proc</span> <span class="Identifier">`$`</span><span class="Other">(</span><span class="Identifier">c</span><span class="Other">:</span> <span class="Identifier">Cigar</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
@@ -1775,7 +1779,7 @@ shows the string representation of the cigar op.
 iterates over the ops in the cigar.
 
 </dd>
-<dt id="consumes"><a name="consumes,Op"></a><pre><span class="Keyword">proc</span> <span class="Identifier">consumes</span><span class="Other">(</span><span class="Identifier">o</span><span class="Other">:</span> <span class="Identifier">Op</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Consume</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dt id="consumes"><a name="consumes,CigarElement"></a><pre><span class="Keyword">proc</span> <span class="Identifier">consumes</span><span class="Other">(</span><span class="Identifier">o</span><span class="Other">:</span> <span class="Identifier">CigarElement</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Consume</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
 
 
@@ -1880,7 +1884,12 @@ The targets (chromosomes) from the header.
 
 
 </dd>
-<dt id="qual"><a name="qual,Record"></a><pre><span class="Keyword">proc</span> <span class="Identifier">qual</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <span class="Identifier">Record</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint8</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dt id="qual"><a name="qual,Record"></a><pre><span class="Keyword">proc</span> <span class="Identifier">qual</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <span class="Identifier">Record</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint8</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">WriteIOEffect</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dd>
+mapping quality
+
+</dd>
+<dt id="mapping_quality"><a name="mapping_quality,Record"></a><pre><span class="Keyword">proc</span> <span class="Identifier">mapping_quality</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <span class="Identifier">Record</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint8</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
 mapping quality
 
@@ -1942,22 +1951,27 @@ write the record to the bam which must be writeable.
 </dd>
 <dt id="asString"><a name="asString,Aux"></a><pre><span class="Keyword">proc</span> <span class="Identifier">asString</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">Aux</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
-
+get the value as a string. return none if not found.
 
 </dd>
 <dt id="asInt"><a name="asInt,Aux"></a><pre><span class="Keyword">proc</span> <span class="Identifier">asInt</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">Aux</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">int</span><span class="Other">]</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
-
+get the value as an int. return none if not found.
 
 </dd>
 <dt id="asFloat"><a name="asFloat,Aux"></a><pre><span class="Keyword">proc</span> <span class="Identifier">asFloat</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">Aux</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">float64</span><span class="Other">]</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
+get the value as a float. return none if not found.
 
+</dd>
+<dt id="tag"><a name="tag,Record,string"></a><pre><span class="Keyword">proc</span> <span class="Identifier">tag</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Operator">|</span> <span class="Identifier">float</span> <span class="Operator">|</span> <span class="Identifier">string</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <span class="Identifier">Record</span><span class="Other">;</span> <span class="Identifier">itag</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span></pre></dt>
+<dd>
+Get the aux tag from the record. Due to <cite>nim</cite> language limitations, this must be used as, e.g.: <cite>tag[int](rec, &quot;NM&quot;)</cite>. It will return <cite>none</cite> if the tag does not exist or if it is not of the requested type. This can be a shorter alternative to rec.aux() which requires first checking if the value is nil and then getting the return type.
 
 </dd>
 <dt id="aux"><a name="aux,Record,string"></a><pre><span class="Keyword">proc</span> <span class="Identifier">aux</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <span class="Identifier">Record</span><span class="Other">;</span> <span class="Identifier">tag</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Aux</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
-get the aux tag from the record.
+get the aux tag from the record. if the tag is not found, this will return nil.
 
 </dd>
 <dt id="stop"><a name="stop,Splitter"></a><pre><span class="Keyword">proc</span> <span class="Identifier">stop</span><span class="Other">(</span><span class="Identifier">s</span><span class="Other">:</span> <span class="Identifier">Splitter</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">OverflowError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
@@ -1975,7 +1989,7 @@ calculate the stop value for the splitter
 <div class="section" id="14">
 <h1><a class="toc-backref" href="#14">Iterators</a></h1>
 <dl class="item">
-<dt id="items"><a name="items.i,Cigar"></a><pre><span class="Keyword">iterator</span> <span class="Identifier">items</span><span class="Other">(</span><span class="Identifier">c</span><span class="Other">:</span> <span class="Identifier">Cigar</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Op</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
+<dt id="items"><a name="items.i,Cigar"></a><pre><span class="Keyword">iterator</span> <span class="Identifier">items</span><span class="Other">(</span><span class="Identifier">c</span><span class="Other">:</span> <span class="Identifier">Cigar</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">CigarElement</span> <span class="Other pragmabegin">{.</span><div class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></div><span class="Other pragmaend">.}</span></pre></dt>
 <dd>
 iterates over the ops in the cigar.
 
@@ -2029,7 +2043,7 @@ generate splitters from SA tag.
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small>Made with Nim. Generated: 2018-02-23 16:30:02 UTC</small>
+        <small>Made with Nim. Generated: 2018-03-26 13:38:49 UTC</small>
       </div>
     </div>
   </div>

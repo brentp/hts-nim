@@ -27,7 +27,7 @@ suite "flag hts-suite":
       #  echo s
 
       discard rec.isize
-      discard rec.qual
+      discard rec.mapping_quality
       var s = ""
       if i == 0:
         check rec.sequence(s) == "AGGACTTCAGTACTATGTTGAATAGGAGTAATGAGAGGGGGCATTCTTGTCTTCTGCCAGTTTTCAAGGGGAATGCTTCCAGCTTTTGCCCATTCAGTATG"
