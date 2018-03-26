@@ -296,7 +296,11 @@ proc open*(v:var VCF, fname:string, mode:string="r", samples:seq[string]=empty_s
     stderr.write_line "hts-nim/vcf: error opening file:" & fname
     return false
 
-  if mode == "w": return true
+  if mode[0] == 'w': return true
+
+  if mode[0] == 'r' and 0 != threads and 0 != hts_set_threads(v.hts, cint(threads)):
+    raise newException(ValueError, "error setting number of threads")
+
   
   v.header = Header(hdr:bcf_hdr_read(v.hts))
   if samples != nil and samples != empty_samples:
