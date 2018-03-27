@@ -8,14 +8,14 @@ proc destroy_fai(fai: Fai) =
   if fai.cptr != nil:
     fai_destroy(fai.cptr)
 
-proc open_fai*(path: string): Fai =
-  var fai : Fai
+proc open*(fai:var Fai, path: string): bool =
+  ## open an fai and return a bool indicating success
   new(fai, destroy_fai)
   fai.cptr = fai_load(cstring(path))
   if fai.cptr == nil:
     stderr.write_line("[hts-nim] error loading fai file for:", path)
-    quit(1)
-  return fai
+    return false
+  return true
 
 proc len*(fai: Fai): int =
   return int(faidx_nseq(fai.cptr))
@@ -29,8 +29,7 @@ proc get*(fai: Fai, region: string, start:int=0, stop:int=0): string =
     res = faidx_fetch_seq(fai.cptr, cstring(region), cint(start), cint(stop), rlen.addr)
 
   if int(rlen) == -2:
-    stderr.write_line("[hts-nim] sequence ", region, " not found in fasta")
-    quit(1)
+    raise newException(ValueError, "sequence " & region & " not found in fasta")
   if int(rlen) == -1:
     stderr.write_line("[hts-nim] error reading sequence ", region)
   result = $res

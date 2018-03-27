@@ -2,7 +2,8 @@ import unittest, hts/fai
 
 suite "fai-suite":
   test "fai-read":
-    var f = open_fai("tests/aa.fa")
+    var f:Fai
+    check open(f, "tests/aa.fa")
     check f.len == 6
 
     check f.get("20", 1, 3) == "GGA"
