@@ -11,6 +11,10 @@ This is a wrapper for [htslib](https://github.com/samtools/htslib) in [nim](http
 Nim is a fast, garbage-collected language that compiles to C and has a syntax that's not
 too different to python.
 
+This library is under active development. Though it's been in use for some time and I have
+been using it nearly every day for script-like tasks, the API may change. If it does, old
+methods will be deprecated so users have time to update.
+
 ## Installation
 
 See Section Below

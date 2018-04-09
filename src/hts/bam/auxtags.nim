@@ -76,7 +76,7 @@ proc aux*(r:Record, tag: string): Aux {.inline.} =
       var f = bam_aux2f(b)
       return Aux(kind: akFloat, xFloat: float64(f))
     of 'A', 'Z', 'H':
-      var z = bam_aux2Z(b).cstring
+      var z = bam_aux2Z(b)
       return Aux(kind:akString, xString: $(z))
     else:
       return nil
