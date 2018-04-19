@@ -21,7 +21,7 @@ type
     ## Variant is a single line from a VCF
     c: ptr bcf1_t
     p: pointer
-    vcf: VCF
+    vcf*: VCF
     own: bool # this seems to protect against a bug in the gc
 
   INFO* = ref object

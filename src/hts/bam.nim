@@ -133,6 +133,8 @@ proc cigar*(r: Record): Cigar {.inline.} =
 iterator querys*(bam: Bam, region: string): Record =
   ## query iterates over the given region. A single element is used and
   ## overwritten on each iteration so use `Record.copy` to retain.
+  if bam.idx == nil:
+    quit "must open index before querying"
   var qiter = sam_itr_querys(bam.idx, bam.hdr.hdr, region);
   if qiter != nil:
     var slen = sam_itr_next(bam.hts, qiter, bam.rec.b)
@@ -146,6 +148,8 @@ iterator querys*(bam: Bam, region: string): Record =
 iterator query*(bam: Bam, chrom:string, start:int, stop:int): Record =
   ## query iterates over the given region. A single element is used and
   ## overwritten on each iteration so use `Record.copy` to retain.
+  if bam.idx == nil:
+    quit "must open index before querying"
   var region = format("$1:$2-$3", chrom, intToStr(start+1), intToStr(stop))
   var qiter = sam_itr_querys(bam.idx, bam.hdr.hdr, region);
   if qiter != nil:
@@ -238,8 +242,9 @@ proc open*(bam: var Bam, path: cstring, threads: int=0, mode:string="r", fai: cs
   if mode[0] == 'r' and 0 != threads and 0 != hts_set_threads(hts, cint(threads)):
       raise newException(ValueError, "error setting number of threads")
 
-  if mode[0] == 'r' and hts_check_EOF(hts) != 1:
+  if mode[0] == 'r' and hts_check_EOF(hts) != 1 and bam.hts.format.format != hts_concat.sam:
     raise newException(ValueError, "invalid bgzf file")
+
 
   if mode[0] == 'w':
     return
