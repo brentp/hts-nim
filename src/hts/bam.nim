@@ -242,9 +242,8 @@ proc open*(bam: var Bam, path: cstring, threads: int=0, mode:string="r", fai: cs
   if mode[0] == 'r' and 0 != threads and 0 != hts_set_threads(hts, cint(threads)):
       raise newException(ValueError, "error setting number of threads")
 
-  if mode[0] == 'r' and hts_check_EOF(hts) != 1 and bam.hts.format.format != hts_concat.sam:
+  if mode[0] == 'r' and bam.hts.format.format != hts_concat.sam and hts_check_EOF(hts) != 1:
     raise newException(ValueError, "invalid bgzf file")
-
 
   if mode[0] == 'w':
     return
@@ -288,15 +287,15 @@ proc set_option*(b: Bam, f: FormatOption, val: int): int =
     stderr.write_line("couldn't set opts")
   return ret
 
-iterator items*(bam: Bam): Record {.raises: [BamError]}=
+iterator items*(bam: Bam): Record {.raises: [ValueError]}=
   ## items iterates over a bam. A single element is used and overwritten
   ## on each iteration so use `Record.copy` to retain.
   var ret = sam_read1(bam.hts, bam.hdr.hdr, bam.rec.b)
-  while ret > 0:
+  while ret >= 0:
     yield bam.rec
     ret = sam_read1(bam.hts, bam.hdr.hdr, bam.rec.b)
   if ret < -1:
-    raise BamError(msg:"hts/bam: error in iteration")
+    raise newException(ValueError, "hts/bam:error in iteration")
 
 
 include "./bam/auxtags"
