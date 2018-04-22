@@ -1,24 +1,33 @@
 import hts/hts_concat
 import hts/simpleoption
+import sequtils
 export simpleoption
 
 type
- Kind = enum typString, typFloat, typInt, typStrings, typFloats, typInts, typNone, typBool
+ Kind = enum typString, typChar, typFloat, typInt, typStrings, typChars, typFloats, typInts, typNone, typBool
  Value* = ref object
     ## a value in the info field
     case kind: Kind
     of typString: oString: string
+    of typChar: oChar: char
     of typFloat: oFloat: float64
     of typInt: oInt: int
     of typStrings: nString: seq[string]
+    of typChars: nChar: seq[char]
     of typFloats: nFloat: seq[float64]
     of typInts: nInt: seq[int]
     of typNone: xNone: bool
     of typBool: xBool: bool
 
+proc asChar*(a: Value): Option[char] =
+  if a.kind == typChar:
+    return some(a.oChar)
+
 proc asString*(a: Value): Option[string] =
   if a.kind == typString:
     return some(a.oString)
+  if a.kind == typChar:
+    return some($a.oChar)
 
 proc asInt*(a: Value): Option[int] =
   if a.kind == typInt:
@@ -39,6 +48,12 @@ proc asStrings*(a: Value): Option[seq[string]] =
     return some(a.nString)
   if a.kind == typString:
     return some(@[a.oString])
+  if a.kind == typChars:
+    return some(map(a.nChar, proc(x: char): string = $x))
+
+proc asChars*(a: Value): Option[seq[char]] =
+  if a.kind == typChars:
+    return some(a.nChar)
 
 proc asInts*(a: Value): Option[seq[int]] =
   if a.kind == typInts:

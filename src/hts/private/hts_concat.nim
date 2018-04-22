@@ -445,6 +445,7 @@ proc bam_aux_get*(b: ptr bam1_t; tag: array[2, char]): ptr uint8 {.cdecl,
 proc bam_aux2i*(s: ptr uint8): int32 {.cdecl, importc: "bam_aux2i", dynlib: libname.}
 proc bam_aux2f*(s: ptr uint8): cfloat {.cdecl, importc: "bam_aux2f", dynlib: libname.}
 proc bam_aux2Z*(s: ptr uint8): cstring {.cdecl, importc: "bam_aux2Z", dynlib: libname.}
+proc bam_aux2A*(s: ptr uint8): char {.cdecl, importc: "bam_aux2A", dynlib: libname.}
 proc bam_copy1*(bdst: ptr bam1_t; bsrc: ptr bam1_t): ptr bam1_t {.cdecl,
     importc: "bam_copy1", dynlib: libname.}
 proc bam_dup1*(bsrc: ptr bam1_t): ptr bam1_t {.cdecl, importc: "bam_dup1",
