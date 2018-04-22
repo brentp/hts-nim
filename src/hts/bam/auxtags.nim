@@ -68,6 +68,9 @@ proc tag*[T: int|float|string|char](r:Record, itag:string): Option[T] =
       when T is char:
         var a = bam_aux2A(b)
         return some(a)
+      when T is string:
+        var a = bam_aux2A(b)
+        return some($a)
       return none(T)
     else:
       return none(T)
