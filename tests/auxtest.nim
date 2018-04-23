@@ -13,6 +13,12 @@ suite "aux-test":
       check v.asfloat.get == 37.float64
 
       check v.asstring.isNone
+      
+      var xt = rec.aux("XT")
+
+      check xt.aschar.get == 'U'
+
+      check xt.asstring.get == "U"
 
       var rg = rec.aux("RG")
       check rg.asstring.get == "SRR741410"
@@ -31,6 +37,12 @@ suite "aux-test":
 
       var v = tag[int](rec, "SM")
       check v.get == 37
+
+      var xt = tag[char](rec, "XT")
+      check xt.get == 'U'
+
+      var xts = tag[string](rec, "XT")
+      check xts.get == "U"
 
       # SM exists, but it's a float.
       var f = tag[float](rec, "SM")

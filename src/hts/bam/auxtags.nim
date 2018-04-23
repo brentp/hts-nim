@@ -2,17 +2,25 @@ import ../simpleoption
 export simpleoption
 
 type 
-  AuxKind = enum akString, akFloat, akInt
+  AuxKind = enum akString, akChar, akFloat, akInt
   Aux* = ref object
     case kind: AuxKind
     of akString: xString*: string
+    of akChar: xChar*: char
     of akFloat: xFloat*: float64
     of akInt: xInt*: int
+
+proc asChar*(a: Aux): Option[char] {.inline.} =
+  ## get the value as a char. return none if not found.
+  if a.kind == akChar:
+    return some(a.xChar)
 
 proc asString*(a: Aux): Option[string] {.inline.} =
   ## get the value as a string. return none if not found.
   if a.kind == akString:
     return some(a.xString)
+  if a.kind == akChar:
+    return some($a.xChar)
 
 proc asInt*(a:Aux): Option[int] {.inline.} =
   ## get the value as an int. return none if not found.
@@ -26,7 +34,7 @@ proc asFloat*(a:Aux): Option[float64] {.inline.} =
   if a.kind == akInt:
     return some(float64(a.xInt))
 
-proc tag*[T: int|float|string](r:Record, itag:string): Option[T] =
+proc tag*[T: int|float|string|char](r:Record, itag:string): Option[T] =
   ## Get the aux tag from the record.
   ## Due to `nim` language limitations, this must be used as, e.g.:
   ## `tag[int](rec, "NM")`. It will return `none` if the tag does
@@ -51,10 +59,18 @@ proc tag*[T: int|float|string](r:Record, itag:string): Option[T] =
         var f = bam_aux2f(b)
         return some(T(f))
       return none(T)
-    of 'Z', 'A', 'H':
+    of 'Z', 'H':
       when T is string:
         var z = $bam_aux2Z(b)
         return some(z)
+      return none(T)
+    of 'A':
+      when T is char:
+        var a = bam_aux2A(b)
+        return some(a)
+      when T is string:
+        var a = bam_aux2A(b)
+        return some($a)
       return none(T)
     else:
       return none(T)
@@ -75,8 +91,11 @@ proc aux*(r:Record, tag: string): Aux {.inline.} =
     of 'f', 'd':
       var f = bam_aux2f(b)
       return Aux(kind: akFloat, xFloat: float64(f))
-    of 'A', 'Z', 'H':
+    of 'Z', 'H':
       var z = bam_aux2Z(b)
       return Aux(kind:akString, xString: $(z))
+    of 'A':
+      var a = bam_aux2A(b)
+      return Aux(kind: akChar, xChar: a)
     else:
       return nil

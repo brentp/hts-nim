@@ -357,6 +357,7 @@ uint8_t *bam_aux_get(const bam1_t *b, const char tag[2]);
 int32_t bam_aux2i(const uint8_t *s);
 float bam_aux2f(const uint8_t *s);
 char *bam_aux2Z(const uint8_t *s);
+char bam_aux2A(const uint8_t *s);
 
 bam1_t *bam_copy1(bam1_t *bdst, const bam1_t *bsrc);
 bam1_t *bam_dup1(const bam1_t *bsrc);
