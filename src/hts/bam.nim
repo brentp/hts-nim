@@ -177,9 +177,6 @@ iterator queryi*(bam: Bam, tid:int, start:int, stop:int): Record =
 proc `$`*(r: Record): string =
     return format("Record($1:$2-$3):$4", [r.chrom, intToStr(r.start), intToStr(r.stop), r.qname])
 
-proc qual*(r: Record): uint8 {.inline, deprecated: "use mapping_quality".} =
-  return r.b.core.qual
-
 proc mapping_quality*(r: Record): uint8 {.inline.} =
   ## mapping quality
   return r.b.core.qual
