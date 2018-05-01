@@ -181,7 +181,6 @@ proc mapping_quality*(r: Record): uint8 {.inline.} =
   ## mapping quality
   return r.b.core.qual
 
-
 proc isize*(r: Record): int32 {.inline.} =
   ## insert size
   return r.b.core.isize

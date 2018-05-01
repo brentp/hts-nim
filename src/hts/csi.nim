@@ -26,11 +26,11 @@ proc open*(csi: var CSI, base_path: string): bool =
   return true
 
 # these are all 1-based.
-proc new_csi*(seq_col: int, start_col: int, end_col: int, one_based: bool): CSI =
+proc new_csi*(seq_col: int, start_col: int, end_col: int, one_based: bool, levels:int=5, min_shift:int=14): CSI =
   var c:CSI
   new(c, finalize_csi)
   var tbx: tbx_t
-  tbx.idx = hts_idx_init(0, HTS_FMT_CSI, 0, 14, 5)
+  tbx.idx = hts_idx_init(0, HTS_FMT_CSI, 0, min_shift.cint, levels.cint)
   if tbx.idx == nil:
     stderr.write_line("[hts-nim] error creating index in new_csi")
     quit(1)
