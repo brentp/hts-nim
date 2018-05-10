@@ -338,7 +338,7 @@ iterator items*(v:VCF): Variant =
 
   while true:
     ret = bcf_read(v.hts, v.header.hdr, v.c)
-    if ret ==  -1:
+    if ret == -1:
       break
     #discard bcf_unpack(v.c, 1 or 2 or 4)
     discard bcf_unpack(v.c, BCF_UN_ALL)
