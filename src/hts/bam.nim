@@ -16,7 +16,7 @@ type
 
   Bam* = ref object of RootObj
     ## Bam wraps a BAM/CRAM/SAM reader object from htslib.
-    hts: ptr hts_file
+    hts*: ptr hts_file
     hdr*: Header
     rec: Record
     idx*: ptr hts_idx_t
