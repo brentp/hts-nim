@@ -19,7 +19,7 @@ type
 
   Variant* = ref object of RootObj
     ## Variant is a single line from a VCF
-    c: ptr bcf1_t
+    c*: ptr bcf1_t
     p: pointer
     vcf*: VCF
     own: bool # this seems to protect against a bug in the gc
@@ -290,7 +290,12 @@ proc write_variant*(v:VCF, variant:Variant): bool =
 proc open*(v:var VCF, fname:string, mode:string="r", samples:seq[string]=empty_samples, threads:int=0): bool =
   ## open a VCF at the given path
   new(v, destroy_vcf)
-  v.hts = hts_open(fname.cstring, mode.cstring)
+  var vmode = mode
+  if vmode[0] == 'w' and vmode.len == 1:
+    if fname.endswith(".gz"): vmode &= "z"
+    elif fname.endswith(".bcf"): vmode &= "b"
+
+  v.hts = hts_open(fname.cstring, vmode.cstring)
   v.fname = fname
   if v.hts == nil:
     stderr.write_line "hts-nim/vcf: error opening file:" & fname
@@ -483,7 +488,7 @@ proc REF*(v:Variant): string {.inline.} =
 proc ALT*(v:Variant): seq[string] {.inline.} =
   ## a seq of alternate alleles
   result = new_seq[string](v.c.n_allele-1)
-  for i in 1..<v.c.n_allele.int:
+  for i in 1..(v.c.n_allele.int - 1):
     result[i-1] = $(v.c.d.allele[i])
 
 type
