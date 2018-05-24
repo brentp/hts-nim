@@ -592,6 +592,10 @@ proc faidx_fetch_seq*(fai: ptr faidx_t; c_name: cstring; p_beg_i: cint; p_end_i:
     dynlib: libname.}
 proc faidx_has_seq*(fai: ptr faidx_t; seq: cstring): cint {.cdecl,
     importc: "faidx_has_seq", dynlib: libname.}
+## / Return sequence length, -1 if not present
+
+proc faidx_seq_len*(fai: ptr faidx_t; seq: cstring): cint {.cdecl,
+    importc: "faidx_seq_len", dynlib: libname.}
 ## ##############################################
 ## # vcf
 ## ##############################################
@@ -613,7 +617,7 @@ proc faidx_has_seq*(fai: ptr faidx_t; seq: cstring): cint {.cdecl,
 ## 
 
 type
-  INNER_C_UNION_1854249023* {.bycopy.} = object {.union.}
+  INNER_C_UNION_681630523* {.bycopy.} = object {.union.}
     i*: int32                  ##  integer value
     f*: cfloat                 ##  float value
   
@@ -643,7 +647,7 @@ type
     key*: cint                 ##  key: numeric tag id, the corresponding string is bcf_hdr_t::id[BCF_DT_ID][$key].key
     `type`*: cint
     len*: cint                 ##  type: one of BCF_BT_* types; len: vector length, 1 for scalars
-    v1*: INNER_C_UNION_1854249023 ##  only set if $len==1; for easier access
+    v1*: INNER_C_UNION_681630523 ##  only set if $len==1; for easier access
     vptr*: ptr uint8            ##  pointer to data array in bcf1_t->shared.s, excluding the size+type and tag id bytes
     vptr_len*: uint32          ##  length of the vptr block or, when set, of the vptr_mod block, excluding offset
     vptr_off* {.bitsize: 31.}: uint32 ##  vptr offset, i.e., the size of the INFO key plus size+type bytes

@@ -11,3 +11,9 @@ suite "fai-suite":
     check f.get("20", 0, 3) == "AGGA"
 
     check f.get("2", 0, 3) == "AGCA"
+
+  test "fai chrom_len":
+    var f:Fai
+    check open(f, "tests/aa.fa")
+    check f.chrom_len("2") == 215
+    check f.chrom_len("20") == 301

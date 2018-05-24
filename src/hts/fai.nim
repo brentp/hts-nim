@@ -20,6 +20,12 @@ proc open*(fai:var Fai, path: string): bool =
 proc len*(fai: Fai): int =
   return int(faidx_nseq(fai.cptr))
 
+proc chrom_len*(fai:Fai, chrom: string): int =
+  ## return the length of the requested chromosome.
+  result = faidx_seq_len(fai.cptr, chrom.cstring).int
+  if result == -1:
+    raise newException(ValueError, "chromosome " & chrom & " not found in fasta")
+
 proc get*(fai: Fai, region: string, start:int=0, stop:int=0): string =
   var rlen: cint
   var res: cstring
