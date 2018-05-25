@@ -477,6 +477,10 @@ int faidx_has_seq(const faidx_t *fai, const char *seq);
 /// Return sequence length, -1 if not present
 int faidx_seq_len(const faidx_t *fai, const char *seq);
 
+/// Return name of i-th sequence
+const char *faidx_iseq(const faidx_t *fai, int i);
+
+
 //##############################################
 //# vcf
 //##############################################

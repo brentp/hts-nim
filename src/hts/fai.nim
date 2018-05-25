@@ -17,7 +17,8 @@ proc open*(fai:var Fai, path: string): bool =
     return false
   return true
 
-proc len*(fai: Fai): int =
+proc len*(fai: Fai): int {.inline.} =
+  ## the number of sequences in the index.
   return int(faidx_nseq(fai.cptr))
 
 proc chrom_len*(fai:Fai, chrom: string): int =
@@ -25,6 +26,14 @@ proc chrom_len*(fai:Fai, chrom: string): int =
   result = faidx_seq_len(fai.cptr, chrom.cstring).int
   if result == -1:
     raise newException(ValueError, "chromosome " & chrom & " not found in fasta")
+
+proc `[]`*(fai:Fai, i:int): string =
+  ## return the name of the i'th sequence.
+  if i < 0 or i >= fai.len:
+    raise newException(IndexError, "cant access sequence:" & $i)
+  var cname = faidx_iseq(fai.cptr, i.cint)
+  result = $cname
+  free(cname)
 
 proc get*(fai: Fai, region: string, start:int=0, stop:int=0): string =
   var rlen: cint

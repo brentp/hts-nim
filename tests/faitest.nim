@@ -17,3 +17,11 @@ suite "fai-suite":
     check open(f, "tests/aa.fa")
     check f.chrom_len("2") == 215
     check f.chrom_len("20") == 301
+
+  test "fai indexing":
+    var f:Fai
+    check open(f, "tests/aa.fa")
+    check f[0] == "20"
+    check f[1] == "2"
+    check f[5] == "21"
+
