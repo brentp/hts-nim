@@ -145,6 +145,19 @@ proc floats*(f:FORMAT, key:string, data:var seq[float32]): Status =
   if ret < 0: return Status(ret.int)
   return toSeq[float32](data, f.p, ret.int)
 
+proc strings*(f:FORMAT, key:string, data:var string): Status {.inline.} =
+  ## strings fills the data with the value for the key and returns a bool indicating if the key was found.
+  var n:cint = 0
+
+  var ret = bcf_get_format_values(f.v.vcf.header.hdr, f.v.c, key.cstring,
+     f.v.p.addr, n.addr, BCF_HT_STR.cint)
+  if ret < 0:
+    if data.len != 0: data.set_len(0)
+    return Status(ret.int)
+  data.set_len(ret.int)
+  copyMem(data[0].addr.pointer, f.v.p, ret.int)
+  return Status.OK
+
 proc ints*(i:INFO, key:string, data:var seq[int32]): Status {.inline.} =
   ## ints fills the given data with ints associated with the key.
   var n:cint = 0
