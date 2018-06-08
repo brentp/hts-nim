@@ -233,7 +233,9 @@ proc open*(bam: var Bam, path: cstring, threads: int=0, mode:string="r", fai: cs
   bam.hts = hts
 
   if fai != nil:
-    discard hts_set_fai_filename(hts, fai)
+    if 0 != hts_set_fai_filename(hts, fai):
+      stderr.write_line "[hts-nim] could not load '" & $fai & "' as fasta index"
+      quit 2
 
   if mode[0] == 'r' and 0 != threads and 0 != hts_set_threads(hts, cint(threads)):
       raise newException(ValueError, "error setting number of threads")
