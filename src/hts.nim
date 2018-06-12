@@ -14,5 +14,5 @@ import ./hts/bgzf/bgzi
 export bgzi
 import ./hts/csi
 export csi
-import ./hts/fisher
-export fisher
+import ./hts/stats
+export stats

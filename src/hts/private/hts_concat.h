@@ -454,6 +454,7 @@ int bam_mplp_auto(bam_mplp_t iter, int *tid, int *pos, int *n_plp, const bam_pil
 //# kfunc
 //##############################################
 
+double kf_betai(double a, double b, double x);
 double kt_fisher_exact(int n11, int n12, int n21, int n22, double *left, double *right, double *two);
 
 //##############################################

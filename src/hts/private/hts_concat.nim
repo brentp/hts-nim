@@ -568,6 +568,8 @@ proc bam_mplp_auto*(iter: bam_mplp_t; tid: ptr cint; pos: ptr cint; n_plp: ptr c
 ## # kfunc
 ## ##############################################
 
+proc kf_betai*(a: cdouble; b: cdouble; x: cdouble): cdouble {.cdecl, importc: "kf_betai",
+    dynlib: libname.}
 proc kt_fisher_exact*(n11: cint; n12: cint; n21: cint; n22: cint; left: ptr cdouble;
                      right: ptr cdouble; two: ptr cdouble): cdouble {.cdecl,
     importc: "kt_fisher_exact", dynlib: libname.}
@@ -621,7 +623,7 @@ proc faidx_iseq*(fai: ptr faidx_t; i: cint): cstring {.cdecl, importc: "faidx_is
 ## 
 
 type
-  INNER_C_UNION_1432638914* {.bycopy.} = object {.union.}
+  INNER_C_UNION_2213226113* {.bycopy.} = object {.union.}
     i*: int32                  ##  integer value
     f*: cfloat                 ##  float value
   
@@ -651,7 +653,7 @@ type
     key*: cint                 ##  key: numeric tag id, the corresponding string is bcf_hdr_t::id[BCF_DT_ID][$key].key
     `type`*: cint
     len*: cint                 ##  type: one of BCF_BT_* types; len: vector length, 1 for scalars
-    v1*: INNER_C_UNION_1432638914 ##  only set if $len==1; for easier access
+    v1*: INNER_C_UNION_2213226113 ##  only set if $len==1; for easier access
     vptr*: ptr uint8            ##  pointer to data array in bcf1_t->shared.s, excluding the size+type and tag id bytes
     vptr_len*: uint32          ##  length of the vptr block or, when set, of the vptr_mod block, excluding offset
     vptr_off* {.bitsize: 31.}: uint32 ##  vptr offset, i.e., the size of the INFO key plus size+type bytes
