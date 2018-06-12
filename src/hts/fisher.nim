@@ -1,0 +1,19 @@
+import ./private/hts_concat
+import strutils
+
+type fisher_result* = object
+  left*: float64
+  right*:float64
+  two*:float64
+
+proc `$`*(f:fisher_result): string =
+  return "fisher_result(left:" & formatFloat(f.left, ffScientific, precision=4) &
+         ", right:" & formatFloat(f.right, ffScientific, precision=4) &
+         ", two:" & formatFloat(f.two, ffScientific, precision=4) & ")"
+
+# kt_fisher_exact(int n11, int n12, int n21, int n22, double *_left
+proc fishers_exact_test*[T:int|int64|int32](n11:T, n12:T, n21:T, n22:T): fisher_result {.inline.} =
+  result = fisher_result()
+  discard kt_fisher_exact(n11.cint, n12.cint, n21.cint, n22.cint, result.left.cdouble.addr, result.right.cdouble.addr, result.two.cdouble.addr)
+
+
