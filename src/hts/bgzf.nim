@@ -9,7 +9,7 @@ type
 proc close*(b: BGZ): int =
   ## close the filehandle
   if b.cptr != nil:
-    return int(bgzf_close(b.cptr))
+    result = int(bgzf_close(b.cptr))
   b.cptr = nil
 
 proc write*(b: BGZ, line: string): int64 {.inline.} =
