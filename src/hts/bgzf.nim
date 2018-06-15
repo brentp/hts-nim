@@ -10,14 +10,7 @@ proc close*(b: BGZ): int =
   ## close the filehandle
   if b.cptr != nil:
     return int(bgzf_close(b.cptr))
-
-proc open*(b: var BGZ, path: string, mode: string) =
-  ## open a BGZF file
-  if b == nil:
-    b = BGZ()
-  b.cptr = bgzf_open(cstring(path), cstring(mode))
-  if b.cptr == nil:
-    stderr.write_line("[hts-nim] error opening file:", path)
+  b.cptr = nil
 
 proc write*(b: BGZ, line: string): int64 {.inline.} =
   ## write a string to the file
@@ -45,3 +38,15 @@ proc flush*(b: BGZ): int =
 
 proc tell*(b: BGZ): uint64 {.inline.} =
   return uint64(bgzf_tell(b.cptr))
+
+proc finalize(b: BGZ) =
+  if b.cptr != nil:
+    discard b.flush()
+    discard b.close()
+
+proc open*(b: var BGZ, path: string, mode: string) =
+  ## open a BGZF file
+  new(b, finalize)
+  b.cptr = bgzf_open(cstring(path), cstring(mode))
+  if b.cptr == nil:
+    raise newException(IOError, "error opening " & path)
