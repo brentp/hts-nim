@@ -159,7 +159,7 @@ iterator query*(bam: Bam, chrom:string, start:int, stop:int): Record =
       slen = sam_itr_next(bam.hts, qiter, bam.rec.b)
     hts_itr_destroy(qiter)
     if slen < -1:
-      stderr.write_line("[hts-nim] error in bam.query")
+      stderr.write_line("[hts-nim] error in bam.query:" & $slen)
 
 iterator queryi*(bam: Bam, tid:int, start:int, stop:int): Record =
   ## query iterates over the given region. A single element is used and
@@ -172,7 +172,7 @@ iterator queryi*(bam: Bam, tid:int, start:int, stop:int): Record =
       slen = sam_itr_next(bam.hts, qiter, bam.rec.b)
     hts_itr_destroy(qiter)
     if slen < -1:
-      stderr.write_line("[hts-nim] error in bam.queri")
+      stderr.write_line("[hts-nim] error in bam.queryi:" & $slen)
   
 proc `$`*(r: Record): string =
     return format("Record($1:$2-$3):$4", [r.chrom, intToStr(r.start), intToStr(r.stop), r.qname])
