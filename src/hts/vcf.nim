@@ -372,7 +372,12 @@ iterator vquery(v:VCF, region:string): Variant =
     tid:cint = 0
 
   discard hts_parse_reg(region.cstring, start.addr, stop.addr)
-  tid = tbx_name2id(v.tidx, region)
+  var cidx = region.find(":")
+  if cidx == -1:
+    tid = tbx_name2id(v.tidx, region)
+  else:
+    tid = tbx_name2id(v.tidx,region[0..<cidx])
+
   var itr = hts_itr_query(v.tidx.idx, tid.cint, start, stop, fn)
     #itr = tbx_itr_querys(v.tidx, region)
   var variant: Variant
@@ -385,6 +390,7 @@ iterator vquery(v:VCF, region:string): Variant =
     if ret > 0:
       break
     variant.c = v.c
+    discard bcf_unpack(v.c, BCF_UN_ALL)
     variant.vcf = v
     yield variant
 
@@ -423,6 +429,7 @@ iterator query*(v:VCF, region: string): Variant =
         if ret < 0: break
         variant.c = v.c
         variant.vcf = v
+        discard bcf_unpack(v.c, BCF_UN_ALL)
         yield variant
 
     hts_itr_destroy(itr)
