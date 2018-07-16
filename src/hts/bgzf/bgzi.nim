@@ -32,7 +32,7 @@ type
 
 proc fastSubStr(dest: var string; src: cstring, a, b: int) {.inline.} =
   # once the stdlib uses TR macros, these things should not be necessary
-  template `+!`(src, a): expr = cast[pointer](cast[int](src) + a)
+  template `+!`(src, a): untyped = cast[pointer](cast[int](src) + a)
   setLen(dest, b-a)
   copyMem(addr dest[0], src+!a, b-a)
 
