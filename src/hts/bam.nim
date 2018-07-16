@@ -59,6 +59,13 @@ proc sequence*(r: Record, s: var string): string =
       s[i] = "=ACMGRSVTWYHKDBN"[int(uint8(bseq[i shr 1]) shr uint8((not (i) and 1) shl 2) and uint8(0xF))]
   result = s
 
+proc base_at*(r:Record, i:int): char {.inline.} =
+  ## return just the base at the requsted index 'i' into the query sequence.
+  if i >= r.b.core.l_qseq:
+    return '.'
+  var bseq = bam_get_seq(r.b)
+  return "=ACMGRSVTWYHKDBN"[int(uint8(bseq[i shr 1]) shr uint8((not (i) and 1) shl 2) and uint8(0xF))]
+
 template bam_get_qual(b: untyped): untyped =
   cast[CPtr[uint8]](cast[uint]((b).data) + uint(uint((b).core.n_cigar shl 2) + uint((b).core.l_qname) + uint((b.core.l_qseq + 1) shr 1)))
 
@@ -71,6 +78,11 @@ proc base_qualities*(r: Record, q: var seq[uint8]): seq[uint8] =
   for i in 0..<int(r.b.core.l_qseq):
     q[i] = bqual[i]
   return q
+
+proc base_quality_at*(r:Record, i:int): uint8 {.inline.} =
+  if i >= r.b.core.l_qseq:
+    return 0
+  return bam_get_qual(r.b)[i]
 
 proc targets*(h: Header): seq[Target] =
   ## The targets (chromosomes) from the header.
