@@ -68,7 +68,7 @@ proc `[]=`*[T](p: SafeCPtr[T], k: int, val: T) {.inline.} =
     assert k < p.size
   p.mem[k] = val
 
-var empty_samples:seq[string]
+const empty_samples: seq[string] = nil
 
 proc set_samples*(v:VCF, samples:seq[string]) =
   ## set the samples that will be decoded
@@ -363,7 +363,7 @@ iterator vquery(v:VCF, region:string): Variant =
     quit(2)
 
   var 
-    fn:hts_readrec_func = tbx_readrec
+    read_func:hts_readrec_func = tbx_readrec
     ret = 0
     slen = 0
     s = kstring_t()
@@ -378,7 +378,7 @@ iterator vquery(v:VCF, region:string): Variant =
   else:
     tid = tbx_name2id(v.tidx,region[0..<cidx])
 
-  var itr = hts_itr_query(v.tidx.idx, tid.cint, start, stop, fn)
+  var itr = hts_itr_query(v.tidx.idx, tid.cint, start, stop, read_func)
     #itr = tbx_itr_querys(v.tidx, region)
   var variant: Variant
   new(variant, destroy_variant)
@@ -415,11 +415,11 @@ iterator query*(v:VCF, region: string): Variant =
       start: cint
       stop: cint
       tid:cint = 0
-      fn:hts_readrec_func = bcf_readrec
+      read_fn:hts_readrec_func = bcf_readrec
 
     discard hts_parse_reg(region.cstring, start.addr, stop.addr)
     tid = bcf_hdr_name2id(v.header.hdr, region.split(":")[0].cstring)
-    var itr = hts_itr_query(v.bidx, tid, start, stop, fn)
+    var itr = hts_itr_query(v.bidx, tid, start, stop, read_fn)
     var ret = 0
     var variant: Variant
     new(variant, destroy_variant)
