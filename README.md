@@ -66,6 +66,7 @@ for record in cram:
 
 ```nim
 import hts
+import unittest  # Enable the check statement
 
 var tsamples = @["101976-101976", "100920-100920", "100231-100231", "100232-100232", "100919-100919"]
 
@@ -89,17 +90,17 @@ for rec in v:
   # accessing format fields is similar
   var format = rec.format
   var dps = new_seq[int32](len(v.samples))
-  assert format.ints("DP", dps)
+  doAssert(format.ints("DP", dps))
   echo dps
 
 echo v.samples
 
 # open a VCF for writing
 var wtr:VCF
-open(wtr, "tests/outv.vcf", mode="w")
+doAssert(open(wtr, "tests/outv.vcf", mode="w"))
 # set and write the header.
 wtr.header = v.header
-assert wtr.write_header()
+doAssert(wtr.write_header())
 
 # regional queries look for index. works for VCF and BCF
 for rec in v.query("1:15600-18250"):
@@ -107,7 +108,7 @@ for rec in v.query("1:15600-18250"):
   # adjust some values in the INFO
   var val = 22.3
   check rec.info.set("VQSLOD", val) == Status.OK
-  assert wtr.write_variant(rec)
+  doAssert(wtr.write_variant(rec))
 
   check rec.info.delete("CSQ") == Status.OK
 
