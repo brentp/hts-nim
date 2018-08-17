@@ -71,7 +71,7 @@ var tsamples = @["101976-101976", "100920-100920", "100231-100231", "100232-1002
 
 # VCF and BCF supported
 var v:VCF
-assert open(v, "tests/test.bcf", samples=tsamples)
+doAssert(open(v, "tests/test.bcf", samples=tsamples))
 
 var afs = new_seq[float32](5) # size doesn't matter. this will be re-sized as needed
 var acs = new_seq[int32](5) # size doesn't matter. this will be re-sized as needed
@@ -87,7 +87,7 @@ for rec in v:
   echo acs, afs, csq, info.has_flag("IN_EXAC")
 
   # accessing format fields is similar
-  var format = ref.format
+  var format = rec.format
   var dps = new_seq[int32](len(v.samples))
   assert format.ints("DP", dps)
   echo dps
