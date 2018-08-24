@@ -37,7 +37,7 @@ var b:Bam
 open(b, "tests/HG02002.bam", index=true)
 
 for record in b:
-  if record.qual > 10u:
+  if record.mapping_quality > 10u:
     echo record.chrom, record.start, record.stop
 
 # regional queries:
@@ -49,9 +49,9 @@ for record in b.query("6", 30816675, 32816675):
       echo $op, op.consumes.reference, op.consumes.query
 
     # tags are pulled with `aux`
-    var mismatches = rec.aux("NM")
+    var mismatches = record.aux("NM")
     if mismatches != nil and mismatches.asInt.get < 3:
-      var rg = rec.aux("RG")
+      var rg = record.aux("RG")
       echo rg.asString
 
 # cram requires an fasta to decode:
