@@ -47,6 +47,24 @@ proc copy*(h: Header): Header =
   hdr.hdr = bam_hdr_dup(h.hdr)
   return hdr
 
+proc from_string*(h:Header, header_string:string) =
+    ## create a new header from a string
+    h.hdr = sam_hdr_parse(header_string.len.cint, header_string.cstring)
+    if h.hdr == nil:
+        raise newException(ValueError, "error parsing header string:" & header_string)
+
+proc from_string*(r:Record, record_string:string) =
+    ## update the record with the given SAM record.
+    if r.hdr == nil:
+        raise newException(ValueError, "must set header for record before calling from_string")
+    if r.b == nil:
+        raise newException(ValueError, "must create record with NewRecord before calling from_string")
+
+
+    var kstr = kstring_t(s:record_string.cstring, m:record_string.len, l:record_string.len)
+    if sam_parse1(kstr.addr, r.hdr.hdr, r.b) != 0:
+        raise newException(ValueError, "error in from_string parsing record: " & record_string)
+
 template bam_get_seq(b: untyped): untyped =
   cast[CPtr[uint8]](cast[uint]((b).data) + uint(((b).core.n_cigar shl 2) + (b).core.l_qname))
 
@@ -237,6 +255,14 @@ proc write*(bam: var Bam, rec: Record) {.inline.} =
 proc close*(bam: Bam) =
   discard hts_close(bam.hts)
 
+proc NewRecord*(h:Header): Record =
+  ## create a new bam record and associate it with the header
+  var b   = bam_init1()
+  # the record is attached to the bam, but it takes care of it's own finalizer.
+  new(result, finalize_record)
+  result.b = b
+  result.hdr = h
+
 proc open*(bam: var Bam, path: cstring, threads: int=0, mode:string="r", fai: cstring=nil, index: bool=false) =
   ## `open_hts` returns a bam object for the given path. If CRAM, then fai must be given.
   ## if index is true, then it will attempt to open an index file for regional queries.
@@ -262,12 +288,8 @@ proc open*(bam: var Bam, path: cstring, threads: int=0, mode:string="r", fai: cs
   new(hdr, finalize_header)
   hdr.hdr = sam_hdr_read(hts)
 
-  var b   = bam_init1()
-  # the record is attached to the bam, but it takes care of it's own finalizer.
-  var rec: Record
-  new(rec, finalize_record)
-  rec.b = b
-  rec.hdr = hdr
+  var rec = NewRecord(hdr)
+
   bam.hdr = hdr
   bam.rec = rec
 
