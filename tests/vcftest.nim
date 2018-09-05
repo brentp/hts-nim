@@ -58,6 +58,11 @@ suite "vcf suite":
 
     wtr.close()
 
+  test "test empty format":
+    var tsamples = @["101976-101976", "100920-100920", "100231-100231", "100232-100232", "100919-100919"]
+    var vcf:VCF
+    check open(vcf, "tests/test.vcf.gz", samples=tsamples)
+
 
   test "test format setting":
     var tsamples = @["101976-101976", "100920-100920", "100231-100231", "100232-100232", "100919-100919"]

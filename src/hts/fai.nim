@@ -1,6 +1,6 @@
 import ./private/hts_concat
 type
-  Fai* = ref object of RootObj
+  Fai* = ref object
     ## Header wraps the bam header info.
     cptr*: ptr faidx_t
 

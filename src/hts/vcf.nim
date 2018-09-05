@@ -68,12 +68,12 @@ proc `[]=`*[T](p: SafeCPtr[T], k: int, val: T) {.inline.} =
     assert k < p.size
   p.mem[k] = val
 
-const empty_samples: seq[string] = nil
+var empty_samples: seq[string]
 
 proc set_samples*(v:VCF, samples:seq[string]) =
   ## set the samples that will be decoded
   var isamples = samples
-  if isamples == nil:
+  if isamples.len == 0:
     isamples = @["-"]
   var sample_str = join(isamples, ",")
   var ret = bcf_hdr_set_samples(v.header.hdr, sample_str.cstring, 0)
@@ -122,10 +122,7 @@ proc toSeq[T](data: var seq[T], p:pointer, n:int): Status {.inline.} =
   # this makes a copy but the cost of this over using the underlying directly is only ~10% for 2500 samples and
   # < 2% for 3 samples.
   if data.len != n:
-    if data != nil:
-      data.set_len(n)
-    else:
-      data = new_seq[T](n)
+    data.set_len(n)
   c_memcpy(data[0].addr.pointer, p, (n * sizeof(T)).csize)
   return Status.OK
 
@@ -308,7 +305,7 @@ proc open*(v:var VCF, fname:string, mode:string="r", samples:seq[string]=empty_s
 
   
   v.header = Header(hdr:bcf_hdr_read(v.hts))
-  if samples != nil and samples != empty_samples:
+  if samples.len != 0:
     v.set_samples(samples)
 
   v.n_samples = bcf_hdr_nsamples(v.header.hdr)
