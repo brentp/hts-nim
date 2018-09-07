@@ -1,4 +1,5 @@
 import unittest, hts, strutils
+import math
 
 
 var global_vcf:VCF
@@ -11,6 +12,9 @@ var global_variant:Variant
 for v in global_vcf:
   global_variant = v.copy()
   break
+
+proc isNan(f:float32): bool =
+    return f.classify == fcNaN
 
 
 suite "vcf suite":
@@ -57,6 +61,37 @@ suite "vcf suite":
 
 
     wtr.close()
+
+  test "vcf write missing format values":
+    var tsamples = @["101976-101976", "100920-100920", "100231-100231", "100232-100232", "100919-100919"]
+    var vcf:VCF
+    var wtr:VCF
+    check open(vcf, "tests/test.vcf.gz", samples=tsamples)
+
+    check vcf.header.add_format("xx", "1", "Float", "New float format field") == Status.OK
+
+    check open(wtr, "tests/outmissing.vcf", mode="w")
+    wtr.header = vcf.header
+    check wtr.write_header()
+
+    var vals = newSeq[float32](tsamples.len)
+    for i, v in vals:
+        vals[i] = cast[float32](bcf_float_missing)
+        #bcf_float_set(vals[i].addr, bcf_float_missing)
+        check vals[i].isNaN
+
+    var i:int
+    for v in vcf:
+      vals[0] = i.float32
+      i += 1
+
+      check v.format.set("xx", vals) == Status.OK
+      check wtr.write_variant(v)
+
+    wtr.close()
+
+
+
 
   test "test empty format":
     var tsamples = @["101976-101976", "100920-100920", "100231-100231", "100232-100232", "100919-100919"]
