@@ -25,3 +25,10 @@ suite "fai-suite":
     check f[1] == "2"
     check f[5] == "21"
 
+  test "issue26":
+      var fai:Fai
+      check open(fai, "tests/sample.fa")
+      check fai[0] == "ref"
+      check fai[0] == "ref"
+      check fai[0] == "ref"
+      check fai.get(fai[0], 0, 2) == "ACG"
