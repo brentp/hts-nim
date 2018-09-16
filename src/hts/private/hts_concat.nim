@@ -109,7 +109,7 @@ const
   BCF_HT_STR* = 3
 
 proc malloc*(size: csize): pointer {.cdecl, importc: "malloc", dynlib: libname.}
-proc free*(a2: pointer) {.cdecl, importc: "free", dynlib: libname.}
+proc free*(a1: pointer) {.cdecl, importc: "free", dynlib: libname.}
 proc strncpy*(dst: cstring; src: cstring; size: csize): cstring {.cdecl,
     importc: "strncpy", dynlib: libname.}
 proc strtol*(str: cstring; endptr: cstringArray; base: cint): clong {.cdecl,
@@ -136,7 +136,7 @@ type
 
 proc ks_release*(s: ptr kstring_t): cstring {.inline, cdecl, importc: "ks_release",
     dynlib: libname.}
-proc kputsn*(a2: cstring; a3: cint; a4: ptr kstring_t) {.cdecl, importc: "kputsn",
+proc kputsn*(a1: cstring; a2: cint; a3: ptr kstring_t) {.cdecl, importc: "kputsn",
     dynlib: libname.}
 ## ##########################
 ## # BGZF
@@ -221,14 +221,14 @@ type
 
 
 type
-  INNER_C_STRUCT_1736020040* {.bycopy.} = object
+  INNER_C_STRUCT_1655966615* {.bycopy.} = object
     major*: cshort
     minor*: cshort
 
   htsFormat* {.bycopy.} = object
     category*: htsFormatCategory
     format*: htsExactFormat
-    version*: INNER_C_STRUCT_1736020040
+    version*: INNER_C_STRUCT_1655966615
     compression*: htsCompression
     compression_level*: cshort ##  currently unused
     specific*: pointer         ##  format specific options; see struct hts_opt.
@@ -239,7 +239,7 @@ type
 ## ###########################
 
 type
-  INNER_C_UNION_800860346* {.bycopy.} = object {.union.}
+  INNER_C_UNION_720806921* {.bycopy.} = object {.union.}
     bgzf*: ptr BGZF
     cram*: ptr cram_fd
     hfile*: ptr hFILE
@@ -259,7 +259,7 @@ type
     line*: kstring_t
     fn*: cstring
     fn_aux*: cstring
-    fp*: INNER_C_UNION_800860346
+    fp*: INNER_C_UNION_720806921
     format*: htsFormat
 
 
@@ -277,7 +277,7 @@ proc hts_set_fai_filename*(fp: ptr htsFile; fn_aux: cstring): cint {.cdecl,
 type
   hts_readrec_func* = proc (fp: ptr BGZF; data: pointer; r: pointer; tid: ptr cint;
                          beg: ptr cint; `end`: ptr cint): cint {.cdecl.}
-  hts_id2name_f* = proc (a2: pointer; a3: cint): cstring {.cdecl.}
+  hts_id2name_f* = proc (a1: pointer; a2: cint): cstring {.cdecl.}
   hts_itr_t* {.bycopy.} = object
   
 
@@ -318,7 +318,7 @@ proc hts_idx_seqnames*(idx: ptr hts_idx_t; n: ptr cint; getid: hts_id2name_f;
 type
   hts_itr_query_func* = proc (idx: ptr hts_idx_t; tid: cint; beg: cint; `end`: cint;
                            readrec: ptr hts_readrec_func): ptr hts_itr_t {.cdecl.}
-  hts_name2id_f* = proc (a2: pointer; a3: cstring): cint {.cdecl.}
+  hts_name2id_f* = proc (a1: pointer; a2: cstring): cint {.cdecl.}
 
 proc hts_itr_querys*(idx: ptr hts_idx_t; reg: cstring; getid: hts_name2id_f;
                     hdr: pointer; itr_query: ptr hts_itr_query_func;
@@ -465,13 +465,13 @@ proc bam_flag2str*(flag: cint): cstring {.cdecl, importc: "bam_flag2str",
 
 proc sam_parse1*(s: ptr kstring_t; h: ptr bam_hdr_t; b: ptr bam1_t): cint {.cdecl,
     importc: "sam_parse1", dynlib: libname.}
-proc sam_index_load*(`in`: ptr samFile; a3: cstring): ptr hts_idx_t {.cdecl,
+proc sam_index_load*(`in`: ptr samFile; a2: cstring): ptr hts_idx_t {.cdecl,
     importc: "sam_index_load", dynlib: libname.}
 ##  load index
 
 proc bam_index_build*(fn: cstring; min_shift: cint): cint {.cdecl,
     importc: "bam_index_build", dynlib: libname.}
-proc sam_itr_querys*(a2: ptr hts_idx_t; h: ptr bam_hdr_t; region: cstring): ptr hts_itr_t {.
+proc sam_itr_querys*(a1: ptr hts_idx_t; h: ptr bam_hdr_t; region: cstring): ptr hts_itr_t {.
     cdecl, importc: "sam_itr_querys", dynlib: libname.}
 proc sam_itr_queryi*(idx: ptr hts_idx_t; tid: cint; beg: cint; `end`: cint): ptr hts_itr_t {.
     cdecl, importc: "sam_itr_queryi", dynlib: libname.}
@@ -623,7 +623,7 @@ proc faidx_iseq*(fai: ptr faidx_t; i: cint): cstring {.cdecl, importc: "faidx_is
 ## 
 
 type
-  INNER_C_UNION_2213226113* {.bycopy.} = object {.union.}
+  INNER_C_UNION_2133172688* {.bycopy.} = object {.union.}
     i*: int32                  ##  integer value
     f*: cfloat                 ##  float value
   
@@ -653,7 +653,7 @@ type
     key*: cint                 ##  key: numeric tag id, the corresponding string is bcf_hdr_t::id[BCF_DT_ID][$key].key
     `type`*: cint
     len*: cint                 ##  type: one of BCF_BT_* types; len: vector length, 1 for scalars
-    v1*: INNER_C_UNION_2213226113 ##  only set if $len==1; for easier access
+    v1*: INNER_C_UNION_2133172688 ##  only set if $len==1; for easier access
     vptr*: ptr uint8            ##  pointer to data array in bcf1_t->shared.s, excluding the size+type and tag id bytes
     vptr_len*: uint32          ##  length of the vptr block or, when set, of the vptr_mod block, excluding offset
     vptr_off* {.bitsize: 31.}: uint32 ##  vptr offset, i.e., the size of the INFO key plus size+type bytes
@@ -724,6 +724,22 @@ type
   
 
 proc bcf_init*(): ptr bcf1_t {.cdecl, importc: "bcf_init", dynlib: libname.}
+proc bcf_hdr_parse*(hdr: ptr bcf_hdr_t; htxt: cstring): cint {.cdecl,
+    importc: "bcf_hdr_parse", dynlib: libname.}
+## / Appends formatted header text to _str_.
+## * If _is_bcf_ is zero, `IDX` fields are discarded.
+##   @return 0 if successful, or negative if an error occurred
+##   @since 1.4
+## 
+
+proc bcf_hdr_format*(hdr: ptr bcf_hdr_t; is_bcf: cint; str: ptr kstring_t): cint {.cdecl,
+    importc: "bcf_hdr_format", dynlib: libname.}
+proc bcf_hdr_init*(mode: cstring): ptr bcf_hdr_t {.cdecl, importc: "bcf_hdr_init",
+    dynlib: libname.}
+proc bcf_hdr_printf*(h: ptr bcf_hdr_t; format: cstring): cint {.varargs, cdecl,
+    importc: "bcf_hdr_printf", dynlib: libname.}
+proc bcf_hdr_remove*(h: ptr bcf_hdr_t; `type`: cint; key: cstring) {.cdecl,
+    importc: "bcf_hdr_remove", dynlib: libname.}
 template bcf_hdr_nsamples*(hdr: untyped): untyped =
   (hdr).n[BCF_DT_SAMPLE]
 
@@ -803,7 +819,7 @@ proc bcf_index_load*(fn: cstring): ptr hts_idx_t {.cdecl, importc: "bcf_index_lo
 template bcf_itr_queryi*(idx, tid, beg, `end`: untyped): untyped =
   hts_itr_query((idx), (tid), (beg), (`end`), bcf_readrec)
 
-proc bcf_itr_next*(a2: ptr htsFile; iter: ptr hts_itr_t; a4: ptr bcf1_t): cint {.cdecl,
+proc bcf_itr_next*(a1: ptr htsFile; iter: ptr hts_itr_t; a3: ptr bcf1_t): cint {.cdecl,
     importc: "bcf_itr_next", dynlib: libname.}
 proc bcf_readrec*(fp: ptr BGZF; null: pointer; v: pointer; tid: ptr cint; beg: ptr cint;
                  `end`: ptr cint): cint {.cdecl, importc: "bcf_readrec",

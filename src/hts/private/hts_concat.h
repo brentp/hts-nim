@@ -600,6 +600,20 @@ typedef struct {
 
 bcf1_t *bcf_init(void);
 
+int bcf_hdr_parse(bcf_hdr_t *hdr, char *htxt);
+/// Appends formatted header text to _str_.
+/** If _is_bcf_ is zero, `IDX` fields are discarded.
+ *  @return 0 if successful, or negative if an error occurred
+ *  @since 1.4
+ */
+int bcf_hdr_format(const bcf_hdr_t *hdr, int is_bcf, kstring_t *str);
+bcf_hdr_t *bcf_hdr_init(const char *mode);
+
+int bcf_hdr_printf(bcf_hdr_t *h, const char *format, ...);
+void bcf_hdr_remove(bcf_hdr_t *h, int type, const char *key);
+
+
+
 
 #define bcf_hdr_nsamples(hdr) (hdr)->n[BCF_DT_SAMPLE]
 

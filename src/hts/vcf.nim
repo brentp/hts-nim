@@ -14,7 +14,6 @@ type
     c: ptr bcf1_t
     bidx: ptr hts_idx_t
     tidx: ptr tbx_t
-    n_samples*: int ## number of samples in the VCF
     fname: string
 
   Variant* = ref object of RootObj
@@ -70,6 +69,9 @@ proc `[]=`*[T](p: SafeCPtr[T], k: int, val: T) {.inline.} =
 
 var empty_samples: seq[string]
 
+proc n_samples*(v:VCF): int {.inline.} =
+  bcf_hdr_nsamples(v.header.hdr).int
+
 proc set_samples*(v:VCF, samples:seq[string]) =
   ## set the samples that will be decoded
   var isamples = samples
@@ -92,6 +94,23 @@ proc add_string*(h:Header, header:string): Status =
   if ret != 0:
     return Status(ret)
   return Status(bcf_hdr_sync(h.hdr))
+
+proc `$`*(h:Header): string =
+  ## return the string header
+  var str = kstring_t(s:nil, l:0, m:0)
+  if bcf_hdr_format(h.hdr, 0, str.addr) != 0:
+    raise newException(ValueError, "hts-nim/Header/$: error in bcf_hdr_format:")
+  result = $str.s
+  free(str.s)
+
+proc from_string*(h: var Header, s:string) =
+  ## create a new header from a VCF header string.
+  if h == nil:
+      h = Header()
+  if h.hdr == nil:
+      h.hdr = bcf_hdr_init("w".cstring);
+  if bcf_hdr_parse(h.hdr, s.cstring) != 0:
+   raise newException(ValueError, "hts-nim/Header/from_string: error setting header with:" & s)
 
 proc add_info*(h:Header, ID:string, Number:string, Type:string, Description: string): Status =
   ## add an INFO field to the header with the given values
@@ -308,7 +327,6 @@ proc open*(v:var VCF, fname:string, mode:string="r", samples:seq[string]=empty_s
   if samples.len != 0:
     v.set_samples(samples)
 
-  v.n_samples = bcf_hdr_nsamples(v.header.hdr)
   v.c = bcf_init()
 
   if v.c == nil:

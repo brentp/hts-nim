@@ -1,4 +1,5 @@
 import unittest, hts, strutils
+import hts/vcf
 import math
 
 
@@ -148,6 +149,23 @@ suite "vcf suite":
     check global_variant.QUAL == 55
 
 
+  test "new from string":
+    var v:VCF
+    check open(v, "tests/test.vcf.gz")
+    var s = $v.header
+
+    var h: vcf.Header
+    h.from_string(s)
+
+    var o:VCF = VCF()
+    o.header = h
+    echo o.samples == v.samples
+
+    check h.add_string("""##FORMAT=<ID=ASDF,Number=4,Type=Integer,Description="ASDF">""") == Status.OK
+    echo "ASDF" in $h
+
+
+
 suite "genotypes suite":
   test "test alts":
 
@@ -163,6 +181,8 @@ suite "genotypes suite":
       check a[2] == 1
       check a[3] == 1
       check a[4] == -1
+
+
 
   test "unknown alts":
     var v:VCF
