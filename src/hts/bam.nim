@@ -34,6 +34,9 @@ type
 proc finalize_header(h: Header) =
   bam_hdr_destroy(h.hdr)
 
+proc `$`*(h:Header): string =
+    return $h.hdr.text
+
 proc stats*(idx: ptr hts_idx_t, tid: int): IndexStats =
   ## get the stats from the index.
   var v: IndexStats = (0'u64, 0'u64)
