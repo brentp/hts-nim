@@ -1368,6 +1368,8 @@ function main() {
     title="n_samples(v: Variant): int"><wbr />n_<wbr />samples<span class="attachedType" style="visibility:hidden">Variant</span></a></li>
   <li><a class="reference" href="#from_string,Variant,Header,string"
     title="from_string(v: var Variant; h: Header; s: string)"><wbr />from_<wbr />string<span class="attachedType" style="visibility:hidden">Variant</span></a></li>
+  <li><a class="reference" href="#close,VCF"
+    title="close(v: VCF)"><wbr />close<span class="attachedType" style="visibility:hidden">VCF</span></a></li>
   <li><a class="reference" href="#header=,VCF,Header"
     title="header=(v: var VCF; hdr: Header)"><wbr />header=<span class="attachedType" style="visibility:hidden">VCF</span></a></li>
   <li><a class="reference" href="#write_header,VCF"
@@ -1732,6 +1734,11 @@ set the info key with the given int values.
 unequals operator. This is a shorthand for <tt class="docutils literal"><span class="pre">not (x == y)</span></tt>.
 
 </dd>
+<dt id="close"><a name="close,VCF"></a><pre><span class="Keyword">proc</span> <span class="Identifier">close</span><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <span class="Identifier">VCF</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+unequals operator. This is a shorthand for <tt class="docutils literal"><span class="pre">not (x == y)</span></tt>.
+
+</dd>
 <dt id="header="><a name="header=,VCF,Header"></a><pre><span class="Keyword">proc</span> <span class="Identifier">header=</span><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">VCF</span><span class="Other">;</span> <span class="Identifier">hdr</span><span class="Other">:</span> <span class="Identifier">Header</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
@@ -1905,7 +1912,7 @@ iterate over variants in a VCF/BCF for the given region. Each returned Variant h
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small>Made with Nim. Generated: 2018-09-20 18:34:35 UTC</small>
+        <small>Made with Nim. Generated: 2018-09-20 19:17:32 UTC</small>
       </div>
     </div>
   </div>

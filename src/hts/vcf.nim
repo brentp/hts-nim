@@ -318,6 +318,11 @@ proc destroy_vcf(v:VCF) =
   if v.fname != "-" and v.fname != "/dev/stdin" and v.hts != nil:
     discard hts_close(v.hts)
   v.hts = nil
+  bcf_destroy(v.c)
+
+proc close*(v:VCF) =
+  if v.fname != "-" and v.fname != "/dev/stdin" and v.hts != nil:
+    discard hts_close(v.hts)
 
 proc `header=`*(v: var VCF, hdr: Header) =
   v.header = Header(hdr:bcf_hdr_dup(hdr.hdr))
