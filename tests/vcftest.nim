@@ -110,7 +110,7 @@ suite "vcf suite":
     for variant in vcf:
       check variant.format.set("MIN_DP", val) == Status.OK
 
-      check variant.format.ints("MIN_DP", vout) == Status.OK
+      check variant.format.get("MIN_DP", vout) == Status.OK
 
       check vout == val
 

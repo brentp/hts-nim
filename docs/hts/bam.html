@@ -1402,6 +1402,8 @@ function main() {
     title="reference(c: Consume): bool"><wbr />reference<span class="attachedType" style="visibility:hidden">Consume</span></a></li>
   <li><a class="reference" href="#ref_coverage,Cigar,int"
     title="ref_coverage(c: Cigar; ipos: int = 0): seq[Range]"><wbr />ref_<wbr />coverage<span class="attachedType" style="visibility:hidden">Cigar</span></a></li>
+  <li><a class="reference" href="#$,Header"
+    title="`$`(h: Header): string"><wbr />`$`<span class="attachedType" style="visibility:hidden">Header</span></a></li>
   <li><a class="reference" href="#stats,ptr.hts_idx_t,int"
     title="stats(idx: ptr hts_idx_t; tid: int): IndexStats"><wbr />stats<span class="attachedType" style="visibility:hidden">IndexStats</span></a></li>
   <li><a class="reference" href="#copy,Header"
@@ -1847,6 +1849,11 @@ unequals operator. This is a shorthand for <tt class="docutils literal"><span cl
 iterates over the ops in the cigar.
 
 </dd>
+<dt id="$"><a name="$,Header"></a><pre><span class="Keyword">proc</span> <span class="Identifier">`$`</span><span class="Other">(</span><span class="Identifier">h</span><span class="Other">:</span> <span class="Identifier">Header</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+</dd>
 <dt id="stats"><a name="stats,ptr.hts_idx_t,int"></a><pre><span class="Keyword">proc</span> <span class="Identifier">stats</span><span class="Other">(</span><span class="Identifier">idx</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">hts_idx_t</span><span class="Other">;</span> <span class="Identifier">tid</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">IndexStats</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 get the stats from the index.
@@ -2116,7 +2123,7 @@ generate splitters from SA tag.
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small>Made with Nim. Generated: 2018-09-12 14:00:30 UTC</small>
+        <small>Made with Nim. Generated: 2018-09-20 18:34:33 UTC</small>
       </div>
     </div>
   </div>
