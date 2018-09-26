@@ -43,7 +43,7 @@ proc get*(fai: Fai, region: string, start:int=0, stop:int=0): string =
     res = faidx_fetch_seq(fai.cptr, cstring(region), cint(start), cint(stop), rlen.addr)
 
   if int(rlen) == -2:
-    raise newException(ValueError, "sequence " & region & " not found in fasta")
+    raise newException(KeyError, "sequence " & region & " not found in fasta")
   if int(rlen) == -1:
     stderr.write_line("[hts-nim] error reading sequence ", region)
   result = $res
