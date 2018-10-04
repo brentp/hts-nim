@@ -35,6 +35,8 @@ proc `[]`*(fai:Fai, i:int): string {.inline.} =
   result = $cname
 
 proc get*(fai: Fai, region: string, start:int=0, stop:int=0): string =
+  ## get the sequence for the specified region (chr1:10-20) or
+  ## chromosome and start, end, e.g. "chr1", 9, 20
   var rlen: cint
   var res: cstring
   if start == 0 and stop == 0:
