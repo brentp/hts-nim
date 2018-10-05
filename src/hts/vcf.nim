@@ -315,19 +315,24 @@ proc destroy_vcf(v:VCF) =
     tbx_destroy(v.tidx)
   if v.bidx != nil:
     hts_idx_destroy(v.bidx)
+  if v.c != nil:
+    bcf_destroy(v.c)
   if v.fname != "-" and v.fname != "/dev/stdin" and v.hts != nil:
     discard hts_close(v.hts)
-  v.hts = nil
-  bcf_destroy(v.c)
+    v.hts = nil
 
 proc close*(v:VCF) =
   if v.fname != "-" and v.fname != "/dev/stdin" and v.hts != nil:
     if hts_close(v.hts) != 0:
         when defined(debug):
             stderr.write_line "[hts-nim] error closing vcf"
+    v.hts = nil
 
 
 proc `header=`*(v: var VCF, hdr: Header) =
+  v.header = Header(hdr:bcf_hdr_dup(hdr.hdr))
+
+proc copy_header*(v: var VCF, hdr: Header) =
   v.header = Header(hdr:bcf_hdr_dup(hdr.hdr))
 
 proc write_header*(v: VCF): bool =
@@ -357,7 +362,7 @@ proc open*(v:var VCF, fname:string, mode:string="r", samples:seq[string]=empty_s
   if mode[0] == 'r' and 0 != threads and 0 != hts_set_threads(v.hts, cint(threads)):
     raise newException(ValueError, "error setting number of threads")
 
-  
+
   v.header = Header(hdr:bcf_hdr_read(v.hts))
   if samples.len != 0:
     v.set_samples(samples)
