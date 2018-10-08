@@ -137,7 +137,7 @@ proc format*(v:Variant): FORMAT {.inline.} =
 
 proc c_memcpy(a, b: pointer, size: csize) {.importc: "memcpy", header: "<string.h>", inline.}
 
-proc toSeq[T](data: var seq[T], p:pointer, n:int): Status {.inline.} =
+proc toSeq[T](data: var seq[T], p:pointer, n:int) {.inline.} =
   ## helper function to fill a sequence with data from a pointer
   ## `n` is number of elements.
   # this makes a copy but the cost of this over using the underlying directly is only ~10% for 2500 samples and
@@ -145,16 +145,17 @@ proc toSeq[T](data: var seq[T], p:pointer, n:int): Status {.inline.} =
   if data.len != n:
     data.set_len(n)
   c_memcpy(data[0].addr.pointer, p, (n * sizeof(T)).csize)
-  return Status.OK
-
 
 proc get*(f:FORMAT, key:string, data:var seq[int32]): Status {.inline.} =
   ## fill data with integer values for each sample with the given key
+  result = Status.OK
   var n:cint = 0
   var ret = bcf_get_format_values(f.v.vcf.header.hdr, f.v.c, key.cstring,
      f.p.addr, n.addr, BCF_HT_INT.cint)
-  if ret < 0: return Status(ret.int)
-  return toSeq[int32](data, f.p, ret.int)
+  if ret < 0:
+      result = Status(ret.int)
+      return
+  toSeq[int32](data, f.p, ret.int)
 
 proc ints*(f:FORMAT, key:string, data:var seq[int32]): Status {.inline, deprecated:"use FORMAT.get".} =
     return f.get(key, data)
@@ -162,10 +163,13 @@ proc ints*(f:FORMAT, key:string, data:var seq[int32]): Status {.inline, deprecat
 proc get*(f:FORMAT, key:string, data:var seq[float32]): Status {.inline.} =
   ## fill data with integer values for each sample with the given key
   var n:cint = 0
+  result = Status.OK
   var ret = bcf_get_format_values(f.v.vcf.header.hdr, f.v.c, key.cstring,
      f.p.addr, n.addr, BCF_HT_REAL.cint)
-  if ret < 0: return Status(ret.int)
-  return toSeq[float32](data, f.p, ret.int)
+  if ret < 0:
+      result = Status(ret.int)
+      return
+  toSeq[float32](data, f.p, ret.int)
 
 proc floats*(f:FORMAT, key:string, data:var seq[float32]): Status {.inline, deprecated:"use FORMAT.get".} =
   return f.get(key, data)
@@ -188,14 +192,16 @@ proc set*(f:FORMAT, key:string, values: var seq[float32]): Status {.inline.} =
 
 proc get*(i:INFO, key:string, data:var seq[int32]): Status {.inline.} =
   ## fills the given data with ints associated with the key.
+  result = Status.OK
   var n:cint = 0
 
   var ret = bcf_get_info_values(i.v.vcf.header.hdr, i.v.c, key.cstring,
      i.v.p.addr, n.addr, BCF_HT_INT.cint)
   if ret < 0:
-    return Status(ret.int)
+    result = Status(ret.int)
+    return
 
-  return toSeq[int32](data, i.v.p, ret.int)
+  toSeq[int32](data, i.v.p, ret.int)
 
 proc ints*(i:INFO, key:string, data:var seq[int32]): Status {.inline, deprecated:"use i.get".} =
     return i.get(key, data)
@@ -205,13 +211,15 @@ proc get*(i:INFO, key:string, data:var seq[float32]): Status {.inline.} =
   ## in many cases, the user will want only a single value; in that case
   ## data will have length 1 with the single value.
   var n:cint = 0
+  result = Status.OK
 
   var ret = bcf_get_info_values(i.v.vcf.header.hdr, i.v.c, key.cstring,
      i.v.p.addr, n.addr, BCF_HT_REAL.cint)
   if ret < 0:
-    return Status(ret.int)
+    result = Status(ret.int)
+    return
 
-  return toSeq[float32](data, i.v.p, ret.int)
+  toSeq[float32](data, i.v.p, ret.int)
 
 proc floats*(i:INFO, key:string, data:var seq[float32]): Status {.inline, deprecated:"use get".} =
   return i.get(key, data)
@@ -219,18 +227,18 @@ proc floats*(i:INFO, key:string, data:var seq[float32]): Status {.inline, deprec
 proc get*(i:INFO, key:string, data:var string): Status {.inline.} =
   ## fills the data with the value for the key and returns a bool indicating if the key was found.
   var n:cint = 0
+  result = Status.OK
 
   var ret = bcf_get_info_values(i.v.vcf.header.hdr, i.v.c, key.cstring,
      i.v.p.addr, n.addr, BCF_HT_STR.cint)
   if ret < 0:
     if data.len != 0: data.set_len(0)
-    return Status(ret.int)
+    result = Status(ret.int)
   data.set_len(ret.int)
   #var tmp = cast[ptr CArray[char]](i.v.p)
   #for i in 0..<ret.int:
   #  data[i] = tmp[i]
   copyMem(data[0].addr.pointer, i.v.p, ret.int)
-  return Status.OK
 
 proc strings*(i:INFO, key:string, data:var string): Status {.inline, deprecated:"use INFO.get".} =
   ## strings fills the data with the value for the key and returns a bool indicating if the key was found.
@@ -390,15 +398,13 @@ proc CHROM*(v:Variant): cstring {.inline.} =
 iterator items*(v:VCF): Variant =
   ## Each returned Variant has a pointer in the underlying iterator
   ## that is updated each iteration; use .copy to keep it in memory
-  var ret = 0
 
   # all iterables share the same variant
   var variant: Variant
   new(variant, destroy_variant)
 
   while true:
-    ret = bcf_read(v.hts, v.header.hdr, v.c)
-    if ret == -1:
+    if bcf_read(v.hts, v.header.hdr, v.c) == -1:
       break
     #discard bcf_unpack(v.c, 1 or 2 or 4)
     discard bcf_unpack(v.c, BCF_UN_ALL)
@@ -417,7 +423,7 @@ iterator vquery(v:VCF, region:string): Variant =
     stderr.write_line("hts-nim/vcf no index found for " & v.fname)
     quit(2)
 
-  var 
+  var
     read_func:hts_readrec_func = tbx_readrec
     ret = 0
     slen = 0
@@ -427,7 +433,7 @@ iterator vquery(v:VCF, region:string): Variant =
     tid:cint = 0
 
   discard hts_parse_reg(region.cstring, start.addr, stop.addr)
-  var cidx = region.find(":")
+  var cidx = region.find(':')
   if cidx == -1:
     tid = tbx_name2id(v.tidx, region)
   else:
@@ -452,6 +458,7 @@ iterator vquery(v:VCF, region:string): Variant =
   hts_itr_destroy(itr)
   free(s.s)
 
+
 iterator query*(v:VCF, region: string): Variant =
   ## iterate over variants in a VCF/BCF for the given region.
   ## Each returned Variant has a pointer in the underlying iterator
@@ -473,7 +480,7 @@ iterator query*(v:VCF, region: string): Variant =
       read_fn:hts_readrec_func = bcf_readrec
 
     discard hts_parse_reg(region.cstring, start.addr, stop.addr)
-    tid = bcf_hdr_name2id(v.header.hdr, region.split(":")[0].cstring)
+    tid = bcf_hdr_name2id(v.header.hdr, region.split({':'}, maxsplit=1)[0].cstring)
     var itr = hts_itr_query(v.bidx, tid, start, stop, read_fn)
     var ret = 0
     var variant: Variant
