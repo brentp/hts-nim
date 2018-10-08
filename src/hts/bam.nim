@@ -155,7 +155,7 @@ proc qname*(r: Record): string {. inline .} =
   ## `qname` returns the query name.
   return $(bam_get_qname(r.b))
 
-proc flag*(r: Record): Flag =
+proc flag*(r: Record): Flag {.inline.} =
   ## `flag` returns a `Flag` object.
   return Flag(r.b.core.flag)
 
@@ -206,7 +206,7 @@ iterator queryi*(bam: Bam, tid:int, start:int, stop:int): Record =
     hts_itr_destroy(qiter)
     if slen < -1:
       stderr.write_line("[hts-nim] error in bam.queryi:" & $slen)
-  
+ 
 proc `$`*(r: Record): string =
     return format("Record($1:$2-$3):$4", [r.chrom, intToStr(r.start), intToStr(r.stop), r.qname])
 
