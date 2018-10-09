@@ -630,7 +630,7 @@ proc alts*(g:Genotype): int8 {.inline.} =
   if g.len == 2:
     var g0 = g[0].value
     var g1 = g[1].value
-    if g0 > 0 and g1 > 0:
+    if g0 >= 0 and g1 >= 0:
       return int8(g0 + g1)
     # only unknown if both are unknown
     if (g0 == -1 and g1 == -1) or g1 < -1:
@@ -657,7 +657,7 @@ proc alts*(g:Genotype): int8 {.inline.} =
     return -1
   raise newException(OSError, "not implemented for:" & $g)
 
-proc genotypes*(f:FORMAT, gts: var seq[int32]): Genotypes =
+proc genotypes*(f:FORMAT, gts: var seq[int32]): Genotypes {.inline.} =
   ## give sequence of genotypes (using the underlying array given in gts)
   if f.get("GT", gts) != Status.OK:
     return nil
@@ -669,11 +669,15 @@ proc `$`*(gs:Genotypes): string =
     x.add($g)
   return '[' & join(x, ", ") & ']'
 
-proc alts*(gs:Genotypes): seq[int8] =
+
+proc alts*(gs:Genotypes): seq[int8] {.inline.} =
   ## return the number of alternate alleles. Unknown is -1.
-  result = new_seq_of_cap[int8](gs.len)
+  var ret = newSeq[int8](gs.len)
+  var i = 0
   for g in gs:
-    result.add(g.alts)
+    ret[i] = g.alts
+    i += 1
+  return ret
 
 proc `$`*(v:Variant): string =
   return format("Variant($#:$# $#/$#)" % [$v.CHROM, $v.POS, $v.REF, join(v.ALT, ",")])
