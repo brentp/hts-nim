@@ -298,7 +298,10 @@ proc set*(i:INFO, key:string, values:var seq[int32]): Status {.inline.} =
   return Status(ret.int)
 
 proc n_samples*(v:Variant): int {.inline.} =
-  return v.c.n_sample.int
+  return v.vcf.n_samples
+  # see: https://github.com/samtools/htslib/issues/778
+  # NOTE: the value below is not reliable on bcf files where a subset of samples is used.
+  #return v.c.n_sample.int
 
 proc destroy_variant(v:Variant) =
   if v != nil and v.c != nil and v.own:
@@ -489,9 +492,9 @@ iterator query*(v:VCF, region: string): Variant =
         #ret = bcf_itr_next(v.hts, itr, v.c)
         ret = hts_itr_next(v.hts.fp.bgzf, itr, v.c, nil)
         if ret < 0: break
+        discard bcf_unpack(v.c, BCF_UN_ALL)
         variant.c = v.c
         variant.vcf = v
-        discard bcf_unpack(v.c, BCF_UN_ALL)
         yield variant
 
     hts_itr_destroy(itr)
@@ -601,6 +604,7 @@ proc `[]`*(g:Genotypes, i:int): seq[Allele] {.inline.} =
 
 proc len*(g:Genotypes): int {.inline.} =
   ## this should match the number of samples.
+  if g.ploidy == 0: return 0
   return int(len(g.gts) / g.ploidy)
 
 iterator items*(g:Genotypes): Genotype =
@@ -618,6 +622,8 @@ proc `$`*(a:Allele): string {.inline.} =
 proc `$`*(g:Genotype): string {.inline.} =
   ## string representation of a genotype. removes trailing phase value.
   result = join(map(g, proc(a:Allele): string = $a), "")
+  if result.len == 0:
+      return "."
   if result[result.len - 1] in {'/', '|', '$'}:
     result.set_len(result.len - 1)
 

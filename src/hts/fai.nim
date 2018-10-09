@@ -34,19 +34,25 @@ proc `[]`*(fai:Fai, i:int): string {.inline.} =
   var cname = faidx_iseq(fai.cptr, i.cint)
   result = $cname
 
-proc get*(fai: Fai, region: string, start:int=0, stop:int=0): string =
+proc cget*(fai:Fai, region:string, start:int=0, stop:int=0): cstring {.inline.} =
   ## get the sequence for the specified region (chr1:10-20) or
   ## chromosome and start, end, e.g. "chr1", 9, 20
+  ## the user is responsible for freeing the result.
   var rlen: cint
   var res: cstring
   if start == 0 and stop == 0:
-    res = fai_fetch(fai.cptr, cstring(region), rlen.addr)
+    result = fai_fetch(fai.cptr, cstring(region), rlen.addr)
   else:
-    res = faidx_fetch_seq(fai.cptr, cstring(region), cint(start), cint(stop), rlen.addr)
+    result = faidx_fetch_seq(fai.cptr, cstring(region), cint(start), cint(stop), rlen.addr)
 
   if int(rlen) == -2:
     raise newException(KeyError, "sequence " & region & " not found in fasta")
   if int(rlen) == -1:
     stderr.write_line("[hts-nim] error reading sequence ", region)
+
+proc get*(fai: Fai, region: string, start:int=0, stop:int=0): string =
+  ## get the sequence for the specified region (chr1:10-20) or
+  ## chromosome and start, end, e.g. "chr1", 9, 20
+  var res = fai.cget(region, start, stop)
   result = $res
   free(res)
