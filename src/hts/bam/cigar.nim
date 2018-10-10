@@ -28,7 +28,7 @@ proc `[]=`*[T](p: SafeCPtr[T], k: int, val: T) =
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 type
-  Cigar* = ref object of RootObj
+  Cigar* = ref object
     ## `Cigar` represents ths SAM Cigar type. It consists of one or more `CigarElement` s.
     cig: SafeCPtr[uint32]
     n: uint32
@@ -41,11 +41,11 @@ type CigarOp* {.pure.} = enum
   match, insert, deletion, ref_skip, soft_clip, hard_clip, pad, equal, diff, back
 
 proc newCigar(p: ptr uint32, n: uint32): Cigar {.inline.} =
-  return Cigar(cig: safe(cast[CPtr[uint32]](p), int(n)), n:n)
+  result = Cigar(cig: safe(cast[CPtr[uint32]](p), int(n)), n:n)
 
 proc len*(c: Cigar): int {. inline .} =
   ## returns the number of operations in the cigar.
-  return int(c.n)
+  result = int(c.n)
 
 proc `[]`*(c:Cigar, i:int): CigarElement {.inline.} =
   return CigarElement(c.cig[i])
@@ -59,15 +59,15 @@ template bam_get_cigar*(b: untyped): untyped =
   (cast[ptr uint32](((cast[int]((b).data)) + cast[int]((b).core.l_qname))))
 
 proc bam_cigar_type(o: CigarOp): uint8 {.inline.} =
-  return uint8(BAM_CIGAR_TYPE shr (uint32(o) shl 1) and 3)
+  result = uint8(BAM_CIGAR_TYPE shr (uint32(o) shl 1) and 3)
 
 proc op*(o: CigarElement): CigarOp {.inline.} =
   ## `op` gives the operation of the cigar.
-  return CigarOp(uint8(uint32(o) and BAM_CIGAR_MASK))
+  result = CigarOp(uint8(uint32(o) and BAM_CIGAR_MASK))
 
 proc len*(o: CigarElement): int {. inline .} =
   ## `len` gives the length of the cigar op.
-  return int(uint32(o) shr BAM_CIGAR_SHIFT)
+  result = int(uint32(o) shr BAM_CIGAR_SHIFT)
 
 proc `$`*(o: CigarElement): string =
   ## shows the string representation of the cigar element.
@@ -82,15 +82,15 @@ proc `$`*(c: Cigar): string =
   return s
 
 proc consumes*(o: CigarElement): Consume {. inline .} =
-  return Consume(bam_cigar_type(o.op))
+  result = Consume(bam_cigar_type(o.op))
 
 proc query*(c: Consume): bool {. inline .} =
   # returns true if the op consumes bases in the query.
-  return (uint32(c) and uint8(1)) != 0
+  result = (uint32(c) and uint8(1)) != 0
 
 proc reference*(c: Consume): bool {. inline .} =
   # returns true if the op consumes bases in the reference.
-  return (uint32(c) and uint8(2)) != 0
+  result = (uint32(c) and uint8(2)) != 0
 
 type
   Range* = tuple[start: int, stop: int]

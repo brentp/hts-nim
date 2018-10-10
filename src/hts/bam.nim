@@ -161,7 +161,7 @@ proc flag*(r: Record): Flag {.inline.} =
 
 proc cigar*(r: Record): Cigar {.inline.} =
   ## `cigar` returns a `Cigar` object.
-  return newCigar(bam_get_cigar(r.b), r.b.core.n_cigar)
+  result = newCigar(bam_get_cigar(r.b), r.b.core.n_cigar)
 
 iterator querys*(bam: Bam, region: string): Record =
   ## query iterates over the given region. A single element is used and
