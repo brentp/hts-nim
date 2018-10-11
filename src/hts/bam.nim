@@ -236,8 +236,10 @@ proc tostring*(r: Record): string =
 
 proc finalize_bam(bam: Bam) =
   if bam.idx != nil:
-      hts_idx_destroy(bam.idx)
-  discard hts_close(bam.hts)
+    hts_idx_destroy(bam.idx)
+  if bam.hts != nil:
+    discard hts_close(bam.hts)
+    bam.hts = nil
 
 proc finalize_record(rec: Record) =
   bam_destroy1(rec.b)
@@ -257,6 +259,7 @@ proc write*(bam: var Bam, rec: Record) {.inline.} =
 
 proc close*(bam: Bam) =
   discard hts_close(bam.hts)
+  bam.hts = nil
 
 proc NewRecord*(h:Header): Record =
   ## create a new bam record and associate it with the header
