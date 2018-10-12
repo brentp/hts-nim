@@ -298,10 +298,7 @@ proc set*(i:INFO, key:string, values:var seq[int32]): Status {.inline.} =
   return Status(ret.int)
 
 proc n_samples*(v:Variant): int {.inline.} =
-  return v.vcf.n_samples
-  # see: https://github.com/samtools/htslib/issues/778
-  # NOTE: the value below is not reliable on bcf files where a subset of samples is used.
-  #return v.c.n_sample.int
+  return v.c.n_sample.int
 
 proc destroy_variant(v:Variant) =
   if v != nil and v.c != nil and v.own:
@@ -493,6 +490,9 @@ iterator query*(v:VCF, region: string): Variant =
         ret = hts_itr_next(v.hts.fp.bgzf, itr, v.c, nil)
         if ret < 0: break
         discard bcf_unpack(v.c, BCF_UN_ALL)
+        if bcf_subset_format(v.header.hdr, v.c) != 0:
+            stderr.write_line "[hts-nim/vcf] error with bcf subset format"
+            break
         variant.c = v.c
         variant.vcf = v
         yield variant
