@@ -57,16 +57,18 @@ proc from_string*(h:Header, header_string:string) =
         raise newException(ValueError, "error parsing header string:" & header_string)
 
 proc from_string*(r:Record, record_string:string) =
-    ## update the record with the given SAM record.
+    ## update the record with the given SAM record. note that this does
+    ## not make a copy of `record_string and will modify the string in-place.
     if r.hdr == nil:
-        raise newException(ValueError, "must set header for record before calling from_string")
+      raise newException(ValueError, "must set header for record before calling from_string")
     if r.b == nil:
-        raise newException(ValueError, "must create record with NewRecord before calling from_string")
+      raise newException(ValueError, "must create record with NewRecord before calling from_string")
 
 
     var kstr = kstring_t(s:record_string.cstring, m:record_string.len, l:record_string.len)
-    if sam_parse1(kstr.addr, r.hdr.hdr, r.b) != 0:
-        raise newException(ValueError, "error in from_string parsing record: " & record_string)
+    var ret = sam_parse1(kstr.addr, r.hdr.hdr, r.b)
+    if ret != 0:
+      raise newException(ValueError, "error:" & $ret & " in from_string parsing record: " & record_string)
 
 template bam_get_seq(b: untyped): untyped =
   cast[CPtr[uint8]](cast[uint]((b).data) + uint(((b).core.n_cigar shl 2) + (b).core.l_qname))
