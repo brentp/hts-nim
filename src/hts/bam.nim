@@ -89,7 +89,7 @@ proc base_at*(r:Record, i:int): char {.inline.} =
   var bseq = bam_get_seq(r.b)
   return "=ACMGRSVTWYHKDBN"[int(uint8(bseq[i shr 1]) shr uint8((not (i) and 1) shl 2) and uint8(0xF))]
 
-template bam_get_qual(b: untyped): untyped =
+template bam_get_qual*(b: untyped): untyped =
   cast[CPtr[uint8]](cast[uint]((b).data) + uint(uint((b).core.n_cigar shl 2) + uint((b).core.l_qname) + uint((b.core.l_qseq + 1) shr 1)))
 
 proc base_qualities*(r: Record, q: var seq[uint8]): seq[uint8] =
@@ -365,21 +365,17 @@ proc stop*(s: Splitter): int {.inline.} =
 proc `$`*(s: Splitter): string =
   return format("Splitter($# $#..$# ($#))" % [s.chrom, $s.start, $s.stop, s.cigar])
 
-iterator splitters*(r: Record, tag:string="SA"): Splitter =
+iterator splitters*(r: Record, atag:string="SA"): Splitter =
   ## generate splitters from SA tag.
-  var aux = r.aux(tag)
-  if aux != nil:
-    var splo = aux.asString
-    var spls = ";"
-    if splo.isSome:
-      spls = splo.get
-    if spls.len != 1:
-      for s in spls[0..<len(spls)-1].split(";"):
-        var toks = s.split(",")
-        if len(toks) == 4: # XA == chr,[strand]pos,CIGAR,NM
-          yield Splitter(aln:r, chrom: toks[0], start: -1 + parseInt(toks[1][1..<len(toks[1])]), cigar: toks[2], NM:uint16(parseInt(toks[3])))
-        else:
-          yield Splitter(aln:r, chrom:toks[0], start: -1 + parseInt(toks[1]), cigar: toks[3],
+  var aux = tag[string](r, atag)
+  if aux.isSome:
+    var spls = aux.get
+    for s in spls[0..<len(spls)-1].split(";"):
+      var toks = s.split(",")
+      if len(toks) == 4: # XA == chr,[strand]pos,CIGAR,NM
+        yield Splitter(aln:r, chrom: toks[0], start: -1 + parseInt(toks[1][1..<len(toks[1])]), cigar: toks[2], NM:uint16(parseInt(toks[3])))
+      else:
+        yield Splitter(aln:r, chrom:toks[0], start: -1 + parseInt(toks[1]), cigar: toks[3],
                            qual: uint8(parseInt(toks[4])),
                            NM: uint16(parseInt(toks[5])))
 

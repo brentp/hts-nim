@@ -446,6 +446,8 @@ proc bam_aux2i*(s: ptr uint8): int32 {.cdecl, importc: "bam_aux2i", dynlib: libn
 proc bam_aux2f*(s: ptr uint8): cfloat {.cdecl, importc: "bam_aux2f", dynlib: libname.}
 proc bam_aux2Z*(s: ptr uint8): cstring {.cdecl, importc: "bam_aux2Z", dynlib: libname.}
 proc bam_aux2A*(s: ptr uint8): char {.cdecl, importc: "bam_aux2A", dynlib: libname.}
+proc bam_aux_del*(b: ptr bam1_t; s: ptr uint8): cint {.cdecl, importc: "bam_aux_del",
+    dynlib: libname.}
 proc bam_copy1*(bdst: ptr bam1_t; bsrc: ptr bam1_t): ptr bam1_t {.cdecl,
     importc: "bam_copy1", dynlib: libname.}
 proc bam_dup1*(bsrc: ptr bam1_t): ptr bam1_t {.cdecl, importc: "bam_dup1",
@@ -623,7 +625,7 @@ proc faidx_iseq*(fai: ptr faidx_t; i: cint): cstring {.cdecl, importc: "faidx_is
 ## 
 
 type
-  INNER_C_UNION_2133172688* {.bycopy.} = object {.union.}
+  INNER_C_UNION_3694347086* {.bycopy.} = object {.union.}
     i*: int32                  ##  integer value
     f*: cfloat                 ##  float value
   
@@ -653,7 +655,7 @@ type
     key*: cint                 ##  key: numeric tag id, the corresponding string is bcf_hdr_t::id[BCF_DT_ID][$key].key
     `type`*: cint
     len*: cint                 ##  type: one of BCF_BT_* types; len: vector length, 1 for scalars
-    v1*: INNER_C_UNION_2133172688 ##  only set if $len==1; for easier access
+    v1*: INNER_C_UNION_3694347086 ##  only set if $len==1; for easier access
     vptr*: ptr uint8            ##  pointer to data array in bcf1_t->shared.s, excluding the size+type and tag id bytes
     vptr_len*: uint32          ##  length of the vptr block or, when set, of the vptr_mod block, excluding offset
     vptr_off* {.bitsize: 31.}: uint32 ##  vptr offset, i.e., the size of the INFO key plus size+type bytes
