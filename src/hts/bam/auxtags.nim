@@ -11,7 +11,7 @@ proc delete_tag*(r:Record, itag:string): bool {.inline.} =
   return bam_aux_del(r.b, b) == 0
 
 
-proc tag*[T: int|float|string|char](r:Record, itag:string): Option[T] =
+proc tag*[T: int|float|string|char|cstring](r:Record, itag:string): Option[T] =
   ## Get the aux tag from the record.
   ## Due to `nim` language limitations, this must be used as, e.g.:
   ## `tag[int](rec, "NM")`. It will return `none` if the tag does
@@ -39,6 +39,9 @@ proc tag*[T: int|float|string|char](r:Record, itag:string): Option[T] =
     of 'Z', 'H':
       when T is string:
         var z = $bam_aux2Z(b)
+        return some(z)
+      when T is cstring:
+        var z = bam_aux2Z(b)
         return some(z)
       return none(T)
     of 'A':
