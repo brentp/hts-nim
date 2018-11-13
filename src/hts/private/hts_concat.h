@@ -358,6 +358,8 @@ int32_t bam_aux2i(const uint8_t *s);
 float bam_aux2f(const uint8_t *s);
 char *bam_aux2Z(const uint8_t *s);
 char bam_aux2A(const uint8_t *s);
+int bam_aux_del(bam1_t *b, uint8_t *s);
+
 
 bam1_t *bam_copy1(bam1_t *bdst, const bam1_t *bsrc);
 bam1_t *bam_dup1(const bam1_t *bsrc);
@@ -600,6 +602,22 @@ typedef struct {
 
 bcf1_t *bcf_init(void);
 
+int bcf_hdr_parse(bcf_hdr_t *hdr, char *htxt);
+/// Appends formatted header text to _str_.
+/** If _is_bcf_ is zero, `IDX` fields are discarded.
+ *  @return 0 if successful, or negative if an error occurred
+ *  @since 1.4
+ */
+int bcf_hdr_format(const bcf_hdr_t *hdr, int is_bcf, kstring_t *str);
+bcf_hdr_t *bcf_hdr_init(const char *mode);
+
+int bcf_hdr_printf(bcf_hdr_t *h, const char *format, ...);
+void bcf_hdr_remove(bcf_hdr_t *h, int type, const char *key);
+
+
+
+
+
 
 #define bcf_hdr_nsamples(hdr) (hdr)->n[BCF_DT_SAMPLE]
 
@@ -649,6 +667,7 @@ void bcf_destroy(bcf1_t *v);
 int bcf_update_info(const bcf_hdr_t *hdr, bcf1_t *line, const char *key, const void *values, int n, int type);
 
 int bcf_hdr_set_samples(bcf_hdr_t *hdr, const char *samples, int is_file);
+int bcf_subset_format(const bcf_hdr_t *hdr, bcf1_t *rec);
 int bcf_get_genotypes(const bcf_hdr_t *hdr, bcf1_t *line, int **dst, int *ndst);
 int bcf_get_format_values(const bcf_hdr_t *hdr, bcf1_t *line, const char *tag, void **dst, int *ndst, int type);
 //typedef htsFile vcfFile;

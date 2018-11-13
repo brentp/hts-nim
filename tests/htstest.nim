@@ -16,7 +16,7 @@ suite "flag hts-suite":
 
       if rec.cigar.len() > 0:
         check uint32(rec.copy().cigar[0]) == uint32(rec.cigar[0])
-      check rec.base_qualities(bqs) != nil
+      check rec.base_qualities(bqs).len != 0
       for v in bqs:
         check v > 0'u8 and v < 100'u8
       if i == 0:

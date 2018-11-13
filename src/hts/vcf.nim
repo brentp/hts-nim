@@ -14,7 +14,6 @@ type
     c: ptr bcf1_t
     bidx: ptr hts_idx_t
     tidx: ptr tbx_t
-    n_samples*: int ## number of samples in the VCF
     fname: string
 
   Variant* = ref object of RootObj
@@ -68,12 +67,15 @@ proc `[]=`*[T](p: SafeCPtr[T], k: int, val: T) {.inline.} =
     assert k < p.size
   p.mem[k] = val
 
-const empty_samples: seq[string] = nil
+var empty_samples: seq[string]
+
+proc n_samples*(v:VCF): int {.inline.} =
+  bcf_hdr_nsamples(v.header.hdr).int
 
 proc set_samples*(v:VCF, samples:seq[string]) =
   ## set the samples that will be decoded
   var isamples = samples
-  if isamples == nil:
+  if isamples.len == 0:
     isamples = @["-"]
   var sample_str = join(isamples, ",")
   var ret = bcf_hdr_set_samples(v.header.hdr, sample_str.cstring, 0)
@@ -92,6 +94,25 @@ proc add_string*(h:Header, header:string): Status =
   if ret != 0:
     return Status(ret)
   return Status(bcf_hdr_sync(h.hdr))
+
+proc `$`*(h:Header): string =
+  ## return the string header
+  var str = kstring_t(s:nil, l:0, m:0)
+  if bcf_hdr_format(h.hdr, 0, str.addr) != 0:
+    raise newException(ValueError, "hts-nim/Header/$: error in bcf_hdr_format:")
+  result = $str.s
+  free(str.s)
+
+proc from_string*(h: var Header, s:string) =
+  ## create a new header from a VCF header string.
+  if h == nil:
+      h = Header()
+  if h.hdr == nil:
+      h.hdr = bcf_hdr_init("w".cstring);
+  if bcf_hdr_parse(h.hdr, s.cstring) != 0:
+   raise newException(ValueError, "hts-nim/Header/from_string: error setting header with:" & s)
+  if bcf_hdr_sync(h.hdr) != 0:
+   raise newException(ValueError, "hts-nim/Header/from_string: error setting header with:" & s)
 
 proc add_info*(h:Header, ID:string, Number:string, Type:string, Description: string): Status =
   ## add an INFO field to the header with the given values
@@ -116,45 +137,42 @@ proc format*(v:Variant): FORMAT {.inline.} =
 
 proc c_memcpy(a, b: pointer, size: csize) {.importc: "memcpy", header: "<string.h>", inline.}
 
-proc toSeq[T](data: var seq[T], p:pointer, n:int): Status {.inline.} =
+proc toSeq[T](data: var seq[T], p:pointer, n:int) {.inline.} =
   ## helper function to fill a sequence with data from a pointer
   ## `n` is number of elements.
   # this makes a copy but the cost of this over using the underlying directly is only ~10% for 2500 samples and
   # < 2% for 3 samples.
   if data.len != n:
-    if data != nil:
-      data.set_len(n)
-    else:
-      data = new_seq[T](n)
+    data.set_len(n)
   c_memcpy(data[0].addr.pointer, p, (n * sizeof(T)).csize)
-  return Status.OK
 
-proc ints*(f:FORMAT, key:string, data:var seq[int32]): Status {.inline.} =
+proc get*(f:FORMAT, key:string, data:var seq[int32]): Status {.inline.} =
   ## fill data with integer values for each sample with the given key
+  result = Status.OK
   var n:cint = 0
   var ret = bcf_get_format_values(f.v.vcf.header.hdr, f.v.c, key.cstring,
      f.p.addr, n.addr, BCF_HT_INT.cint)
-  if ret < 0: return Status(ret.int)
-  return toSeq[int32](data, f.p, ret.int)
+  if ret < 0:
+      result = Status(ret.int)
+      return
+  toSeq[int32](data, f.p, ret.int)
 
-proc floats*(f:FORMAT, key:string, data:var seq[float32]): Status =
+proc ints*(f:FORMAT, key:string, data:var seq[int32]): Status {.inline, deprecated:"use FORMAT.get".} =
+    return f.get(key, data)
+
+proc get*(f:FORMAT, key:string, data:var seq[float32]): Status {.inline.} =
   ## fill data with integer values for each sample with the given key
   var n:cint = 0
+  result = Status.OK
   var ret = bcf_get_format_values(f.v.vcf.header.hdr, f.v.c, key.cstring,
      f.p.addr, n.addr, BCF_HT_REAL.cint)
-  if ret < 0: return Status(ret.int)
-  return toSeq[float32](data, f.p, ret.int)
-
-proc ints*(i:INFO, key:string, data:var seq[int32]): Status {.inline.} =
-  ## ints fills the given data with ints associated with the key.
-  var n:cint = 0
-
-  var ret = bcf_get_info_values(i.v.vcf.header.hdr, i.v.c, key.cstring,
-     i.v.p.addr, n.addr, BCF_HT_INT.cint)
   if ret < 0:
-    return Status(ret.int)
+      result = Status(ret.int)
+      return
+  toSeq[float32](data, f.p, ret.int)
 
-  return toSeq[int32](data, i.v.p, ret.int)
+proc floats*(f:FORMAT, key:string, data:var seq[float32]): Status {.inline, deprecated:"use FORMAT.get".} =
+  return f.get(key, data)
 
 proc set*(f:FORMAT, key:string, values: var seq[int32]): Status {.inline.} =
   ## set the sample fields. values must be a multiple of number of samples.
@@ -170,34 +188,61 @@ proc set*(f:FORMAT, key:string, values: var seq[float32]): Status {.inline.} =
   var ret = bcf_update_format(f.v.vcf.header.hdr, f.v.c, key.cstring, values[0].addr.pointer, values.len.cint, BCF_HT_REAL.cint)
   return Status(ret.int)
 
-proc floats*(i:INFO, key:string, data:var seq[float32]): Status {.inline.} =
-  ## floats fills the given data with ints associated with the key.
+
+
+proc get*(i:INFO, key:string, data:var seq[int32]): Status {.inline.} =
+  ## fills the given data with ints associated with the key.
+  result = Status.OK
+  var n:cint = 0
+
+  var ret = bcf_get_info_values(i.v.vcf.header.hdr, i.v.c, key.cstring,
+     i.v.p.addr, n.addr, BCF_HT_INT.cint)
+  if ret < 0:
+    result = Status(ret.int)
+    return
+
+  toSeq[int32](data, i.v.p, ret.int)
+
+proc ints*(i:INFO, key:string, data:var seq[int32]): Status {.inline, deprecated:"use i.get".} =
+    return i.get(key, data)
+
+proc get*(i:INFO, key:string, data:var seq[float32]): Status {.inline.} =
+  ## fills the given data with ints associated with the key.
   ## in many cases, the user will want only a single value; in that case
   ## data will have length 1 with the single value.
   var n:cint = 0
+  result = Status.OK
 
   var ret = bcf_get_info_values(i.v.vcf.header.hdr, i.v.c, key.cstring,
      i.v.p.addr, n.addr, BCF_HT_REAL.cint)
   if ret < 0:
-    return Status(ret.int)
+    result = Status(ret.int)
+    return
 
-  return toSeq[float32](data, i.v.p, ret.int)
+  toSeq[float32](data, i.v.p, ret.int)
 
-proc strings*(i:INFO, key:string, data:var string): Status {.inline.} =
-  ## strings fills the data with the value for the key and returns a bool indicating if the key was found.
+proc floats*(i:INFO, key:string, data:var seq[float32]): Status {.inline, deprecated:"use get".} =
+  return i.get(key, data)
+
+proc get*(i:INFO, key:string, data:var string): Status {.inline.} =
+  ## fills the data with the value for the key and returns a bool indicating if the key was found.
   var n:cint = 0
+  result = Status.OK
 
   var ret = bcf_get_info_values(i.v.vcf.header.hdr, i.v.c, key.cstring,
      i.v.p.addr, n.addr, BCF_HT_STR.cint)
   if ret < 0:
     if data.len != 0: data.set_len(0)
-    return Status(ret.int)
+    result = Status(ret.int)
   data.set_len(ret.int)
   #var tmp = cast[ptr CArray[char]](i.v.p)
   #for i in 0..<ret.int:
   #  data[i] = tmp[i]
   copyMem(data[0].addr.pointer, i.v.p, ret.int)
-  return Status.OK
+
+proc strings*(i:INFO, key:string, data:var string): Status {.inline, deprecated:"use INFO.get".} =
+  ## strings fills the data with the value for the key and returns a bool indicating if the key was found.
+  return i.get(key, data)
 
 proc has_flag*(i:INFO, key:string): bool {.inline.} =
   ## return indicates whether the flag is found in the INFO.
@@ -262,21 +307,40 @@ proc destroy_variant(v:Variant) =
   if v.p != nil:
     free(v.p)
 
+proc from_string*(v: var Variant, h: Header, s:string) =
+  var str = kstring_t(s:s.cstring, l:s.len, m:s.len)
+  if v == nil:
+    new(v, destroy_variant)
+  if v.c == nil:
+    v.c = bcf_init()
+
+  if vcf_parse(str.addr, h.hdr, v.c) != 0:
+   raise newException(ValueError, "hts-nim/Variant/from_string: error parsing variant:" & s)
+
 proc destroy_vcf(v:VCF) =
   bcf_hdr_destroy(v.header.hdr)
   if v.tidx != nil:
     tbx_destroy(v.tidx)
   if v.bidx != nil:
     hts_idx_destroy(v.bidx)
+  if v.c != nil:
+    bcf_destroy(v.c)
   if v.fname != "-" and v.fname != "/dev/stdin" and v.hts != nil:
     discard hts_close(v.hts)
-  bcf_destroy(v.c)
+    v.hts = nil
 
 proc close*(v:VCF) =
-  discard hts_close(v.hts)
-  v.hts = nil
+  if v.fname != "-" and v.fname != "/dev/stdin" and v.hts != nil:
+    if hts_close(v.hts) != 0:
+        when defined(debug):
+            stderr.write_line "[hts-nim] error closing vcf"
+    v.hts = nil
+
 
 proc `header=`*(v: var VCF, hdr: Header) =
+  v.header = Header(hdr:bcf_hdr_dup(hdr.hdr))
+
+proc copy_header*(v: var VCF, hdr: Header) =
   v.header = Header(hdr:bcf_hdr_dup(hdr.hdr))
 
 proc write_header*(v: VCF): bool =
@@ -306,12 +370,11 @@ proc open*(v:var VCF, fname:string, mode:string="r", samples:seq[string]=empty_s
   if mode[0] == 'r' and 0 != threads and 0 != hts_set_threads(v.hts, cint(threads)):
     raise newException(ValueError, "error setting number of threads")
 
-  
+
   v.header = Header(hdr:bcf_hdr_read(v.hts))
-  if samples != nil and samples != empty_samples:
+  if samples.len != 0:
     v.set_samples(samples)
 
-  v.n_samples = bcf_hdr_nsamples(v.header.hdr)
   v.c = bcf_init()
 
   if v.c == nil:
@@ -335,15 +398,13 @@ proc CHROM*(v:Variant): cstring {.inline.} =
 iterator items*(v:VCF): Variant =
   ## Each returned Variant has a pointer in the underlying iterator
   ## that is updated each iteration; use .copy to keep it in memory
-  var ret = 0
 
   # all iterables share the same variant
   var variant: Variant
   new(variant, destroy_variant)
 
   while true:
-    ret = bcf_read(v.hts, v.header.hdr, v.c)
-    if ret == -1:
+    if bcf_read(v.hts, v.header.hdr, v.c) == -1:
       break
     #discard bcf_unpack(v.c, 1 or 2 or 4)
     discard bcf_unpack(v.c, BCF_UN_ALL)
@@ -362,7 +423,7 @@ iterator vquery(v:VCF, region:string): Variant =
     stderr.write_line("hts-nim/vcf no index found for " & v.fname)
     quit(2)
 
-  var 
+  var
     read_func:hts_readrec_func = tbx_readrec
     ret = 0
     slen = 0
@@ -372,7 +433,7 @@ iterator vquery(v:VCF, region:string): Variant =
     tid:cint = 0
 
   discard hts_parse_reg(region.cstring, start.addr, stop.addr)
-  var cidx = region.find(":")
+  var cidx = region.find(':')
   if cidx == -1:
     tid = tbx_name2id(v.tidx, region)
   else:
@@ -397,6 +458,7 @@ iterator vquery(v:VCF, region:string): Variant =
   hts_itr_destroy(itr)
   free(s.s)
 
+
 iterator query*(v:VCF, region: string): Variant =
   ## iterate over variants in a VCF/BCF for the given region.
   ## Each returned Variant has a pointer in the underlying iterator
@@ -418,7 +480,7 @@ iterator query*(v:VCF, region: string): Variant =
       read_fn:hts_readrec_func = bcf_readrec
 
     discard hts_parse_reg(region.cstring, start.addr, stop.addr)
-    tid = bcf_hdr_name2id(v.header.hdr, region.split(":")[0].cstring)
+    tid = bcf_hdr_name2id(v.header.hdr, region.split({':'}, maxsplit=1)[0].cstring)
     var itr = hts_itr_query(v.bidx, tid, start, stop, read_fn)
     var ret = 0
     var variant: Variant
@@ -427,9 +489,12 @@ iterator query*(v:VCF, region: string): Variant =
         #ret = bcf_itr_next(v.hts, itr, v.c)
         ret = hts_itr_next(v.hts.fp.bgzf, itr, v.c, nil)
         if ret < 0: break
+        discard bcf_unpack(v.c, BCF_UN_ALL)
+        if bcf_subset_format(v.header.hdr, v.c) != 0:
+            stderr.write_line "[hts-nim/vcf] error with bcf subset format"
+            break
         variant.c = v.c
         variant.vcf = v
-        discard bcf_unpack(v.c, BCF_UN_ALL)
         yield variant
 
     hts_itr_destroy(itr)
@@ -539,6 +604,7 @@ proc `[]`*(g:Genotypes, i:int): seq[Allele] {.inline.} =
 
 proc len*(g:Genotypes): int {.inline.} =
   ## this should match the number of samples.
+  if g.ploidy == 0: return 0
   return int(len(g.gts) / g.ploidy)
 
 iterator items*(g:Genotypes): Genotype =
@@ -556,6 +622,8 @@ proc `$`*(a:Allele): string {.inline.} =
 proc `$`*(g:Genotype): string {.inline.} =
   ## string representation of a genotype. removes trailing phase value.
   result = join(map(g, proc(a:Allele): string = $a), "")
+  if result.len == 0:
+      return "."
   if result[result.len - 1] in {'/', '|', '$'}:
     result.set_len(result.len - 1)
 
@@ -568,7 +636,7 @@ proc alts*(g:Genotype): int8 {.inline.} =
   if g.len == 2:
     var g0 = g[0].value
     var g1 = g[1].value
-    if g0 > 0 and g1 > 0:
+    if g0 >= 0 and g1 >= 0:
       return int8(g0 + g1)
     # only unknown if both are unknown
     if (g0 == -1 and g1 == -1) or g1 < -1:
@@ -595,9 +663,9 @@ proc alts*(g:Genotype): int8 {.inline.} =
     return -1
   raise newException(OSError, "not implemented for:" & $g)
 
-proc genotypes*(f:FORMAT, gts: var seq[int32]): Genotypes =
+proc genotypes*(f:FORMAT, gts: var seq[int32]): Genotypes {.inline.} =
   ## give sequence of genotypes (using the underlying array given in gts)
-  if f.ints("GT", gts) != Status.OK:
+  if f.get("GT", gts) != Status.OK:
     return nil
   result = Genotypes(gts: gts, ploidy: int(gts.len/f.v.n_samples))
 
@@ -607,11 +675,15 @@ proc `$`*(gs:Genotypes): string =
     x.add($g)
   return '[' & join(x, ", ") & ']'
 
-proc alts*(gs:Genotypes): seq[int8] =
+
+proc alts*(gs:Genotypes): seq[int8] {.inline.} =
   ## return the number of alternate alleles. Unknown is -1.
-  result = new_seq_of_cap[int8](gs.len)
+  var ret = newSeq[int8](gs.len)
+  var i = 0
   for g in gs:
-    result.add(g.alts)
+    ret[i] = g.alts
+    i += 1
+  return ret
 
 proc `$`*(v:Variant): string =
   return format("Variant($#:$# $#/$#)" % [$v.CHROM, $v.POS, $v.REF, join(v.ALT, ",")])
@@ -632,7 +704,8 @@ when isMainModule:
     var v:VCF
     if k mod 200 == 0:
       stderr.write_line $k
-    discard open(v, "tests/test.vcf.gz", samples=tsamples)
+    if not open(v, "tests/test.vcf.gz", samples=tsamples):
+        quit "couldn't open file"
     var ac = new_seq[int32](10)
     var af = new_seq[float32](10)
     var dps = new_seq[int32](20)
@@ -643,17 +716,22 @@ when isMainModule:
       if rec.n_samples != tsamples.len:
         quit(2)
       echo rec.tostring()
-      discard rec.info.ints("AC", ac)
-      discard rec.info.floats("AF", af)
-      discard rec.info.strings("CSQ", csq)
+      if rec.info.get("AC", ac) != Status.OK:
+          quit "couldn't get AC"
+      if rec.info.get("AF", af) != Status.OK:
+          quit "couldn't get CSQ"
+      if rec.info.get("CSQ", csq) != Status.OK:
+          quit "couldn't get AF"
       echo rec, " qual:", rec.QUAL, " filter:", rec.FILTER, "  AC (int):",  ac, " AF(float):", af, " CSQ:", csq
       if rec.info.has_flag("in_exac_flag"):
         echo "FOUND"
       var f = rec.format()
-      discard f.ints("DP", dps)
-      discard f.ints("AD", ads)
+      if f.get("DP", dps) != Status.OK:
+          quit "couldn't get DP"
+      if f.get("AD", ads) != Status.OK:
+          quit "couldn't get DP"
       echo dps, " ads:", ads
-      if f.floats("BAD", bad) != Status.UndefinedTag:
+      if f.get("BAD", bad) != Status.UndefinedTag:
         quit(2)
       var gts = f.genotypes(ac)
       echo gts
@@ -666,4 +744,4 @@ when isMainModule:
     for rec in v.query("1:15600-18250"):
       echo rec.CHROM, ":", $rec.POS
       var info = rec.info()
-      discard info.ints("AC", ac)
+      discard info.get("AC", ac)

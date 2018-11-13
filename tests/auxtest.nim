@@ -7,26 +7,18 @@ suite "aux-test":
 
     for rec in b:
 
-      var v = rec.aux("SM")
-      check v.asint.get == 37
+      var v = tag[int](rec, "SM")
+      check v.get == 37
 
-      check v.asfloat.get == 37.float64
+      var xt = tag[char](rec, "XT")
+      check xt.get == 'U'
 
-      check v.asstring.isNone
-      
-      var xt = rec.aux("XT")
 
-      check xt.aschar.get == 'U'
+      var rg = tag[string](rec, "RG")
+      check rg.get == "SRR741410"
 
-      check xt.asstring.get == "U"
-
-      var rg = rec.aux("RG")
-      check rg.asstring.get == "SRR741410"
-      check rg.asint.isNone
-      check rg.asfloat.isNone
-
-      var missing = rec.aux("UA")
-      check missing == nil
+      var missing = tag[int](rec, "RG")
+      check missing.isNone
       break
     b.close()
 
@@ -55,3 +47,17 @@ suite "aux-test":
 
       break
     b.close()
+
+  test "drop tag":
+    var b: Bam
+    open(b, "tests/HG02002.bam")
+    for rec in b:
+
+      var v = tag[int](rec, "SM")
+      check v.get == 37
+
+      check rec.delete_tag("SM")
+      v = tag[int](rec, "SM")
+      check v.isNone
+
+      break

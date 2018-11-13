@@ -34,6 +34,9 @@ type
 proc finalize_header(h: Header) =
   bam_hdr_destroy(h.hdr)
 
+proc `$`*(h:Header): string =
+    return $h.hdr.text
+
 proc stats*(idx: ptr hts_idx_t, tid: int): IndexStats =
   ## get the stats from the index.
   var v: IndexStats = (0'u64, 0'u64)
@@ -46,6 +49,26 @@ proc copy*(h: Header): Header =
   new(hdr, finalize_header)
   hdr.hdr = bam_hdr_dup(h.hdr)
   return hdr
+
+proc from_string*(h:Header, header_string:string) =
+    ## create a new header from a string
+    h.hdr = sam_hdr_parse(header_string.len.cint, header_string.cstring)
+    if h.hdr == nil:
+        raise newException(ValueError, "error parsing header string:" & header_string)
+
+proc from_string*(r:Record, record_string:string) =
+    ## update the record with the given SAM record. note that this does
+    ## not make a copy of `record_string and will modify the string in-place.
+    if r.hdr == nil:
+      raise newException(ValueError, "must set header for record before calling from_string")
+    if r.b == nil:
+      raise newException(ValueError, "must create record with NewRecord before calling from_string")
+
+
+    var kstr = kstring_t(s:record_string.cstring, m:record_string.len, l:record_string.len)
+    var ret = sam_parse1(kstr.addr, r.hdr.hdr, r.b)
+    if ret != 0:
+      raise newException(ValueError, "error:" & $ret & " in from_string parsing record: " & record_string)
 
 template bam_get_seq(b: untyped): untyped =
   cast[CPtr[uint8]](cast[uint]((b).data) + uint(((b).core.n_cigar shl 2) + (b).core.l_qname))
@@ -66,7 +89,7 @@ proc base_at*(r:Record, i:int): char {.inline.} =
   var bseq = bam_get_seq(r.b)
   return "=ACMGRSVTWYHKDBN"[int(uint8(bseq[i shr 1]) shr uint8((not (i) and 1) shl 2) and uint8(0xF))]
 
-template bam_get_qual(b: untyped): untyped =
+template bam_get_qual*(b: untyped): untyped =
   cast[CPtr[uint8]](cast[uint]((b).data) + uint(uint((b).core.n_cigar shl 2) + uint((b).core.l_qname) + uint((b.core.l_qseq + 1) shr 1)))
 
 proc base_qualities*(r: Record, q: var seq[uint8]): seq[uint8] =
@@ -134,15 +157,15 @@ proc qname*(r: Record): string {. inline .} =
   ## `qname` returns the query name.
   return $(bam_get_qname(r.b))
 
-proc flag*(r: Record): Flag =
+proc flag*(r: Record): Flag {.inline.} =
   ## `flag` returns a `Flag` object.
   return Flag(r.b.core.flag)
 
 proc cigar*(r: Record): Cigar {.inline.} =
   ## `cigar` returns a `Cigar` object.
-  return newCigar(bam_get_cigar(r.b), r.b.core.n_cigar)
+  result = newCigar(bam_get_cigar(r.b), r.b.core.n_cigar)
 
-iterator querys*(bam: Bam, region: string): Record =
+iterator querys*(bam: Bam, region: string): Record {.deprecated:"hts/bam: use query for string queries".} =
   ## query iterates over the given region. A single element is used and
   ## overwritten on each iteration so use `Record.copy` to retain.
   if bam.idx == nil:
@@ -157,12 +180,18 @@ iterator querys*(bam: Bam, region: string): Record =
     if slen < -1:
       stderr.write_line("[hts-nim] error reading region:", region)
 
-iterator query*(bam: Bam, chrom:string, start:int, stop:int): Record =
+iterator query*(bam: Bam, chrom:string, start:int=0, stop:int=0): Record =
   ## query iterates over the given region. A single element is used and
   ## overwritten on each iteration so use `Record.copy` to retain.
   if bam.idx == nil:
     quit "must open index before querying"
-  var region = format("$1:$2-$3", chrom, intToStr(start+1), intToStr(stop))
+  var region: string
+  if start >= 0 and stop > 0:
+    region = format("$1:$2-$3", chrom, intToStr(start+1), intToStr(stop))
+  elif start > 0:
+    region = format("$1:$2", chrom, intToStr(start+1))
+  else:
+    region = chrom
   var qiter = sam_itr_querys(bam.idx, bam.hdr.hdr, region);
   if qiter != nil:
     var slen = sam_itr_next(bam.hts, qiter, bam.rec.b)
@@ -173,7 +202,23 @@ iterator query*(bam: Bam, chrom:string, start:int, stop:int): Record =
     if slen < -1:
       stderr.write_line("[hts-nim] error in bam.query:" & $slen)
 
-iterator queryi*(bam: Bam, tid:int, start:int, stop:int): Record =
+iterator query*(bam: Bam, tid:int, start:int=0, stop:int=(-1)): Record =
+  ## query iterates over the given region. A single element is used and
+  ## overwritten on each iteration so use `Record.copy` to retain.
+  var stop = stop
+  if stop == -1:
+    stop = bam.hdr.targets[tid].length.int
+  var qiter = sam_itr_queryi(bam.idx, cint(tid), cint(start), cint(stop));
+  if qiter != nil:
+    var slen = sam_itr_next(bam.hts, qiter, bam.rec.b)
+    while slen >= 0:
+      yield bam.rec
+      slen = sam_itr_next(bam.hts, qiter, bam.rec.b)
+    hts_itr_destroy(qiter)
+    if slen < -1:
+      stderr.write_line("[hts-nim] error in bam.queryi:" & $slen)
+
+iterator queryi*(bam: Bam, tid:int, start:int, stop:int): Record {.deprecated: "use \"query\" to iterate with tid".}=
   ## query iterates over the given region. A single element is used and
   ## overwritten on each iteration so use `Record.copy` to retain.
   var qiter = sam_itr_queryi(bam.idx, cint(tid), cint(start), cint(stop));
@@ -185,7 +230,7 @@ iterator queryi*(bam: Bam, tid:int, start:int, stop:int): Record =
     hts_itr_destroy(qiter)
     if slen < -1:
       stderr.write_line("[hts-nim] error in bam.queryi:" & $slen)
-  
+
 proc `$`*(r: Record): string =
     return format("Record($1:$2-$3):$4", [r.chrom, intToStr(r.start), intToStr(r.stop), r.qname])
 
@@ -215,8 +260,10 @@ proc tostring*(r: Record): string =
 
 proc finalize_bam(bam: Bam) =
   if bam.idx != nil:
-      hts_idx_destroy(bam.idx)
-  discard hts_close(bam.hts)
+    hts_idx_destroy(bam.idx)
+  if bam.hts != nil:
+    discard hts_close(bam.hts)
+    bam.hts = nil
 
 proc finalize_record(rec: Record) =
   bam_destroy1(rec.b)
@@ -236,6 +283,15 @@ proc write*(bam: var Bam, rec: Record) {.inline.} =
 
 proc close*(bam: Bam) =
   discard hts_close(bam.hts)
+  bam.hts = nil
+
+proc NewRecord*(h:Header): Record =
+  ## create a new bam record and associate it with the header
+  var b   = bam_init1()
+  # the record is attached to the bam, but it takes care of it's own finalizer.
+  new(result, finalize_record)
+  result.b = b
+  result.hdr = h
 
 proc open*(bam: var Bam, path: cstring, threads: int=0, mode:string="r", fai: cstring=nil, index: bool=false) =
   ## `open_hts` returns a bam object for the given path. If CRAM, then fai must be given.
@@ -262,12 +318,8 @@ proc open*(bam: var Bam, path: cstring, threads: int=0, mode:string="r", fai: cs
   new(hdr, finalize_header)
   hdr.hdr = sam_hdr_read(hts)
 
-  var b   = bam_init1()
-  # the record is attached to the bam, but it takes care of it's own finalizer.
-  var rec: Record
-  new(rec, finalize_record)
-  rec.b = b
-  rec.hdr = hdr
+  var rec = NewRecord(hdr)
+
   bam.hdr = hdr
   bam.rec = rec
 
@@ -335,21 +387,17 @@ proc stop*(s: Splitter): int {.inline.} =
 proc `$`*(s: Splitter): string =
   return format("Splitter($# $#..$# ($#))" % [s.chrom, $s.start, $s.stop, s.cigar])
 
-iterator splitters*(r: Record, tag:string="SA"): Splitter =
+iterator splitters*(r: Record, atag:string="SA"): Splitter =
   ## generate splitters from SA tag.
-  var aux = r.aux(tag)
-  if aux != nil:
-    var splo = aux.asString
-    var spls = ";"
-    if splo.isSome:
-      spls = splo.get
-    if spls.len != 1:
-      for s in spls[0..<len(spls)-1].split(";"):
-        var toks = s.split(",")
-        if len(toks) == 4: # XA == chr,[strand]pos,CIGAR,NM
-          yield Splitter(aln:r, chrom: toks[0], start: -1 + parseInt(toks[1][1..<len(toks[1])]), cigar: toks[2], NM:uint16(parseInt(toks[3])))
-        else:
-          yield Splitter(aln:r, chrom:toks[0], start: -1 + parseInt(toks[1]), cigar: toks[3],
+  var aux = tag[string](r, atag)
+  if aux.isSome:
+    var spls = aux.get
+    for s in spls[0..<len(spls)-1].split(";"):
+      var toks = s.split(",")
+      if len(toks) == 4: # XA == chr,[strand]pos,CIGAR,NM
+        yield Splitter(aln:r, chrom: toks[0], start: -1 + parseInt(toks[1][1..<len(toks[1])]), cigar: toks[2], NM:uint16(parseInt(toks[3])))
+      else:
+        yield Splitter(aln:r, chrom:toks[0], start: -1 + parseInt(toks[1]), cigar: toks[3],
                            qual: uint8(parseInt(toks[4])),
                            NM: uint16(parseInt(toks[5])))
 
