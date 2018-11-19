@@ -2,7 +2,12 @@ import ../private/hts_concat
 import strutils
 # https://forum.nim-lang.org/t/567 (by Jehan)
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-type CArray{.unchecked.}[T] = array[0..0, T]
+#
+when defined(nimUncheckedArrayTyp):
+  type CArray[T] = UncheckedArray[T]
+else:
+  type CArray{.unchecked.}[T] = array[0..0, T]
+
 type CPtr*[T] = ptr CArray[T]
 
 type SafeCPtr*[T] =

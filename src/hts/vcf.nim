@@ -3,6 +3,12 @@ import strutils
 import system
 import sequtils
 
+
+when defined(nimUncheckedArrayTyp):
+  type CArray[T] = UncheckedArray[T]
+else:
+  type CArray{.unchecked.}[T] = array[0..0, T]
+
 type
   Header* = ref object of RootObj
     ## Header wraps the bam header info.
@@ -33,7 +39,7 @@ type
     v*: Variant
     p*: pointer
 
-  CArray{.unchecked.}[T] = array[0..0, T]
+
   CPtr*[T] = ptr CArray[T]
 
   SafeCPtr*[T] =
