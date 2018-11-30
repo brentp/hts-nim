@@ -196,11 +196,13 @@ proc get*(f:FORMAT, key:string, data:var seq[string]): Status {.inline.} =
   var n:cint = 0
   result = Status.OK
   var ret = bcf_get_format_values(f.v.vcf.header.hdr, f.v.c, key.cstring, f.p.addr, n.addr, BCF_HT_STR.cint)
-  var cs = cast[cstring](f.p)
+  # now f.p is a single char* with values from all samples.
 
   if ret < 0:
       result = Status(ret.int)
       return
+  # extract the per-sample strings which are fixed-length.
+  var cs = cast[cstring](f.p)
   var n_per = int(n / f.v.n_samples)
   if data.len != f.v.n_samples:
       data.set_len(f.v.n_samples)
@@ -214,10 +216,13 @@ proc set*(f:FORMAT, key:string, data:var seq[string]): Status {.inline.} =
     # TODO: support Number other than 1.
     return Status.IncorrectNumberOfValues
 
+  ## with char*, we have a single string that's \0 padded to make all
+  ## samples have the same length. so we calc the max length.
   var lmax = data[0].len
   for d in data:
     lmax = max(lmax, d.len)
 
+  # then fill the cstr with the data from each sample.
   var cstr = newString(lmax * data.len)
   for i, d in data:
     var off = i * lmax
