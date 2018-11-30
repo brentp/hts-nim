@@ -27,6 +27,8 @@ Examples of `hts-nim` tools are available in the [hts-nim-tools repo](https://gi
 
 below are examples of the syntax in this library see the [docs](https://brentp.github.io/hts-nim/) for more info:
 
+Also see examples and other repos using hts-nim in the [wiki](https://github.com/brentp/hts-nim/wiki/Examples)
+
 ## BAM / CRAM / SAM
 
 ```nim
