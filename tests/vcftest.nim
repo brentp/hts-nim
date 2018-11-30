@@ -1,5 +1,6 @@
 import unittest, hts, strutils
 import hts/vcf
+import hts/private/hts_concat
 import math
 
 
@@ -92,6 +93,63 @@ suite "vcf suite":
     wtr.close()
 
 
+  test "add sample":
+    var vcf:VCF
+    var wtr:VCF
+    var tsamples = @["101976-101976", "100920-100920", "100231-100231", "100232-100232", "100919-100919"]
+    check open(vcf, "tests/test.vcf.gz", samples=tsamples)
+
+
+    check open(wtr, "tests/newsample.vcf", mode="w")
+    echo "OK"
+    wtr.copy_header(vcf.header)
+    wtr.add_sample("totally_new_sample")
+    echo "OK"
+
+    check wtr.samples ==  @["101976-101976", "100920-100920", "100231-100231", "100232-100232", "100919-100919", "totally_new_sample"]
+    check wtr.n_samples == tsamples.len + 1
+    check wtr.write_header
+    echo "OK"
+
+    var ints = newSeq[int32]()
+    var floats = newSeq[float32]()
+    var strings = newSeq[string]()
+    for v in vcf:
+      v.vcf = wtr
+      for field in v.format.fields:
+        if field.vtype == 5:
+          check v.format.get(field.name, floats) == Status.OK
+          check v.format.set(field.name, floats) == Status.OK
+        elif field.vtype == BCF_BT_CHAR:
+          check v.format.get(field.name, strings) == Status.OK
+          check v.format.set(field.name, strings) == Status.OK
+          check v.format.get(field.name, strings) == Status.OK
+          check v.format.get(field.name, strings) == Status.OK
+        else:
+          check v.format.get(field.name, ints) == Status.OK
+          echo "type:", field.vtype, " field:", field.name, " before:", ints.len, "per sample:", field.n_per_sample
+          #ints.add(newSeq[int32](field.n_per_sample))
+          for i in 1..field.n_per_sample:
+              echo i
+              ints[^i] = 0
+          echo "after:", ints.len
+          check v.format.set(field.name, ints) == Status.OK
+
+      check wtr.write_variant(v)
+    wtr.close()
+
+  test "format fields":
+    var vcf:VCF
+    check open(vcf, "tests/test.vcf.gz")
+    for v in vcf:
+      var f = v.format.fields
+      var fields = newSeq[string](f.len)
+      for i, ff in f:
+          fields[i] = ff.name
+          check ff.vtype in {1,2}
+      check fields == @["GT", "AD", "DP", "GQ", "PL"] or fields ==  @["GT", "AD", "DP", "GQ", "PGT", "PID", "PL"]
+      break
+    vcf.close()
 
 
   test "test empty format":

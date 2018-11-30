@@ -90,9 +90,15 @@ proc set_samples*(v:VCF, samples:seq[string]) =
     quit(1)
 
 proc samples*(v:VCF): seq[string] =
+  ## get the list of samples
   result = new_seq[string](v.n_samples)
   for i in 0..<v.n_samples:
     result[i] = $v.header.hdr.samples[i]
+
+proc add_sample*(v:VCF, sample:string) =
+  ## add a sample to the VCF
+  doAssert bcf_hdr_add_sample(v.header.hdr, sample.cstring) == 0, "error adding sample to header"
+  doAssert bcf_hdr_sync(v.header.hdr) == 0, "error adding sample to header"
 
 proc add_string*(h:Header, header:string): Status =
   ## add the full string header to the VCF.
@@ -141,6 +147,9 @@ proc format*(v:Variant): FORMAT {.inline.} =
   f.v = v
   return f
 
+proc n_samples*(v:Variant): int {.inline.} =
+  return v.c.n_sample.int
+
 proc c_memcpy(a, b: pointer, size: csize) {.importc: "memcpy", header: "<string.h>", inline.}
 
 proc toSeq[T](data: var seq[T], p:pointer, n:int) {.inline.} =
@@ -163,11 +172,9 @@ proc get*(f:FORMAT, key:string, data:var seq[int32]): Status {.inline.} =
       return
   toSeq[int32](data, f.p, ret.int)
 
-proc ints*(f:FORMAT, key:string, data:var seq[int32]): Status {.inline, deprecated:"use FORMAT.get".} =
-    return f.get(key, data)
 
 proc get*(f:FORMAT, key:string, data:var seq[float32]): Status {.inline.} =
-  ## fill data with integer values for each sample with the given key
+  ## fill data with float values for each sample with the given key
   var n:cint = 0
   result = Status.OK
   var ret = bcf_get_format_values(f.v.vcf.header.hdr, f.v.c, key.cstring,
@@ -176,6 +183,46 @@ proc get*(f:FORMAT, key:string, data:var seq[float32]): Status {.inline.} =
       result = Status(ret.int)
       return
   toSeq[float32](data, f.p, ret.int)
+
+proc get*(f:FORMAT, key:string, data:var seq[string]): Status {.inline.} =
+  ## fill data with string values for each sample with the given key
+  var n:cint = 0
+  result = Status.OK
+  var ret = bcf_get_format_values(f.v.vcf.header.hdr, f.v.c, key.cstring, f.p.addr, n.addr, BCF_HT_STR.cint)
+  var cs = cast[cstring](f.p)
+
+  if ret < 0:
+      result = Status(ret.int)
+      return
+  var n_per = int(n / f.v.n_samples)
+  if data.len != f.v.n_samples:
+      data.set_len(f.v.n_samples)
+
+  for isample in 0..<data.len:
+    #data[isample].setLen(0)
+    data[isample] = $(cast[cstring](cs[isample * n_per].addr))
+
+proc set*(f:FORMAT, key:string, data:var seq[string]): Status {.inline.} =
+  ## set the format field with the given strings.
+  if data.len != f.v.vcf.n_samples:
+    # TODO: support Number other than 1.
+    return Status.IncorrectNumberOfValues
+
+  var lmax = data[0].len
+  for d in data:
+    lmax = max(lmax, d.len)
+
+  var cstr = newString(lmax * data.len)
+  for i, d in data:
+    var off = i * lmax
+    for k, c in d:
+        cstr[off + k] = c
+
+  var ret = bcf_update_format(f.v.vcf.header.hdr, f.v.c, key.cstring, cstr[0].addr.pointer, cstr.len.cint, BCF_HT_STR.cint)
+  return Status(ret.int)
+
+proc ints*(f:FORMAT, key:string, data:var seq[int32]): Status {.inline, deprecated:"use FORMAT.get".} =
+    return f.get(key, data)
 
 proc floats*(f:FORMAT, key:string, data:var seq[float32]): Status {.inline, deprecated:"use FORMAT.get".} =
   return f.get(key, data)
@@ -303,9 +350,6 @@ proc set*(i:INFO, key:string, values:var seq[int32]): Status {.inline.} =
       values[0].addr.pointer, len(values).cint, BCF_HT_INT.cint)
   return Status(ret.int)
 
-proc n_samples*(v:Variant): int {.inline.} =
-  return v.c.n_sample.int
-
 proc destroy_variant(v:Variant) =
   if v != nil and v.c != nil and v.own:
     bcf_destroy(v.c)
@@ -342,9 +386,6 @@ proc close*(v:VCF) =
             stderr.write_line "[hts-nim] error closing vcf"
     v.hts = nil
 
-
-proc `header=`*(v: var VCF, hdr: Header) =
-  v.header = Header(hdr:bcf_hdr_dup(hdr.hdr))
 
 proc copy_header*(v: var VCF, hdr: Header) =
   v.header = Header(hdr:bcf_hdr_dup(hdr.hdr))
@@ -386,7 +427,7 @@ proc open*(v:var VCF, fname:string, mode:string="r", samples:seq[string]=empty_s
   if v.c == nil:
     stderr.write_line "hts-nim/vcf: error opening file:" & fname
     return false
-    
+
   return true
 
 proc bcf_hdr_id2name(hdr: ptr bcf_hdr_t, rid: cint): cstring {.inline.} =
@@ -396,6 +437,23 @@ proc bcf_hdr_id2name(hdr: ptr bcf_hdr_t, rid: cint): cstring {.inline.} =
 proc bcf_hdr_int2id(hdr: ptr bcf_hdr_t, typ: int, rid:int): cstring {.inline.} =
   var v = cast[CPtr[bcf_idpair_t]](hdr.id[typ])
   return v[rid].key
+
+
+type FormatField* = object
+    # This represents the name (e.g. AD) and the type (BCF_BT_*) of a FORMAT field.
+    name*: string
+    n_per_sample*: int
+    ## number of entries per sample
+    vtype*: int
+    ## variable type is one of the BCF_BT_* types.
+
+proc fields*(f:FORMAT): seq[FormatField] {.inline.} =
+  result = newSeq[FormatField](f.v.c.n_fmt)
+  for i in 0..<f.v.c.n_fmt.int:
+    var fmt = cast[CPtr[bcf_fmt_t]](f.v.c.d.fmt)[i]
+    result[i].name = $bcf_hdr_int2id(f.v.vcf.header.hdr, BCF_DT_ID, fmt.id)
+    result[i].vtype = fmt.`type`
+    result[i].n_per_sample = fmt.n
 
 proc CHROM*(v:Variant): cstring {.inline.} =
   ## return the chromosome associated with the variant

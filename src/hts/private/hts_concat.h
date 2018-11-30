@@ -614,7 +614,7 @@ bcf_hdr_t *bcf_hdr_init(const char *mode);
 int bcf_hdr_printf(bcf_hdr_t *h, const char *format, ...);
 void bcf_hdr_remove(bcf_hdr_t *h, int type, const char *key);
 
-
+int bcf_hdr_add_sample(bcf_hdr_t *hdr, const char *sample);
 
 
 
@@ -670,10 +670,13 @@ int bcf_hdr_set_samples(bcf_hdr_t *hdr, const char *samples, int is_file);
 int bcf_subset_format(const bcf_hdr_t *hdr, bcf1_t *rec);
 int bcf_get_genotypes(const bcf_hdr_t *hdr, bcf1_t *line, int **dst, int *ndst);
 int bcf_get_format_values(const bcf_hdr_t *hdr, bcf1_t *line, const char *tag, void **dst, int *ndst, int type);
+int bcf_get_format_string(const bcf_hdr_t *hdr, bcf1_t *line, const char *tag, char ***dst, int *ndst);
+
 //typedef htsFile vcfFile;
 int bcf_hdr_append(bcf_hdr_t *h, const char *line);
 int bcf_hdr_sync(bcf_hdr_t *h);
 
+int bcf_update_format_string(const bcf_hdr_t *hdr, bcf1_t *line, const char *key, const char **values, int n);
 int bcf_update_format(const bcf_hdr_t *hdr, bcf1_t *line, const char *key, const void *values, int n, int type);
 
 
