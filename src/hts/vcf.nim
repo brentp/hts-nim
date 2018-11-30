@@ -63,6 +63,13 @@ type
     BCF_HL_STR  #4 // structured header line TAG=<A=..,B=..>
     BCF_HL_GEN  #5 // generic header line
 
+  BCF_TYPE* {.pure.} = enum
+    INT8 = 1
+    INT16 = 2
+    INT32 = 3
+    FLOAT = 5
+    CHAR = 7
+
 proc `[]`*[T](p: SafeCPtr[T], k: int): T {.inline.} =
   when not defined(release):
     assert k < p.size
@@ -199,7 +206,6 @@ proc get*(f:FORMAT, key:string, data:var seq[string]): Status {.inline.} =
       data.set_len(f.v.n_samples)
 
   for isample in 0..<data.len:
-    #data[isample].setLen(0)
     data[isample] = $(cast[cstring](cs[isample * n_per].addr))
 
 proc set*(f:FORMAT, key:string, data:var seq[string]): Status {.inline.} =
@@ -221,12 +227,6 @@ proc set*(f:FORMAT, key:string, data:var seq[string]): Status {.inline.} =
   var ret = bcf_update_format(f.v.vcf.header.hdr, f.v.c, key.cstring, cstr[0].addr.pointer, cstr.len.cint, BCF_HT_STR.cint)
   return Status(ret.int)
 
-proc ints*(f:FORMAT, key:string, data:var seq[int32]): Status {.inline, deprecated:"use FORMAT.get".} =
-    return f.get(key, data)
-
-proc floats*(f:FORMAT, key:string, data:var seq[float32]): Status {.inline, deprecated:"use FORMAT.get".} =
-  return f.get(key, data)
-
 proc set*(f:FORMAT, key:string, values: var seq[int32]): Status {.inline.} =
   ## set the sample fields. values must be a multiple of number of samples.
   if values.len mod f.v.vcf.n_samples != 0:
@@ -241,8 +241,6 @@ proc set*(f:FORMAT, key:string, values: var seq[float32]): Status {.inline.} =
   var ret = bcf_update_format(f.v.vcf.header.hdr, f.v.c, key.cstring, values[0].addr.pointer, values.len.cint, BCF_HT_REAL.cint)
   return Status(ret.int)
 
-
-
 proc get*(i:INFO, key:string, data:var seq[int32]): Status {.inline.} =
   ## fills the given data with ints associated with the key.
   result = Status.OK
@@ -255,9 +253,6 @@ proc get*(i:INFO, key:string, data:var seq[int32]): Status {.inline.} =
     return
 
   toSeq[int32](data, i.v.p, ret.int)
-
-proc ints*(i:INFO, key:string, data:var seq[int32]): Status {.inline, deprecated:"use i.get".} =
-    return i.get(key, data)
 
 proc get*(i:INFO, key:string, data:var seq[float32]): Status {.inline.} =
   ## fills the given data with ints associated with the key.
@@ -274,9 +269,6 @@ proc get*(i:INFO, key:string, data:var seq[float32]): Status {.inline.} =
 
   toSeq[float32](data, i.v.p, ret.int)
 
-proc floats*(i:INFO, key:string, data:var seq[float32]): Status {.inline, deprecated:"use get".} =
-  return i.get(key, data)
-
 proc get*(i:INFO, key:string, data:var string): Status {.inline.} =
   ## fills the data with the value for the key and returns a bool indicating if the key was found.
   var n:cint = 0
@@ -288,14 +280,8 @@ proc get*(i:INFO, key:string, data:var string): Status {.inline.} =
     if data.len != 0: data.set_len(0)
     result = Status(ret.int)
   data.set_len(ret.int)
-  #var tmp = cast[ptr CArray[char]](i.v.p)
-  #for i in 0..<ret.int:
-  #  data[i] = tmp[i]
   copyMem(data[0].addr.pointer, i.v.p, ret.int)
 
-proc strings*(i:INFO, key:string, data:var string): Status {.inline, deprecated:"use INFO.get".} =
-  ## strings fills the data with the value for the key and returns a bool indicating if the key was found.
-  return i.get(key, data)
 
 proc has_flag*(i:INFO, key:string): bool {.inline.} =
   ## return indicates whether the flag is found in the INFO.
@@ -440,11 +426,11 @@ proc bcf_hdr_int2id(hdr: ptr bcf_hdr_t, typ: int, rid:int): cstring {.inline.} =
 
 
 type FormatField* = object
-    # This represents the name (e.g. AD) and the type (BCF_BT_*) of a FORMAT field.
+    ## FormatField represents the name (e.g. AD or DP), the number of values per sample, and the type (BCF_BT_\*) of a FORMAT field.
     name*: string
     n_per_sample*: int
     ## number of entries per sample
-    vtype*: int
+    vtype*: BCF_TYPE
     ## variable type is one of the BCF_BT_* types.
 
 proc fields*(f:FORMAT): seq[FormatField] {.inline.} =
@@ -452,7 +438,7 @@ proc fields*(f:FORMAT): seq[FormatField] {.inline.} =
   for i in 0..<f.v.c.n_fmt.int:
     var fmt = cast[CPtr[bcf_fmt_t]](f.v.c.d.fmt)[i]
     result[i].name = $bcf_hdr_int2id(f.v.vcf.header.hdr, BCF_DT_ID, fmt.id)
-    result[i].vtype = fmt.`type`
+    result[i].vtype = BCF_TYPE(fmt.`type`)
     result[i].n_per_sample = fmt.n
 
 proc CHROM*(v:Variant): cstring {.inline.} =

@@ -93,7 +93,7 @@ suite "vcf suite":
     wtr.close()
 
 
-  test "add sample":
+  test "that adding a new sample and setting values works.":
     var vcf:VCF
     var wtr:VCF
     var tsamples = @["101976-101976", "100920-100920", "100231-100231", "100232-100232", "100919-100919"]
@@ -101,42 +101,48 @@ suite "vcf suite":
 
 
     check open(wtr, "tests/newsample.vcf", mode="w")
-    echo "OK"
     wtr.copy_header(vcf.header)
-    wtr.add_sample("totally_new_sample")
-    echo "OK"
+    wtr.add_sample("Totally_New_Sample")
 
-    check wtr.samples ==  @["101976-101976", "100920-100920", "100231-100231", "100232-100232", "100919-100919", "totally_new_sample"]
+    check wtr.samples ==  @["101976-101976", "100920-100920", "100231-100231", "100232-100232", "100919-100919", "Totally_New_Sample"]
     check wtr.n_samples == tsamples.len + 1
     check wtr.write_header
-    echo "OK"
 
     var ints = newSeq[int32]()
     var floats = newSeq[float32]()
     var strings = newSeq[string]()
     for v in vcf:
+      ## NOTE!!! this is required to get this to work.
       v.vcf = wtr
       for field in v.format.fields:
-        if field.vtype == 5:
+        if field.vtype == BCF_TYPE.FLOAT:
           check v.format.get(field.name, floats) == Status.OK
           check v.format.set(field.name, floats) == Status.OK
-        elif field.vtype == BCF_BT_CHAR:
+        elif field.vtype == BCF_TYPE.CHAR:
           check v.format.get(field.name, strings) == Status.OK
+          strings[0] = "hello"
+          strings[strings.high] = "XXX" & field.name
           check v.format.set(field.name, strings) == Status.OK
-          check v.format.get(field.name, strings) == Status.OK
           check v.format.get(field.name, strings) == Status.OK
         else:
           check v.format.get(field.name, ints) == Status.OK
-          echo "type:", field.vtype, " field:", field.name, " before:", ints.len, "per sample:", field.n_per_sample
-          #ints.add(newSeq[int32](field.n_per_sample))
+
           for i in 1..field.n_per_sample:
-              echo i
-              ints[^i] = 0
-          echo "after:", ints.len
+              ints[^i] = 14
           check v.format.set(field.name, ints) == Status.OK
 
       check wtr.write_variant(v)
     wtr.close()
+    vcf.close()
+
+    check open(vcf, "tests/newsample.vcf")
+    for v in vcf:
+      for field in v.format.fields:
+        if field.vtype in {BCF_TYPE.INT32, BCF_TYPE.INT16, BCF_TYPE.INT8}:
+          check v.format.get(field.name, ints) == Status.OK
+          check ints[ints.high] == 14
+
+    vcf.close()
 
   test "format fields":
     var vcf:VCF
@@ -146,7 +152,7 @@ suite "vcf suite":
       var fields = newSeq[string](f.len)
       for i, ff in f:
           fields[i] = ff.name
-          check ff.vtype in {1,2}
+          check ff.vtype in {BCF_TYPE.INT8, BCF_TYPE.INT16, BCF_TYPE.INT32}
       check fields == @["GT", "AD", "DP", "GQ", "PL"] or fields ==  @["GT", "AD", "DP", "GQ", "PGT", "PID", "PL"]
       break
     vcf.close()
@@ -217,10 +223,10 @@ suite "vcf suite":
 
     var o:VCF = VCF()
     o.header = h
-    echo o.samples == v.samples
+    check o.samples == v.samples
 
     check h.add_string("""##FORMAT=<ID=ASDF,Number=4,Type=Integer,Description="ASDF">""") == Status.OK
-    echo "ASDF" in $h
+    check "ASDF" in $h
 
 
 
@@ -246,13 +252,10 @@ suite "genotypes suite":
     var v:VCF
     check open(v, "tests/unknown-alts.vcf")
     var x :seq[int32]
-
-  
-    
     # GT:DP:RO:QR:AO:QA:GL	.:.:.:.:.:.:.	0/0:3:3:96:0:0:0,-0.90309,-8.96	0/1:5:3:88:2:59:-5.09985,0,-7.70818	0/1:8:7:215:1:33:-1.79485,0,-10	0/1:3:2:67:1:34:-2.97403,0,-5.93903	0/0:3:3:89:0:0:0,-0.90309,-8.30667	1/1:2:0:0:2:53:-5.035,-0.60206,0	1/1:2:0:0:2:62:-5.89,-0.60206,0	1/1:2:0:0:2:54:-5.13,-0.60206,0	1/1:1:0:0:1:23:-2.3,-0.30103,0	1/1:2:0:0:2:42:-3.99,-0.60206,0	1/1:1:0:0:1:30:-3,-0.30103,0	.:.:.:.:.:.:.	0/0:6:6:207:0:0:0,-1.80618,-10	1/1:2:0:0:2:53:-5.035,-0.60206,0	0/1:4:3:86:1:30:-2.39794,0,-7.42461	1/1:1:0:0:1:37:-3.7,-0.30103,0
     for variant in v:
       var gts = variant.format.genotypes(x)
-      echo gts
+      #echo gts
       var a = gts.alts
       check a[0] == -1
       check a[1] == 0

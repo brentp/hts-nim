@@ -58,7 +58,7 @@ proc from_string*(h:Header, header_string:string) =
 
 proc from_string*(r:Record, record_string:string) =
     ## update the record with the given SAM record. note that this does
-    ## not make a copy of `record_string and will modify the string in-place.
+    ## not make a copy of `record_string` and will modify the string in-place.
     if r.hdr == nil:
       raise newException(ValueError, "must set header for record before calling from_string")
     if r.b == nil:
