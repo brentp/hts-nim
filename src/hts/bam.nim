@@ -293,17 +293,20 @@ proc NewRecord*(h:Header): Record =
   result.b = b
   result.hdr = h
 
-proc open*(bam: var Bam, path: cstring, threads: int=0, mode:string="r", fai: cstring=nil, index: bool=false) =
+proc open*(bam: var Bam, path: cstring, threads: int=0, mode:string="r", fai: cstring=nil, index: bool=false): bool {.discardable.} =
   ## `open_hts` returns a bam object for the given path. If CRAM, then fai must be given.
   ## if index is true, then it will attempt to open an index file for regional queries.
   var hts = hts_open(path, mode)
+  if hts == nil:
+      stderr.write_line "[hts-nim] could open '" & $path & "'"
+      return false
   new(bam, finalize_bam)
   bam.hts = hts
 
   if fai != nil:
     if 0 != hts_set_fai_filename(hts, fai):
       stderr.write_line "[hts-nim] could not load '" & $fai & "' as fasta index"
-      quit 2
+      return false
 
   if mode[0] == 'r' and 0 != threads and 0 != hts_set_threads(hts, cint(threads)):
       raise newException(ValueError, "error setting number of threads")
@@ -312,7 +315,7 @@ proc open*(bam: var Bam, path: cstring, threads: int=0, mode:string="r", fai: cs
     raise newException(ValueError, "invalid bgzf file")
 
   if mode[0] == 'w':
-    return
+    return true
 
   var hdr: Header
   new(hdr, finalize_header)
@@ -329,7 +332,8 @@ proc open*(bam: var Bam, path: cstring, threads: int=0, mode:string="r", fai: cs
         bam.idx = idx
     else:
       stderr.write_line "index not found for:", path
-      quit(2)
+      return false
+  return true
 
 proc hts_set_opt*(fp: ptr htsFile; opt: FormatOption): cint {.varargs, cdecl,
     importc: "hts_set_opt", dynlib: libname.}
