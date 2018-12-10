@@ -107,7 +107,7 @@ proc add_sample*(v:VCF, sample:string) =
   doAssert bcf_hdr_add_sample(v.header.hdr, sample.cstring) == 0, "error adding sample to header"
   doAssert bcf_hdr_sync(v.header.hdr) == 0, "error adding sample to header"
 
-proc add_string*(h:Header, header:string): Status =
+proc add_string*(h:Header, header:string): Status {.inline.} =
   ## add the full string header to the VCF.
   var ret = bcf_hdr_append(h.hdr, header.cstring)
   if ret != 0:
@@ -381,12 +381,22 @@ proc close*(v:VCF) =
 proc copy_header*(v: var VCF, hdr: Header) =
   v.header = Header(hdr:bcf_hdr_dup(hdr.hdr))
 
+proc bcf_hdr_id2name(hdr: ptr bcf_hdr_t, rid: cint): cstring {.inline.} =
+  var v = cast[CPtr[bcf_idpair_t]](hdr.id[1])
+  return v[rid.int].key
+
 proc write_header*(v: VCF): bool =
   ## write a the header to the file (must have been opened in write mode) and return a bool for success.
   return bcf_hdr_write(v.hts, v.header.hdr) == 0
 
 proc write_variant*(v:VCF, variant:Variant): bool =
   ## write a variant to the VCF opened in write mode and return a bool indicating success.
+  if variant.c.errcode == BCF_ERR_CTG_UNDEF:
+      # if the input VCF did not have contigs defined, we have to manually add
+      # them to the VCF that we are about to write. This happens once per chromosome.
+      var chrom = bcf_hdr_id2name(variant.vcf.header.hdr, variant.c.rid)
+      doAssert v.header.add_string("##contig=<ID=" & $chrom & '>') == Status.OK
+      doAssert bcf_hdr_sync(variant.vcf.header.hdr) == 0
   return bcf_write(v.hts, v.header.hdr, variant.c) == 0
 
 proc open*(v:var VCF, fname:string, mode:string="r", samples:seq[string]=empty_samples, threads:int=0): bool =
@@ -421,10 +431,6 @@ proc open*(v:var VCF, fname:string, mode:string="r", samples:seq[string]=empty_s
 
   return true
 
-proc bcf_hdr_id2name(hdr: ptr bcf_hdr_t, rid: cint): cstring {.inline.} =
-  var v = cast[CPtr[bcf_idpair_t]](hdr.id[1])
-  return v[rid.int].key
-
 proc bcf_hdr_int2id(hdr: ptr bcf_hdr_t, typ: int, rid:int): cstring {.inline.} =
   var v = cast[CPtr[bcf_idpair_t]](hdr.id[typ])
   return v[rid].key
@@ -450,6 +456,14 @@ proc CHROM*(v:Variant): cstring {.inline.} =
   ## return the chromosome associated with the variant
   return bcf_hdr_id2name(v.vcf.header.hdr, v.c.rid)
 
+proc tostring*(v:Variant): string =
+  ## return the full variant string including new-line from vcf_format.
+  var s = kstring_t(s:nil, l:0, m:0)
+  if vcf_format(v.vcf.header.hdr, v.c, s.addr) != 0:
+    raise newException(ValueError, "hts-nim/format error for variant")
+  result = $s.s
+  free(s.s)
+
 iterator items*(v:VCF): Variant =
   ## Each returned Variant has a pointer in the underlying iterator
   ## that is updated each iteration; use .copy to keep it in memory
@@ -466,8 +480,12 @@ iterator items*(v:VCF): Variant =
     variant.vcf = v
     variant.c = v.c
     yield variant
-  if v.c.errcode != 0:
+  # allow an error code of 1 (CTG_UNDEF) because we can have a contig
+  # undefined in the reader in the absence of an index or a full header
+  # but that's not an error in this library.
+  if v.c.errcode > 1:
     stderr.write_line "hts-nim/vcf bcf_read error:" & $v.c.errcode
+    stderr.write_line "last read variant:", variant.tostring()
     quit(2)
 
 iterator vquery(v:VCF, region:string): Variant =
@@ -743,13 +761,6 @@ proc alts*(gs:Genotypes): seq[int8] {.inline.} =
 proc `$`*(v:Variant): string =
   return format("Variant($#:$# $#/$#)" % [$v.CHROM, $v.POS, $v.REF, join(v.ALT, ",")])
 
-proc tostring*(v:Variant): string =
-  ## return the full variant string including new-line from vcf_format.
-  var s = kstring_t(s:nil, l:0, m:0)
-  if vcf_format(v.vcf.header.hdr, v.c, s.addr) != 0:
-    raise newException(ValueError, "hts-nim/format error for variant")
-  result = $s.s
-  free(s.s)
 
 when isMainModule:
 
