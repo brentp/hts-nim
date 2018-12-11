@@ -1,6 +1,7 @@
 dev
 ===
 + [vcf] allow writing from a VCF that does not contain contigs (in htslib this is an error)
++ [vcf] fix bug in getting (absent) string arguments from INFO.
 
 v0.2.7
 ======

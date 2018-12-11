@@ -229,7 +229,6 @@ suite "vcf suite":
     check "ASDF" in $h
 
 
-
 suite "genotypes suite":
   test "test alts":
 
@@ -245,8 +244,6 @@ suite "genotypes suite":
       check a[2] == 1
       check a[3] == 1
       check a[4] == -1
-
-
 
   test "unknown alts":
     var v:VCF
@@ -264,3 +261,15 @@ suite "genotypes suite":
       check a[4] == 1
       check a[12] == -1
       check a[13] == 0
+
+
+suite "bug suite":
+    test "csq reader":
+        var v:VCF
+        check open(v, "tests/csq-bug.vcf.gz")
+
+        var anno = ""
+        for variant in v:
+            var st = variant.info.get("CSQ", anno)
+            check st in {Status.OK, Status.NotFound}
+

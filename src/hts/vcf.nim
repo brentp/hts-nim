@@ -284,6 +284,7 @@ proc get*(i:INFO, key:string, data:var string): Status {.inline.} =
   if ret < 0:
     if data.len != 0: data.set_len(0)
     result = Status(ret.int)
+    return
   data.set_len(ret.int)
   copyMem(data[0].addr.pointer, i.v.p, ret.int)
 
