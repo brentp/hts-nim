@@ -281,3 +281,26 @@ suite "bug suite":
             var st = variant.info.get("CSQ", anno)
             check st in {Status.OK, Status.NotFound}
 
+import times
+
+suite "speed tests":
+  test "standard format getter":
+    var t = cpuTime()
+    var v:VCF
+    var n:int
+    for i in 0..3:
+      check open(v, "tests/test.vcf.gz")
+
+      var ints:seq[int32]
+      var fields = @["DP", "GQ", "AD"]
+      for variant in v:
+        var f = variant.format
+        for i in 0..10000:
+          for fld in fields:
+            if f.get(fld, ints) != Status.OK:
+              quit "bad int field"
+
+            if ints[22] == 0: n += 1
+            if ints[12] == 0: n += 1
+      v.close()
+    echo n, " in .. ", cpuTime() - t, " seconds "
