@@ -22,7 +22,7 @@ type
     tidx: ptr tbx_t
     fname: string
 
-  Variant* = ref object of RootObj
+  Variant* = ref object
     ## Variant is a single line from a VCF
     c*: ptr bcf1_t
     p: pointer
@@ -128,17 +128,15 @@ proc add_format*(h:Header, ID:string, Number:string, Type:string, Description: s
   return h.add_string(format("##FORMAT=<ID=$#,Number=$#,Type=$#,Description=\"$#\">", ID, Number, Type, Description))
 
 proc info*(v:Variant): INFO {.inline.} =
-  return INFO(i:0, v:v)
+  result = INFO(i:0, v:v)
 
 proc destroy_format(f:Format) =
   if f != nil and f.p != nil:
     free(f.p)
 
 proc format*(v:Variant): FORMAT {.inline.} =
-  var f:FORMAT
-  new(f, destroy_format)
-  f.v = v
-  return f
+  new(result, destroy_format)
+  result.v = v
 
 proc n_samples*(v:Variant): int {.inline.} =
   return v.c.n_sample.int
@@ -160,9 +158,9 @@ proc get*(f:FORMAT, key:string, data:var seq[int32]): Status {.inline.} =
   var n:cint = 0
   var ret = bcf_get_format_values(f.v.vcf.header.hdr, f.v.c, key.cstring,
      f.p.addr, n.addr, BCF_HT_INT.cint)
-  if ret < 0:
-      result = Status(ret.int)
-      return
+  if unlikely(ret < 0):
+    result = Status(ret.int)
+    return
   toSeq[int32](data, f.p, ret.int)
 
 
@@ -172,7 +170,7 @@ proc get*(f:FORMAT, key:string, data:var seq[float32]): Status {.inline.} =
   result = Status.OK
   var ret = bcf_get_format_values(f.v.vcf.header.hdr, f.v.c, key.cstring,
      f.p.addr, n.addr, BCF_HT_REAL.cint)
-  if ret < 0:
+  if unlikely(ret < 0):
       result = Status(ret.int)
       return
   toSeq[float32](data, f.p, ret.int)
@@ -183,7 +181,6 @@ proc get*(f:FORMAT, key:string, data:var seq[string]): Status {.inline.} =
   result = Status.OK
   var ret = bcf_get_format_values(f.v.vcf.header.hdr, f.v.c, key.cstring, f.p.addr, n.addr, BCF_HT_STR.cint)
   # now f.p is a single char* with values from all samples.
-
   if ret < 0:
       result = Status(ret.int)
       return
