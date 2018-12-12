@@ -42,11 +42,6 @@ type
 
   CPtr*[T] = ptr CArray[T]
 
-  SafeCPtr*[T] =
-    object
-      size: int
-      mem: CPtr[T]
-
   Status* {.pure.} = enum
     ## contains the values returned from the INFO for FORMAT fields.
     IncorrectNumberOfValues = -10 ## when setting a FORMAT field, the number of values must be a multiple of the number of samples
@@ -70,16 +65,6 @@ type
     INT32 = 3
     FLOAT = 5
     CHAR = 7
-
-proc `[]`*[T](p: SafeCPtr[T], k: int): T {.inline.} =
-  when not defined(release):
-    assert k < p.size
-  result = p.mem[k]
-
-proc `[]=`*[T](p: SafeCPtr[T], k: int, val: T) {.inline.} =
-  when not defined(release):
-    assert k < p.size
-  p.mem[k] = val
 
 var empty_samples: seq[string]
 
@@ -310,7 +295,7 @@ proc bcf_hdr_id2number(hdr:ptr bcf_hdr_t, htype:int, int_id:int): int {.inline.}
   return (v shr 12)
 
 proc delete*(i:INFO, key:string): Status {.inline.} =
-  ## delete the value from the INFO field  
+  ## delete the value from the INFO field
   var info = bcf_get_info(i.v.vcf.header.hdr, i.v.c, key.cstring)
   if info == nil:
     raise newException(KeyError, "hts-nim/info: key not found:" & key)

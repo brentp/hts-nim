@@ -39,7 +39,6 @@ proc cget*(fai:Fai, region:string, start:int=0, stop:int=0): cstring {.inline.} 
   ## chromosome and start, end, e.g. "chr1", 9, 20
   ## the user is responsible for freeing the result.
   var rlen: cint
-  var res: cstring
   if start == 0 and stop == 0:
     result = fai_fetch(fai.cptr, cstring(region), rlen.addr)
   else:

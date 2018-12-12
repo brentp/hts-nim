@@ -29,7 +29,6 @@ suite "vcf suite":
     check open(wtr, "tests/out.vcf", mode="w")
     wtr.header = v.header
     check wtr.write_header()
-    var variant:Variant
     var i = 0
 
     for variant in v:
@@ -113,7 +112,7 @@ suite "vcf suite":
     wtr.copy_header(vcf.header)
     wtr.add_sample("Totally_New_Sample")
 
-    check wtr.samples ==  @["101976-101976", "100920-100920", "100231-100231", "100232-100232", "100919-100919", "Totally_New_Sample"]
+    check wtr.samples == @["101976-101976", "100920-100920", "100231-100231", "100232-100232", "100919-100919", "Totally_New_Sample"]
     check wtr.n_samples == tsamples.len + 1
     check wtr.write_header
 
@@ -162,7 +161,7 @@ suite "vcf suite":
       for i, ff in f:
           fields[i] = ff.name
           check ff.vtype in {BCF_TYPE.INT8, BCF_TYPE.INT16, BCF_TYPE.INT32}
-      check fields == @["GT", "AD", "DP", "GQ", "PL"] or fields ==  @["GT", "AD", "DP", "GQ", "PGT", "PID", "PL"]
+      check fields == @["GT", "AD", "DP", "GQ", "PL"] or fields == @["GT", "AD", "DP", "GQ", "PGT", "PID", "PL"]
       break
     vcf.close()
 
