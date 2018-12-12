@@ -92,6 +92,15 @@ suite "vcf suite":
 
     wtr.close()
 
+  test "iterating over info fields":
+    var vcf:VCF
+    var tsamples = @["101976-101976", "100920-100920", "100231-100231", "100232-100232", "100919-100919"]
+    check open(vcf, "tests/test.vcf.gz", samples=tsamples)
+    for v in vcf:
+        for f in v.info.fields:
+            #echo f.name, " -> ", f.n
+            check f.n >= 0
+            check f.name != ""
 
   test "that adding a new sample and setting values works.":
     var vcf:VCF

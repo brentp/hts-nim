@@ -64,6 +64,7 @@ type
     BCF_HL_GEN  #5 // generic header line
 
   BCF_TYPE* {.pure.} = enum
+    NULL = 0
     INT8 = 1
     INT16 = 2
     INT32 = 3
@@ -275,7 +276,7 @@ proc get*(i:INFO, key:string, data:var seq[float32]): Status {.inline.} =
   toSeq[float32](data, i.v.p, ret.int)
 
 proc get*(i:INFO, key:string, data:var string): Status {.inline.} =
-  ## fills the data with the value for the key and returns a bool indicating if the key was found.
+  ## fills the data with the value for the key and returns a Status indicating success
   var n:cint = 0
   result = Status.OK
 
@@ -301,6 +302,12 @@ proc bcf_hdr_id2type(hdr:ptr bcf_hdr_t, htype:int, int_id:int): int {.inline.}=
   var d = cast[CPtr[bcf_idpair_t]](hdr.id[0])
   var v = d[int_id.cint].val.info[htype].int
   return (v shr 4) and 0xf
+
+proc bcf_hdr_id2number(hdr:ptr bcf_hdr_t, htype:int, int_id:int): int {.inline.}=
+  # translation of htslib macro.
+  var d = cast[CPtr[bcf_idpair_t]](hdr.id[0])
+  var v = d[int_id.cint].val.info[htype].int
+  return (v shr 12)
 
 proc delete*(i:INFO, key:string): Status {.inline.} =
   ## delete the value from the INFO field  
@@ -452,6 +459,21 @@ proc fields*(f:FORMAT): seq[FormatField] {.inline.} =
     result[i].name = $bcf_hdr_int2id(f.v.vcf.header.hdr, BCF_DT_ID, fmt.id)
     result[i].vtype = BCF_TYPE(fmt.`type`)
     result[i].n_per_sample = fmt.n
+
+type InfoField* = object
+    name*: string
+    n*: int
+    ## number of values. 1048575 means variable-length (Number=A)
+    vtype*: BCF_TYPE
+
+iterator fields*(info:INFO): InfoField =
+  for i in 0..<info.v.c.n_info.int:
+    var fld = cast[CPtr[bcf_info_t]](info.v.c.d.info)[i]
+    var typ = BCF_TYPE(fld.`type`)
+    var r = InfoField(name: $bcf_hdr_int2id(info.v.vcf.header.hdr, BCF_DT_ID, fld.key),
+                      n: bcf_hdr_id2number(info.v.vcf.header.hdr, BCF_HEADER_LINE.BCF_HL_INFO.cint, fld.key),
+                      vtype: typ)
+    yield r
 
 proc CHROM*(v:Variant): cstring {.inline.} =
   ## return the chromosome associated with the variant
