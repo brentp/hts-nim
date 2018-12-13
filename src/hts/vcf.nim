@@ -150,6 +150,7 @@ proc toSeq[T](data: var seq[T], p:pointer, n:int) {.inline.} =
   # < 2% for 3 samples.
   if data.len != n:
     data.set_len(n)
+  if n == 0: return
   c_memcpy(data[0].addr.pointer, p, (n * sizeof(T)).csize)
 
 proc get*(f:FORMAT, key:string, data:var seq[int32]): Status {.inline.} =
