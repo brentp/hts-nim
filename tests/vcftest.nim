@@ -20,6 +20,16 @@ proc isNan(f:float32): bool =
 
 
 suite "vcf suite":
+
+  test "filter":
+    var v:VCF
+    var tsamples = @["101976-101976", "100920-100920", "100231-100231", "100232-100232", "100919-100919"]
+    check open(v, "tests/test.vcf.gz", samples=tsamples)
+    for variant in v:
+        check variant.FILTER != "."
+        if variant.POS == 10428:
+          check variant.FILTER == "PASS"
+
   test "test writer":
 
     var tsamples = @["101976-101976", "100920-100920", "100231-100231", "100232-100232", "100919-100919"]
@@ -32,6 +42,7 @@ suite "vcf suite":
     var i = 0
 
     for variant in v:
+      check variant.rid == 0
       var val = @[0.6789'f32]
       check variant.info.set("VQSLOD", val) == Status.OK
       # or for a single value:

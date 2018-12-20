@@ -462,6 +462,10 @@ proc CHROM*(v:Variant): cstring {.inline.} =
   ## return the chromosome associated with the variant
   return bcf_hdr_id2name(v.vcf.header.hdr, v.c.rid)
 
+proc rid*(v:Variant): int32 {.inline.} =
+  ## return the reference id of the variant.
+  return v.c.rid
+
 proc tostring*(v:Variant): string =
   ## return the full variant string including new-line from vcf_format.
   var s = kstring_t(s:nil, l:0, m:0)
