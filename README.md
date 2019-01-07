@@ -48,13 +48,15 @@ for record in b.query("6", 30816675, 32816675):
     # cigar is an iterable of operations:
     for op in record.cigar:
       # $op gives the string repr of the operation, e.g. '151M'
-      echo $op, op.consumes.reference, op.consumes.query
+      echo $op, " ", op.consumes.reference, " ", op.consumes.query
 
-    # tags are pulled with `aux`
-    var mismatches = record.aux("NM")
-    if mismatches != nil and mismatches.asInt.get < 3:
-      var rg = record.aux("RG")
-      echo rg.asString
+    # tags are pulled by type `ta`
+    var mismatches = tag[int](record, "NM")
+    if mismatches.isNone: continue
+    if mismatches.get < 3:
+      var rg = tag[string](record, "RG")
+      if rg.isNone: continue
+      echo rg.get
 
 # cram requires an fasta to decode:
 var cram:Bam
