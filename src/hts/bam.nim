@@ -298,7 +298,7 @@ proc open*(bam: var Bam, path: cstring, threads: int=0, mode:string="r", fai: cs
   ## if index is true, then it will attempt to open an index file for regional queries.
   var hts = hts_open(path, mode)
   if hts == nil:
-      stderr.write_line "[hts-nim] could open '" & $path & "'"
+      stderr.write_line "[hts-nim] could not open '" & $path & "'"
       return false
   new(bam, finalize_bam)
   bam.hts = hts
