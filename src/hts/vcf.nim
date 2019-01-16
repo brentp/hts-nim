@@ -390,6 +390,11 @@ proc write_variant*(v:VCF, variant:Variant): bool =
       doAssert bcf_hdr_sync(variant.vcf.header.hdr) == 0
   return bcf_write(v.hts, v.header.hdr, variant.c) == 0
 
+var
+  errno* {.importc, header: "<errno.h>".}: cint
+
+proc strerror(errnum:cint): cstring {.importc, header: "<errno.h>", cdecl.}
+
 proc open*(v:var VCF, fname:string, mode:string="r", samples:seq[string]=empty_samples, threads:int=0): bool =
   ## open a VCF at the given path
   new(v, destroy_vcf)
@@ -401,7 +406,7 @@ proc open*(v:var VCF, fname:string, mode:string="r", samples:seq[string]=empty_s
   v.hts = hts_open(fname.cstring, vmode.cstring)
   v.fname = fname
   if v.hts == nil:
-    stderr.write_line "hts-nim/vcf: error opening file:" & fname
+    stderr.write_line "hts-nim/vcf: error opening file:" & fname & ". " & $strerror(errno)
     return false
 
   if mode[0] == 'w': return true

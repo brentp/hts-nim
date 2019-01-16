@@ -293,19 +293,24 @@ proc NewRecord*(h:Header): Record =
   result.b = b
   result.hdr = h
 
+var
+  errno* {.importc, header: "<errno.h>".}: cint
+
+proc strerror(errnum:cint): cstring {.importc, header: "<errno.h>", cdecl.}
+
 proc open*(bam: var Bam, path: cstring, threads: int=0, mode:string="r", fai: cstring=nil, index: bool=false): bool {.discardable.} =
   ## `open_hts` returns a bam object for the given path. If CRAM, then fai must be given.
   ## if index is true, then it will attempt to open an index file for regional queries.
   var hts = hts_open(path, mode)
   if hts == nil:
-      stderr.write_line "[hts-nim] could not open '" & $path & "'"
+      stderr.write_line "[hts-nim] could not open '" & $path & "'. " & $strerror(errno)
       return false
   new(bam, finalize_bam)
   bam.hts = hts
 
   if fai != nil:
     if 0 != hts_set_fai_filename(hts, fai):
-      stderr.write_line "[hts-nim] could not load '" & $fai & "' as fasta index"
+      stderr.write_line "[hts-nim] could not load '" & $fai & "' as fasta index. " & $strerror(errno)
       return false
 
   if mode[0] == 'r' and 0 != threads and 0 != hts_set_threads(hts, cint(threads)):
@@ -331,7 +336,7 @@ proc open*(bam: var Bam, path: cstring, threads: int=0, mode:string="r", fai: cs
     if idx != nil:
         bam.idx = idx
     else:
-      stderr.write_line "index not found for:", path
+      stderr.write_line "index not found for:", $path & ". " & $strerror(errno)
       return false
   return true
 
