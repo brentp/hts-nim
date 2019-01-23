@@ -339,13 +339,12 @@ proc destroy_variant(v:Variant) =
   if v.p != nil:
     free(v.p)
 
-proc from_string*(v: var Variant, h: Header, s:string) =
+proc from_string*(v: var Variant, h: Header, s:var string) =
   var str = kstring_t(s:s.cstring, l:s.len, m:s.len)
   if v == nil:
     new(v, destroy_variant)
   if v.c == nil:
     v.c = bcf_init()
-
   if vcf_parse(str.addr, h.hdr, v.c) != 0:
    raise newException(ValueError, "hts-nim/Variant/from_string: error parsing variant:" & s)
 
