@@ -119,6 +119,24 @@ proc from_string*(h: var Header, s:string) =
   if bcf_hdr_sync(h.hdr) != 0:
    raise newException(ValueError, "hts-nim/Header/from_string: error setting header with:" & s)
 
+proc init_header*(h: var Header, samples:seq[string] = @[]) =
+  var default_header = ("""##fileformat=VCFv4.2
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT""")
+  if len(samples) != 0:
+    default_header &= "	" & samples.join("	")
+  h.from_string(default_header)
+
+proc add_contig*(h:Header, ID:string, meta:tuple = ()): Status =
+  ## add a contig field to the header with the given values
+  var str = "##contig=<ID=" & ID
+  for key, value in fieldPairs(meta):
+    str &= "," & key & "=" & value
+  return h.add_string(str & ">")
+
+proc add_filter*(h:Header, ID:string, Description: string): Status =
+  ## add a FILTER field to the header with the given values
+  return h.add_string(format("##FILTER=<ID=$#,Description=\"$#\">", ID, Description))
+
 proc add_info*(h:Header, ID:string, Number:string, Type:string, Description: string): Status =
   ## add an INFO field to the header with the given values
   return h.add_string(format("##INFO=<ID=$#,Number=$#,Type=$#,Description=\"$#\">", ID, Number, Type, Description))
@@ -347,6 +365,23 @@ proc from_string*(v: var Variant, h: Header, s:var string) =
     v.c = bcf_init()
   if vcf_parse(str.addr, h.hdr, v.c) != 0:
    raise newException(ValueError, "hts-nim/Variant/from_string: error parsing variant:" & s)
+
+proc add_filters*(v:Variant, filters:seq[string]) =
+  var filter_id: cint
+  for filter in filters:
+    filter_id = bcf_hdr_id2int(v.vcf.header.hdr, BCF_DT_ID, filter)
+    doAssert bcf_add_filter(v.vcf.header.hdr, v.c, filter_id) == 1
+
+proc new_variant*(v:VCF, contig: string, pos: int32, id:string=".", REF:string=".", ALT:string=".", qual:float = 0, filters:seq[string] = @[]): Variant =
+  new(result, destroy_variant)
+  result.vcf = v
+  result.c = bcf_init()
+  result.c.rid = bcf_hdr_name2id(result.vcf.header.hdr, contig)
+  result.c.pos = pos
+  result.c.d.id = id
+  doAssert bcf_update_alleles_str(result.vcf.header.hdr, result.c, REF & "," & ALT) == 0
+  result.c.qual = qual
+  result.add_filters(filters)
 
 proc destroy_vcf(v:VCF) =
   bcf_hdr_destroy(v.header.hdr)
