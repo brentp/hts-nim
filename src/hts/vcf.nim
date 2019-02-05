@@ -765,12 +765,11 @@ proc `$`*(gs:Genotypes): string =
 
 proc alts*(gs:Genotypes): seq[int8] {.inline.} =
   ## return the number of alternate alleles. Unknown is -1.
-  var ret = newSeq[int8](gs.len)
+  result = newSeq[int8](gs.len)
   var i = 0
   for g in gs:
-    ret[i] = g.alts
+    result[i] = g.alts
     i += 1
-  return ret
 
 proc `$`*(v:Variant): string =
   return format("Variant($#:$# $#/$#)" % [$v.CHROM, $v.POS, $v.REF, join(v.ALT, ",")])
