@@ -84,6 +84,8 @@ proc sequence*(r: Record, s: var string): string =
 
 proc base_at*(r:Record, i:int): char {.inline.} =
   ## return just the base at the requsted index 'i' into the query sequence.
+  when defined(debug):
+    assert i >= 0
   if i >= r.b.core.l_qseq:
     return '.'
   var bseq = bam_get_seq(r.b)
@@ -165,21 +167,6 @@ proc cigar*(r: Record): Cigar {.inline.} =
   ## `cigar` returns a `Cigar` object.
   result = newCigar(bam_get_cigar(r.b), r.b.core.n_cigar)
 
-iterator querys*(bam: Bam, region: string): Record {.deprecated:"hts/bam: use query for string queries".} =
-  ## query iterates over the given region. A single element is used and
-  ## overwritten on each iteration so use `Record.copy` to retain.
-  if bam.idx == nil:
-    quit "must open index before querying"
-  var qiter = sam_itr_querys(bam.idx, bam.hdr.hdr, region);
-  if qiter != nil:
-    var slen = sam_itr_next(bam.hts, qiter, bam.rec.b)
-    while slen > 0:
-      yield bam.rec
-      slen = sam_itr_next(bam.hts, qiter, bam.rec.b)
-    hts_itr_destroy(qiter)
-    if slen < -1:
-      stderr.write_line("[hts-nim] error reading region:", region)
-
 iterator query*(bam: Bam, chrom:string, start:int=0, stop:int=0): Record =
   ## query iterates over the given region. A single element is used and
   ## overwritten on each iteration so use `Record.copy` to retain.
@@ -208,19 +195,6 @@ iterator query*(bam: Bam, tid:int, start:int=0, stop:int=(-1)): Record =
   var stop = stop
   if stop == -1:
     stop = bam.hdr.targets[tid].length.int
-  var qiter = sam_itr_queryi(bam.idx, cint(tid), cint(start), cint(stop));
-  if qiter != nil:
-    var slen = sam_itr_next(bam.hts, qiter, bam.rec.b)
-    while slen >= 0:
-      yield bam.rec
-      slen = sam_itr_next(bam.hts, qiter, bam.rec.b)
-    hts_itr_destroy(qiter)
-    if slen < -1:
-      stderr.write_line("[hts-nim] error in bam.queryi:" & $slen)
-
-iterator queryi*(bam: Bam, tid:int, start:int, stop:int): Record {.deprecated: "use \"query\" to iterate with tid".}=
-  ## query iterates over the given region. A single element is used and
-  ## overwritten on each iteration so use `Record.copy` to retain.
   var qiter = sam_itr_queryi(bam.idx, cint(tid), cint(start), cint(stop));
   if qiter != nil:
     var slen = sam_itr_next(bam.hts, qiter, bam.rec.b)
