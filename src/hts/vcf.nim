@@ -332,7 +332,7 @@ proc set*(i:INFO, key:string, values:var seq[int32]): Status {.inline.} =
       values[0].addr.pointer, len(values).cint, BCF_HT_INT.cint)
   return Status(ret.int)
 
-proc destroy_variant*(v:Variant) =
+proc destroy_variant(v:Variant) =
   if v != nil and v.c != nil and v.own:
     bcf_destroy(v.c)
     v.c = nil
@@ -347,6 +347,11 @@ proc from_string*(v: var Variant, h: Header, s:var string) =
     v.c = bcf_init()
   if vcf_parse(str.addr, h.hdr, v.c) != 0:
    raise newException(ValueError, "hts-nim/Variant/from_string: error parsing variant:" & s)
+
+proc newVariant*(): Variant =
+  ## make an empty variant.
+  new(result, destroy_variant)
+  result.c = bcf_init()
 
 proc destroy_vcf(v:VCF) =
   bcf_hdr_destroy(v.header.hdr)
