@@ -686,7 +686,7 @@ proc ALT*(v:Variant): seq[string] {.inline.} =
     result[i-1] = $(v.c.d.allele[i])
 
 type
-  Genotypes* = ref object
+  Genotypes* = object
     ## Genotypes are the genotype calls for each sample.
     ## These are represented efficiently with the int32 values used in the underlying
     ## representation. However, we are able to efficiently manipulate them by adding
@@ -703,8 +703,9 @@ type
 
 proc copy*(g: Genotypes): Genotypes =
   ## make a copy of the genotypes
-  var gts = new_seq[int32](g.gts.len)
-  copyMem(gts[0].addr.pointer, g.gts[0].addr.pointer, gts.len * sizeof(int32))
+  var gts = newSeqUninitialized[int32](g.gts.len)
+  var src = g.gts[0]
+  copyMem(gts[0].addr.pointer, src.addr.pointer, gts.len * sizeof(int32))
   return Genotypes(gts:gts, ploidy:g.ploidy)
 
 proc phased*(a:Allele): bool {.inline.} =
@@ -713,16 +714,14 @@ proc phased*(a:Allele): bool {.inline.} =
 
 proc value*(a:Allele): int {.inline.} =
   ## e.g. 0 for REF, 1 for first alt, -1 for unknown.
-  if int32(a) < 0:
+  if cast[int32](a) < 0:
     return int(a)
-  return (int32(a) shr 1) - 1
+  return (cast[int32](a) shr 1) - 1
 
-proc `[]`*(g:Genotypes, i:int): seq[Allele] {.inline.} =
-  var alleles = new_seq[Allele](g.ploidy)
+proc `[]`*(g:Genotypes, i:int): Genotype {.inline.} =
+  result = cast[seq[Allele]](newSeqUninitialized[int32](g.ploidy))
   for k, v in g.gts[i*g.ploidy..<(i+1)*g.ploidy]:
-    alleles[k] = Allele(v)
-
-  return alleles
+    result[k] = cast[Allele](v)
 
 proc len*(g:Genotypes): int {.inline.} =
   ## this should match the number of samples.
@@ -755,7 +754,7 @@ proc alts*(g:Genotype): int8 {.inline.} =
   ## 0/. == 0
   ## ./. -> -1
   ## 1/1 -> 2
-  if g.len == 2:
+  if likely(g.len == 2):
     var g0 = g[0].value
     var g1 = g[1].value
     if g0 >= 0 and g1 >= 0:
@@ -788,7 +787,7 @@ proc alts*(g:Genotype): int8 {.inline.} =
 proc genotypes*(f:FORMAT, gts: var seq[int32]): Genotypes {.inline.} =
   ## give sequence of genotypes (using the underlying array given in gts)
   if f.get("GT", gts) != Status.OK:
-    return nil
+    return
   result = Genotypes(gts: gts, ploidy: int(gts.len/f.v.n_samples))
 
 proc `$`*(gs:Genotypes): string =
@@ -800,12 +799,11 @@ proc `$`*(gs:Genotypes): string =
 
 proc alts*(gs:Genotypes): seq[int8] {.inline.} =
   ## return the number of alternate alleles. Unknown is -1.
-  var ret = newSeq[int8](gs.len)
+  result = newSeqUninitialized[int8](gs.len)
   var i = 0
   for g in gs:
-    ret[i] = g.alts
+    result[i] = g.alts
     i += 1
-  return ret
 
 proc `$`*(v:Variant): string =
   return format("Variant($#:$# $#/$#)" % [$v.CHROM, $v.POS, $v.REF, join(v.ALT, ",")])
