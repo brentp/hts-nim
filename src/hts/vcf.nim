@@ -348,6 +348,11 @@ proc from_string*(v: var Variant, h: Header, s:var string) =
   if vcf_parse(str.addr, h.hdr, v.c) != 0:
    raise newException(ValueError, "hts-nim/Variant/from_string: error parsing variant:" & s)
 
+proc newVariant*(): Variant =
+  ## make an empty variant.
+  new(result, destroy_variant)
+  result.c = bcf_init()
+
 proc destroy_vcf(v:VCF) =
   bcf_hdr_destroy(v.header.hdr)
   if v.tidx != nil:
