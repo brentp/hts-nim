@@ -215,6 +215,12 @@ suite "vcf suite":
     for variant in vcf:
       check variant.info.set("hello", val) == Status.OK
 
+  test "remove info from header":
+    var vcf:VCF
+    check open(vcf, "tests/test.vcf.gz")
+    check vcf.header.add_info("toto", "1", "String", "New string field") == Status.OK
+    check vcf.header.remove_info("toto") == Status.OK
+
   test "add format to header":
     var vcf:VCF
     check open(vcf, "tests/test.vcf.gz")
@@ -225,6 +231,12 @@ suite "vcf suite":
 
       # note that we can't set the INFO with this new field.
       check variant.info.set("hello", val) == Status.UndefinedTag
+
+  test "remove format from header":
+    var vcf:VCF
+    check open(vcf, "tests/test.vcf.gz")
+    check vcf.header.add_format("hello", "1", "Integer", "New int format field") == Status.OK
+    check vcf.header.remove_format("hello") == Status.OK
 
   test "set qual":
 

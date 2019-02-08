@@ -123,9 +123,19 @@ proc add_info*(h:Header, ID:string, Number:string, Type:string, Description: str
   ## add an INFO field to the header with the given values
   return h.add_string(format("##INFO=<ID=$#,Number=$#,Type=$#,Description=\"$#\">", ID, Number, Type, Description))
 
+proc remove_info*(h:Header, ID:string): Status =
+  ## remove an INFO field from the header
+  bcf_hdr_remove(h.hdr, BCF_HEADER_LINE.BCF_HL_INFO.cint, ID.cstring)
+  return Status(bcf_hdr_sync(h.hdr))
+
 proc add_format*(h:Header, ID:string, Number:string, Type:string, Description: string): Status =
   ## add a FORMAT field to the header with the given values
   return h.add_string(format("##FORMAT=<ID=$#,Number=$#,Type=$#,Description=\"$#\">", ID, Number, Type, Description))
+
+proc remove_format*(h:Header, ID:string): Status =
+  ## remove a FORMAT field from the header
+  bcf_hdr_remove(h.hdr, BCF_HEADER_LINE.BCF_HL_FMT.cint, ID.cstring)
+  return Status(bcf_hdr_sync(h.hdr))
 
 proc info*(v:Variant): INFO {.inline.} =
   result = INFO(i:0, v:v)
