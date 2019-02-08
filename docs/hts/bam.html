@@ -27,232 +27,113 @@ customize this style sheet.
 Modified from Chad Skeeters' rst2html-style
 https://bitbucket.org/cskeeters/rst2html-style/
 
-Modified by Boyd Greenfield
+Modified by Boyd Greenfield and narimiran
 */
-/* SCSS variables */
-/* Text weights */
-/* Body colors */
-/* Text colors */
-/* Link colors */
-/* Syntax highlighting colors */
-/* Pct changes */
-/* Mixins */
-/* Body/layout */
+
 html {
   font-size: 100%;
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%; }
 
-/* Where we want fancier font if available */
-h1, h2, h3, h4, h5, h6, p.module-desc, table.docinfo + blockquote p, table.docinfo blockquote p, h1 + blockquote p {
-  font-family: "Lato", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif !important; }
-
-h1.title {
-  font-weight: 900; }
-
 body {
   font-family: "Lato", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
   font-weight: 400;
-  font-size: 16px;
-  line-height: 20px;
-  color: #444;
-  letter-spacing: 0.15px;
-  background-color: #FDFBFA; }
+  font-size: 1.125em;
+  line-height: 1.5;
+  color: #222;
+  background-color: #FCFCFC; }
 
 /* Skeleton grid */
 .container {
   position: relative;
   width: 100%;
-  max-width: 960px;
+  max-width: 1050px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0;
   box-sizing: border-box; }
 
 .column,
 .columns {
   width: 100%;
   float: left;
-  box-sizing: border-box; }
+  box-sizing: border-box;
+  margin-left: 1%;
+}
 
-/* For devices larger than 400px */
-@media (min-width: 400px) {
-  .container {
-    width: 100%;
-    padding: 0; } }
-/* For devices larger than 650px */
-@media (min-width: 650px) {
-  .container {
-    width: 100%; }
+.column:first-child,
+.columns:first-child {
+  margin-left: 0; }
 
-  .column,
-  .columns {
-    margin-left: 4%; }
+.three.columns {
+  width: 19%; }
 
-  .column:first-child,
-  .columns:first-child {
-    margin-left: 0; }
+.nine.columns {
+  width: 80.0%; }
 
-  .one.column,
-  .one.columns {
-    width: 4.66666666667%; }
+.twelve.columns {
+  width: 100%;
+  margin-left: 0; }
 
-  .two.columns {
-    width: 13.3333333333%; }
-
+@media screen and (max-width: 860px) {
   .three.columns {
-    width: 22%; }
-
-  .four.columns {
-    width: 30.6666666667%; }
-
-  .five.columns {
-    width: 39.3333333333%; }
-
-  .six.columns {
-    width: 48%; }
-
-  .seven.columns {
-    width: 56.6666666667%; }
-
-  .eight.columns {
-    width: 65.3333333333%; }
-
+    display: none;
+  }
   .nine.columns {
-    width: 74.0%; }
-
-  .ten.columns {
-    width: 82.6666666667%; }
-
-  .eleven.columns {
-    width: 91.3333333333%; }
-
-  .twelve.columns {
-    width: 100%;
-    margin-left: 0; }
-
-  .one-third.column {
-    width: 30.6666666667%; }
-
-  .two-thirds.column {
-    width: 65.3333333333%; } }
-/* Customer Overrides */
-.footer {
-  text-align: center;
-  color: #969696;
-  padding-top: 10%; }
-
-p.module-desc {
-  font-size: 1.1em;
-  color: #666666; }
-
-a.link-seesrc {
-  color: #aec7d2;
-  font-style: italic; }
-
-a.link-seesrc:hover {
-  color: #6c9aae; }
-
-#toc-list {
-  word-wrap: break-word; }
-
-ul.simple-toc {
-  list-style: none; }
-
-ul.simple-toc a.reference-toplevel {
-  font-weight: bold;
-  color: #0077b3; }
-
-ul.simple-toc-section {
-  list-style-type: circle;
-  color: #6c9aae; }
-
-ul.simple-toc-section a.reference {
-  color: #0077b3; }
+    width: 98.0%;
+  }
+  body {
+    font-size: 1em;
+    line-height: 1.35;
+  }
+}
 
 cite {
   font-style: italic !important; }
 
-dt > pre {
-  border-color: rgba(0, 0, 0, 0.1);
-  background-color: rgba(255, 255, 255, 0.3);
-  margin: 15px 0px 5px; }
-
-dd > pre {
-  border-color: rgba(0, 0, 0, 0.1);
-  background-color: whitesmoke;
-  margin-top: 8px; }
-
-.item > dd {
-  margin-left: 10px;
-  margin-bottom: 30px; }
-
-/* Nim line-numbered tables */
-.line-nums-table {
-  width: 100%;
-  table-layout: fixed; }
 
 /* Nim search input */
 div#searchInputDiv {
-  margin-bottom: 8px;
+  margin-bottom: 1em;
 }
-div#searchInputDiv input#searchInput {
-  width: 10em;
-}
-div.search-groupby {
-  margin-bottom: 8px;
+input#searchInput {
+  width: 80%;
 }
 
-table.line-nums-table {
-  border-radius: 4px;
-  border: 1px solid #cccccc;
-  background-color: whitesmoke;
-  border-collapse: separate;
-  margin-top: 15px;
-  margin-bottom: 25px; }
-
-.line-nums-table tbody {
-  border: none; }
-
-.line-nums-table td pre {
-  border: none;
-  background-color: transparent; }
-
-.line-nums-table td.blob-line-nums {
-  width: 28px; }
-
-.line-nums-table td.blob-line-nums pre {
-  color: #b0b0b0;
-  -webkit-filter: opacity(75%);
-  text-align: right;
-  border-color: transparent;
-  background-color: transparent;
-  padding-left: 0px;
-  margin-left: 0px;
-  padding-right: 0px;
-  margin-right: 0px; }
 
 /* Docgen styles */
 /* Links */
 a {
-  color: #0077b3;
-  text-decoration: none; }
+  color: #07b;
+  text-decoration: none;
+}
+
+a span.Identifier {
+  text-decoration: underline;
+  text-decoration-color: #aab;
+}
+
+a.reference-toplevel {
+  font-weight: bold;
+}
+
+a.toc-backref {
+  text-decoration: none;
+  color: #222; }
+
+a.link-seesrc {
+  color: #607c9f;
+  font-size: 0.9em;
+  font-style: italic; }
 
 a:hover,
 a:focus {
-  color: #00334d;
+  color: #607c9f;
   text-decoration: underline; }
 
-a:visited {
-  color: #00334d; }
+a:hover span.Identifier {
+  color: #607c9f;
+}
 
-a:focus {
-  outline: thin dotted #2d2d2d;
-  outline: 5px auto -webkit-focus-ring-color;
-  outline-offset: -2px; }
-
-a:hover,
-a:active {
-  outline: 0; }
 
 sub,
 sup {
@@ -329,379 +210,258 @@ img {
 
   h2,
   h3 {
-    page-break-after: avoid; } }
-.img-rounded {
-  -webkit-border-radius: 6px;
-  -moz-border-radius: 6px;
-  border-radius: 6px; }
+    page-break-after: avoid; }
+}
 
-.img-polaroid {
-  padding: 4px;
-  background-color: rgba(252, 248, 244, 0.75);
-  border: 1px solid #ccc;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); }
 
 p {
-  margin: 0 0 8px; }
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
 
 small {
   font-size: 85%; }
 
 strong {
-  font-weight: 600; }
+  font-weight: 600;
+  font-size: 0.95em;
+  color: #3c3c3c;
+}
 
 em {
   font-style: italic; }
 
-cite {
-  font-style: normal; }
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: "Lato", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
-  font-weight: 600;
-  line-height: 20px;
-  color: inherit;
-  text-rendering: optimizelegibility; }
-
 h1 {
-  font-size: 2em;
+  font-size: 1.8em;
   font-weight: 400;
-  padding-bottom: .15em;
-  border-bottom: 1px solid #aaaaaa;
-  margin-top: 1.0em;
+  padding-bottom: .25em;
+  border-bottom: 1px solid #aaa;
+  margin-top: 2.5em;
+  margin-bottom: 1em;
   line-height: 1.2em; }
 
 h1.title {
   padding-bottom: 1em;
   border-bottom: 0px;
-  font-size: 2.75em; }
+  font-size: 2.5em;
+  text-align: center;
+  font-weight: 900;
+  margin-top: 0.75em;
+  margin-bottom: 0em;
+}
 
 h2 {
-  font-size: 1.5em;
-  margin-top: 1.5em; }
+  font-size: 1.3em;
+  margin-top: 2em; }
+
+h2.subtitle {
+  text-align: center; }
 
 h3 {
-  font-size: 1.3em;
+  font-size: 1.125em;
   font-style: italic;
-  margin-top: 0.75em; }
+  margin-top: 1.5em; }
 
 h4 {
-  font-size: 1.3em;
-  margin-top: 0.5em; }
+  font-size: 1.125em;
+  margin-top: 1em; }
 
 h5 {
-  font-size: 1.2em;
-  margin-top: 0.25em; }
+  font-size: 1.125em;
+  margin-top: 0.75em; }
 
 h6 {
   font-size: 1.1em; }
 
+
 ul,
 ol {
   padding: 0;
-  margin: 0 0 0px 15px; }
+  margin-top: 0.5em;
+  margin-left: 0.75em; }
 
 ul ul,
 ul ol,
 ol ol,
 ol ul {
-  margin-bottom: 0; }
+  margin-bottom: 0;
+  margin-left: 1.25em; }
 
 li {
-  line-height: 20px; }
-
-dl {
-  margin-bottom: 20px; }
-
-dt,
-dd {
-  line-height: 20px; }
-
-dt {
-  font-weight: bold; }
-
-dd {
-  margin-left: 10px;
-  margin-bottom: 26px; }
-
-hr {
-  margin: 20px 0;
-  border: 0;
-  border-top: 1px solid #eeeeee;
-  border-bottom: 1px solid #ffffff; }
-
-abbr[title],
-abbr[data-original-title] {
-  cursor: help;
-  border-bottom: 1px dotted #999999; }
-
-abbr.initialism {
-  font-size: 90%;
-  text-transform: uppercase; }
-
-blockquote {
-  padding: 0 0 0 15px;
-  margin: 0 0 20px;
-  border-left: 5px solid #EFEBE0; }
-
-table.docinfo + blockquote, table.docinfo blockquote, h1 + blockquote {
-  border-left: 5px solid #c9c9c9;
+    list-style-type: circle;
 }
 
-table.docinfo + blockquote p, table.docinfo blockquote p, h1 + blockquote p {
-  margin-bottom: 0;
-  font-size: 15px;
-  font-weight: 200;
-  line-height: 1.5;
-  font-style: italic; }
+ul.simple-boot li {
+    list-style-type: none;
+    margin-left: 0em;
+    margin-bottom: 0.5em;
+}
 
-q:before,
-q:after,
-blockquote:before,
-blockquote:after {
-  content: ""; }
+ol.simple > li, ul.simple > li {
+  margin-bottom: 0.25em;
+  margin-left: 0.4em }
 
-address {
-  display: block;
-  margin-bottom: 20px;
-  font-style: normal;
-  line-height: 20px; }
+ul.simple.simple-toc > li {
+    margin-top: 1em;
+}
 
-code,
-pre {
-  font-family: "Source Code Pro", Monaco, Menlo, Consolas, "Courier New", monospace;
-  padding: 0 3px 2px;
-  font-weight: 500;
-  font-size: 12px;
-  color: #444444;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px; }
+ul.simple-toc {
+  list-style: none;
+  font-size: 0.9em;
+  margin-left: -0.3em;
+  margin-top: 1em; }
+
+ul.simple-toc > li {
+    list-style-type: none;
+}
+
+ul.simple-toc-section {
+  list-style-type: circle;
+  margin-left: 1em;
+  color: #6c9aae; }
+
+
+ol.arabic {
+  list-style: decimal; }
+
+ol.loweralpha {
+  list-style: lower-alpha; }
+
+ol.upperalpha {
+  list-style: upper-alpha; }
+
+ol.lowerroman {
+  list-style: lower-roman; }
+
+ol.upperroman {
+  list-style: upper-roman; }
+
+ul.auto-toc {
+  list-style-type: none; }
+
+
+dl {
+  margin-bottom: 1.5em; }
+
+dt {
+  margin-bottom: -0.5em;
+  margin-left: 0.5em; }
+
+dd {
+  margin-left: 0.5em;
+  margin-bottom: 2.5em;
+  margin-top: 0.5em; }
+
+
+hr {
+  margin: 2em 0;
+  border: 0;
+  border-top: 1px solid #aaa; }
+
+blockquote {
+  font-size: 0.9em;
+  font-style: italic;
+  padding-left: 0.5em;
+  margin-left: 0;
+  border-left: 5px solid #bbc;
+}
 
 .pre {
   font-family: "Source Code Pro", Monaco, Menlo, Consolas, "Courier New", monospace;
-  font-weight: 600;
-  /*color: #504da6;*/
+  font-weight: 500;
+  font-size: 0.85em;
+  background-color: #f0f3ff;
+  padding-left: 3px;
+  padding-right: 3px;
+  border-radius: 4px;
 }
 
-code {
-  padding: 2px 4px;
-  color: #444444;
-  white-space: nowrap;
-  background-color: white;
-  border: 1px solid #777777; }
-
 pre {
+  font-family: "Source Code Pro", Monaco, Menlo, Consolas, "Courier New", monospace;
+  color: #222;
+  font-weight: 500;
   display: inline-block;
   box-sizing: border-box;
-  min-width: calc(100% - 19.5px);
-  padding: 9.5px;
-  margin: 0.25em 10px 10px 10px;
-  font-size: 15px;
-  line-height: 20px;
+  min-width: 100%;
+  padding: 0.5em;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  font-size: 0.85em;
   white-space: pre !important;
   overflow-y: hidden;
   overflow-x: visible;
-  background-color: rgba(0, 0, 0, 0.01);
-  border: 1px solid #cccccc;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px; }
-
-pre.prettyprint {
-  margin-bottom: 20px; }
-
-pre code {
-  padding: 0;
-  color: inherit;
-  white-space: pre;
-  overflow-x: visible;
-  background-color: transparent;
-  border: 0; }
+  background-color: ghostwhite;
+  border: 1px solid #dde;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px; }
 
 .pre-scrollable {
   max-height: 340px;
   overflow-y: scroll; }
 
+
+/* Nim line-numbered tables */
+.line-nums-table {
+  width: 100%;
+  table-layout: fixed; }
+
+table.line-nums-table {
+  border-radius: 4px;
+  border: 1px solid #cccccc;
+  background-color: ghostwhite;
+  border-collapse: separate;
+  margin-top: 15px;
+  margin-bottom: 25px; }
+
+.line-nums-table tbody {
+  border: none; }
+
+.line-nums-table td pre {
+  border: none;
+  background-color: transparent; }
+
+.line-nums-table td.blob-line-nums {
+  width: 28px; }
+
+.line-nums-table td.blob-line-nums pre {
+  color: #b0b0b0;
+  -webkit-filter: opacity(75%);
+  text-align: right;
+  border-color: transparent;
+  background-color: transparent;
+  padding-left: 0px;
+  margin-left: 0px;
+  padding-right: 0px;
+  margin-right: 0px; }
+
+
 table {
   max-width: 100%;
   background-color: transparent;
+  margin-top: 0.5em;
+  margin-bottom: 1.5em;
   border-collapse: collapse;
-  border-spacing: 0; }
-
-table th, table td {
-  padding: 0px 8px 0px;
+  border-color: #ccc;
+  border-spacing: 0;
+  font-size: 0.9em;
 }
 
-.table {
-  width: 100%;
-  margin-bottom: 20px; }
+table th, table td {
+  padding: 0px 0.5em 0px;
+}
 
-.table th,
-.table td {
-  padding: 8px;
-  line-height: 20px;
-  text-align: left;
-  vertical-align: top;
-  border-top: 1px solid #444444; }
-
-.table th {
+table th {
+  background-color: #e8e8e8;
   font-weight: bold; }
 
-.table thead th {
-  vertical-align: bottom; }
+table th.docinfo-name {
+    background-color: transparent;
+}
 
-.table caption + thead tr:first-child th,
-.table caption + thead tr:first-child td,
-.table colgroup + thead tr:first-child th,
-.table colgroup + thead tr:first-child td,
-.table thead:first-child tr:first-child th,
-.table thead:first-child tr:first-child td {
-  border-top: 0; }
+table tr:hover {
+  background-color: ghostwhite; }
 
-.table tbody + tbody {
-  border-top: 2px solid #444444; }
-
-.table .table {
-  background-color: rgba(252, 248, 244, 0.75); }
-
-.table-condensed th,
-.table-condensed td {
-  padding: 4px 5px; }
-
-.table-bordered {
-  border: 1px solid #444444;
-  border-collapse: separate;
-  *border-collapse: collapse;
-  border-left: 0;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px; }
-
-.table-bordered th,
-.table-bordered td {
-  border-left: 1px solid #444444; }
-
-.table-bordered caption + thead tr:first-child th,
-.table-bordered caption + tbody tr:first-child th,
-.table-bordered caption + tbody tr:first-child td,
-.table-bordered colgroup + thead tr:first-child th,
-.table-bordered colgroup + tbody tr:first-child th,
-.table-bordered colgroup + tbody tr:first-child td,
-.table-bordered thead:first-child tr:first-child th,
-.table-bordered tbody:first-child tr:first-child th,
-.table-bordered tbody:first-child tr:first-child td {
-  border-top: 0; }
-
-.table-bordered thead:first-child tr:first-child > th:first-child,
-.table-bordered tbody:first-child tr:first-child > td:first-child,
-.table-bordered tbody:first-child tr:first-child > th:first-child {
-  -webkit-border-top-left-radius: 4px;
-  border-top-left-radius: 4px;
-  -moz-border-radius-topleft: 4px; }
-
-.table-bordered thead:first-child tr:first-child > th:last-child,
-.table-bordered tbody:first-child tr:first-child > td:last-child,
-.table-bordered tbody:first-child tr:first-child > th:last-child {
-  -webkit-border-top-right-radius: 4px;
-  border-top-right-radius: 4px;
-  -moz-border-radius-topright: 4px; }
-
-.table-bordered thead:last-child tr:last-child > th:first-child,
-.table-bordered tbody:last-child tr:last-child > td:first-child,
-.table-bordered tbody:last-child tr:last-child > th:first-child,
-.table-bordered tfoot:last-child tr:last-child > td:first-child,
-.table-bordered tfoot:last-child tr:last-child > th:first-child {
-  -webkit-border-bottom-left-radius: 4px;
-  border-bottom-left-radius: 4px;
-  -moz-border-radius-bottomleft: 4px; }
-
-.table-bordered thead:last-child tr:last-child > th:last-child,
-.table-bordered tbody:last-child tr:last-child > td:last-child,
-.table-bordered tbody:last-child tr:last-child > th:last-child,
-.table-bordered tfoot:last-child tr:last-child > td:last-child,
-.table-bordered tfoot:last-child tr:last-child > th:last-child {
-  -webkit-border-bottom-right-radius: 4px;
-  border-bottom-right-radius: 4px;
-  -moz-border-radius-bottomright: 4px; }
-
-.table-bordered tfoot + tbody:last-child tr:last-child td:first-child {
-  -webkit-border-bottom-left-radius: 0;
-  border-bottom-left-radius: 0;
-  -moz-border-radius-bottomleft: 0; }
-
-.table-bordered tfoot + tbody:last-child tr:last-child td:last-child {
-  -webkit-border-bottom-right-radius: 0;
-  border-bottom-right-radius: 0;
-  -moz-border-radius-bottomright: 0; }
-
-.table-bordered caption + thead tr:first-child th:first-child,
-.table-bordered caption + tbody tr:first-child td:first-child,
-.table-bordered colgroup + thead tr:first-child th:first-child,
-.table-bordered colgroup + tbody tr:first-child td:first-child {
-  -webkit-border-top-left-radius: 4px;
-  border-top-left-radius: 4px;
-  -moz-border-radius-topleft: 4px; }
-
-.table-bordered caption + thead tr:first-child th:last-child,
-.table-bordered caption + tbody tr:first-child td:last-child,
-.table-bordered colgroup + thead tr:first-child th:last-child,
-.table-bordered colgroup + tbody tr:first-child td:last-child {
-  -webkit-border-top-right-radius: 4px;
-  border-top-right-radius: 4px;
-  -moz-border-radius-topright: 4px; }
-
-table.docutils th {
-  background-color: #e8e8e8; }
-
-table.docutils tr:hover {
-  background-color: whitesmoke; }
-
-.table-striped tbody > tr:nth-child(odd) > td,
-.table-striped tbody > tr:nth-child(odd) > th {
-  background-color: rgba(252, 248, 244, 0.75); }
-
-.table-hover tbody tr:hover > td,
-.table-hover tbody tr:hover > th {
-  background-color: rgba(241, 222, 204, 0.75); }
-
-table td[class*="span"],
-table th[class*="span"],
-.row-fluid table td[class*="span"],
-.row-fluid table th[class*="span"] {
-  display: table-cell;
-  float: none;
-  margin-left: 0; }
-
-.hero-unit {
-  padding: 60px;
-  margin-bottom: 30px;
-  font-size: 18px;
-  font-weight: 200;
-  line-height: 30px;
-  color: inherit;
-  background-color: rgba(230, 197, 164, 0.75);
-  -webkit-border-radius: 6px;
-  -moz-border-radius: 6px;
-  border-radius: 6px; }
-
-.hero-unit h1 {
-  margin-bottom: 0;
-  font-size: 60px;
-  line-height: 1;
-  letter-spacing: -1px;
-  color: inherit; }
-
-.hero-unit li {
-  line-height: 30px; }
 
 /* rst2html default used to remove borders from tables and images */
 .borderless, table.borderless td, table.borderless th {
@@ -722,10 +482,6 @@ table.borderless td, table.borderless th {
 .hidden {
   display: none; }
 
-a.toc-backref {
-  text-decoration: none;
-  color: #444444; }
-
 blockquote.epigraph {
   margin: 2em 5em; }
 
@@ -735,85 +491,6 @@ dl.docutils dd {
 object[type="image/svg+xml"], object[type="application/x-shockwave-flash"] {
   overflow: hidden; }
 
-/* Uncomment (and remove this text!) to get bold-faced definition list terms
-dl.docutils dt {
-  font-weight: bold }
-*/
-div.abstract {
-  margin: 2em 5em; }
-
-div.abstract p.topic-title {
-  font-weight: bold;
-  text-align: center; }
-
-div.admonition, div.attention, div.caution, div.danger, div.error,
-div.hint, div.important, div.note, div.tip, div.warning {
-  margin: 2em;
-  border: medium outset;
-  padding: 1em; }
-
-div.note, div.warning {
-  margin: 1.5em 0px;
-  border: none; }
-
-div.note p.admonition-title,
-div.warning p.admonition-title {
-  display: none; }
-
-/* Clearfix
- * http://css-tricks.com/snippets/css/clear-fix/
- */
-div.note:after,
-div.warning:after {
-  content: "";
-  display: table;
-  clear: both; }
-
-div.note p:before,
-div.warning p:before {
-  display: block;
-  float: left;
-  font-size: 4em;
-  line-height: 1em;
-  margin-right: 20px;
-  margin-left: 0em;
-  margin-top: -10px;
-  content: '\0270D';
-  /*handwriting*/ }
-
-div.warning p:before {
-  content: '\026A0';
-  /*warning*/ }
-
-div.admonition p.admonition-title, div.hint p.admonition-title,
-div.important p.admonition-title, div.note p.admonition-title,
-div.tip p.admonition-title {
-  font-weight: bold;
-  font-family: "Lato", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif; }
-
-div.attention p.admonition-title, div.caution p.admonition-title,
-div.danger p.admonition-title, div.error p.admonition-title,
-div.warning p.admonition-title, .code .error {
-  color: #b30000;
-  font-weight: bold;
-  font-family: "Lato", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif; }
-
-/* Uncomment (and remove this text!) to get reduced vertical space in
-   compound paragraphs.
-div.compound .compound-first, div.compound .compound-middle {
-  margin-bottom: 0.5em }
-
-div.compound .compound-last, div.compound .compound-middle {
-  margin-top: 0.5em }
-*/
-div.dedication {
-  margin: 2em 5em;
-  text-align: center;
-  font-style: italic; }
-
-div.dedication p.topic-title {
-  font-weight: bold;
-  font-style: normal; }
 
 div.figure {
   margin-left: 2em;
@@ -821,7 +498,13 @@ div.figure {
 
 div.footer, div.header {
   clear: both;
+  text-align: center;
+  color: #666;
   font-size: smaller; }
+
+div.footer {
+    padding-top: 5em;
+}
 
 div.line-block {
   display: block;
@@ -833,45 +516,24 @@ div.line-block div.line-block {
   margin-bottom: 0;
   margin-left: 1.5em; }
 
-div.sidebar {
-  margin: 0 0 0.5em 1em;
-  border: medium outset;
-  padding: 1em;
-  background-color: rgba(252, 248, 244, 0.75);
-  width: 40%;
-  float: right;
-  clear: right; }
-
-div.sidebar p.rubric {
-  font-family: "Lato", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
-  font-size: medium; }
-
-div.system-messages {
-  margin: 5em; }
-
-div.system-messages h1 {
-  color: #b30000; }
-
-div.system-message {
-  border: medium outset;
-  padding: 1em; }
-
-div.system-message p.system-message-title {
-  color: #b30000;
-  font-weight: bold; }
-
 div.topic {
   margin: 2em; }
 
-h1.section-subtitle, h2.section-subtitle, h3.section-subtitle,
-h4.section-subtitle, h5.section-subtitle, h6.section-subtitle {
-  margin-top: 0.4em; }
+div.search_results {
+  background-color: antiquewhite;
+  margin: 3em;
+  padding: 1em;
+  border: 1px solid #4d4d4d;
+}
 
-h1.title {
-  text-align: center; }
+div#global-links ul {
+  margin-left: 0;
+  list-style-type: none;
+}
 
-h2.subtitle {
-  text-align: center; }
+div#global-links > simple-boot {
+    margin-left: 3em;
+}
 
 hr.docutils {
   width: 75%; }
@@ -905,30 +567,6 @@ img.align-center, .figure.align-center, object.align-center {
 div.align-right {
   text-align: inherit; }
 
-/* div.align-center * { */
-/*   text-align: left } */
-
-ul.simple > li {
-  margin-bottom: 0.5em }
-
-ol.simple, ul.simple {
-  margin-bottom: 1em; }
-
-ol.arabic {
-  list-style: decimal; }
-
-ol.loweralpha {
-  list-style: lower-alpha; }
-
-ol.upperalpha {
-  list-style: upper-alpha; }
-
-ol.lowerroman {
-  list-style: lower-roman; }
-
-ol.upperroman {
-  list-style: upper-roman; }
-
 p.attribution {
   text-align: right;
   margin-left: 50%; }
@@ -948,15 +586,6 @@ p.rubric {
   font-size: larger;
   color: maroon;
   text-align: center; }
-
-p.sidebar-title {
-  font-family: "Lato", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
-  font-weight: bold;
-  font-size: larger; }
-
-p.sidebar-subtitle {
-  font-family: "Lato", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
-  font-weight: bold; }
 
 p.topic-title {
   font-weight: bold; }
@@ -997,21 +626,13 @@ pre.code .inserted, code .inserted {
   background-color: #A3D289; }
 
 span.classifier {
-  font-family: "Lato", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
   font-style: oblique; }
 
 span.classifier-delimiter {
-  font-family: "Lato", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
   font-weight: bold; }
-
-span.interpreted {
-  font-family: "Lato", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif; }
 
 span.option {
   white-space: nowrap; }
-
-span.pre {
-  white-space: pre; }
 
 span.problematic {
   color: #b30000; }
@@ -1019,44 +640,6 @@ span.problematic {
 span.section-subtitle {
   /* font-size relative to parent (h1..h6 element) */
   font-size: 80%; }
-
-table.citation {
-  border-left: solid 1px #666666;
-  margin-left: 1px; }
-
-table.docinfo {
-  margin: 0em;
-  margin-top: 2em;
-  margin-bottom: 2em;
-  font-family: "Lato", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif !important;
-  color: #444444; }
-
-table.docutils {
-  margin-top: 0.5em;
-  margin-bottom: 0.5em; }
-
-table.footnote {
-  border-left: solid 1px #2d2d2d;
-  margin-left: 1px; }
-
-table.docutils td, table.docutils th,
-table.docinfo td, table.docinfo th {
-  padding-left: 0.5em;
-  padding-right: 0.5em;
-  vertical-align: top; }
-
-table.docutils th.field-name, table.docinfo th.docinfo-name {
-  font-weight: 700;
-  text-align: left;
-  white-space: nowrap;
-  padding-left: 0; }
-
-h1 tt.docutils, h2 tt.docutils, h3 tt.docutils,
-h4 tt.docutils, h5 tt.docutils, h6 tt.docutils {
-  font-size: 100%; }
-
-ul.auto-toc {
-  list-style-type: none; }
 
 span.DecNumber {
   color: #252dbe; }
@@ -1074,7 +657,7 @@ span.FloatNumber {
   color: #252dbe; }
 
 span.Identifier {
-  color: #3b3b3b; }
+  color: #222; }
 
 span.Keyword {
   font-weight: 600;
@@ -1139,37 +722,22 @@ dt pre > span.Identifier, dt pre > span.Operator {
   color: #155da4;
   font-weight: 700; }
 
-dt pre > span.Identifier ~ span.Identifier, dt pre > span.Operator ~ span.Identifier {
-  color: inherit;
-  font-weight: inherit; }
-
-dt pre > span.Operator ~ span.Identifier {
+dt pre > span.Keyword ~ span.Identifier, dt pre > span.Identifier ~ span.Identifier,
+dt pre > span.Operator ~ span.Identifier, dt pre > span.Other ~ span.Identifier {
   color: inherit;
   font-weight: inherit; }
 
 /* Nim sprite for the footer (taken from main page favicon) */
 .nim-sprite {
   display: inline-block;
-  height: 12px;
-  width: 12px;
+  height: 16px;
+  width: 16px;
   background-position: 0 0;
-  background-size: 12px 12px;
+  background-size: 16px 16px;
   -webkit-filter: opacity(50%);
   background-repeat: no-repeat;
   background-image: url("data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AAAAAAUAAAAF////AP///wD///8A////AP///wD///8A////AP///wD///8A////AAAAAAIAAABbAAAAlQAAAKIAAACbAAAAmwAAAKIAAACVAAAAWwAAAAL///8A////AP///wD///8A////AAAAABQAAADAAAAAYwAAAA3///8A////AP///wD///8AAAAADQAAAGMAAADAAAAAFP///wD///8A////AP///wAAAACdAAAAOv///wD///8A////AP///wD///8A////AP///wD///8AAAAAOgAAAJ3///8A////AP///wAAAAAnAAAAcP///wAAAAAoAAAASv///wD///8A////AP///wAAAABKAAAAKP///wAAAABwAAAAJ////wD///8AAAAAgQAAABwAAACIAAAAkAAAAJMAAACtAAAAFQAAABUAAACtAAAAkwAAAJAAAACIAAAAHAAAAIH///8A////AAAAAKQAAACrAAAAaP///wD///8AAAAARQAAANIAAADSAAAARf///wD///8AAAAAaAAAAKsAAACk////AAAAADMAAACcAAAAnQAAABj///8A////AP///wAAAAAYAAAAGP///wD///8A////AAAAABgAAACdAAAAnAAAADMAAAB1AAAAwwAAAP8AAADpAAAAsQAAAE4AAAAb////AP///wAAAAAbAAAATgAAALEAAADpAAAA/wAAAMMAAAB1AAAAtwAAAOkAAAD/AAAA/wAAAP8AAADvAAAA3gAAAN4AAADeAAAA3gAAAO8AAAD/AAAA/wAAAP8AAADpAAAAtwAAAGUAAAA/AAAA3wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAADfAAAAPwAAAGX///8A////AAAAAEgAAADtAAAAvwAAAL0AAADGAAAA7wAAAO8AAADGAAAAvQAAAL8AAADtAAAASP///wD///8A////AP///wD///8AAAAAO////wD///8A////AAAAAIcAAACH////AP///wD///8AAAAAO////wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A//8AAP//AAD4HwAA7/cAAN/7AAD//wAAoYUAAJ55AACf+QAAh+EAAAAAAADAAwAA4AcAAP5/AAD//wAA//8AAA==");
   margin-bottom: -5px; }
-
-div.search_results {
-  background-color: antiquewhite;
-  margin: 3em;
-  padding: 1em;
-  border: 1px solid #4d4d4d;
-}
-
-div#global-links ul {
-  margin-left: 0;
-  list-style-type: none;
-}
 
 span.pragmadots {
   /* Position: relative frees us up to make the dots
@@ -1178,18 +746,14 @@ span.pragmadots {
   position: relative;
   /* 1px down looks slightly nicer */
   top: 1px;
-
   padding: 2px;
-  background-color: #D3D3D3;
+  background-color: #e8e8e8;
   border-radius: 4px;
   margin: 0 2px;
   cursor: pointer;
-
-  /* For some reason on Chrome, making the font size
-  smaller than 1em is causing the parent container to
-  bulge slightly. So, we're stuck with inheriting 1em,
-  which is sad, because 0.8em looks better... */
+  font-size: 0.8em;
 }
+
 span.pragmadots:hover {
   background-color: #DBDBDB;
 }
@@ -1323,6 +887,14 @@ function main() {
   cigar*: string
   qual*: uint8
   NM*: uint16"><wbr />Splitter<span class="attachedType" style="visibility:hidden"></span></a></li>
+
+  </ul>
+</li>
+<li>
+  <a class="reference reference-toplevel" href="#8" id="58">Vars</a>
+  <ul class="simple simple-toc-section">
+      <li><a class="reference" href="#errno"
+    title="errno: cint"><wbr />errno<span class="attachedType" style="visibility:hidden"></span></a></li>
 
   </ul>
 </li>
@@ -1482,14 +1054,10 @@ function main() {
   <ul class="simple simple-toc-section">
       <li><a class="reference" href="#items.i%2CCigar"
     title="items(c: Cigar): CigarElement"><wbr />items<span class="attachedType" style="visibility:hidden">Cigar</span></a></li>
-  <li><a class="reference" href="#querys.i%2CBam%2Cstring"
-    title="querys(bam: Bam; region: string): Record"><wbr />querys<span class="attachedType" style="visibility:hidden">Bam</span></a></li>
   <li><a class="reference" href="#query.i%2CBam%2Cstring%2Cint%2Cint"
     title="query(bam: Bam; chrom: string; start: int = 0; stop: int = 0): Record"><wbr />query<span class="attachedType" style="visibility:hidden">Bam</span></a></li>
   <li><a class="reference" href="#query.i%2CBam%2Cint%2Cint%2Cint"
     title="query(bam: Bam; tid: int; start: int = 0; stop: int = (-1)): Record"><wbr />query<span class="attachedType" style="visibility:hidden">Bam</span></a></li>
-  <li><a class="reference" href="#queryi.i%2CBam%2Cint%2Cint%2Cint"
-    title="queryi(bam: Bam; tid: int; start: int; stop: int): Record"><wbr />queryi<span class="attachedType" style="visibility:hidden">Bam</span></a></li>
   <li><a class="reference" href="#items.i%2CBam"
     title="items(bam: Bam): Record"><wbr />items<span class="attachedType" style="visibility:hidden">Bam</span></a></li>
   <li><a class="reference" href="#splitters.i%2CRecord%2Cstring"
@@ -1581,13 +1149,13 @@ CRAM specific
   <span class="Identifier">n</span><span class="Other">:</span> <span class="Identifier">uint32</span>
 </pre></dt>
 <dd>
-<cite>Cigar</cite> represents ths SAM Cigar type. It consists of one or more <cite>CigarElement</cite> s.
+<tt class="docutils literal"><span class="pre">Cigar</span></tt> represents ths SAM Cigar type. It consists of one or more <tt class="docutils literal"><span class="pre">CigarElement</span></tt> s.
 
 </dd>
 <a id="CigarElement"></a>
 <dt><pre><a href="bam.html#CigarElement"><span class="Identifier">CigarElement</span></a> <span class="Other">=</span> <span class="Keyword">distinct</span> <span class="Identifier">uint32</span></pre></dt>
 <dd>
-<cite>CigarElement</cite> encodes the operation (length and type) of each element of a <cite>Cigar</cite>.
+<tt class="docutils literal"><span class="pre">CigarElement</span></tt> encodes the operation (length and type) of each element of a <tt class="docutils literal"><span class="pre">Cigar</span></tt>.
 
 </dd>
 <a id="Consume"></a>
@@ -1674,442 +1242,453 @@ A splitter represents one item from an SA tag
 </dd>
 
 </dl></div>
+<div class="section" id="8">
+<h1><a class="toc-backref" href="#8">Vars</a></h1>
+<dl class="item">
+<a id="errno"></a>
+<dt><pre><span class="Identifier">errno</span><span class="Other">:</span> <span class="Identifier">cint</span></pre></dt>
+<dd>
+
+
+</dd>
+
+</dl></div>
 <div class="section" id="12">
 <h1><a class="toc-backref" href="#12">Procs</a></h1>
 <dl class="item">
 <a id="and,Flag,uint16"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">`and`</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">;</span> <span class="Identifier">o</span><span class="Other">:</span> <span class="Identifier">uint16</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint16</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">borrow</span><span class="Other">,</span> <span class="Identifier">inline</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#and%2CFlag%2Cuint16"><span class="Identifier">`and`</span></a><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">;</span> <span class="Identifier">o</span><span class="Other">:</span> <span class="Identifier">uint16</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint16</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">borrow</span><span class="Other">,</span> <span class="Identifier">inline</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="and,Flag,Flag"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">`and`</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">;</span> <span class="Identifier">o</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint16</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">borrow</span><span class="Other">,</span> <span class="Identifier">inline</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#and%2CFlag%2CFlag"><span class="Identifier">`and`</span></a><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">;</span> <span class="Identifier">o</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint16</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">borrow</span><span class="Other">,</span> <span class="Identifier">inline</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="or,Flag,uint16"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">`or`</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">;</span> <span class="Identifier">o</span><span class="Other">:</span> <span class="Identifier">uint16</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint16</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">borrow</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#or%2CFlag%2Cuint16"><span class="Identifier">`or`</span></a><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">;</span> <span class="Identifier">o</span><span class="Other">:</span> <span class="Identifier">uint16</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint16</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">borrow</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="or,uint16,Flag"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">`or`</span><span class="Other">(</span><span class="Identifier">o</span><span class="Other">:</span> <span class="Identifier">uint16</span><span class="Other">;</span> <span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint16</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">borrow</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#or%2Cuint16%2CFlag"><span class="Identifier">`or`</span></a><span class="Other">(</span><span class="Identifier">o</span><span class="Other">:</span> <span class="Identifier">uint16</span><span class="Other">;</span> <span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint16</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">borrow</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="==,Flag,Flag"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">`==`</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">;</span> <span class="Identifier">o</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">borrow</span><span class="Other">,</span> <span class="Identifier">inline</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#%3D%3D%2CFlag%2CFlag"><span class="Identifier">`==`</span></a><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">;</span> <span class="Identifier">o</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">borrow</span><span class="Other">,</span> <span class="Identifier">inline</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="==,Flag,uint16"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">`==`</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">;</span> <span class="Identifier">o</span><span class="Other">:</span> <span class="Identifier">uint16</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">borrow</span><span class="Other">,</span> <span class="Identifier">inline</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#%3D%3D%2CFlag%2Cuint16"><span class="Identifier">`==`</span></a><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">;</span> <span class="Identifier">o</span><span class="Other">:</span> <span class="Identifier">uint16</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">borrow</span><span class="Other">,</span> <span class="Identifier">inline</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="==,uint16,Flag"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">`==`</span><span class="Other">(</span><span class="Identifier">o</span><span class="Other">:</span> <span class="Identifier">uint16</span><span class="Other">;</span> <span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">borrow</span><span class="Other">,</span> <span class="Identifier">inline</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#%3D%3D%2Cuint16%2CFlag"><span class="Identifier">`==`</span></a><span class="Other">(</span><span class="Identifier">o</span><span class="Other">:</span> <span class="Identifier">uint16</span><span class="Other">;</span> <span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">borrow</span><span class="Other">,</span> <span class="Identifier">inline</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="has_flag,Flag,uint16"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">has_flag</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">;</span> <span class="Identifier">o</span><span class="Other">:</span> <span class="Identifier">uint16</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#has_flag%2CFlag%2Cuint16"><span class="Identifier">has_flag</span></a><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">;</span> <span class="Identifier">o</span><span class="Other">:</span> <span class="Identifier">uint16</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="pair,Flag"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">pair</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#pair%2CFlag"><span class="Identifier">pair</span></a><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="proper_pair,Flag"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">proper_pair</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#proper_pair%2CFlag"><span class="Identifier">proper_pair</span></a><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="unmapped,Flag"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">unmapped</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#unmapped%2CFlag"><span class="Identifier">unmapped</span></a><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="mate_unmapped,Flag"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">mate_unmapped</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#mate_unmapped%2CFlag"><span class="Identifier">mate_unmapped</span></a><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="reverse,Flag"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">reverse</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#reverse%2CFlag"><span class="Identifier">reverse</span></a><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="mate_reverse,Flag"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">mate_reverse</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#mate_reverse%2CFlag"><span class="Identifier">mate_reverse</span></a><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="read1,Flag"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">read1</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#read1%2CFlag"><span class="Identifier">read1</span></a><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="read2,Flag"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">read2</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#read2%2CFlag"><span class="Identifier">read2</span></a><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="secondary,Flag"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">secondary</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#secondary%2CFlag"><span class="Identifier">secondary</span></a><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="qcfail,Flag"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">qcfail</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#qcfail%2CFlag"><span class="Identifier">qcfail</span></a><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="dup,Flag"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">dup</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#dup%2CFlag"><span class="Identifier">dup</span></a><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="supplementary,Flag"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">supplementary</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#supplementary%2CFlag"><span class="Identifier">supplementary</span></a><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="$,Flag"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">`$`</span><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#%24%2CFlag"><span class="Identifier">`$`</span></a><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="safe,CPtr[T],int"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">safe</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">p</span><span class="Other">:</span> <a href="bam.html#CPtr"><span class="Identifier">CPtr</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">k</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="bam.html#SafeCPtr"><span class="Identifier">SafeCPtr</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#safe%2CCPtr%5BT%5D%2Cint"><span class="Identifier">safe</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">p</span><span class="Other">:</span> <a href="bam.html#CPtr"><span class="Identifier">CPtr</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">k</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="bam.html#SafeCPtr"><span class="Identifier">SafeCPtr</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="[],SafeCPtr[T],int"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">`[]`</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">p</span><span class="Other">:</span> <a href="bam.html#SafeCPtr"><span class="Identifier">SafeCPtr</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">k</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">T</span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%2CSafeCPtr%5BT%5D%2Cint"><span class="Identifier">`[]`</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">p</span><span class="Other">:</span> <a href="bam.html#SafeCPtr"><span class="Identifier">SafeCPtr</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">k</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">T</span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="[]=,SafeCPtr[T],int,T"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">`[]=`</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">p</span><span class="Other">:</span> <a href="bam.html#SafeCPtr"><span class="Identifier">SafeCPtr</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">k</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">T</span><span class="Other">)</span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%3D%2CSafeCPtr%5BT%5D%2Cint%2CT"><span class="Identifier">`[]=`</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">p</span><span class="Other">:</span> <a href="bam.html#SafeCPtr"><span class="Identifier">SafeCPtr</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">k</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">T</span><span class="Other">)</span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="len,Cigar"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">len</span><span class="Other">(</span><span class="Identifier">c</span><span class="Other">:</span> <a href="bam.html#Cigar"><span class="Identifier">Cigar</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#len%2CCigar"><span class="Identifier">len</span></a><span class="Other">(</span><span class="Identifier">c</span><span class="Other">:</span> <a href="bam.html#Cigar"><span class="Identifier">Cigar</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 returns the number of operations in the cigar.
 
 </dd>
 <a id="[],Cigar,int"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">`[]`</span><span class="Other">(</span><span class="Identifier">c</span><span class="Other">:</span> <a href="bam.html#Cigar"><span class="Identifier">Cigar</span></a><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="bam.html#CigarElement"><span class="Identifier">CigarElement</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%2CCigar%2Cint"><span class="Identifier">`[]`</span></a><span class="Other">(</span><span class="Identifier">c</span><span class="Other">:</span> <a href="bam.html#Cigar"><span class="Identifier">Cigar</span></a><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="bam.html#CigarElement"><span class="Identifier">CigarElement</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="op,CigarElement"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">op</span><span class="Other">(</span><span class="Identifier">o</span><span class="Other">:</span> <a href="bam.html#CigarElement"><span class="Identifier">CigarElement</span></a><span class="Other">)</span><span class="Other">:</span> <a href="bam.html#CigarOp"><span class="Identifier">CigarOp</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#op%2CCigarElement"><span class="Identifier">op</span></a><span class="Other">(</span><span class="Identifier">o</span><span class="Other">:</span> <a href="bam.html#CigarElement"><span class="Identifier">CigarElement</span></a><span class="Other">)</span><span class="Other">:</span> <a href="bam.html#CigarOp"><span class="Identifier">CigarOp</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
-<cite>op</cite> gives the operation of the cigar.
+<tt class="docutils literal"><span class="pre">op</span></tt> gives the operation of the cigar.
 
 </dd>
 <a id="len,CigarElement"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">len</span><span class="Other">(</span><span class="Identifier">o</span><span class="Other">:</span> <a href="bam.html#CigarElement"><span class="Identifier">CigarElement</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#len%2CCigarElement"><span class="Identifier">len</span></a><span class="Other">(</span><span class="Identifier">o</span><span class="Other">:</span> <a href="bam.html#CigarElement"><span class="Identifier">CigarElement</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
-<cite>len</cite> gives the length of the cigar op.
+<tt class="docutils literal"><span class="pre">len</span></tt> gives the length of the cigar op.
 
 </dd>
 <a id="$,CigarElement"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">`$`</span><span class="Other">(</span><span class="Identifier">o</span><span class="Other">:</span> <a href="bam.html#CigarElement"><span class="Identifier">CigarElement</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#%24%2CCigarElement"><span class="Identifier">`$`</span></a><span class="Other">(</span><span class="Identifier">o</span><span class="Other">:</span> <a href="bam.html#CigarElement"><span class="Identifier">CigarElement</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 shows the string representation of the cigar element.
 
 </dd>
 <a id="$,Cigar"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">`$`</span><span class="Other">(</span><span class="Identifier">c</span><span class="Other">:</span> <a href="bam.html#Cigar"><span class="Identifier">Cigar</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#%24%2CCigar"><span class="Identifier">`$`</span></a><span class="Other">(</span><span class="Identifier">c</span><span class="Other">:</span> <a href="bam.html#Cigar"><span class="Identifier">Cigar</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="consumes,CigarElement"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">consumes</span><span class="Other">(</span><span class="Identifier">o</span><span class="Other">:</span> <a href="bam.html#CigarElement"><span class="Identifier">CigarElement</span></a><span class="Other">)</span><span class="Other">:</span> <a href="bam.html#Consume"><span class="Identifier">Consume</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#consumes%2CCigarElement"><span class="Identifier">consumes</span></a><span class="Other">(</span><span class="Identifier">o</span><span class="Other">:</span> <a href="bam.html#CigarElement"><span class="Identifier">CigarElement</span></a><span class="Other">)</span><span class="Other">:</span> <a href="bam.html#Consume"><span class="Identifier">Consume</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="query,Consume"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">query</span><span class="Other">(</span><span class="Identifier">c</span><span class="Other">:</span> <a href="bam.html#Consume"><span class="Identifier">Consume</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#query%2CConsume"><span class="Identifier">query</span></a><span class="Other">(</span><span class="Identifier">c</span><span class="Other">:</span> <a href="bam.html#Consume"><span class="Identifier">Consume</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="reference,Consume"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">reference</span><span class="Other">(</span><span class="Identifier">c</span><span class="Other">:</span> <a href="bam.html#Consume"><span class="Identifier">Consume</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#reference%2CConsume"><span class="Identifier">reference</span></a><span class="Other">(</span><span class="Identifier">c</span><span class="Other">:</span> <a href="bam.html#Consume"><span class="Identifier">Consume</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="ref_coverage,Cigar,int"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">ref_coverage</span><span class="Other">(</span><span class="Identifier">c</span><span class="Other">:</span> <a href="bam.html#Cigar"><span class="Identifier">Cigar</span></a><span class="Other">;</span> <span class="Identifier">ipos</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="bam.html#Range"><span class="Identifier">Range</span></a><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#ref_coverage%2CCigar%2Cint"><span class="Identifier">ref_coverage</span></a><span class="Other">(</span><span class="Identifier">c</span><span class="Other">:</span> <a href="bam.html#Cigar"><span class="Identifier">Cigar</span></a><span class="Other">;</span> <span class="Identifier">ipos</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="bam.html#Range"><span class="Identifier">Range</span></a><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="$,Header"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">`$`</span><span class="Other">(</span><span class="Identifier">h</span><span class="Other">:</span> <a href="bam.html#Header"><span class="Identifier">Header</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#%24%2CHeader"><span class="Identifier">`$`</span></a><span class="Other">(</span><span class="Identifier">h</span><span class="Other">:</span> <a href="bam.html#Header"><span class="Identifier">Header</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="stats,ptr.hts_idx_t,int"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">stats</span><span class="Other">(</span><span class="Identifier">idx</span><span class="Other">:</span> <span class="Keyword">ptr</span> <a href="hts_concat.html#hts_idx_t"><span class="Identifier">hts_idx_t</span></a><span class="Other">;</span> <span class="Identifier">tid</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="bam.html#IndexStats"><span class="Identifier">IndexStats</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#stats%2Cptr.hts_idx_t%2Cint"><span class="Identifier">stats</span></a><span class="Other">(</span><span class="Identifier">idx</span><span class="Other">:</span> <span class="Keyword">ptr</span> <a href="hts_concat.html#hts_idx_t"><span class="Identifier">hts_idx_t</span></a><span class="Other">;</span> <span class="Identifier">tid</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="bam.html#IndexStats"><span class="Identifier">IndexStats</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 get the stats from the index.
 
 </dd>
 <a id="copy,Header"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">copy</span><span class="Other">(</span><span class="Identifier">h</span><span class="Other">:</span> <a href="bam.html#Header"><span class="Identifier">Header</span></a><span class="Other">)</span><span class="Other">:</span> <a href="bam.html#Header"><span class="Identifier">Header</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#copy%2CHeader"><span class="Identifier">copy</span></a><span class="Other">(</span><span class="Identifier">h</span><span class="Other">:</span> <a href="bam.html#Header"><span class="Identifier">Header</span></a><span class="Other">)</span><span class="Other">:</span> <a href="bam.html#Header"><span class="Identifier">Header</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 make a copy of the bam Header and underlying pointer.
 
 </dd>
 <a id="from_string,Header,string"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">from_string</span><span class="Other">(</span><span class="Identifier">h</span><span class="Other">:</span> <a href="bam.html#Header"><span class="Identifier">Header</span></a><span class="Other">;</span> <span class="Identifier">header_string</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#from_string%2CHeader%2Cstring"><span class="Identifier">from_string</span></a><span class="Other">(</span><span class="Identifier">h</span><span class="Other">:</span> <a href="bam.html#Header"><span class="Identifier">Header</span></a><span class="Other">;</span> <span class="Identifier">header_string</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 create a new header from a string
 
 </dd>
 <a id="from_string,Record,string"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">from_string</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">;</span> <span class="Identifier">record_string</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#from_string%2CRecord%2Cstring"><span class="Identifier">from_string</span></a><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">;</span> <span class="Identifier">record_string</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
-update the record with the given SAM record. note that this does not make a copy of <cite>record_string</cite> and will modify the string in-place.
+update the record with the given SAM record. note that this does not make a copy of <tt class="docutils literal"><span class="pre">record_string</span></tt> and will modify the string in-place.
 
 </dd>
 <a id="sequence,Record,string"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">sequence</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">;</span> <span class="Identifier">s</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#sequence%2CRecord%2Cstring"><span class="Identifier">sequence</span></a><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">;</span> <span class="Identifier">s</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 fill the given string with the read sequence
 
 </dd>
 <a id="base_at,Record,int"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">base_at</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">char</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#base_at%2CRecord%2Cint"><span class="Identifier">base_at</span></a><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">char</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 return just the base at the requsted index 'i' into the query sequence.
 
 </dd>
 <a id="base_qualities,Record,seq[uint8]"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">base_qualities</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">;</span> <span class="Identifier">q</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">uint8</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">uint8</span><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#base_qualities%2CRecord%2Cseq%5Buint8%5D"><span class="Identifier">base_qualities</span></a><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">;</span> <span class="Identifier">q</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">uint8</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">uint8</span><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 fill the given seq with the base-qualities.
 
 </dd>
 <a id="base_quality_at,Record,int"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">base_quality_at</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint8</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#base_quality_at%2CRecord%2Cint"><span class="Identifier">base_quality_at</span></a><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint8</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="targets,Header"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">targets</span><span class="Other">(</span><span class="Identifier">h</span><span class="Other">:</span> <a href="bam.html#Header"><span class="Identifier">Header</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="bam.html#Target"><span class="Identifier">Target</span></a><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#targets%2CHeader"><span class="Identifier">targets</span></a><span class="Other">(</span><span class="Identifier">h</span><span class="Other">:</span> <a href="bam.html#Header"><span class="Identifier">Header</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="bam.html#Target"><span class="Identifier">Target</span></a><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 The targets (chromosomes) from the header.
 
 </dd>
 <a id="$,Target"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">`$`</span><span class="Other">(</span><span class="Identifier">t</span><span class="Other">:</span> <a href="bam.html#Target"><span class="Identifier">Target</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#%24%2CTarget"><span class="Identifier">`$`</span></a><span class="Other">(</span><span class="Identifier">t</span><span class="Other">:</span> <a href="bam.html#Target"><span class="Identifier">Target</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="chrom,Record"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">chrom</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#chrom%2CRecord"><span class="Identifier">chrom</span></a><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
-<cite>chrom</cite> returns the chromosome or '' if not mapped.
+<tt class="docutils literal"><span class="pre">chrom</span></tt> returns the chromosome or '' if not mapped.
 
 </dd>
 <a id="mate_chrom,Record"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">mate_chrom</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#mate_chrom%2CRecord"><span class="Identifier">mate_chrom</span></a><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
-<cite>mate_chrom</cite> returns the chromosome of the mate or '' if not mapped.
+<tt class="docutils literal"><span class="pre">mate_chrom</span></tt> returns the chromosome of the mate or '' if not mapped.
 
 </dd>
 <a id="mate_tid,Record"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">mate_tid</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#mate_tid%2CRecord"><span class="Identifier">mate_tid</span></a><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
-<cite>mate_tid</cite> returns the tid of the mate or -1 if not mapped.
+<tt class="docutils literal"><span class="pre">mate_tid</span></tt> returns the tid of the mate or -1 if not mapped.
 
 </dd>
 <a id="tid,Record"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">tid</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#tid%2CRecord"><span class="Identifier">tid</span></a><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
-<cite>tid</cite> returns the tid of the alignment or -1 if not mapped.
+<tt class="docutils literal"><span class="pre">tid</span></tt> returns the tid of the alignment or -1 if not mapped.
 
 </dd>
 <a id="start,Record"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">start</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#start%2CRecord"><span class="Identifier">start</span></a><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
-<cite>start</cite> returns 0-based start position.
+<tt class="docutils literal"><span class="pre">start</span></tt> returns 0-based start position.
 
 </dd>
 <a id="stop,Record"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">stop</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#stop%2CRecord"><span class="Identifier">stop</span></a><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
-<cite>stop</cite> returns end position of the read.
+<tt class="docutils literal"><span class="pre">stop</span></tt> returns end position of the read.
 
 </dd>
 <a id="copy,Record"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">copy</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">)</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#copy%2CRecord"><span class="Identifier">copy</span></a><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">)</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
-<cite>copy</cite> makes a copy of the record.
+<tt class="docutils literal"><span class="pre">copy</span></tt> makes a copy of the record.
 
 </dd>
 <a id="qname,Record"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">qname</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#qname%2CRecord"><span class="Identifier">qname</span></a><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
-<cite>qname</cite> returns the query name.
+<tt class="docutils literal"><span class="pre">qname</span></tt> returns the query name.
 
 </dd>
 <a id="flag,Record"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">flag</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">)</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#flag%2CRecord"><span class="Identifier">flag</span></a><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">)</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
-<cite>flag</cite> returns a <cite>Flag</cite> object.
+<tt class="docutils literal"><span class="pre">flag</span></tt> returns a <tt class="docutils literal"><span class="pre">Flag</span></tt> object.
 
 </dd>
 <a id="cigar,Record"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">cigar</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">)</span><span class="Other">:</span> <a href="bam.html#Cigar"><span class="Identifier">Cigar</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#cigar%2CRecord"><span class="Identifier">cigar</span></a><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">)</span><span class="Other">:</span> <a href="bam.html#Cigar"><span class="Identifier">Cigar</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
-<cite>cigar</cite> returns a <cite>Cigar</cite> object.
+<tt class="docutils literal"><span class="pre">cigar</span></tt> returns a <tt class="docutils literal"><span class="pre">Cigar</span></tt> object.
 
 </dd>
 <a id="$,Record"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">`$`</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#%24%2CRecord"><span class="Identifier">`$`</span></a><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="mapping_quality,Record"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">mapping_quality</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint8</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#mapping_quality%2CRecord"><span class="Identifier">mapping_quality</span></a><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint8</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 mapping quality
 
 </dd>
 <a id="isize,Record"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">isize</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int32</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#isize%2CRecord"><span class="Identifier">isize</span></a><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int32</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 insert size
 
 </dd>
 <a id="mate_pos,Record"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">mate_pos</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int32</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#mate_pos%2CRecord"><span class="Identifier">mate_pos</span></a><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int32</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 mate position
 
 </dd>
 <a id="tostring,Record"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">tostring</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#tostring%2CRecord"><span class="Identifier">tostring</span></a><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="write_header,Bam,Header"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">write_header</span><span class="Other">(</span><span class="Identifier">bam</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="bam.html#Bam"><span class="Identifier">Bam</span></a><span class="Other">;</span> <span class="Identifier">header</span><span class="Other">:</span> <a href="bam.html#Header"><span class="Identifier">Header</span></a><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#write_header%2CBam%2CHeader"><span class="Identifier">write_header</span></a><span class="Other">(</span><span class="Identifier">bam</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="bam.html#Bam"><span class="Identifier">Bam</span></a><span class="Other">;</span> <span class="Identifier">header</span><span class="Other">:</span> <a href="bam.html#Header"><span class="Identifier">Header</span></a><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 write the bam the the bam stream. useful when a bam is opened in write mode. this also sets the header.
 
 </dd>
 <a id="write,Bam,Record"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">write</span><span class="Other">(</span><span class="Identifier">bam</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="bam.html#Bam"><span class="Identifier">Bam</span></a><span class="Other">;</span> <span class="Identifier">rec</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#write%2CBam%2CRecord"><span class="Identifier">write</span></a><span class="Other">(</span><span class="Identifier">bam</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="bam.html#Bam"><span class="Identifier">Bam</span></a><span class="Other">;</span> <span class="Identifier">rec</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 write the record to the bam which must be writeable.
 
 </dd>
 <a id="close,Bam"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">close</span><span class="Other">(</span><span class="Identifier">bam</span><span class="Other">:</span> <a href="bam.html#Bam"><span class="Identifier">Bam</span></a><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#close%2CBam"><span class="Identifier">close</span></a><span class="Other">(</span><span class="Identifier">bam</span><span class="Other">:</span> <a href="bam.html#Bam"><span class="Identifier">Bam</span></a><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="NewRecord,Header"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">NewRecord</span><span class="Other">(</span><span class="Identifier">h</span><span class="Other">:</span> <a href="bam.html#Header"><span class="Identifier">Header</span></a><span class="Other">)</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#NewRecord%2CHeader"><span class="Identifier">NewRecord</span></a><span class="Other">(</span><span class="Identifier">h</span><span class="Other">:</span> <a href="bam.html#Header"><span class="Identifier">Header</span></a><span class="Other">)</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 create a new bam record and associate it with the header
 
 </dd>
 <a id="open,Bam,cstring,int,string,cstring,bool"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">open</span><span class="Other">(</span><span class="Identifier">bam</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="bam.html#Bam"><span class="Identifier">Bam</span></a><span class="Other">;</span> <span class="Identifier">path</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span> <span class="Identifier">threads</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> <span class="Identifier">mode</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Other">=</span> <span class="StringLit">&quot;r&quot;</span><span class="Other">;</span>
+<dt><pre><span class="Keyword">proc</span> <a href="#open%2CBam%2Ccstring%2Cint%2Cstring%2Ccstring%2Cbool"><span class="Identifier">open</span></a><span class="Other">(</span><span class="Identifier">bam</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="bam.html#Bam"><span class="Identifier">Bam</span></a><span class="Other">;</span> <span class="Identifier">path</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span> <span class="Identifier">threads</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> <span class="Identifier">mode</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Other">=</span> <span class="StringLit">&quot;r&quot;</span><span class="Other">;</span>
          <span class="Identifier">fai</span><span class="Other">:</span> <span class="Identifier">cstring</span> <span class="Other">=</span> <span class="Keyword">nil</span><span class="Other">;</span> <span class="Identifier">index</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other">=</span> <span class="Identifier">false</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">discardable</span><span class="Other">,</span>
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">WriteIOEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
-<cite>open_hts</cite> returns a bam object for the given path. If CRAM, then fai must be given. if index is true, then it will attempt to open an index file for regional queries.
+<tt class="docutils literal"><span class="pre">open_hts</span></tt> returns a bam object for the given path. If CRAM, then fai must be given. if index is true, then it will attempt to open an index file for regional queries.
 
 </dd>
 <a id="hts_set_opt,ptr.htsFile,FormatOption"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">hts_set_opt</span><span class="Other">(</span><span class="Identifier">fp</span><span class="Other">:</span> <span class="Keyword">ptr</span> <a href="hts_concat.html#htsFile"><span class="Identifier">htsFile</span></a><span class="Other">;</span> <span class="Identifier">opt</span><span class="Other">:</span> <a href="bam.html#FormatOption"><span class="Identifier">FormatOption</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cint</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">varargs</span><span class="Other">,</span> <span class="Identifier">cdecl</span><span class="Other">,</span>
+<dt><pre><span class="Keyword">proc</span> <a href="#hts_set_opt%2Cptr.htsFile%2CFormatOption"><span class="Identifier">hts_set_opt</span></a><span class="Other">(</span><span class="Identifier">fp</span><span class="Other">:</span> <span class="Keyword">ptr</span> <a href="hts_concat.html#htsFile"><span class="Identifier">htsFile</span></a><span class="Other">;</span> <span class="Identifier">opt</span><span class="Other">:</span> <a href="bam.html#FormatOption"><span class="Identifier">FormatOption</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cint</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">varargs</span><span class="Other">,</span> <span class="Identifier">cdecl</span><span class="Other">,</span>
     <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;hts_set_opt&quot;</span><span class="Other">,</span> <span class="Identifier">dynlib</span><span class="Other">:</span> <span class="Identifier">libname</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="set_fields,Bam,varargs[SamField]"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">set_fields</span><span class="Other">(</span><span class="Identifier">b</span><span class="Other">:</span> <a href="bam.html#Bam"><span class="Identifier">Bam</span></a><span class="Other">;</span> <span class="Identifier">fields</span><span class="Other">:</span> <span class="Identifier">varargs</span><span class="Other">[</span><a href="bam.html#SamField"><span class="Identifier">SamField</span></a><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">]</span><span class="Other">,</span>
+<dt><pre><span class="Keyword">proc</span> <a href="#set_fields%2CBam%2Cvarargs%5BSamField%5D"><span class="Identifier">set_fields</span></a><span class="Other">(</span><span class="Identifier">b</span><span class="Other">:</span> <a href="bam.html#Bam"><span class="Identifier">Bam</span></a><span class="Other">;</span> <span class="Identifier">fields</span><span class="Other">:</span> <span class="Identifier">varargs</span><span class="Other">[</span><a href="bam.html#SamField"><span class="Identifier">SamField</span></a><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">WriteIOEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="set_option,Bam,FormatOption,int"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">set_option</span><span class="Other">(</span><span class="Identifier">b</span><span class="Other">:</span> <a href="bam.html#Bam"><span class="Identifier">Bam</span></a><span class="Other">;</span> <span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#FormatOption"><span class="Identifier">FormatOption</span></a><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">]</span><span class="Other">,</span>
+<dt><pre><span class="Keyword">proc</span> <a href="#set_option%2CBam%2CFormatOption%2Cint"><span class="Identifier">set_option</span></a><span class="Other">(</span><span class="Identifier">b</span><span class="Other">:</span> <a href="bam.html#Bam"><span class="Identifier">Bam</span></a><span class="Other">;</span> <span class="Identifier">f</span><span class="Other">:</span> <a href="bam.html#FormatOption"><span class="Identifier">FormatOption</span></a><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">WriteIOEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="delete_tag,Record,string"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">delete_tag</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">;</span> <span class="Identifier">itag</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#delete_tag%2CRecord%2Cstring"><span class="Identifier">delete_tag</span></a><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">;</span> <span class="Identifier">itag</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 remove the tag from the record return a bool indicating success.
 
 </dd>
 <a id="tag,Record,string"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">tag</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Operator">|</span> <span class="Identifier">float</span> <span class="Operator">|</span> <span class="Identifier">string</span> <span class="Operator">|</span> <span class="Identifier">char</span> <span class="Operator">|</span> <span class="Identifier">cstring</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">;</span> <span class="Identifier">itag</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="simpleoption.html#Option"><span class="Identifier">Option</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#tag%2CRecord%2Cstring"><span class="Identifier">tag</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Operator">|</span> <span class="Identifier">float</span> <span class="Operator">|</span> <span class="Identifier">string</span> <span class="Operator">|</span> <span class="Identifier">char</span> <span class="Operator">|</span> <span class="Identifier">cstring</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">;</span> <span class="Identifier">itag</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="simpleoption.html#Option"><span class="Identifier">Option</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span></pre></dt>
 <dd>
-Get the aux tag from the record. Due to <cite>nim</cite> language limitations, this must be used as, e.g.: <cite>tag[int](rec, &quot;NM&quot;)</cite>. It will return <cite>none</cite> if the tag does not exist or if it is not of the requested type. This can be a shorter alternative to rec.aux() which requires first checking if the value is nil and then getting the return type.
+Get the aux tag from the record. Due to <tt class="docutils literal"><span class="pre">nim</span></tt> language limitations, this must be used as, e.g.: <tt class="docutils literal"><span class="pre">tag[int](rec, &quot;NM&quot;)</span></tt>. It will return <tt class="docutils literal"><span class="pre">none</span></tt> if the tag does not exist or if it is not of the requested type. This can be a shorter alternative to rec.aux() which requires first checking if the value is nil and then getting the return type.
 
 </dd>
 <a id="stop,Splitter"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">stop</span><span class="Other">(</span><span class="Identifier">s</span><span class="Other">:</span> <a href="bam.html#Splitter"><span class="Identifier">Splitter</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">OverflowError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#stop%2CSplitter"><span class="Identifier">stop</span></a><span class="Other">(</span><span class="Identifier">s</span><span class="Other">:</span> <a href="bam.html#Splitter"><span class="Identifier">Splitter</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 calculate the stop value for the splitter
 
 </dd>
 <a id="$,Splitter"></a>
-<dt><pre><span class="Keyword">proc</span> <span class="Identifier">`$`</span><span class="Other">(</span><span class="Identifier">s</span><span class="Other">:</span> <a href="bam.html#Splitter"><span class="Identifier">Splitter</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OverflowError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#%24%2CSplitter"><span class="Identifier">`$`</span></a><span class="Other">(</span><span class="Identifier">s</span><span class="Other">:</span> <a href="bam.html#Splitter"><span class="Identifier">Splitter</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -2120,50 +1699,34 @@ calculate the stop value for the splitter
 <h1><a class="toc-backref" href="#15">Iterators</a></h1>
 <dl class="item">
 <a id="items.i,Cigar"></a>
-<dt><pre><span class="Keyword">iterator</span> <span class="Identifier">items</span><span class="Other">(</span><span class="Identifier">c</span><span class="Other">:</span> <a href="bam.html#Cigar"><span class="Identifier">Cigar</span></a><span class="Other">)</span><span class="Other">:</span> <a href="bam.html#CigarElement"><span class="Identifier">CigarElement</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">iterator</span> <a href="#items.i%2CCigar"><span class="Identifier">items</span></a><span class="Other">(</span><span class="Identifier">c</span><span class="Other">:</span> <a href="bam.html#Cigar"><span class="Identifier">Cigar</span></a><span class="Other">)</span><span class="Other">:</span> <a href="bam.html#CigarElement"><span class="Identifier">CigarElement</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 iterates over the ops in the cigar.
 
 </dd>
-<a id="querys.i,Bam,string"></a>
-<dt><pre><span class="Keyword">iterator</span> <span class="Identifier">querys</span><span class="Other">(</span><span class="Identifier">bam</span><span class="Other">:</span> <a href="bam.html#Bam"><span class="Identifier">Bam</span></a><span class="Other">;</span> <span class="Identifier">region</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
-    <span class="Identifier">deprecated</span><span class="Other">:</span> <span class="StringLit">&quot;hts/bam: use query for string queries&quot;</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">WriteIOEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
-<dd>
-query iterates over the given region. A single element is used and overwritten on each iteration so use <cite>Record.copy</cite> to retain.
-
-</dd>
 <a id="query.i,Bam,string,int,int"></a>
-<dt><pre><span class="Keyword">iterator</span> <span class="Identifier">query</span><span class="Other">(</span><span class="Identifier">bam</span><span class="Other">:</span> <a href="bam.html#Bam"><span class="Identifier">Bam</span></a><span class="Other">;</span> <span class="Identifier">chrom</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">start</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> <span class="Identifier">stop</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">)</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+<dt><pre><span class="Keyword">iterator</span> <a href="#query.i%2CBam%2Cstring%2Cint%2Cint"><span class="Identifier">query</span></a><span class="Other">(</span><span class="Identifier">bam</span><span class="Other">:</span> <a href="bam.html#Bam"><span class="Identifier">Bam</span></a><span class="Other">;</span> <span class="Identifier">chrom</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">start</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> <span class="Identifier">stop</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">)</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">WriteIOEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
-query iterates over the given region. A single element is used and overwritten on each iteration so use <cite>Record.copy</cite> to retain.
+query iterates over the given region. A single element is used and overwritten on each iteration so use <tt class="docutils literal"><span class="pre">Record.copy</span></tt> to retain.
 
 </dd>
 <a id="query.i,Bam,int,int,int"></a>
-<dt><pre><span class="Keyword">iterator</span> <span class="Identifier">query</span><span class="Other">(</span><span class="Identifier">bam</span><span class="Other">:</span> <a href="bam.html#Bam"><span class="Identifier">Bam</span></a><span class="Other">;</span> <span class="Identifier">tid</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">start</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> <span class="Identifier">stop</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="Other">(</span><span class="Operator">-</span><span class="DecNumber">1</span><span class="Other">)</span><span class="Other">)</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+<dt><pre><span class="Keyword">iterator</span> <a href="#query.i%2CBam%2Cint%2Cint%2Cint"><span class="Identifier">query</span></a><span class="Other">(</span><span class="Identifier">bam</span><span class="Other">:</span> <a href="bam.html#Bam"><span class="Identifier">Bam</span></a><span class="Other">;</span> <span class="Identifier">tid</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">start</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> <span class="Identifier">stop</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="Other">(</span><span class="Operator">-</span><span class="DecNumber">1</span><span class="Other">)</span><span class="Other">)</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">WriteIOEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
-query iterates over the given region. A single element is used and overwritten on each iteration so use <cite>Record.copy</cite> to retain.
-
-</dd>
-<a id="queryi.i,Bam,int,int,int"></a>
-<dt><pre><span class="Keyword">iterator</span> <span class="Identifier">queryi</span><span class="Other">(</span><span class="Identifier">bam</span><span class="Other">:</span> <a href="bam.html#Bam"><span class="Identifier">Bam</span></a><span class="Other">;</span> <span class="Identifier">tid</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">start</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">stop</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
-    <span class="Identifier">deprecated</span><span class="Other">:</span> <span class="StringLit">&quot;use \&quot;query\&quot; to iterate with tid&quot;</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">WriteIOEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
-<dd>
-query iterates over the given region. A single element is used and overwritten on each iteration so use <cite>Record.copy</cite> to retain.
+query iterates over the given region. A single element is used and overwritten on each iteration so use <tt class="docutils literal"><span class="pre">Record.copy</span></tt> to retain.
 
 </dd>
 <a id="items.i,Bam"></a>
-<dt><pre><span class="Keyword">iterator</span> <span class="Identifier">items</span><span class="Other">(</span><span class="Identifier">bam</span><span class="Other">:</span> <a href="bam.html#Bam"><span class="Identifier">Bam</span></a><span class="Other">)</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">iterator</span> <a href="#items.i%2CBam"><span class="Identifier">items</span></a><span class="Other">(</span><span class="Identifier">bam</span><span class="Other">:</span> <a href="bam.html#Bam"><span class="Identifier">Bam</span></a><span class="Other">)</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
-items iterates over a bam. A single element is used and overwritten on each iteration so use <cite>Record.copy</cite> to retain.
+items iterates over a bam. A single element is used and overwritten on each iteration so use <tt class="docutils literal"><span class="pre">Record.copy</span></tt> to retain.
 
 </dd>
 <a id="splitters.i,Record,string"></a>
-<dt><pre><span class="Keyword">iterator</span> <span class="Identifier">splitters</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">;</span> <span class="Identifier">atag</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Other">=</span> <span class="StringLit">&quot;SA&quot;</span><span class="Other">)</span><span class="Other">:</span> <a href="bam.html#Splitter"><span class="Identifier">Splitter</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
-    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">OverflowError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">iterator</span> <a href="#splitters.i%2CRecord%2Cstring"><span class="Identifier">splitters</span></a><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">;</span> <span class="Identifier">atag</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Other">=</span> <span class="StringLit">&quot;SA&quot;</span><span class="Other">)</span><span class="Other">:</span> <a href="bam.html#Splitter"><span class="Identifier">Splitter</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 generate splitters from SA tag.
 
@@ -2174,13 +1737,13 @@ generate splitters from SA tag.
 <h1><a class="toc-backref" href="#18">Templates</a></h1>
 <dl class="item">
 <a id="bam_get_cigar.t,untyped"></a>
-<dt><pre><span class="Keyword">template</span> <span class="Identifier">bam_get_cigar</span><span class="Other">(</span><span class="Identifier">b</span><span class="Other">:</span> <span class="Identifier">untyped</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
+<dt><pre><span class="Keyword">template</span> <a href="#bam_get_cigar.t%2Cuntyped"><span class="Identifier">bam_get_cigar</span></a><span class="Other">(</span><span class="Identifier">b</span><span class="Other">:</span> <span class="Identifier">untyped</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
 <dd>
 
 
 </dd>
 <a id="bam_get_qual.t,untyped"></a>
-<dt><pre><span class="Keyword">template</span> <span class="Identifier">bam_get_qual</span><span class="Other">(</span><span class="Identifier">b</span><span class="Other">:</span> <span class="Identifier">untyped</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
+<dt><pre><span class="Keyword">template</span> <a href="#bam_get_qual.t%2Cuntyped"><span class="Identifier">bam_get_qual</span></a><span class="Other">(</span><span class="Identifier">b</span><span class="Other">:</span> <span class="Identifier">untyped</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
 <dd>
 
 
@@ -2195,7 +1758,7 @@ generate splitters from SA tag.
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small>Made with Nim. Generated: 2018-12-20 13:55:53 UTC</small>
+        <small>Made with Nim. Generated: 2019-02-08 16:08:41 UTC</small>
       </div>
     </div>
   </div>
