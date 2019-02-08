@@ -675,11 +675,11 @@ proc copy*(g: Genotypes): Genotypes =
 
 proc phased*(a:Allele): bool {.inline.} =
   ## is the allele pahsed.
-  return (int32(a) and 1) == 1
+  return (cast[int32](a) and 1) == 1
 
 proc value*(a:Allele): int {.inline.} =
   ## e.g. 0 for REF, 1 for first alt, -1 for unknown.
-  if cast[int32](a) < 0:
+  if unlikely(cast[int32](a) < 0):
     return int(a)
   return (cast[int32](a) shr 1) - 1
 
