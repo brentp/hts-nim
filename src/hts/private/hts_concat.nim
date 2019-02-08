@@ -807,6 +807,10 @@ proc bcf_destroy*(v: ptr bcf1_t) {.cdecl, importc: "bcf_destroy", dynlib: libnam
 proc bcf_update_info*(hdr: ptr bcf_hdr_t; line: ptr bcf1_t; key: cstring;
                      values: pointer; n: cint; `type`: cint): cint {.cdecl,
     importc: "bcf_update_info", dynlib: libname.}
+proc bcf_add_filter*(hdr: ptr bcf_hdr_t; line: ptr bcf1_t; flt_id: cint;): cint {.cdecl,
+    importc: "bcf_add_filter", dynlib: libname.}
+proc bcf_update_alleles_str*(hdr: ptr bcf_hdr_t; line: ptr bcf1_t; alleles: cstring): cint {.cdecl,
+    importc: "bcf_update_alleles_str", dynlib: libname.}
 proc bcf_hdr_set_samples*(hdr: ptr bcf_hdr_t; samples: cstring; is_file: cint): cint {.
     cdecl, importc: "bcf_hdr_set_samples", dynlib: libname.}
 proc bcf_subset_format*(hdr: ptr bcf_hdr_t; rec: ptr bcf1_t): cint {.cdecl,

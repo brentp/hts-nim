@@ -672,7 +672,9 @@ int bcf_write(htsFile *fp, bcf_hdr_t *h, bcf1_t *v);
 void bcf_hdr_destroy(bcf_hdr_t *h);
 bcf1_t *bcf_dup(bcf1_t *src);
 void bcf_destroy(bcf1_t *v);
+int bcf_add_filter(const bcf_hdr_t *hdr, bcf1_t *line, int flt_id)
 int bcf_update_info(const bcf_hdr_t *hdr, bcf1_t *line, const char *key, const void *values, int n, int type);
+int bcf_update_alleles_str(const bcf_hdr_t *hdr, bcf1_t *line, char ***dst);
 
 int bcf_hdr_set_samples(bcf_hdr_t *hdr, const char *samples, int is_file);
 int bcf_subset_format(const bcf_hdr_t *hdr, bcf1_t *rec);
@@ -688,7 +690,7 @@ int bcf_update_format_string(const bcf_hdr_t *hdr, bcf1_t *line, const char *key
 int bcf_update_format(const bcf_hdr_t *hdr, bcf1_t *line, const char *key, const void *values, int n, int type);
 
 
-int vcf_parse(kstring_t *s, const bcf_hdr_t *h, bcf1_t *v); 
+int vcf_parse(kstring_t *s, const bcf_hdr_t *h, bcf1_t *v);
 int vcf_format(const bcf_hdr_t *h, const bcf1_t *v, kstring_t *s);
 
 hts_idx_t *bcf_index_load(char *fn);
