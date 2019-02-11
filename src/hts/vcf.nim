@@ -165,31 +165,30 @@ proc toSeq[T](data: var seq[T], p:pointer, n:int) {.inline.} =
 
 proc get*(f:FORMAT, key:string, data:var seq[int32]): Status {.inline.} =
   ## fill data with integer values for each sample with the given key
-  result = Status.OK
   var n:cint = 0
   var ret = bcf_get_format_values(f.v.vcf.header.hdr, f.v.c, key.cstring,
      f.p.addr, n.addr, BCF_HT_INT.cint)
   if unlikely(ret < 0):
     result = Status(ret.int)
     return
+  result = Status.OK
   toSeq[int32](data, f.p, ret.int)
 
 
 proc get*(f:FORMAT, key:string, data:var seq[float32]): Status {.inline.} =
   ## fill data with float values for each sample with the given key
   var n:cint = 0
-  result = Status.OK
   var ret = bcf_get_format_values(f.v.vcf.header.hdr, f.v.c, key.cstring,
      f.p.addr, n.addr, BCF_HT_REAL.cint)
   if unlikely(ret < 0):
       result = Status(ret.int)
       return
+  result = Status.OK
   toSeq[float32](data, f.p, ret.int)
 
 proc get*(f:FORMAT, key:string, data:var seq[string]): Status {.inline.} =
   ## fill data with string values for each sample with the given key
   var n:cint = 0
-  result = Status.OK
   var ret = bcf_get_format_values(f.v.vcf.header.hdr, f.v.c, key.cstring, f.p.addr, n.addr, BCF_HT_STR.cint)
   # now f.p is a single char* with values from all samples.
   if ret < 0:
@@ -203,6 +202,7 @@ proc get*(f:FORMAT, key:string, data:var seq[string]): Status {.inline.} =
 
   for isample in 0..<data.len:
     data[isample] = $(cast[cstring](cs[isample * n_per].addr))
+  result = Status.OK
 
 proc set*(f:FORMAT, key:string, data:var seq[string]): Status {.inline.} =
   ## set the format field with the given strings.
@@ -387,6 +387,7 @@ proc copy_header*(v: var VCF, hdr: Header) =
   v.header = Header(hdr:bcf_hdr_dup(hdr.hdr))
 
 proc bcf_hdr_id2name(hdr: ptr bcf_hdr_t, rid: cint): cstring {.inline.} =
+  ## for looking up contigs
   var v = cast[CPtr[bcf_idpair_t]](hdr.id[1])
   return v[rid.int].key
 
@@ -670,7 +671,7 @@ proc ALT*(v:Variant): seq[string] {.inline.} =
     result[i-1] = $(v.c.d.allele[i])
 
 type
-  Genotypes* = object
+  Genotypes* {.shallow.} = object
     ## Genotypes are the genotype calls for each sample.
     ## These are represented efficiently with the int32 values used in the underlying
     ## representation. However, we are able to efficiently manipulate them by adding
@@ -703,9 +704,7 @@ proc value*(a:Allele): int {.inline.} =
   return (cast[int32](a) shr 1) - 1
 
 proc `[]`*(g:Genotypes, i:int): Genotype {.inline.} =
-  result = cast[seq[Allele]](newSeqUninitialized[int32](g.ploidy))
-  for k, v in g.gts[i*g.ploidy..<(i+1)*g.ploidy]:
-    result[k] = cast[Allele](v)
+  result = cast[seq[Allele]](g.gts[i*g.ploidy..<(i+1)*g.ploidy])
 
 proc len*(g:Genotypes): int {.inline.} =
   ## this should match the number of samples.
