@@ -167,10 +167,9 @@ suite "vcf suite":
     var vcf:VCF
     check open(vcf, "tests/test.vcf.gz")
     for v in vcf:
-      var f = v.format.fields
-      var fields = newSeq[string](f.len)
-      for i, ff in f:
-          fields[i] = ff.name
+      var fields = newSeq[string]()
+      for ff in v.format.fields:
+          fields.add(ff.name)
           check ff.vtype in {BCF_TYPE.INT8, BCF_TYPE.INT16, BCF_TYPE.INT32}
       check fields == @["GT", "AD", "DP", "GQ", "PL"] or fields == @["GT", "AD", "DP", "GQ", "PGT", "PID", "PL"]
       break

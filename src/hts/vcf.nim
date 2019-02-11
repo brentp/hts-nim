@@ -453,20 +453,24 @@ type FormatField* = object
     ## number of entries per sample
     vtype*: BCF_TYPE
     ## variable type is one of the BCF_BT_* types.
+    i*: int
 
-proc fields*(f:FORMAT): seq[FormatField] {.inline.} =
-  result = newSeq[FormatField](f.v.c.n_fmt)
+iterator fields*(f:FORMAT): FormatField {.inline.} =
   for i in 0..<f.v.c.n_fmt.int:
     var fmt = cast[CPtr[bcf_fmt_t]](f.v.c.d.fmt)[i]
-    result[i].name = $bcf_hdr_int2id(f.v.vcf.header.hdr, BCF_DT_ID, fmt.id)
-    result[i].vtype = BCF_TYPE(fmt.`type`)
-    result[i].n_per_sample = fmt.n
+    var t = FormatField()
+    t.name = $bcf_hdr_int2id(f.v.vcf.header.hdr, BCF_DT_ID, fmt.id)
+    t.vtype = BCF_TYPE(fmt.`type`)
+    t.n_per_sample = fmt.n
+    t.i = fmt.id
+    yield t
 
 type InfoField* = object
     name*: string
     n*: int
     ## number of values. 1048575 means variable-length (Number=A)
     vtype*: BCF_TYPE
+    i*: int
 
 iterator fields*(info:INFO): InfoField =
   for i in 0..<info.v.c.n_info.int:
@@ -474,7 +478,7 @@ iterator fields*(info:INFO): InfoField =
     var typ = BCF_TYPE(fld.`type`)
     var r = InfoField(name: $bcf_hdr_int2id(info.v.vcf.header.hdr, BCF_DT_ID, fld.key),
                       n: bcf_hdr_id2number(info.v.vcf.header.hdr, BCF_HEADER_LINE.BCF_HL_INFO.cint, fld.key),
-                      vtype: typ)
+                      vtype: typ, i: fld.key)
     yield r
 
 proc CHROM*(v:Variant): cstring {.inline.} =
