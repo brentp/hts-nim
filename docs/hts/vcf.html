@@ -855,14 +855,16 @@ function main() {
     title="FormatField = object
   name*: string
   n_per_sample*: int           ## number of entries per sample
-  vtype*: BCF_TYPE             ## variable type is one of the BCF_BT_* types."><wbr />Format<wbr />Field<span class="attachedType" style="visibility:hidden"></span></a></li>
+  vtype*: BCF_TYPE             ## variable type is one of the BCF_BT_* types.
+  i*: int"><wbr />Format<wbr />Field<span class="attachedType" style="visibility:hidden"></span></a></li>
   <li><a class="reference" href="#InfoField"
     title="InfoField = object
   name*: string
   n*: int                      ## number of values. 1048575 means variable-length (Number=A)
-  vtype*: BCF_TYPE"><wbr />Info<wbr />Field<span class="attachedType" style="visibility:hidden"></span></a></li>
+  vtype*: BCF_TYPE
+  i*: int"><wbr />Info<wbr />Field<span class="attachedType" style="visibility:hidden"></span></a></li>
   <li><a class="reference" href="#Genotypes"
-    title="Genotypes = object
+    title="Genotypes {.shallow.} = object
   gts: seq[int32]
   ploidy: int"><wbr />Genotypes<span class="attachedType" style="visibility:hidden"></span></a></li>
   <li><a class="reference" href="#Allele"
@@ -899,8 +901,12 @@ function main() {
     title="from_string(h: var Header; s: string)"><wbr />from_<wbr />string<span class="attachedType" style="visibility:hidden">Header</span></a></li>
   <li><a class="reference" href="#add_info%2CHeader%2Cstring%2Cstring%2Cstring%2Cstring"
     title="add_info(h: Header; ID: string; Number: string; Type: string; Description: string): Status"><wbr />add_<wbr />info<span class="attachedType" style="visibility:hidden">Header</span></a></li>
+  <li><a class="reference" href="#remove_info%2CHeader%2Cstring"
+    title="remove_info(h: Header; ID: string): Status"><wbr />remove_<wbr />info<span class="attachedType" style="visibility:hidden">Header</span></a></li>
   <li><a class="reference" href="#add_format%2CHeader%2Cstring%2Cstring%2Cstring%2Cstring"
     title="add_format(h: Header; ID: string; Number: string; Type: string; Description: string): Status"><wbr />add_<wbr />format<span class="attachedType" style="visibility:hidden">Header</span></a></li>
+  <li><a class="reference" href="#remove_format%2CHeader%2Cstring"
+    title="remove_format(h: Header; ID: string): Status"><wbr />remove_<wbr />format<span class="attachedType" style="visibility:hidden">Header</span></a></li>
   <li><a class="reference" href="#info%2CVariant"
     title="info(v: Variant): INFO"><wbr />info<span class="attachedType" style="visibility:hidden">Variant</span></a></li>
   <li><a class="reference" href="#format%2CVariant"
@@ -954,8 +960,6 @@ function main() {
   <li><a class="reference" href="#open%2CVCF%2Cstring%2Cstring%2Cseq%5Bstring%5D%2Cint"
     title="open(v: var VCF; fname: string; mode: string = &quot;r&quot;; samples: seq[string] = empty_samples;
      threads: int = 0): bool"><wbr />open<span class="attachedType" style="visibility:hidden">VCF</span></a></li>
-  <li><a class="reference" href="#fields%2CFORMAT"
-    title="fields(f: FORMAT): seq[FormatField]"><wbr />fields<span class="attachedType" style="visibility:hidden">FORMAT</span></a></li>
   <li><a class="reference" href="#CHROM%2CVariant"
     title="CHROM(v: Variant): cstring"><wbr />CHROM<span class="attachedType" style="visibility:hidden">Variant</span></a></li>
   <li><a class="reference" href="#rid%2CVariant"
@@ -983,15 +987,15 @@ function main() {
   <li><a class="reference" href="#ALT%2CVariant"
     title="ALT(v: Variant): seq[string]"><wbr />ALT<span class="attachedType" style="visibility:hidden">Variant</span></a></li>
   <li><a class="reference" href="#copy%2CGenotypes"
-    title="copy(g: Genotypes): Genotypes"><wbr />copy<span class="attachedType" style="visibility:hidden">Genotypes</span></a></li>
+    title="copy(g: Genotypes): Genotypes"><wbr />copy<span class="attachedType" style="visibility:hidden"></span></a></li>
   <li><a class="reference" href="#phased%2CAllele"
     title="phased(a: Allele): bool"><wbr />phased<span class="attachedType" style="visibility:hidden">Allele</span></a></li>
   <li><a class="reference" href="#value%2CAllele"
     title="value(a: Allele): int"><wbr />value<span class="attachedType" style="visibility:hidden">Allele</span></a></li>
   <li><a class="reference" href="#%5B%5D%2CGenotypes%2Cint"
-    title="`[]`(g: Genotypes; i: int): Genotype"><wbr />`[]`<span class="attachedType" style="visibility:hidden">Genotypes</span></a></li>
+    title="`[]`(g: Genotypes; i: int): Genotype"><wbr />`[]`<span class="attachedType" style="visibility:hidden">Genotype</span></a></li>
   <li><a class="reference" href="#len%2CGenotypes"
-    title="len(g: Genotypes): int"><wbr />len<span class="attachedType" style="visibility:hidden">Genotypes</span></a></li>
+    title="len(g: Genotypes): int"><wbr />len<span class="attachedType" style="visibility:hidden"></span></a></li>
   <li><a class="reference" href="#%24%2CAllele"
     title="`$`(a: Allele): string"><wbr />`$`<span class="attachedType" style="visibility:hidden">Allele</span></a></li>
   <li><a class="reference" href="#%24%2CGenotype"
@@ -1001,9 +1005,9 @@ function main() {
   <li><a class="reference" href="#genotypes%2CFORMAT%2Cseq%5Bint32%5D"
     title="genotypes(f: FORMAT; gts: var seq[int32]): Genotypes"><wbr />genotypes<span class="attachedType" style="visibility:hidden">FORMAT</span></a></li>
   <li><a class="reference" href="#%24%2CGenotypes"
-    title="`$`(gs: Genotypes): string"><wbr />`$`<span class="attachedType" style="visibility:hidden">Genotypes</span></a></li>
+    title="`$`(gs: Genotypes): string"><wbr />`$`<span class="attachedType" style="visibility:hidden"></span></a></li>
   <li><a class="reference" href="#alts%2CGenotypes"
-    title="alts(gs: Genotypes): seq[int8]"><wbr />alts<span class="attachedType" style="visibility:hidden">Genotypes</span></a></li>
+    title="alts(gs: Genotypes): seq[int8]"><wbr />alts<span class="attachedType" style="visibility:hidden"></span></a></li>
   <li><a class="reference" href="#%24%2CVariant"
     title="`$`(v: Variant): string"><wbr />`$`<span class="attachedType" style="visibility:hidden">Variant</span></a></li>
 
@@ -1012,14 +1016,16 @@ function main() {
 <li>
   <a class="reference reference-toplevel" href="#15" id="65">Iterators</a>
   <ul class="simple simple-toc-section">
-      <li><a class="reference" href="#fields.i%2CINFO"
+      <li><a class="reference" href="#fields.i%2CFORMAT"
+    title="fields(f: FORMAT): FormatField"><wbr />fields<span class="attachedType" style="visibility:hidden">FORMAT</span></a></li>
+  <li><a class="reference" href="#fields.i%2CINFO"
     title="fields(info: INFO): InfoField"><wbr />fields<span class="attachedType" style="visibility:hidden">INFO</span></a></li>
   <li><a class="reference" href="#items.i%2CVCF"
     title="items(v: VCF): Variant"><wbr />items<span class="attachedType" style="visibility:hidden">VCF</span></a></li>
   <li><a class="reference" href="#query.i%2CVCF%2Cstring"
     title="query(v: VCF; region: string): Variant"><wbr />query<span class="attachedType" style="visibility:hidden">VCF</span></a></li>
   <li><a class="reference" href="#items.i%2CGenotypes"
-    title="items(g: Genotypes): Genotype"><wbr />items<span class="attachedType" style="visibility:hidden">Genotypes</span></a></li>
+    title="items(g: Genotypes): Genotype"><wbr />items<span class="attachedType" style="visibility:hidden">Genotype</span></a></li>
 
   </ul>
 </li>
@@ -1124,7 +1130,8 @@ contains the values returned from the INFO for FORMAT fields.
   <span class="Identifier">name</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">string</span>
   <span class="Identifier">n_per_sample</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int</span>           <span class="Comment">## number of entries per sample</span>
   <span class="Identifier">vtype</span><span class="Operator">*</span><span class="Other">:</span> <a href="vcf.html#BCF_TYPE"><span class="Identifier">BCF_TYPE</span></a>             <span class="Comment">## variable type is one of the BCF_BT_* types.</span>
-  </pre></dt>
+  <span class="Identifier">i</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int</span>
+</pre></dt>
 <dd>
 FormatField represents the name (e.g. AD or DP), the number of values per sample, and the type (BCF_<a class="reference external" href="#bt">BT</a>*) of a FORMAT field.
 
@@ -1134,13 +1141,14 @@ FormatField represents the name (e.g. AD or DP), the number of values per sample
   <span class="Identifier">name</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">string</span>
   <span class="Identifier">n</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int</span>                      <span class="Comment">## number of values. 1048575 means variable-length (Number=A)</span>
   <span class="Identifier">vtype</span><span class="Operator">*</span><span class="Other">:</span> <a href="vcf.html#BCF_TYPE"><span class="Identifier">BCF_TYPE</span></a>
+  <span class="Identifier">i</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int</span>
 </pre></dt>
 <dd>
 
 
 </dd>
 <a id="Genotypes"></a>
-<dt><pre><a href="vcf.html#Genotypes"><span class="Identifier">Genotypes</span></a> <span class="Other">=</span> <span class="Keyword">object</span>
+<dt><pre><a href="vcf.html#Genotypes"><span class="Identifier">Genotypes</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">shallow</span></span><span class="Other">.}</span></span> <span class="Other">=</span> <span class="Keyword">object</span>
   <span class="Identifier">gts</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">int32</span><span class="Other">]</span>
   <span class="Identifier">ploidy</span><span class="Other">:</span> <span class="Identifier">int</span>
 </pre></dt>
@@ -1226,11 +1234,23 @@ create a new header from a VCF header string.
 add an INFO field to the header with the given values
 
 </dd>
+<a id="remove_info,Header,string"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#remove_info%2CHeader%2Cstring"><span class="Identifier">remove_info</span></a><span class="Other">(</span><span class="Identifier">h</span><span class="Other">:</span> <a href="vcf.html#Header"><span class="Identifier">Header</span></a><span class="Other">;</span> <span class="Identifier">ID</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Status"><span class="Identifier">Status</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+remove an INFO field from the header
+
+</dd>
 <a id="add_format,Header,string,string,string,string"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#add_format%2CHeader%2Cstring%2Cstring%2Cstring%2Cstring"><span class="Identifier">add_format</span></a><span class="Other">(</span><span class="Identifier">h</span><span class="Other">:</span> <a href="vcf.html#Header"><span class="Identifier">Header</span></a><span class="Other">;</span> <span class="Identifier">ID</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">Number</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">Type</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">Description</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Status"><span class="Identifier">Status</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 add a FORMAT field to the header with the given values
+
+</dd>
+<a id="remove_format,Header,string"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#remove_format%2CHeader%2Cstring"><span class="Identifier">remove_format</span></a><span class="Other">(</span><span class="Identifier">h</span><span class="Other">:</span> <a href="vcf.html#Header"><span class="Identifier">Header</span></a><span class="Other">;</span> <span class="Identifier">ID</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Status"><span class="Identifier">Status</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+remove a FORMAT field from the header
 
 </dd>
 <a id="info,Variant"></a>
@@ -1400,12 +1420,6 @@ write a variant to the VCF opened in write mode and return a bool indicating suc
 open a VCF at the given path
 
 </dd>
-<a id="fields,FORMAT"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#fields%2CFORMAT"><span class="Identifier">fields</span></a><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="vcf.html#FORMAT"><span class="Identifier">FORMAT</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="vcf.html#FormatField"><span class="Identifier">FormatField</span></a><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
-<dd>
-
-
-</dd>
 <a id="CHROM,Variant"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#CHROM%2CVariant"><span class="Identifier">CHROM</span></a><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <a href="vcf.html#Variant"><span class="Identifier">Variant</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cstring</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
@@ -1561,6 +1575,12 @@ return the number of alternate alleles. Unknown is -1.
 <div class="section" id="15">
 <h1><a class="toc-backref" href="#15">Iterators</a></h1>
 <dl class="item">
+<a id="fields.i,FORMAT"></a>
+<dt><pre><span class="Keyword">iterator</span> <a href="#fields.i%2CFORMAT"><span class="Identifier">fields</span></a><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="vcf.html#FORMAT"><span class="Identifier">FORMAT</span></a><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#FormatField"><span class="Identifier">FormatField</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+</dd>
 <a id="fields.i,INFO"></a>
 <dt><pre><span class="Keyword">iterator</span> <a href="#fields.i%2CINFO"><span class="Identifier">fields</span></a><span class="Other">(</span><span class="Identifier">info</span><span class="Other">:</span> <a href="vcf.html#INFO"><span class="Identifier">INFO</span></a><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#InfoField"><span class="Identifier">InfoField</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
@@ -1596,7 +1616,7 @@ iterate over variants in a VCF/BCF for the given region. Each returned Variant h
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small>Made with Nim. Generated: 2019-02-08 16:08:45 UTC</small>
+        <small>Made with Nim. Generated: 2019-02-13 14:58:26 UTC</small>
       </div>
     </div>
   </div>
