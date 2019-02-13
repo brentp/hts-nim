@@ -869,7 +869,8 @@ function main() {
   hts*: ptr htsFile
   hdr*: Header
   rec: Record
-  idx*: ptr hts_idx_t"><wbr />Bam<span class="attachedType" style="visibility:hidden"></span></a></li>
+  idx*: ptr hts_idx_t
+  path: cstring                ## path the the alignment file."><wbr />Bam<span class="attachedType" style="visibility:hidden"></span></a></li>
   <li><a class="reference" href="#Target"
     title="Target = ref object
   name*: string
@@ -1032,6 +1033,8 @@ function main() {
   <li><a class="reference" href="#open%2CBam%2Ccstring%2Cint%2Cstring%2Ccstring%2Cbool"
     title="open(bam: var Bam; path: cstring; threads: int = 0; mode: string = &quot;r&quot;; fai: cstring = nil;
      index: bool = false): bool"><wbr />open<span class="attachedType" style="visibility:hidden">Bam</span></a></li>
+  <li><a class="reference" href="#load_index%2CBam%2Cstring"
+    title="load_index(b: Bam; path: string)"><wbr />load_<wbr />index<span class="attachedType" style="visibility:hidden">Bam</span></a></li>
   <li><a class="reference" href="#hts_set_opt%2Cptr.htsFile%2CFormatOption"
     title="hts_set_opt(fp: ptr htsFile; opt: FormatOption): cint"><wbr />hts_<wbr />set_<wbr />opt<span class="attachedType" style="visibility:hidden"></span></a></li>
   <li><a class="reference" href="#set_fields%2CBam%2Cvarargs%5BSamField%5D"
@@ -1200,7 +1203,8 @@ Record is a single alignment object.
   <span class="Identifier">hdr</span><span class="Operator">*</span><span class="Other">:</span> <a href="bam.html#Header"><span class="Identifier">Header</span></a>
   <span class="Identifier">rec</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a>
   <span class="Identifier">idx</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">ptr</span> <a href="hts_concat.html#hts_idx_t"><span class="Identifier">hts_idx_t</span></a>
-</pre></dt>
+  <span class="Identifier">path</span><span class="Other">:</span> <span class="Identifier">cstring</span>                <span class="Comment">## path the the alignment file.</span>
+  </pre></dt>
 <dd>
 Bam wraps a BAM/CRAM/SAM reader object from htslib.
 
@@ -1648,6 +1652,12 @@ create a new bam record and associate it with the header
 <tt class="docutils literal"><span class="pre">open_hts</span></tt> returns a bam object for the given path. If CRAM, then fai must be given. if index is true, then it will attempt to open an index file for regional queries.
 
 </dd>
+<a id="load_index,Bam,string"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#load_index%2CBam%2Cstring"><span class="Identifier">load_index</span></a><span class="Other">(</span><span class="Identifier">b</span><span class="Other">:</span> <a href="bam.html#Bam"><span class="Identifier">Bam</span></a><span class="Other">;</span> <span class="Identifier">path</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+load the bam/cram index at the given path. This can be remote or local.
+
+</dd>
 <a id="hts_set_opt,ptr.htsFile,FormatOption"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#hts_set_opt%2Cptr.htsFile%2CFormatOption"><span class="Identifier">hts_set_opt</span></a><span class="Other">(</span><span class="Identifier">fp</span><span class="Other">:</span> <span class="Keyword">ptr</span> <a href="hts_concat.html#htsFile"><span class="Identifier">htsFile</span></a><span class="Other">;</span> <span class="Identifier">opt</span><span class="Other">:</span> <a href="bam.html#FormatOption"><span class="Identifier">FormatOption</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cint</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">varargs</span><span class="Other">,</span> <span class="Identifier">cdecl</span><span class="Other">,</span>
     <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;hts_set_opt&quot;</span><span class="Other">,</span> <span class="Identifier">dynlib</span><span class="Other">:</span> <span class="Identifier">libname</span></span><span class="Other">.}</span></span></pre></dt>
@@ -1758,7 +1768,7 @@ generate splitters from SA tag.
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small>Made with Nim. Generated: 2019-02-08 16:08:41 UTC</small>
+        <small>Made with Nim. Generated: 2019-02-13 17:11:33 UTC</small>
       </div>
     </div>
   </div>

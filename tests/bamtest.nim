@@ -38,6 +38,19 @@ suite "bam-suite":
         check s.stop > s.start
     check n == 308
 
+  test "load non-standard index":
+    var b:Bam
+    open(b, "tests/sa.bam")
+    check b != nil
+    expect IoError:
+      b.load_index("tests/sa.xxxx.bai")
+
+    b.load_index("https://github.com/brentp/hts-nim/raw/master/tests/sa.bam.bai")
+    var n = 0
+    for r in b.query("1", 10000, 11000):
+      n += 1
+    check n == 2
+
   test "test from string":
 
     var h = Header()

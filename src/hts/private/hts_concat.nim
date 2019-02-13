@@ -471,6 +471,8 @@ proc sam_index_load*(`in`: ptr samFile; a2: cstring): ptr hts_idx_t {.cdecl,
     importc: "sam_index_load", dynlib: libname.}
 ##  load index
 
+proc sam_index_load2*(fp: ptr htsFile; fn: cstring; fnidx: cstring): ptr hts_idx_t {.
+    cdecl, importc: "sam_index_load2", dynlib: libname.}
 proc bam_index_build*(fn: cstring; min_shift: cint): cint {.cdecl,
     importc: "bam_index_build", dynlib: libname.}
 proc sam_itr_querys*(a1: ptr hts_idx_t; h: ptr bam_hdr_t; region: cstring): ptr hts_itr_t {.
@@ -635,7 +637,7 @@ const
 ##
 
 type
-  INNER_C_UNION_hts_concat_543* {.bycopy.} = object {.union.}
+  INNER_C_UNION_hts_concat_544* {.bycopy.} = object {.union.}
     i*: int32                  ##  integer value
     f*: cfloat                 ##  float value
 
@@ -665,7 +667,7 @@ type
     key*: cint                 ##  key: numeric tag id, the corresponding string is bcf_hdr_t::id[BCF_DT_ID][$key].key
     `type`*: cint
     len*: cint                 ##  type: one of BCF_BT_* types; len: vector length, 1 for scalars
-    v1*: INNER_C_UNION_hts_concat_543 ##  only set if $len==1; for easier access
+    v1*: INNER_C_UNION_hts_concat_544 ##  only set if $len==1; for easier access
     vptr*: ptr uint8            ##  pointer to data array in bcf1_t->shared.s, excluding the size+type and tag id bytes
     vptr_len*: uint32          ##  length of the vptr block or, when set, of the vptr_mod block, excluding offset
     vptr_off* {.bitsize: 31.}: uint32 ##  vptr offset, i.e., the size of the INFO key plus size+type bytes
@@ -804,12 +806,13 @@ proc bcf_hdr_destroy*(h: ptr bcf_hdr_t) {.cdecl, importc: "bcf_hdr_destroy",
                                       dynlib: libname.}
 proc bcf_dup*(src: ptr bcf1_t): ptr bcf1_t {.cdecl, importc: "bcf_dup", dynlib: libname.}
 proc bcf_destroy*(v: ptr bcf1_t) {.cdecl, importc: "bcf_destroy", dynlib: libname.}
+proc bcf_add_filter*(hdr: ptr bcf_hdr_t; line: ptr bcf1_t; flt_id: cint): cint {.cdecl,
+    importc: "bcf_add_filter", dynlib: libname.}
 proc bcf_update_info*(hdr: ptr bcf_hdr_t; line: ptr bcf1_t; key: cstring;
                      values: pointer; n: cint; `type`: cint): cint {.cdecl,
     importc: "bcf_update_info", dynlib: libname.}
-proc bcf_add_filter*(hdr: ptr bcf_hdr_t; line: ptr bcf1_t; flt_id: cint;): cint {.cdecl,
-    importc: "bcf_add_filter", dynlib: libname.}
-proc bcf_update_alleles_str*(hdr: ptr bcf_hdr_t; line: ptr bcf1_t; alleles: cstring): cint {.cdecl,
+proc bcf_update_alleles_str*(hdr: ptr bcf_hdr_t; line: ptr bcf1_t;
+                            dst: ptr cstringArray): cint {.cdecl,
     importc: "bcf_update_alleles_str", dynlib: libname.}
 proc bcf_hdr_set_samples*(hdr: ptr bcf_hdr_t; samples: cstring; is_file: cint): cint {.
     cdecl, importc: "bcf_hdr_set_samples", dynlib: libname.}

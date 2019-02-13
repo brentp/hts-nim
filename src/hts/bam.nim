@@ -20,6 +20,7 @@ type
     hdr*: Header
     rec: Record
     idx*: ptr hts_idx_t
+    path: cstring ## path the the alignment file.
 
   Target* = ref object
     ## Target is a chromosome or contig from the bam header.
@@ -120,7 +121,7 @@ proc targets*(h: Header): seq[Target] =
 
 proc `$`*(t: Target): string =
   return format("Target($1:$2)", t.name, t.length)
- 
+
 proc chrom*(r: Record): string {.inline.} =
   ## `chrom` returns the chromosome or '' if not mapped.
   let tid = r.b.core.tid
@@ -281,6 +282,7 @@ proc open*(bam: var Bam, path: cstring, threads: int=0, mode:string="r", fai: cs
       return false
   new(bam, finalize_bam)
   bam.hts = hts
+  bam.path = path
 
   if fai != nil:
     if 0 != hts_set_fai_filename(hts, fai):
@@ -313,6 +315,12 @@ proc open*(bam: var Bam, path: cstring, threads: int=0, mode:string="r", fai: cs
       stderr.write_line "index not found for:", $path & ". " & $strerror(errno)
       return false
   return true
+
+proc load_index*(b: Bam, path: string) =
+  ## load the bam/cram index at the given path. This can be remote or local.
+  b.idx = sam_index_load2(b.hts, b.path, path.cstring)
+  if b.idx == nil:
+    raise newException(IoError, "[bam] load_index: error opening index %s for bam %s" % [path, $b.path])
 
 proc hts_set_opt*(fp: ptr htsFile; opt: FormatOption): cint {.varargs, cdecl,
     importc: "hts_set_opt", dynlib: libname.}
