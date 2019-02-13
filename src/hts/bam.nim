@@ -318,9 +318,12 @@ proc open*(bam: var Bam, path: cstring, threads: int=0, mode:string="r", fai: cs
 
 proc load_index*(b: Bam, path: string) =
   ## load the bam/cram index at the given path. This can be remote or local.
-  b.idx = sam_index_load2(b.hts, b.path, path.cstring)
+  if path == "":
+    b.idx = sam_index_load(b.hts, b.path)
+  else:
+    b.idx = sam_index_load2(b.hts, b.path, path.cstring)
   if b.idx == nil:
-    raise newException(IoError, "[bam] load_index: error opening index %s for bam %s" % [path, $b.path])
+    raise newException(IoError, "[bam] load_index error opening index %s for bam %s. %s" % [path, $b.path, $strerror(errno)])
 
 proc hts_set_opt*(fp: ptr htsFile; opt: FormatOption): cint {.varargs, cdecl,
     importc: "hts_set_opt", dynlib: libname.}
