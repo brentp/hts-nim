@@ -381,7 +381,7 @@ proc stop*(s: Splitter): int {.inline.} =
 proc `$`*(s: Splitter): string =
   return format("Splitter($# $#..$# ($#))" % [s.chrom, $s.start, $s.stop, s.cigar])
 
-iterator splitters*(r: Record, atag:string="SA"): Splitter =
+iterator splitters*(r: Record, atag:string="SA"): Splitter {.deprecated: "dont use splitters"} =
   ## generate splitters from SA tag.
   var aux = tag[string](r, atag)
   if aux.isSome:
