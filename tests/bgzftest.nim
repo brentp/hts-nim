@@ -45,6 +45,16 @@ suite "bgzf-suite":
     
     check nb_lines == 2
 
+  test "bgzf-iterator-err":
+    var 
+      b: BGZ
+      nb_lines = 0
+    b.open("tests/gzip-err.gz", "r")
+
+    expect IoError:
+      for line in b:
+        echo line
+
   test "write-with-index":
     var bx = wopen_bgzi("ti.txt.gz", 1, 2, 3, true)
     check bx.write_interval("aaa\t4\t10", "aaa", 4, 10) > 0
