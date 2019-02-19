@@ -50,3 +50,24 @@ proc open*(b: var BGZ, path: string, mode: string) =
   b.cptr = bgzf_open(cstring(path), cstring(mode))
   if b.cptr == nil:
     raise newException(IOError, "error opening " & path)
+
+iterator items*(b: BGZ): string =
+  ## iterates over the file line by line
+  var 
+    kstr: kstring_t
+    r: int
+
+  kstr.l = 0
+  kstr.m = 0
+  kstr.s = nil
+  var p = kstr.addr
+
+  r = b.read_line(p)
+  while r >= 0:
+    yield $kstr.s
+    r = b.read_line(p)
+  
+  free(kstr.s)
+  
+  if r <= -2:
+    raise newException(IOError, "error while reading bgzip file")

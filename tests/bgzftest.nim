@@ -31,6 +31,29 @@ suite "bgzf-suite":
     check int(b.tell()) > 0
     free(kstr.s)
     check b.close() == 0
+  
+  test "bgzf-iterator":
+    var 
+      b: BGZ
+      nb_lines = 0
+    b.open("t.gz", "r")
+
+    for line in b:
+      nb_lines.inc()
+      if nb_lines == 2:
+        check line == "b\t10\t20"
+    
+    check nb_lines == 2
+
+  test "bgzf-iterator-err":
+    var 
+      b: BGZ
+      nb_lines = 0
+    b.open("tests/gzip-err.gz", "r")
+
+    expect IoError:
+      for line in b:
+        echo line
 
   test "write-with-index":
     var bx = wopen_bgzi("ti.txt.gz", 1, 2, 3, true)
