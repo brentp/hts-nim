@@ -67,7 +67,7 @@ iterator items*(b: BGZ): string =
     yield $kstr.s
     r = b.read_line(p)
   
+  free(kstr.s)
+  
   if r <= -2:
     raise newException(IOError, "error while reading bgzip file")
-
-  free(kstr.s)
