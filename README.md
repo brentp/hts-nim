@@ -153,7 +153,7 @@ Users can also either follow or run [scripts/simple-install.sh](https://github.c
 
 Once Nim is set up, `hts-nim` can be installed with `nimble install -y` from the root of this repository.
 
-In all cases, it's recommended to use **nim version 0.17.2** which is the latest release.
+In all cases, it's recommended to use nim version 0.18.0 or more recent.
 
 Then, from this repo you can run `nimble test` and `nimble install` and then you can save the above snippets into `some.nim`
 and run them with `nim c -d:release -r some.nim`. This will run them and save an executable named `some`.
