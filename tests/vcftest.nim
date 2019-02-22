@@ -214,6 +214,21 @@ suite "vcf suite":
     for variant in vcf:
       check variant.info.set("hello", val) == Status.OK
 
+  test "add and set Flag":
+    var vcf:VCF
+    check open(vcf, "tests/test.vcf.gz")
+    check vcf.header.add_info("myflag", "0", "Flag", "new flag") == Status.OK
+
+    for variant in vcf:
+      var val = true
+      check variant.info.set("myflag", val) == Status.OK
+      check "myflag" in variant.tostring()
+
+      val = false
+      check variant.info.set("myflag", val) == Status.OK
+      check "myflag" notin variant.tostring()
+
+
   test "remove info from header":
     var vcf:VCF
     check open(vcf, "tests/test.vcf.gz")
@@ -324,5 +339,7 @@ suite "speed tests":
 
             if ints[22] == 0: n += 1
             if ints[12] == 0: n += 1
+          var gts = f.genotypes(ints)
+          doAssert gts[0][0].value > -2
       v.close()
     echo n, " in .. ", cpuTime() - t, " seconds "

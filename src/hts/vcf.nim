@@ -313,8 +313,13 @@ proc delete*(i:INFO, key:string): Status {.inline.} =
   return Status(ret.int)
 
 proc set*(i:INFO, key:string, value:var string): Status {.inline.} =
-    var ret = bcf_update_info(i.v.vcf.header.hdr, i.v.c, key.cstring, value.cstring, 1, BCF_HT_STR.cint)
-    return Status(ret.int)
+  var ret = bcf_update_info(i.v.vcf.header.hdr, i.v.c, key.cstring, value.cstring, 1, BCF_HT_STR.cint)
+  return Status(ret.int)
+
+proc set*(i:INFO, key:string, value:bool): Status {.inline.} =
+  ## set a flag (when value is true) and remove it (when value is false)
+  var ret = bcf_update_info(i.v.vcf.header.hdr, i.v.c, key.cstring, nil, value.int.cint, BCF_HT_FLAG.cint)
+  return Status(ret.int)
 
 proc set*[T: float32|float|float64](i:INFO, key:string, value:var T): Status {.inline.} =
   ## set the info key with the given float value).
