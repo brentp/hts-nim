@@ -228,6 +228,10 @@ suite "vcf suite":
       check variant.info.set("myflag", val) == Status.OK
       check "myflag" notin variant.tostring()
 
+  test "load index":
+    var vcf:VCF
+    check open(vcf, "tests/test.bcf")
+    vcf.load_index("tests/other-for-test.bcf.csi")
 
   test "remove info from header":
     var vcf:VCF

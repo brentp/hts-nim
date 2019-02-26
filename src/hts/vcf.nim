@@ -527,6 +527,14 @@ iterator items*(v:VCF): Variant =
     stderr.write_line "last read variant:", variant.tostring()
     quit(2)
 
+proc load_index*(v: VCF, path: string) =
+  ## load the index at the given path (remote or local).
+  v.bidx = hts_idx_load2(v.fname, path)
+  if v.bidx == nil:
+    v.tidx = tbx_index_load2(v.fname, path)
+  if v.bidx == nil and v.tidx == nil:
+    raise newException(OSError, "unable to load index at:" & path)
+
 iterator vquery(v:VCF, region:string): Variant =
   ## internal iterator for VCF regions called from query()
   if v.tidx == nil:
