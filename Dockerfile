@@ -7,7 +7,7 @@
 
 FROM centos:centos6
 
-RUN yum install -y git curl wget zlib-devel xz-devel bzip2-devel openssl-devel openssl-static libcurl-devel && \
+RUN yum install -y git wget zlib-devel xz-devel bzip2-devel && \
     wget http://people.centos.org/tru/devtools-2/devtools-2.repo -O /etc/yum.repos.d/devtools-2.repo && \
     yum install -y devtoolset-2-gcc devtoolset-2-binutils devtoolset-2-gcc-c++ lzma-devel glibc-static && \
     source scl_source enable devtoolset-2 && \
@@ -45,26 +45,32 @@ RUN yum install -y git curl wget zlib-devel xz-devel bzip2-devel openssl-devel o
     rm -r xz*
 
 RUN source scl_source enable devtoolset-2 && \
-    wget --quiet https://c-ares.haxx.se/download/c-ares-1.15.0.tar.gz && \
-    tar xzf c-ares-1.15.0.tar.gz && \
-    cd c-ares-1.15.0 && \
-    LIBS="-lrt"  LDFLAGS="-Wl,--no-as-needed -static" ./configure --enable-static && \
-    LDFLAGS="-Wl,--no-as-needed -static -lrt" make LDFLAGS="-Wl,--no-as-needed -all-static -lrt" -j4 install && \
-    cd .. && \
-    rm -rf c-ares-1.15.0* && \
+    cd / && \
+    wget --quiet https://www.openssl.org/source/openssl-1.1.1b.tar.gz && \
+    tar xzvf openssl-1.1.1b.tar.gz && \
+    cd openssl-1.1.1b && \
+    ./config && \
+    make install
+
+RUN source scl_source enable devtoolset-2 && \
     wget --quiet https://curl.haxx.se/download/curl-7.64.0.tar.gz && \
     tar xzf curl-7.64.0.tar.gz && \
     cd curl-7.64.0 && \
-    LIBS="-Wl,--no-as-needed -ldl -lpthread -lrt" LDFLAGS="-Wl,--no-as-needed -static" PKG_CONFIG="pkg-config --static" ./configure --disable-shared --enable-static --disable-ldap --with-ssl --disable-sspi --without-librtmp --disable-ftp --disable-file --disable-dict --disable-telnet --disable-tftp --disable-rtsp --disable-pop3 --disable-imap --disable-smtp --disable-gopher --disable-smb --without-libidn --enable-ares && \
-    LDFLAGS="-Wl,--no-as-needed -all-static -lrt" make curl_LDFLAGS=-all-static LDFLAGS="-Wl,--no-as-needed -all-static -lrt" -j4 install && \
+    LIBS="-Wl,--no-as-needed -ldl -lpthread -lrt" LDFLAGS="-Wl,--no-as-needed -static" PKG_CONFIG="pkg-config --static"  ./configure --enable-static --disable-ldap --with-ssl=/usr/local/ --enable-ssl --disable-sspi --without-librtmp --disable-ftp --disable-file --disable-dict --disable-telnet --disable-tftp --disable-rtsp --disable-pop3 --disable-imap --disable-smtp --disable-gopher --disable-smb --without-libidn --disable-ares && \
+    make curl_LDFLAGS="-all-static -lssl -lcrypto" LDFLAGS="-Wl,--no-as-needed -lrt -lssl -lcrypto" -j4 install && \
     cd ../ && \
     rm -rf curl-7.64.0* && \
     git clone https://github.com/samtools/htslib && \
-    cd htslib && git checkout 1.9 && autoheader && autoconf && \
-    ./configure --enable-s3 --enable-libcurl --with-libdeflate && \
-    cd .. && make -j4 CFLAGS="-fPIC -O3" -C htslib install && \
+    cd htslib && git checkout 1.9 && autoheader && autoconf
+
+RUN source scl_source enable devtoolset-2 && \
+    cd htslib && \
+    LIBS="-Wl,--no-as-needed -ldl -lpthread -lrt -lssl -lcrypto -lcurl" LDFLAGS="-Wl,--no-as-needed -static" PKG_CONFIG="pkg-config --static" ./configure --enable-plugins --with-libdeflate && \
+    make -j4 CFLAGS="-fPIC -O3" libhts.a && \
+    cp libhts.a /usr/local/lib/ && \
     echo "/usr/local/lib" >> etc/ld.so.conf && \
-    ldconfig
+    ldconfig && \
+    cd .. && rm -rf htslib
 
 
 RUN cd / && \
