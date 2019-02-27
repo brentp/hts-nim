@@ -4,3 +4,9 @@ hts/hts
 tests/htstest
 tests/vcftest
 tests/bgzftest
+tests/bamtest
+tests/all
+tests/run
+docker/static_builder
+docker/nsb
+
