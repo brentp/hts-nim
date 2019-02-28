@@ -46,7 +46,7 @@ if $args["--nimble-file"] != "nil":
   var (dir, _, _) = splitFile(expandFileName($args["--nimble-file"]))
   dir.setCurrentDir
 
-  if execCmd(&"""bash -c "export PATH={path}; /nim/bin/nimble install -d -y " """) != 0:
+  if execCmd(&"""sh -c "export PATH={path}; /nim/bin/nimble install -d -y " """) != 0:
     quit "coudn't run nimble install"
 
 
@@ -55,7 +55,7 @@ dir.setCurrentDir
 
 removeFile("xx_exe_out")
 var cmd = &"""/nim/bin/nim c -d:nsb_static {join(@(args["<nim_compiler_args>"]), " ")} -o:xx_exe_out {name}"""
-if execCmd(&"""bash -c "{cmd}" """) != 0:
+if execCmd(&"""sh -c "{cmd}" """) != 0:
   quit "error compiling code"
 
 copyFileWithPermissions("xx_exe_out", &"/load/{name}")

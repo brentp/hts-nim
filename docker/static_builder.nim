@@ -47,7 +47,7 @@ else:
    dir = d
 
 # file gets build and sent to /load so it appears in the users pwd
-var cmd = &"""docker run -v {dir}:{dir} -v {getCurrentDir()}:/load/ brentp/hts-nim:latest /usr/local/bin/nsb """
+var cmd = &"""docker run -v {dir}:{dir} -v {getCurrentDir()}:/load/ brentp/musl-hts:latest /usr/local/bin/nsb """
 if $args["--nimble-file"] != "nil":
   cmd &= &"""-n {nimblePath}"""
 
