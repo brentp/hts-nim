@@ -1,5 +1,6 @@
 import ./private/hts_concat
 include "./bam/enums"
+import strformat
 import strutils
 include "./bam/flag"
 include "./bam/cigar"
@@ -323,7 +324,7 @@ proc load_index*(b: Bam, path: string) =
   else:
     b.idx = sam_index_load2(b.hts, b.path, path.cstring)
   if b.idx == nil:
-    raise newException(IoError, "[bam] load_index error opening index %s for bam %s. %s" % [path, $b.path, $strerror(errno)])
+    raise newException(IoError, &"[bam] load_index error opening index {path} for bam {b.path}. {strerror(errno)}")
 
 proc hts_set_opt*(fp: ptr htsFile; opt: FormatOption): cint {.varargs, cdecl,
     importc: "hts_set_opt", dynlib: libname.}
