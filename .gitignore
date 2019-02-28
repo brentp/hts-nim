@@ -7,6 +7,6 @@ tests/bgzftest
 tests/bamtest
 tests/all
 tests/run
-docker/static_builder
 docker/nsb
+docker/hts_nim_static_builder
 
