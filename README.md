@@ -166,7 +166,7 @@ truly static binaries for linux from nim-projects and for simple nim scripts. Th
 For a single file application that does not have a nimble file we can specify the dependencies using `--deps`:
 
 ```
-static_builder -s vcf_cleaner.nim --deps "hts@>=0.2.7" --deps "binaryheap"
+hts_nim_static_builder -s vcf_cleaner.nim --deps "hts@>=0.2.7" --deps "binaryheap"
 ```
 
 This will create a static binary at `./vcf_cleaner`.
@@ -177,7 +177,7 @@ Projects with `.nimble` files can use that directly to indicate dependencies.
 For example, to build [slivar](https://github.com/brentp/slivar), we can do:
 
 ```
-static_builder -s ../slivar/src/slivar.nim -n ../slivar/slivar.nimble
+hts_nim_static_builder -s ../slivar/src/slivar.nim -n ../slivar/slivar.nimble
 ```
 
 After this finishes, a static `slivar` binary will appear in the current working directory.
@@ -188,3 +188,9 @@ We can verify that it is static using:
 $ file ./slivar 
 ./slivar: ELF 64-bit LSB executable, x86-64, version 1 (GNU/Linux), statically linked, for GNU/Linux 2.6.18, BuildID[sha1]=c2b5b52cb7be7f81bf90355a4e44a08a08df91d8, not stripped
 ```
+
+The [docker image](https://hub.docker.com/r/brentp/musl-hts-nim) is based on alpine linux and uses musl to create truly static binaries.
+At this time, libcurl is not supported so only binaries built using this method will only be able to access local files (no http/https/s3/gcs).
+
+The docker images does use [libdeflate](https://github.com/ebiggers/libdeflate) by default. That provides,
+for example, a 20% speed improvement when used to build [mosdepth](https://github.com/brentp/mosdepth).
