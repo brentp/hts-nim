@@ -161,7 +161,7 @@ and run them with `nim c -d:release -r some.nim`. This will run them and save an
 ## Static Builds
 
 `hts-nim` is meant to simplify and speed development and distribution. To that end, there is some machinery to help create
-truly static binaries for linux from nim-projects and for simple nim scripts. This means that there is no dependency on libhts.so. These builds only require docker and [this static binary XXX TODO](https://github.com/brentp/slivar/releases).
+truly static binaries for linux from nim-projects and for simple nim scripts. This means that there is no dependency on libhts.so. These builds only require docker and [this static binary](https://github.com/brentp/hts-nim/releases/download/v0.2.8/hts_nim_static_builder).
 
 For a single file application that does not have a nimble file we can specify the dependencies using `--deps`:
 
