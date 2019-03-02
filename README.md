@@ -31,7 +31,7 @@ Also see examples and other repos using hts-nim in the [wiki](https://github.com
 
 ## BAM / CRAM / SAM
 
-See API docs [here](https://brentp.github.io/hts-nim/hts/bam.html)
+#### See API docs [here](https://brentp.github.io/hts-nim/hts/bam.html)
 
 ```nim
 import hts
@@ -61,7 +61,7 @@ for record in b.query("6", 30816675, 32816675):
 
 ## VCF / BCF
 
-### See API docs [here](https://brentp.github.io/hts-nim/hts/vcf.html)
+#### See API docs [here](https://brentp.github.io/hts-nim/hts/vcf.html)
 
 ```nim
 import hts
