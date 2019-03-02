@@ -31,12 +31,14 @@ Also see examples and other repos using hts-nim in the [wiki](https://github.com
 
 ## BAM / CRAM / SAM
 
+See API docs [here](https://brentp.github.io/hts-nim/hts/bam.html)
+
 ```nim
 import hts
 
-# open a bam and look for the index.
+# open a bam/cram and look for the index.
 var b:Bam
-open(b, "tests/HG02002.bam", index=true)
+open(b, "tests/HG02002.cramam", index=true, fai="/data/human/g1k_v37_decoy.fa")
 
 for record in b:
   if record.mapping_quality > 10u:
@@ -52,28 +54,19 @@ for record in b.query("6", 30816675, 32816675):
 
     # tags are pulled by type `ta`
     var mismatches = tag[int](record, "NM")
-    if mismatches.isNone: continue
-    if mismatches.get < 3:
+    if not mismatches.isNone and mismatches.get < 3:
       var rg = tag[string](record, "RG")
-      if rg.isNone: continue
-      echo rg.get
-
-# cram requires an fasta to decode:
-var cram:Bam
-open(cram, "/tmp/t.cram", fai="/data/human/g1k_v37_decoy.fa")
-for record in cram:
-  # now record is same as from bam above
-  echo record.qname, record.isize
+      if not rg.isNone: echo rg.get
 ```
 
 ## VCF / BCF
 
+### See API docs [here](https://brentp.github.io/hts-nim/hts/vcf.html)
+
 ```nim
 import hts
-import unittest  # Enable the check statement
 
 var tsamples = @["101976-101976", "100920-100920", "100231-100231", "100232-100232", "100919-100919"]
-
 # VCF and BCF supported
 var v:VCF
 doAssert(open(v, "tests/test.bcf", samples=tsamples))
@@ -92,17 +85,12 @@ for rec in v:
   echo acs, afs, csq, info.has_flag("IN_EXAC")
 
   # accessing format fields is similar
-  var format = rec.format
   var dps = new_seq[int32](len(v.samples))
-  doAssert(format.ints("DP", dps))
-  echo dps
-
-echo v.samples
+  doAssert rec.format.ints("DP", dps) == Status.OK
 
 # open a VCF for writing
 var wtr:VCF
 doAssert(open(wtr, "tests/outv.vcf", mode="w"))
-# set and write the header.
 wtr.header = v.header
 doAssert(wtr.write_header())
 
@@ -114,28 +102,7 @@ for rec in v.query("1:15600-18250"):
   check rec.info.set("VQSLOD", val) == Status.OK
   doAssert(wtr.write_variant(rec))
 
-  check rec.info.delete("CSQ") == Status.OK
-
-wtr.close()
 ```
-
-## bgzip with csi
-
-A nice thing that is facilitated with this library is creating a .csi index while writing sorted
-intervals to a file.  This can be done as:
-
-```nim
-import hts
-# arguments are 1-based seq-col, start-col, end-col and whether the intervals are 0-based.
-var bx = wopen_bgzi("ti.txt.gz", 1, 2, 3, true)
-# some duplication of args to avoid re-parsing. args are line, chrom, start, end
-check bx.write_interval("a\t4\t10", "a", 4, 10) > 0
-check bx.write_interval("b\t2\t20", "b", 2, 20) > 0
-check bx.close() == 0
-```
-
-After this, `ti.txt.gz.csi` will be usable by tabix.
-
 
 ## Setup / Installation
 
