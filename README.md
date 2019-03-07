@@ -1,9 +1,7 @@
 hts-nim
 =======
 
-[![badge](https://img.shields.io/badge/docs-latest-blue.svg)](https://brentp.github.io/hts-nim/)
-
-[![Build Status](https://travis-ci.org/brentp/hts-nim.svg?branch=master)](https://travis-ci.org/brentp/hts-nim)
+[![badge](https://img.shields.io/badge/docs-latest-blue.svg)](https://brentp.github.io/hts-nim/) [![Build Status](https://travis-ci.org/brentp/hts-nim.svg?branch=master)](https://travis-ci.org/brentp/hts-nim)
 
 
 This is a wrapper for [htslib](https://github.com/samtools/htslib) in [nim](https://nim-lang.org). 
@@ -13,9 +11,7 @@ too different to python.
 
 If you use this library, please cite [the paper](https://academic.oup.com/bioinformatics/advance-article-abstract/doi/10.1093/bioinformatics/bty358/4990493)
 
-This library is under active development. Though it's been in use for some time and I have
-been using it nearly every day for script-like tasks, the API may change. If it does, old
-methods will be deprecated so users have time to update.
+Projects using `hts-nim` are accumulating [in the wiki](https://github.com/brentp/hts-nim/wiki/Examples)
 
 ## Installation
 
