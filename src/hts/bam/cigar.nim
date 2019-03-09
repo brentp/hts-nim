@@ -33,7 +33,7 @@ proc `[]=`*[T](p: SafeCPtr[T], k: int, val: T) =
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 type
-  Cigar* = ref object
+  Cigar* = object
     ## `Cigar` represents ths SAM Cigar type. It consists of one or more `CigarElement` s.
     cig: SafeCPtr[uint32]
     n: uint32
@@ -100,7 +100,7 @@ proc reference*(c: Consume): bool {. inline .} =
 type
   Range* = tuple[start: int, stop: int]
 
-proc ref_coverage*(c: Cigar, ipos: int = 0): seq[Range] =
+proc ref_coverage*(c: Cigar, ipos: int = 0): seq[Range] {.deprecated.} =
   if c.len == 1 and c[0].op == CigarOp.match:
     return @[(ipos, ipos + c[0].len)]
 
