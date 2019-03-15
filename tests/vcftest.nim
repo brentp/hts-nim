@@ -329,14 +329,14 @@ suite "speed tests":
     var t = cpuTime()
     var v:VCF
     var n:int
-    for i in 0..3:
+    for i in 0..2:
       check open(v, "tests/test.vcf.gz")
 
       var ints:seq[int32]
       var fields = @["DP", "GQ", "AD"]
       for variant in v:
         var f = variant.format
-        for i in 0..10000:
+        for i in 0..4000:
           for fld in fields:
             if f.get(fld, ints) != Status.OK:
               quit "bad int field"

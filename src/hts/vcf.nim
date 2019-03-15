@@ -630,6 +630,7 @@ proc copy*(v:Variant): Variant =
   var v2: Variant
   new(v2, destroy_variant)
   v2.c = bcf_dup(v.c)
+  discard bcf_unpack(v2.c, BCF_UN_ALL)
   v2.vcf = v.vcf
   v2.own = true
   v2.p = nil

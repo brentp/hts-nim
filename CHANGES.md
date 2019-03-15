@@ -1,5 +1,9 @@
-dev
-===
+0.2.9 (dev)
+=====
++ [vcf] unpack after copy. this was causing hard-to-diagnose problems whenever Variant.copy was used.
+
+0.2.8
+=====
 + [vcf] allow writing from a VCF that does not contain contigs (in htslib this is an error)
 + [vcf] fix bug in getting (absent) string arguments from INFO.
 
