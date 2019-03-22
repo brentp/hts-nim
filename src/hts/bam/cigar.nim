@@ -45,6 +45,9 @@ type
 type CigarOp* {.pure.} = enum
   match, insert, deletion, ref_skip, soft_clip, hard_clip, pad, equal, diff, back
 
+proc `$`*(o:CigarOp): char {.inline.} =
+  return "MIDNSHP=XB"[int(o)]
+
 proc newCigar(p: ptr uint32, n: uint32): Cigar {.inline.} =
   result = Cigar(cig: safe(cast[CPtr[uint32]](p), int(n)), n:n)
 
