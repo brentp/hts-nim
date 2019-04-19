@@ -138,6 +138,7 @@ proc remove_format*(h:Header, ID:string): Status =
   return Status(bcf_hdr_sync(h.hdr))
 
 proc info*(v:Variant): INFO {.inline.} =
+  discard bcf_unpack(v.c, BCF_UN_STR or BCF_UN_FLT or BCF_UN_INFO)
   result = INFO(i:0, v:v)
 
 proc destroy_format(f:Format) =
@@ -145,6 +146,7 @@ proc destroy_format(f:Format) =
     free(f.p)
 
 proc format*(v:Variant): FORMAT {.inline.} =
+  discard bcf_unpack(v.c, BCF_UN_ALL)
   new(result, destroy_format)
   result.v = v
 
@@ -514,8 +516,7 @@ iterator items*(v:VCF): Variant =
   while true:
     if bcf_read(v.hts, v.header.hdr, v.c) == -1:
       break
-    #discard bcf_unpack(v.c, 1 or 2 or 4)
-    discard bcf_unpack(v.c, BCF_UN_ALL)
+    discard bcf_unpack(v.c, 1 or 2)
     variant.vcf = v
     variant.c = v.c
     yield variant
@@ -571,7 +572,7 @@ iterator vquery(v:VCF, region:string): Variant =
     if ret > 0:
       break
     variant.c = v.c
-    discard bcf_unpack(v.c, BCF_UN_ALL)
+    discard bcf_unpack(v.c, 1 or 2)
     variant.vcf = v
     yield variant
 
@@ -609,7 +610,7 @@ iterator query*(v:VCF, region: string): Variant =
         #ret = bcf_itr_next(v.hts, itr, v.c)
         ret = hts_itr_next(v.hts.fp.bgzf, itr, v.c, nil)
         if ret < 0: break
-        discard bcf_unpack(v.c, BCF_UN_ALL)
+        discard bcf_unpack(v.c, 1 or 2)
         if bcf_subset_format(v.header.hdr, v.c) != 0:
             stderr.write_line "[hts-nim/vcf] error with bcf subset format"
             break
@@ -630,7 +631,7 @@ proc copy*(v:Variant): Variant =
   var v2: Variant
   new(v2, destroy_variant)
   v2.c = bcf_dup(v.c)
-  discard bcf_unpack(v2.c, BCF_UN_ALL)
+  discard bcf_unpack(v2.c, 1 or 2)
   v2.vcf = v.vcf
   v2.own = true
   v2.p = nil
