@@ -1,4 +1,9 @@
-0.2.9 (dev)
+v0.2.11
+=======
++ [vcf] more lazy about unpack; gives some performance improvement
++ [vcf] use pointer size to allow better memory re-use.
+
+0.2.9
 =====
 + [vcf] unpack after copy. this was causing hard-to-diagnose problems whenever Variant.copy was used.
 
