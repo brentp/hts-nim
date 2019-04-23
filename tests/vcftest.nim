@@ -312,6 +312,26 @@ suite "genotypes suite":
       check a[13] == 0
 
 
+suite "header record":
+  test "info test":
+    var ivcf:VCF
+    check ivcf.open("tests/test.vcf.gz")
+    var h = ivcf.header.get("HWP", BCF_HEADER_TYPE.BCF_HL_INFO)
+    check $h == """{ID:HWP, Number:1, Type:Float, Description:"P value from test of Hardy Weinberg Equilibrium", IDX:19}"""
+    check h["ID"] == "HWP"
+    check h["Number"] == "1"
+    check h["Type"] == "Float"
+
+    expect KeyError:
+      h = ivcf.header.get("HWP", BCF_HEADER_TYPE.BCF_HL_FMT)
+
+  test "format test":
+    var ivcf:VCF
+    check ivcf.open("tests/test.vcf.gz")
+    var h = ivcf.header.get("AD", BCF_HEADER_TYPE.BCF_HL_FMT)
+    check $h == """{ID:AD, Number:R, Type:Integer, Description:"Allelic depths for the ref and alt alleles in the order listed", IDX:80}"""
+    check h["Type"] == "Integer"
+
 suite "bug suite":
     test "csq reader":
         var v:VCF
