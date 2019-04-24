@@ -23,7 +23,7 @@ type
   Consume* = distinct uint32
 
 type CigarOp* {.pure.} = enum
-  match, insert, deletion, ref_skip, soft_clip, hard_clip, pad, equal, diff, back
+  match = 0'u32, insert, deletion, ref_skip, soft_clip, hard_clip, pad, equal, diff, back
 
 proc `$`*(o:CigarOp): char {.inline.} =
   return "MIDNSHP=XB"[int(o)]
@@ -38,26 +38,28 @@ proc len*(c: Cigar): int {. inline .} =
 proc `[]`*(c:Cigar, i:int): CigarElement {.inline.} =
   when defined(debug):
     if i >= c.n.int: raise newException(IndexError, "error getting " & $i & " element with length " & $c.n)
-  return CigarElement(c.cig[i])
+  return cast[CigarElement](c.cig[i])
 
 iterator items*(c: Cigar): CigarElement =
   ## iterates over the ops in the cigar.
   for i in 0..<c.n.int:
-    yield CigarElement(c.cig[i])
+    yield cast[CigarElement](c.cig[i])
 
 template bam_get_cigar*(b: untyped): untyped =
   (cast[ptr uint32](((cast[int]((b).data)) + cast[int]((b).core.l_qname))))
 
-proc bam_cigar_type(o: CigarOp): uint8 {.inline.} =
-  result = uint8(BAM_CIGAR_TYPE shr (uint32(o) shl 1) and 3)
+const BAM_CIGAR_TYPEu = BAM_CIGAR_TYPE.uint32
+
+proc bam_cigar_type(o: CigarOp): uint32 {.inline.} =
+  result = (BAM_CIGAR_TYPEu shr (cast[uint32](o) shl 1'u32) and 3'u32)
 
 proc op*(o: CigarElement): CigarOp {.inline.} =
   ## `op` gives the operation of the cigar.
-  result = CigarOp(uint8(uint32(o) and BAM_CIGAR_MASK))
+  result = cast[CigarOp](cast[uint32](o) and BAM_CIGAR_MASK)
 
 proc len*(o: CigarElement): int {. inline .} =
   ## `len` gives the length of the cigar op.
-  result = int(uint32(o) shr BAM_CIGAR_SHIFT)
+  result = int(cast[uint32](o) shr BAM_CIGAR_SHIFT)
 
 proc `$`*(o: CigarElement): string =
   ## shows the string representation of the cigar element.
@@ -71,16 +73,16 @@ proc `$`*(c: Cigar): string =
     s &= $o
   return s
 
-proc consumes*(o: CigarElement): Consume {. inline .} =
-  result = Consume(bam_cigar_type(o.op))
+template consumes*(o: CigarElement): Consume =
+  cast[Consume](bam_cigar_type(o.op))
 
-proc query*(c: Consume): bool {. inline .} =
-  # returns true if the op consumes bases in the query.
-  result = (uint32(c) and uint8(1)) != 0
+template query*(c: Consume): bool =
+  ## returns true if the op consumes bases in the query.
+  (cast[uint32](c) and 1'u32) != 0
 
-proc reference*(c: Consume): bool {. inline .} =
-  # returns true if the op consumes bases in the reference.
-  result = (uint32(c) and uint8(2)) != 0
+template reference*(c: Consume): bool =
+  ## returns true if the op consumes bases in the reference.
+  (cast[uint32](c) and 2'u32) != 0
 
 type
   Range* = tuple[start: int, stop: int]
