@@ -1,3 +1,7 @@
+dev
+===
++ [bam] optimize cigar. had extra calls and memory-use.
+
 v0.2.11
 =======
 + [vcf] more lazy about unpack; gives some performance improvement

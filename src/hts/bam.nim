@@ -115,7 +115,7 @@ proc targets*(h: Header): seq[Target] =
   ## The targets (chromosomes) from the header.
   var n = int(h.hdr.n_targets)
   var ts = newSeq[Target](n)
-  var arr = safe(cast[CPtr[uint32]](h.hdr.target_len), n)
+  var arr = cast[CPtr[uint32]](h.hdr.target_len)
   for tid in 0..<n:
     ts[tid] = Target(name: $h.hdr.target_name[tid], length: arr[tid], tid: tid)
   return ts

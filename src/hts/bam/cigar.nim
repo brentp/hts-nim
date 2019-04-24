@@ -10,32 +10,12 @@ else:
 
 type CPtr*[T] = ptr CArray[T]
 
-type SafeCPtr*[T] =
-  object
-    size: int
-    mem: CPtr[T]
-
-proc safe*[T](p: CPtr[T], k: int): SafeCPtr[T] =
-    SafeCPtr[T](mem: p, size: k)
-
-proc safe[T](a: var openarray[T], k: int): SafeCPtr[T] =
-  safe(cast[CPtr[T]](addr(a)), k)
-
-proc `[]`*[T](p: SafeCPtr[T], k: int): T =
-  when not defined(release):
-    assert k < p.size
-  result = p.mem[k]
-
-proc `[]=`*[T](p: SafeCPtr[T], k: int, val: T) =
-  when not defined(release):
-    assert k < p.size
-  p.mem[k] = val
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 type
   Cigar* = object
     ## `Cigar` represents ths SAM Cigar type. It consists of one or more `CigarElement` s.
-    cig: SafeCPtr[uint32]
+    cig: CPtr[uint32]
     n: uint32
 
   CigarElement* = distinct uint32 ## `CigarElement` encodes the operation (length and type) of each element of a `Cigar`.
@@ -49,18 +29,20 @@ proc `$`*(o:CigarOp): char {.inline.} =
   return "MIDNSHP=XB"[int(o)]
 
 proc newCigar(p: ptr uint32, n: uint32): Cigar {.inline.} =
-  result = Cigar(cig: safe(cast[CPtr[uint32]](p), int(n)), n:n)
+  result = Cigar(cig: cast[CPtr[uint32]](p), n:n)
 
 proc len*(c: Cigar): int {. inline .} =
   ## returns the number of operations in the cigar.
   result = int(c.n)
 
 proc `[]`*(c:Cigar, i:int): CigarElement {.inline.} =
+  when defined(debug):
+    if i >= c.n.int: raise newException(IndexError, "error getting " & $i & " element with length " & $c.n)
   return CigarElement(c.cig[i])
 
 iterator items*(c: Cigar): CigarElement =
   ## iterates over the ops in the cigar.
-  for i in 0..<c.cig.size:
+  for i in 0..<c.n.int:
     yield CigarElement(c.cig[i])
 
 template bam_get_cigar*(b: untyped): untyped =

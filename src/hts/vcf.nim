@@ -52,7 +52,7 @@ type
     UndefinedTag = -1 ## Tag is not present in the Header
     OK = 0 ## Tag was found
 
-  BCF_HEADER_LINE* {.pure.} = enum
+  BCF_HEADER_TYPE* {.pure.} = enum
     BCF_HL_FLT  #0 // header line
     BCF_HL_INFO #1
     BCF_HL_FMT  #2
@@ -69,6 +69,9 @@ type
     CHAR = 7
 
 var empty_samples: seq[string]
+
+converter toInt(b:BCF_HEADER_TYPE): int = b.int
+converter toCint(b:BCF_HEADER_TYPE): cint = b.cint
 
 proc n_samples*(v:VCF): int {.inline.} =
   bcf_hdr_nsamples(v.header.hdr).int
@@ -110,6 +113,40 @@ proc `$`*(h:Header): string =
   result = $str.s
   free(str.s)
 
+type
+  HeaderRecord* = object
+    ## HeaderRecord represents a row from the VCF header (hrec from htslib)
+    name*: string
+    # TODO: val
+    c: ptr bcf_hrec_t
+
+proc `$`*(h:HeaderRecord): string =
+  result.add('{')
+  for i in 0..<h.c.nkeys:
+    result.add($h.c.keys[i] & ':' & $h.c.vals[i])
+    if i < h.c.nkeys - 1:
+      result.add(", ")
+  result.add('}')
+
+proc `[]`*(h:HeaderRecord, key: string): string =
+  ## get the value from the recode, key can be, for example
+  ## ID or Description or Number or Type
+  for i in 0..<h.c.nkeys:
+    if $h.c.keys[i] == key:
+      return $h.c.vals[i]
+  raise newException(KeyError, key & " not found in description")
+
+proc get*(h:Header, name: string, typ:BCF_HEADER_TYPE): HeaderRecord =
+  ## get the HeaderRecord for the given name.
+  var hrec: ptr bcf_hrec_t
+  if typ == BCF_HEADER_TYPE.BCF_HL_GEN:
+    hrec = h.hdr.bcf_hdr_get_hrec(BCF_HL_GEN, name, nil, nil)
+  else:
+    hrec = h.hdr.bcf_hdr_get_hrec(typ, "ID", name, nil)
+  if hrec == nil:
+    raise newException(KeyError, name & " not found in header")
+  return HeaderRecord(name: name, c: hrec)
+
 proc from_string*(h: var Header, s:string) =
   ## create a new header from a VCF header string.
   if h == nil:
@@ -127,7 +164,7 @@ proc add_info*(h:Header, ID:string, Number:string, Type:string, Description: str
 
 proc remove_info*(h:Header, ID:string): Status =
   ## remove an INFO field from the header
-  bcf_hdr_remove(h.hdr, BCF_HEADER_LINE.BCF_HL_INFO.cint, ID.cstring)
+  bcf_hdr_remove(h.hdr, BCF_HEADER_TYPE.BCF_HL_INFO.cint, ID.cstring)
   return Status(bcf_hdr_sync(h.hdr))
 
 proc add_format*(h:Header, ID:string, Number:string, Type:string, Description: string): Status =
@@ -136,7 +173,7 @@ proc add_format*(h:Header, ID:string, Number:string, Type:string, Description: s
 
 proc remove_format*(h:Header, ID:string): Status =
   ## remove a FORMAT field from the header
-  bcf_hdr_remove(h.hdr, BCF_HEADER_LINE.BCF_HL_FMT.cint, ID.cstring)
+  bcf_hdr_remove(h.hdr, BCF_HEADER_TYPE.BCF_HL_FMT.cint, ID.cstring)
   return Status(bcf_hdr_sync(h.hdr))
 
 proc info*(v:Variant): INFO {.inline.} =
@@ -308,7 +345,7 @@ proc delete*(i:INFO, key:string): Status {.inline.} =
   if info == nil:
     raise newException(KeyError, "hts-nim/info: key not found:" & key)
 
-  var htype = bcf_hdr_id2type(i.v.vcf.header.hdr, BCF_HEADER_LINE.BCF_HL_INFO.cint, info.key)
+  var htype = bcf_hdr_id2type(i.v.vcf.header.hdr, BCF_HEADER_TYPE.BCF_HL_INFO.cint, info.key)
   var ret = bcf_update_info(i.v.vcf.header.hdr, i.v.c, key.cstring,nil,0,htype.cint)
   return Status(ret.int)
 
@@ -484,7 +521,7 @@ iterator fields*(info:INFO): InfoField =
     var fld = cast[CPtr[bcf_info_t]](info.v.c.d.info)[i]
     var typ = BCF_TYPE(fld.`type`)
     var r = InfoField(name: $bcf_hdr_int2id(info.v.vcf.header.hdr, BCF_DT_ID, fld.key),
-                      n: bcf_hdr_id2number(info.v.vcf.header.hdr, BCF_HEADER_LINE.BCF_HL_INFO.cint, fld.key),
+                      n: bcf_hdr_id2number(info.v.vcf.header.hdr, BCF_HEADER_TYPE.BCF_HL_INFO.cint, fld.key),
                       vtype: typ, i: fld.key)
     yield r
 

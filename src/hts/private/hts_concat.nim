@@ -862,3 +862,15 @@ proc bcf_get_info*(hdr: ptr bcf_hdr_t; line: ptr bcf1_t; key: cstring): ptr bcf_
 proc bcf_get_info_values*(hdr: ptr bcf_hdr_t; line: ptr bcf1_t; tag: cstring;
                          dst: ptr pointer; ndst: ptr cint; `type`: cint): cint {.cdecl,
     importc: "bcf_get_info_values", dynlib: libname.}
+## *
+##   bcf_hdr_get_hrec() - get header line info
+##   @param type:  one of the BCF_HL_* types: FLT,INFO,FMT,CTG,STR,GEN
+##   @param key:   the header key for generic lines (e.g. "fileformat"), any field
+##                   for structured lines, typically "ID".
+##   @param value: the value which pairs with key. Can be be NULL for BCF_HL_GEN
+##   @param str_class: the class of BCF_HL_STR line (e.g. "ALT" or "SAMPLE"), otherwise NULL
+##
+
+proc bcf_hdr_get_hrec*(hdr: ptr bcf_hdr_t; `type`: cint; key: cstring; value: cstring;
+                      str_class: cstring): ptr bcf_hrec_t {.cdecl,
+    importc: "bcf_hdr_get_hrec", dynlib: libname.}
