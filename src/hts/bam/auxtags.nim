@@ -25,7 +25,7 @@ proc tag*[T: int|float|string|char|cstring](r:Record, itag:string): Option[T] =
   if b == nil:
     return none(T)
 
-  case safe(cast[CPtr[char]](b), 1)[0]:
+  case (cast[CPtr[char]](b))[0]:
     of 'i', 'I', 'c', 'C', 's', 'S':
       when T is int:
         var i = bam_aux2i(b)
