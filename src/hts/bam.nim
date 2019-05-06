@@ -75,7 +75,7 @@ proc from_string*(r:Record, record_string:string) =
 template bam_get_seq(b: untyped): untyped =
   cast[CPtr[uint8]](cast[uint]((b).data) + uint(((b).core.n_cigar shl 2) + (b).core.l_qname))
 
-proc sequence*(r: Record, s: var string): string =
+proc sequence*(r: Record, s: var string): string {.discardable.} =
   ## fill the given string with the read sequence
   if len(s) != r.b.core.l_qseq:
     s.set_len(r.b.core.l_qseq)

@@ -414,6 +414,8 @@ proc sam_hdr_parse*(l_text: cint; text: cstring): ptr bam_hdr_t {.cdecl,
     importc: "sam_hdr_parse", dynlib: libname.}
 proc sam_hdr_read*(fp: ptr samFile): ptr bam_hdr_t {.cdecl, importc: "sam_hdr_read",
     dynlib: libname.}
+proc bam_name2id*(h: ptr bam_hdr_t; `ref`: cstring): cint {.cdecl,
+    importc: "bam_name2id", dynlib: libname.}
 proc bam_hdr_dup*(h0: ptr bam_hdr_t): ptr bam_hdr_t {.cdecl, importc: "bam_hdr_dup",
     dynlib: libname.}
 proc bam_hdr_write*(fp: ptr BGZF; h: ptr bam_hdr_t): cint {.cdecl,
@@ -639,7 +641,7 @@ const
 ##
 
 type
-  INNER_C_UNION_hts_concat_545* {.bycopy.} = object {.union.}
+  INNER_C_UNION_hts_concat_546* {.bycopy.} = object {.union.}
     i*: int32                  ##  integer value
     f*: cfloat                 ##  float value
 
@@ -669,7 +671,7 @@ type
     key*: cint                 ##  key: numeric tag id, the corresponding string is bcf_hdr_t::id[BCF_DT_ID][$key].key
     `type`*: cint
     len*: cint                 ##  type: one of BCF_BT_* types; len: vector length, 1 for scalars
-    v1*: INNER_C_UNION_hts_concat_545 ##  only set if $len==1; for easier access
+    v1*: INNER_C_UNION_hts_concat_546 ##  only set if $len==1; for easier access
     vptr*: ptr uint8            ##  pointer to data array in bcf1_t->shared.s, excluding the size+type and tag id bytes
     vptr_len*: uint32          ##  length of the vptr block or, when set, of the vptr_mod block, excluding offset
     vptr_off* {.bitsize: 31.}: uint32 ##  vptr offset, i.e., the size of the INFO key plus size+type bytes

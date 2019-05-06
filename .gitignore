@@ -1,5 +1,6 @@
 nimcache
 hts/hts
+src/hts/vcf
 *.html
 tests/htstest
 tests/vcftest

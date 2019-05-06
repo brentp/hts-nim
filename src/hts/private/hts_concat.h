@@ -332,6 +332,7 @@ typedef struct {
 
 bam_hdr_t *sam_hdr_parse(int l_text, const char *text);
 bam_hdr_t *sam_hdr_read(samFile *fp);
+int bam_name2id(bam_hdr_t *h, const char *ref);
 bam_hdr_t* bam_hdr_dup(const bam_hdr_t *h0);
 int bam_hdr_write(BGZF *fp, const bam_hdr_t *h);
 int sam_hdr_write(htsFile *fp, const bam_hdr_t *h);
