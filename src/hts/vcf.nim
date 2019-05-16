@@ -26,7 +26,6 @@ type
     ## Variant is a single line from a VCF
     c*: ptr bcf1_t
     p: pointer
-    psize: cint
     vcf*: VCF
     own: bool # this seems to protect against a bug in the gc
 
@@ -39,7 +38,6 @@ type
     ## FORMAT exposes access to the sample format fields in the VCF
     v*: Variant
     p*: pointer
-    psize: cint
 
 
   CPtr*[T] = ptr CArray[T]
@@ -181,10 +179,8 @@ proc info*(v:Variant): INFO {.inline.} =
   result = INFO(i:0, v:v)
 
 proc destroy_format(f:Format) =
-  if f != nil:
-    f.psize = 0
-    if f.p != nil:
-      free(f.p)
+  if f != nil and f.p != nil:
+    free(f.p)
 
 proc format*(v:Variant): FORMAT {.inline.} =
   discard bcf_unpack(v.c, BCF_UN_ALL)
@@ -208,8 +204,9 @@ proc toSeq[T](data: var seq[T], p:pointer, n:int) {.inline.} =
 
 proc get*(f:FORMAT, key:string, data:var seq[int32]): Status {.inline.} =
   ## fill data with integer values for each sample with the given key
+  var n:cint = 0
   var ret = bcf_get_format_values(f.v.vcf.header.hdr, f.v.c, key.cstring,
-     f.p.addr, f.psize.addr, BCF_HT_INT.cint)
+     f.p.addr, n.addr, BCF_HT_INT.cint)
   if unlikely(ret < 0):
     result = Status(ret.int)
     return
@@ -219,8 +216,9 @@ proc get*(f:FORMAT, key:string, data:var seq[int32]): Status {.inline.} =
 
 proc get*(f:FORMAT, key:string, data:var seq[float32]): Status {.inline.} =
   ## fill data with float values for each sample with the given key
+  var n:cint = 0
   var ret = bcf_get_format_values(f.v.vcf.header.hdr, f.v.c, key.cstring,
-     f.p.addr, f.psize.addr, BCF_HT_REAL.cint)
+     f.p.addr, n.addr, BCF_HT_REAL.cint)
   if unlikely(ret < 0):
       result = Status(ret.int)
       return
@@ -229,14 +227,15 @@ proc get*(f:FORMAT, key:string, data:var seq[float32]): Status {.inline.} =
 
 proc get*(f:FORMAT, key:string, data:var seq[string]): Status {.inline.} =
   ## fill data with string values for each sample with the given key
-  var ret = bcf_get_format_values(f.v.vcf.header.hdr, f.v.c, key.cstring, f.p.addr, f.psize.addr, BCF_HT_STR.cint)
+  var n:cint = 0
+  var ret = bcf_get_format_values(f.v.vcf.header.hdr, f.v.c, key.cstring, f.p.addr, n.addr, BCF_HT_STR.cint)
   # now f.p is a single char* with values from all samples.
   if ret < 0:
       result = Status(ret.int)
       return
   # extract the per-sample strings which are fixed-length.
   var cs = cast[cstring](f.p)
-  var n_per = int(f.psize / f.v.n_samples)
+  var n_per = int(n / f.v.n_samples)
   if data.len != f.v.n_samples:
       data.set_len(f.v.n_samples)
 
@@ -283,9 +282,10 @@ proc set*(f:FORMAT, key:string, values: var seq[float32]): Status {.inline.} =
 proc get*(i:INFO, key:string, data:var seq[int32]): Status {.inline.} =
   ## fills the given data with ints associated with the key.
   result = Status.OK
+  var n:cint = 0
 
   var ret = bcf_get_info_values(i.v.vcf.header.hdr, i.v.c, key.cstring,
-     i.v.p.addr, i.v.psize.addr, BCF_HT_INT.cint)
+     i.v.p.addr, n.addr, BCF_HT_INT.cint)
   if ret < 0:
     result = Status(ret.int)
     return
@@ -296,10 +296,11 @@ proc get*(i:INFO, key:string, data:var seq[float32]): Status {.inline.} =
   ## fills the given data with ints associated with the key.
   ## in many cases, the user will want only a single value; in that case
   ## data will have length 1 with the single value.
+  var n:cint = 0
   result = Status.OK
 
   var ret = bcf_get_info_values(i.v.vcf.header.hdr, i.v.c, key.cstring,
-     i.v.p.addr, i.v.psize.addr, BCF_HT_REAL.cint)
+     i.v.p.addr, n.addr, BCF_HT_REAL.cint)
   if ret < 0:
     result = Status(ret.int)
     return
@@ -308,10 +309,11 @@ proc get*(i:INFO, key:string, data:var seq[float32]): Status {.inline.} =
 
 proc get*(i:INFO, key:string, data:var string): Status {.inline.} =
   ## fills the data with the value for the key and returns a Status indicating success
+  var n:cint = 0
   result = Status.OK
 
   var ret = bcf_get_info_values(i.v.vcf.header.hdr, i.v.c, key.cstring,
-     i.v.p.addr, i.v.psize.addr, BCF_HT_STR.cint)
+     i.v.p.addr, n.addr, BCF_HT_STR.cint)
   if ret < 0:
     if data.len != 0: data.set_len(0)
     result = Status(ret.int)
@@ -388,8 +390,7 @@ proc destroy_variant(v:Variant) =
   if v != nil and v.c != nil and v.own:
     bcf_destroy(v.c)
     v.c = nil
-  if v != nil and v.p != nil:
-    v.psize = 0
+  if v.p != nil:
     free(v.p)
 
 proc from_string*(v: var Variant, h: Header, s:var string) =
