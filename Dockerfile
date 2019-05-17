@@ -8,7 +8,7 @@
 # docker build -t brentp/hts-nim:latest -f Dockerfile .
 FROM centos:centos6
 
-RUN yum install -y git curl wget zlib-devel xz-devel bzip2-devel libcurl-devel && \
+RUN yum install -y git curl wget xz-devel bzip2-devel libcurl-devel && \
     wget http://people.centos.org/tru/devtools-2/devtools-2.repo -O /etc/yum.repos.d/devtools-2.repo && \
     yum install -y devtoolset-2-gcc devtoolset-2-binutils devtoolset-2-gcc-c++ lzma-devel glibc-static && \
     source scl_source enable devtoolset-2 && \
@@ -30,13 +30,10 @@ RUN yum install -y git curl wget zlib-devel xz-devel bzip2-devel libcurl-devel &
     make -j2 install && \
     cd ../ && \
     rm -rf bzip2-* && \
-    wget --quiet https://www.zlib.net/zlib-1.2.11.tar.gz && \
-    tar xzf zlib-1.2.11.tar.gz && \
-    cd zlib-1.2.11 && \
-    ./configure && \
-    make -j4 install && \
+    git clone https://github.com/cloudflare/zlib cloudflare-zlib && \
+    cd cloudflare-zlib && ./configure && make install && \
     cd .. && \
-    rm -rf zlib* && \
+    rm -rf cloudflare-zlib && \
     wget --quiet https://tukaani.org/xz/xz-5.2.4.tar.bz2 && \
     tar xjf xz-5.2.4.tar.bz2 && \
     cd xz-5.2.4 && \
