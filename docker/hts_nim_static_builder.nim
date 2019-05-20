@@ -18,7 +18,8 @@ Options:
   -n --nimble-file <string>            optional path to nimble file must be in the same or parent directory of the nim source file.
   -s --nim-src-file <string>           required path to nim file to be compiled to binary
   -x --debug                           debug build. default is to build in release mode.
-  -d --deps <string>...               any number of dependencies, e.g. --deps "hts@>=0.2.7" --deps "lapper"
+  -t --tag <string>                    docker tag to use [default: latest]
+  -d --deps <string>...                any number of dependencies, e.g. --deps "hts@>=0.2.7" --deps "lapper"
 
 """
 
@@ -47,7 +48,7 @@ else:
    dir = d
 
 # file gets build and sent to /load so it appears in the users pwd
-var cmd = &"""docker run -v {dir}:{dir} -v {getCurrentDir()}:/load/ brentp/musl-hts-nim:latest /usr/local/bin/nsb """
+var cmd = &"""docker run -v {dir}:{dir} -v {getCurrentDir()}:/load/ brentp/musl-hts-nim:{$args["--tag"]} /usr/local/bin/nsb """
 if $args["--nimble-file"] != "nil":
   cmd &= &"""-n {nimblePath}"""
 
