@@ -1,5 +1,8 @@
-dev
-===
+v0.2.14
+=======
++ [vcf] add format.delete to delete format (sample) fields from vcf records.
+v0.2.12
+=======
 + [bam] optimize cigar. had extra calls and memory-use.
 
 v0.2.11

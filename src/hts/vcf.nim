@@ -202,6 +202,22 @@ proc toSeq[T](data: var seq[T], p:pointer, n:int) {.inline.} =
   if n == 0: return
   c_memcpy(data[0].addr.pointer, p, (n * sizeof(T)).csize)
 
+proc bcf_hdr_id2type(hdr:ptr bcf_hdr_t, htype:int, int_id:int): int {.inline.}=
+  # translation of htslib macro.
+  var d = cast[CPtr[bcf_idpair_t]](hdr.id[0])
+  var v = d[int_id.cint].val.info[htype].int
+  return (v shr 4) and 0xf
+
+proc delete*(f:FORMAT, key:string): Status {.inline.} =
+  ## delete the value from the FORMAT field for all samples
+  var fmt = bcf_get_fmt(f.v.vcf.header.hdr, f.v.c, key.cstring)
+  if fmt == nil:
+    raise newException(KeyError, "hts-nim/format field not found:" & key)
+
+  var htype = bcf_hdr_id2type(f.v.vcf.header.hdr, BCF_HEADER_TYPE.BCF_HL_FMT.cint, fmt.id)
+  result = Status(bcf_update_format(f.v.vcf.header.hdr, f.v.c, key.cstring, nil, 0, htype.cint).int)
+
+
 proc get*(f:FORMAT, key:string, data:var seq[int32]): Status {.inline.} =
   ## fill data with integer values for each sample with the given key
   var n:cint = 0
@@ -328,12 +344,6 @@ proc has_flag*(i:INFO, key:string): bool {.inline.} =
   if info == nil or info.len != 0:
     return false
   return true
-
-proc bcf_hdr_id2type(hdr:ptr bcf_hdr_t, htype:int, int_id:int): int {.inline.}=
-  # translation of htslib macro.
-  var d = cast[CPtr[bcf_idpair_t]](hdr.id[0])
-  var v = d[int_id.cint].val.info[htype].int
-  return (v shr 4) and 0xf
 
 proc bcf_hdr_id2number(hdr:ptr bcf_hdr_t, htype:int, int_id:int): int {.inline.}=
   # translation of htslib macro.

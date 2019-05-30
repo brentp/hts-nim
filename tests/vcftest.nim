@@ -36,7 +36,7 @@ suite "vcf suite":
     var v:VCF
     var wtr:VCF
     check open(v, "tests/test.vcf.gz", samples=tsamples)
-    check open(wtr, "tests/out.vcf", mode="w")
+    check open(wtr, "tests/outz.vcf", mode="w")
     wtr.header = v.header
     check wtr.write_header()
     var i = 0
@@ -59,9 +59,14 @@ suite "vcf suite":
 
       var culprit = "Test"
       check variant.info.set("culprit", culprit) == Status.OK
+      for f in variant.format.fields:
+        if f.name == "GT": continue
+        doAssert variant.format.delete(f.name) == Status.OK
+
       check wtr.write_variant(variant)
 
       check ("culprit" in variant.tostring())
+
 
       if i == 0:
         try:
