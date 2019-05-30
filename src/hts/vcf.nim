@@ -729,7 +729,7 @@ type
     ## representation. However, we are able to efficiently manipulate them by adding
     ## methods to the base type.
     gts: seq[int32]
-    ploidy: int
+    ploidy*: int
 
   Allele* = distinct int32
   ## An allele represents each element of a genotype.
