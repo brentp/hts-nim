@@ -6,7 +6,6 @@ before_install:
   - export PATH="$HOME/nim-$BRANCH/bin/nim/bin:${PATH:+:$PATH}"
   - export LD_LIBRARY_PATH=$HOME/htslib/
   - export PATH="$HOME/nim-$BRANCH/bin${PATH:+:$PATH}"
-  - export PATH="$HOME/nimble/src:$PATH::~/.nimble/bin"
 
 install:
   - bash ./scripts/install.sh

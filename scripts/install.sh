@@ -10,17 +10,9 @@ sudo apt-get -qy install bwa make build-essential cmake libncurses-dev ncurses-d
 
 cd
 
-if [ ! -x  nim-$BRANCH/bin/nim ]; then
-  git clone -b $BRANCH --depth 1 git://github.com/nim-lang/nim nim-$BRANCH/
-  cd nim-$BRANCH
-  sh build_all.sh
-else
-  cd nim-$BRANCH
-  git fetch origin
-  if ! git merge FETCH_HEAD | grep "Already up-to-date"; then
-    sh build_all.sh
-  fi
-fi
+git clone -b $BRANCH --depth 5 git://github.com/nim-lang/nim nim-$BRANCH/
+cd nim-$BRANCH
+sh build_all.sh
 
 export PATH=$PATH:$HOME/nim-$BRANCH/bin/
 echo $PATH
