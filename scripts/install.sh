@@ -24,26 +24,9 @@ fi
 
 export PATH=$PATH:$HOME/nim-$BRANCH/bin/
 echo $PATH
-
-cd
-git clone --depth 1 https://github.com/nim-lang/nimble.git
-cd nimble
-nim c src/nimble
-src/nimble install -y
-
 cd
 set -x
 nimble refresh
-
-echo $(which nimble)
-echo $(pwd)
-
-
-#git clone --depth 1 --recursive https://github.com/nim-lang/c2nim.git
-#cd c2nim
-#nimble install -y
-
-cd
 
 git clone --recursive https://github.com/samtools/htslib.git
 cd htslib && git checkout 1.9 && autoheader && autoconf && ./configure --enable-libcurl
