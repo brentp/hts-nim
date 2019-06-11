@@ -1,5 +1,6 @@
 import unittest, hts, strutils
 import hts/vcf
+import os
 import hts/private/hts_concat
 import math
 
@@ -20,6 +21,18 @@ proc isNan(f:float32): bool =
 
 
 suite "vcf suite":
+
+  test "empty file rasies":
+    var tfh:File
+    var fname = "____t.vcf"
+    if not open(tfh, fname, fmWrite):
+      quit "couldn't open test vcf"
+    tfh.close()
+    expect OsError:
+      var v:VCF
+      if not open(v, fname):
+        quit "Bad"
+      removeFile(fname)
 
   test "filter":
     var v:VCF

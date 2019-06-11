@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.2.14"
+version       = "0.2.15"
 author        = "Brent Pedersen"
 description   = "hts (bam/sam) for nim"
 license       = "MIT"

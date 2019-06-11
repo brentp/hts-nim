@@ -1,4 +1,5 @@
 import ./private/hts_concat
+import strformat
 import strutils
 import system
 import sequtils
@@ -200,7 +201,7 @@ proc toSeq[T](data: var seq[T], p:pointer, n:int) {.inline.} =
   if data.len != n:
     data.set_len(n)
   if n == 0: return
-  c_memcpy(data[0].addr.pointer, p, (n * sizeof(T)).csize)
+  copyMem(data[0].addr, p, (n * sizeof(T).csize))
 
 proc bcf_hdr_id2type(hdr:ptr bcf_hdr_t, htype:int, int_id:int): int {.inline.}=
   # translation of htslib macro.
@@ -485,6 +486,8 @@ proc open*(v:var VCF, fname:string, mode:string="r", samples:seq[string]=empty_s
 
 
   v.header = Header(hdr:bcf_hdr_read(v.hts))
+  if v.header.hdr == nil:
+    raise newException(OSError, &"[hts-nim/vcf] error reading VCF header from '{fname}'")
   if samples.len != 0:
     v.set_samples(samples)
 
