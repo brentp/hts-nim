@@ -86,6 +86,11 @@ enum hts_fmt_option {
 #define BCF_HT_REAL 2
 #define BCF_HT_STR  3
 
+#define HTS_IDX_NOCOOR (-2)
+#define HTS_IDX_START  (-3)
+#define HTS_IDX_REST   (-4)
+#define HTS_IDX_NONE   (-5)
+
 
 void *malloc(size_t size);
 void free(void *);

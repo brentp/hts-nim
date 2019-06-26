@@ -345,11 +345,11 @@ dl {
 
 dt {
   margin-bottom: -0.5em;
-  margin-left: 0.5em; }
+  margin-left: 0.0em; }
 
 dd {
-  margin-left: 0.5em;
-  margin-bottom: 2.5em;
+  margin-left: 2.0em;
+  margin-bottom: 3.0em;
   margin-top: 0.5em; }
 
 
@@ -761,6 +761,10 @@ span.pragmawrap {
   display: none;
 }
 
+span.attachedType {
+  display: none;
+  visibility: hidden;
+}
 </style>
 
 <script type="text/javascript" src="dochack.js"></script>
@@ -808,7 +812,7 @@ function main() {
       <li><a class="reference" href="#Option"
     title="Option[T] = object
   val: T
-  has: bool"><wbr />Option<span class="attachedType" style="visibility:hidden"></span></a></li>
+  has: bool"><wbr />Option<span class="attachedType"></span></a></li>
 
   </ul>
 </li>
@@ -816,21 +820,21 @@ function main() {
   <a class="reference reference-toplevel" href="#12" id="62">Procs</a>
   <ul class="simple simple-toc-section">
       <li><a class="reference" href="#some%2CT"
-    title="some[T](val: T): Option[T]"><wbr />some<span class="attachedType" style="visibility:hidden">Option</span></a></li>
+    title="some[T](val: T): Option[T]"><wbr />some<span class="attachedType">Option</span></a></li>
   <li><a class="reference" href="#none%2Ctypedesc"
-    title="none(T: typedesc): Option[T]"><wbr />none<span class="attachedType" style="visibility:hidden">Option</span></a></li>
+    title="none(T: typedesc): Option[T]"><wbr />none<span class="attachedType">Option</span></a></li>
   <li><a class="reference" href="#isSome%2COption%5BT%5D"
-    title="isSome[T](self: Option[T]): bool"><wbr />is<wbr />Some<span class="attachedType" style="visibility:hidden">Option</span></a></li>
+    title="isSome[T](self: Option[T]): bool"><wbr />is<wbr />Some<span class="attachedType">Option</span></a></li>
   <li><a class="reference" href="#isNone%2COption%5BT%5D"
-    title="isNone[T](self: Option[T]): bool"><wbr />is<wbr />None<span class="attachedType" style="visibility:hidden">Option</span></a></li>
+    title="isNone[T](self: Option[T]): bool"><wbr />is<wbr />None<span class="attachedType">Option</span></a></li>
   <li><a class="reference" href="#get%2COption%5BT%5D"
-    title="get[T](self: Option[T]): T"><wbr />get<span class="attachedType" style="visibility:hidden">Option</span></a></li>
+    title="get[T](self: Option[T]): T"><wbr />get<span class="attachedType">Option</span></a></li>
   <li><a class="reference" href="#get%2COption%5BT%5D%2CT"
-    title="get[T](self: Option[T]; otherwise: T): T"><wbr />get<span class="attachedType" style="visibility:hidden">Option</span></a></li>
+    title="get[T](self: Option[T]; otherwise: T): T"><wbr />get<span class="attachedType">Option</span></a></li>
   <li><a class="reference" href="#%3D%3D%2COption%2COption"
-    title="`==`(a, b: Option): bool"><wbr />`==`<span class="attachedType" style="visibility:hidden">Option</span></a></li>
+    title="`==`(a, b: Option): bool"><wbr />`==`<span class="attachedType">Option</span></a></li>
   <li><a class="reference" href="#%24%2COption%5BT%5D"
-    title="`$`[T](self: Option[T]): string"><wbr />`$`<span class="attachedType" style="visibility:hidden">Option</span></a></li>
+    title="`$`[T](self: Option[T]): string"><wbr />`$`<span class="attachedType">Option</span></a></li>
 
   </ul>
 </li>
@@ -840,6 +844,7 @@ function main() {
   </div>
   <div class="nine columns" id="content">
   <div id="tocRoot"></div>
+  
   <p class="module-desc"></p>
   <div class="section" id="7">
 <h1><a class="toc-backref" href="#7">Types</a></h1>
@@ -850,6 +855,7 @@ function main() {
   <span class="Identifier">has</span><span class="Other">:</span> <span class="Identifier">bool</span>
 </pre></dt>
 <dd>
+
 An optional type that stores its value and state separately in a boolean.
 
 </dd>
@@ -861,12 +867,14 @@ An optional type that stores its value and state separately in a boolean.
 <a id="some,T"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#some%2CT"><span class="Identifier">some</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">T</span><span class="Other">)</span><span class="Other">:</span> <a href="simpleoption.html#Option"><span class="Identifier">Option</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 Returns a <tt class="docutils literal"><span class="pre">Option</span></tt> that has this value.
 
 </dd>
 <a id="none,typedesc"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#none%2Ctypedesc"><span class="Identifier">none</span></a><span class="Other">(</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">)</span><span class="Other">:</span> <a href="simpleoption.html#Option"><span class="Identifier">Option</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 Returns a <tt class="docutils literal"><span class="pre">Option</span></tt> for this type that has no value.
 
 </dd>
@@ -875,34 +883,40 @@ Returns a <tt class="docutils literal"><span class="pre">Option</span></tt> for 
 <dd>
 
 
+
 </dd>
 <a id="isNone,Option[T]"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#isNone%2COption%5BT%5D"><span class="Identifier">isNone</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="simpleoption.html#Option"><span class="Identifier">Option</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
+
 </dd>
 <a id="get,Option[T]"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#get%2COption%5BT%5D"><span class="Identifier">get</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="simpleoption.html#Option"><span class="Identifier">Option</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">T</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 Returns contents of the Option. If it is none, then an exception is thrown.
 
 </dd>
 <a id="get,Option[T],T"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#get%2COption%5BT%5D%2CT"><span class="Identifier">get</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="simpleoption.html#Option"><span class="Identifier">Option</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">otherwise</span><span class="Other">:</span> <span class="Identifier">T</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">T</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 Returns the contents of this option or <tt class="docutils literal"><span class="pre">otherwise</span></tt> if the option is none.
 
 </dd>
 <a id="==,Option,Option"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#%3D%3D%2COption%2COption"><span class="Identifier">`==`</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">,</span> <span class="Identifier">b</span><span class="Other">:</span> <a href="simpleoption.html#Option"><span class="Identifier">Option</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 Returns <tt class="docutils literal"><span class="pre">true</span></tt> if both <tt class="docutils literal"><span class="pre">Option``s are ``none</span></tt>, or if they have equal values
 
 </dd>
 <a id="$,Option[T]"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#%24%2COption%5BT%5D"><span class="Identifier">`$`</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="simpleoption.html#Option"><span class="Identifier">Option</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 Returns the contents of this option or <tt class="docutils literal"><span class="pre">otherwise</span></tt> if the option is none.
 
 </dd>
@@ -916,7 +930,7 @@ Returns the contents of this option or <tt class="docutils literal"><span class=
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small>Made with Nim. Generated: 2019-02-13 17:11:36 UTC</small>
+        <small>Made with Nim. Generated: 2019-06-26 15:38:31 UTC</small>
       </div>
     </div>
   </div>

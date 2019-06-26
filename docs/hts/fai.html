@@ -345,11 +345,11 @@ dl {
 
 dt {
   margin-bottom: -0.5em;
-  margin-left: 0.5em; }
+  margin-left: 0.0em; }
 
 dd {
-  margin-left: 0.5em;
-  margin-bottom: 2.5em;
+  margin-left: 2.0em;
+  margin-bottom: 3.0em;
   margin-top: 0.5em; }
 
 
@@ -761,6 +761,10 @@ span.pragmawrap {
   display: none;
 }
 
+span.attachedType {
+  display: none;
+  visibility: hidden;
+}
 </style>
 
 <script type="text/javascript" src="dochack.js"></script>
@@ -813,7 +817,7 @@ function main() {
   <ul class="simple simple-toc-section">
       <li><a class="reference" href="#Fai"
     title="Fai = ref object
-  cptr*: ptr faidx_t"><wbr />Fai<span class="attachedType" style="visibility:hidden"></span></a></li>
+  cptr*: ptr faidx_t"><wbr />Fai<span class="attachedType"></span></a></li>
 
   </ul>
 </li>
@@ -821,17 +825,17 @@ function main() {
   <a class="reference reference-toplevel" href="#12" id="62">Procs</a>
   <ul class="simple simple-toc-section">
       <li><a class="reference" href="#open%2CFai%2Cstring"
-    title="open(fai: var Fai; path: string): bool"><wbr />open<span class="attachedType" style="visibility:hidden">Fai</span></a></li>
+    title="open(fai: var Fai; path: string): bool"><wbr />open<span class="attachedType">Fai</span></a></li>
   <li><a class="reference" href="#len%2CFai"
-    title="len(fai: Fai): int"><wbr />len<span class="attachedType" style="visibility:hidden">Fai</span></a></li>
+    title="len(fai: Fai): int"><wbr />len<span class="attachedType">Fai</span></a></li>
   <li><a class="reference" href="#chrom_len%2CFai%2Cstring"
-    title="chrom_len(fai: Fai; chrom: string): int"><wbr />chrom_<wbr />len<span class="attachedType" style="visibility:hidden">Fai</span></a></li>
+    title="chrom_len(fai: Fai; chrom: string): int"><wbr />chrom_<wbr />len<span class="attachedType">Fai</span></a></li>
   <li><a class="reference" href="#%5B%5D%2CFai%2Cint"
-    title="`[]`(fai: Fai; i: int): string"><wbr />`[]`<span class="attachedType" style="visibility:hidden">Fai</span></a></li>
+    title="`[]`(fai: Fai; i: int): string"><wbr />`[]`<span class="attachedType">Fai</span></a></li>
   <li><a class="reference" href="#cget%2CFai%2Cstring%2Cint%2Cint"
-    title="cget(fai: Fai; region: string; start: int = 0; stop: int = 0): cstring"><wbr />cget<span class="attachedType" style="visibility:hidden">Fai</span></a></li>
+    title="cget(fai: Fai; region: string; start: int = 0; stop: int = 0): cstring"><wbr />cget<span class="attachedType">Fai</span></a></li>
   <li><a class="reference" href="#get%2CFai%2Cstring%2Cint%2Cint"
-    title="get(fai: Fai; region: string; start: int = 0; stop: int = 0): string"><wbr />get<span class="attachedType" style="visibility:hidden">Fai</span></a></li>
+    title="get(fai: Fai; region: string; start: int = 0; stop: int = 0): string"><wbr />get<span class="attachedType">Fai</span></a></li>
 
   </ul>
 </li>
@@ -841,6 +845,7 @@ function main() {
   </div>
   <div class="nine columns" id="content">
   <div id="tocRoot"></div>
+  
   <p class="module-desc"></p>
   <div class="section" id="6">
 <h1><a class="toc-backref" href="#6">Imports</a></h1>
@@ -855,6 +860,7 @@ function main() {
   <span class="Identifier">cptr</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">ptr</span> <a href="hts_concat.html#faidx_t"><span class="Identifier">faidx_t</span></a>
 </pre></dt>
 <dd>
+
 Header wraps the bam header info.
 
 </dd>
@@ -866,24 +872,28 @@ Header wraps the bam header info.
 <a id="open,Fai,string"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#open%2CFai%2Cstring"><span class="Identifier">open</span></a><span class="Other">(</span><span class="Identifier">fai</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="fai.html#Fai"><span class="Identifier">Fai</span></a><span class="Other">;</span> <span class="Identifier">path</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">WriteIOEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 open an fai and return a bool indicating success
 
 </dd>
 <a id="len,Fai"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#len%2CFai"><span class="Identifier">len</span></a><span class="Other">(</span><span class="Identifier">fai</span><span class="Other">:</span> <a href="fai.html#Fai"><span class="Identifier">Fai</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 the number of sequences in the index.
 
 </dd>
 <a id="chrom_len,Fai,string"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#chrom_len%2CFai%2Cstring"><span class="Identifier">chrom_len</span></a><span class="Other">(</span><span class="Identifier">fai</span><span class="Other">:</span> <a href="fai.html#Fai"><span class="Identifier">Fai</span></a><span class="Other">;</span> <span class="Identifier">chrom</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 return the length of the requested chromosome.
 
 </dd>
 <a id="[],Fai,int"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%2CFai%2Cint"><span class="Identifier">`[]`</span></a><span class="Other">(</span><span class="Identifier">fai</span><span class="Other">:</span> <a href="fai.html#Fai"><span class="Identifier">Fai</span></a><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IndexError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 return the name of the i'th sequence.
 
 </dd>
@@ -891,6 +901,7 @@ return the name of the i'th sequence.
 <dt><pre><span class="Keyword">proc</span> <a href="#cget%2CFai%2Cstring%2Cint%2Cint"><span class="Identifier">cget</span></a><span class="Other">(</span><span class="Identifier">fai</span><span class="Other">:</span> <a href="fai.html#Fai"><span class="Identifier">Fai</span></a><span class="Other">;</span> <span class="Identifier">region</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">start</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> <span class="Identifier">stop</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cstring</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span>
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">WriteIOEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 get the sequence for the specified region (chr1:10-20) or chromosome and start, end, e.g. &quot;chr1&quot;, 9, 20 the user is responsible for freeing the result.
 
 </dd>
@@ -898,6 +909,7 @@ get the sequence for the specified region (chr1:10-20) or chromosome and start, 
 <dt><pre><span class="Keyword">proc</span> <a href="#get%2CFai%2Cstring%2Cint%2Cint"><span class="Identifier">get</span></a><span class="Other">(</span><span class="Identifier">fai</span><span class="Other">:</span> <a href="fai.html#Fai"><span class="Identifier">Fai</span></a><span class="Other">;</span> <span class="Identifier">region</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">start</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> <span class="Identifier">stop</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">WriteIOEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 get the sequence for the specified region (chr1:10-20) or chromosome and start, end, e.g. &quot;chr1&quot;, 9, 20
 
 </dd>
@@ -911,7 +923,7 @@ get the sequence for the specified region (chr1:10-20) or chromosome and start, 
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small>Made with Nim. Generated: 2019-02-13 17:11:35 UTC</small>
+        <small>Made with Nim. Generated: 2019-06-26 15:38:30 UTC</small>
       </div>
     </div>
   </div>

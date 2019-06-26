@@ -345,11 +345,11 @@ dl {
 
 dt {
   margin-bottom: -0.5em;
-  margin-left: 0.5em; }
+  margin-left: 0.0em; }
 
 dd {
-  margin-left: 0.5em;
-  margin-bottom: 2.5em;
+  margin-left: 2.0em;
+  margin-bottom: 3.0em;
   margin-top: 0.5em; }
 
 
@@ -761,6 +761,10 @@ span.pragmawrap {
   display: none;
 }
 
+span.attachedType {
+  display: none;
+  visibility: hidden;
+}
 </style>
 
 <script type="text/javascript" src="dochack.js"></script>
@@ -813,7 +817,7 @@ function main() {
   <ul class="simple simple-toc-section">
       <li><a class="reference" href="#Header"
     title="Header = ref object of RootObj
-  hdr*: ptr bcf_hdr_t"><wbr />Header<span class="attachedType" style="visibility:hidden"></span></a></li>
+  hdr*: ptr bcf_hdr_t"><wbr />Header<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#VCF"
     title="VCF = ref object of RootObj
   hts: ptr htsFile
@@ -821,56 +825,60 @@ function main() {
   c: ptr bcf1_t
   bidx: ptr hts_idx_t
   tidx: ptr tbx_t
-  fname: string"><wbr />VCF<span class="attachedType" style="visibility:hidden"></span></a></li>
+  fname: string"><wbr />VCF<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#Variant"
     title="Variant = ref object
   c*: ptr bcf1_t
   p: pointer
   vcf*: VCF
-  own: bool"><wbr />Variant<span class="attachedType" style="visibility:hidden"></span></a></li>
+  own: bool"><wbr />Variant<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#INFO"
     title="INFO = ref object
   v: Variant
-  i: int"><wbr />INFO<span class="attachedType" style="visibility:hidden"></span></a></li>
+  i: int"><wbr />INFO<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#FORMAT"
     title="FORMAT = ref object
   v*: Variant
-  p*: pointer"><wbr />FORMAT<span class="attachedType" style="visibility:hidden"></span></a></li>
+  p*: pointer"><wbr />FORMAT<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#CPtr"
-    title="CPtr[T] = ptr CArray[T]"><wbr />CPtr<span class="attachedType" style="visibility:hidden"></span></a></li>
+    title="CPtr[T] = ptr CArray[T]"><wbr />CPtr<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#Status"
     title="Status {.pure.} = enum
   IncorrectNumberOfValues = -10, ## when setting a FORMAT field, the number of values must be a multiple of the number of samples
   NotFound = -3,                ## Tag is not present in the Record
   UnexpectedType = -2,          ## E.g. user requested int when type was float.
   UndefinedTag = -1,            ## Tag is not present in the Header
-  OK = 0                        ## Tag was found"><wbr />Status<span class="attachedType" style="visibility:hidden"></span></a></li>
-  <li><a class="reference" href="#BCF_HEADER_LINE"
-    title="BCF_HEADER_LINE {.pure.} = enum
-  BCF_HL_FLT, BCF_HL_INFO, BCF_HL_FMT, BCF_HL_CTG, BCF_HL_STR, BCF_HL_GEN"><wbr />BCF_<wbr />HEADER_<wbr />LINE<span class="attachedType" style="visibility:hidden"></span></a></li>
+  OK = 0                        ## Tag was found"><wbr />Status<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#BCF_HEADER_TYPE"
+    title="BCF_HEADER_TYPE {.pure.} = enum
+  BCF_HL_FLT, BCF_HL_INFO, BCF_HL_FMT, BCF_HL_CTG, BCF_HL_STR, BCF_HL_GEN"><wbr />BCF_<wbr />HEADER_<wbr />TYPE<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#BCF_TYPE"
     title="BCF_TYPE {.pure.} = enum
-  NULL = 0, INT8 = 1, INT16 = 2, INT32 = 3, FLOAT = 5, CHAR = 7"><wbr />BCF_<wbr />TYPE<span class="attachedType" style="visibility:hidden"></span></a></li>
+  NULL = 0, INT8 = 1, INT16 = 2, INT32 = 3, FLOAT = 5, CHAR = 7"><wbr />BCF_<wbr />TYPE<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#HeaderRecord"
+    title="HeaderRecord = object
+  name*: string
+  c: ptr bcf_hrec_t"><wbr />Header<wbr />Record<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#FormatField"
     title="FormatField = object
   name*: string
   n_per_sample*: int           ## number of entries per sample
   vtype*: BCF_TYPE             ## variable type is one of the BCF_BT_* types.
-  i*: int"><wbr />Format<wbr />Field<span class="attachedType" style="visibility:hidden"></span></a></li>
+  i*: int"><wbr />Format<wbr />Field<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#InfoField"
     title="InfoField = object
   name*: string
   n*: int                      ## number of values. 1048575 means variable-length (Number=A)
   vtype*: BCF_TYPE
-  i*: int"><wbr />Info<wbr />Field<span class="attachedType" style="visibility:hidden"></span></a></li>
+  i*: int"><wbr />Info<wbr />Field<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#Genotypes"
     title="Genotypes {.shallow.} = object
   gts: seq[int32]
-  ploidy: int"><wbr />Genotypes<span class="attachedType" style="visibility:hidden"></span></a></li>
+  ploidy: int"><wbr />Genotypes<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#Allele"
-    title="Allele = distinct int32"><wbr />Allele<span class="attachedType" style="visibility:hidden"></span></a></li>
+    title="Allele = distinct int32"><wbr />Allele<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#Genotype"
-    title="Genotype = seq[Allele]"><wbr />Genotype<span class="attachedType" style="visibility:hidden"></span></a></li>
+    title="Genotype = seq[Allele]"><wbr />Genotype<span class="attachedType"></span></a></li>
 
   </ul>
 </li>
@@ -878,7 +886,7 @@ function main() {
   <a class="reference reference-toplevel" href="#8" id="58">Vars</a>
   <ul class="simple simple-toc-section">
       <li><a class="reference" href="#errno"
-    title="errno: cint"><wbr />errno<span class="attachedType" style="visibility:hidden"></span></a></li>
+    title="errno: cint"><wbr />errno<span class="attachedType"></span></a></li>
 
   </ul>
 </li>
@@ -886,130 +894,142 @@ function main() {
   <a class="reference reference-toplevel" href="#12" id="62">Procs</a>
   <ul class="simple simple-toc-section">
       <li><a class="reference" href="#n_samples%2CVCF"
-    title="n_samples(v: VCF): int"><wbr />n_<wbr />samples<span class="attachedType" style="visibility:hidden">VCF</span></a></li>
-  <li><a class="reference" href="#set_samples%2CVCF%2Cseq%5Bstring%5D"
-    title="set_samples(v: VCF; samples: seq[string])"><wbr />set_<wbr />samples<span class="attachedType" style="visibility:hidden">VCF</span></a></li>
+    title="n_samples(v: VCF): int"><wbr />n_<wbr />samples<span class="attachedType">VCF</span></a></li>
+  <li><a class="reference" href="#set_samples%2CVCF%2Cseq%5BT%5D%5Bstring%5D"
+    title="set_samples(v: VCF; samples: seq[string])"><wbr />set_<wbr />samples<span class="attachedType">VCF</span></a></li>
   <li><a class="reference" href="#samples%2CVCF"
-    title="samples(v: VCF): seq[string]"><wbr />samples<span class="attachedType" style="visibility:hidden">VCF</span></a></li>
+    title="samples(v: VCF): seq[string]"><wbr />samples<span class="attachedType">VCF</span></a></li>
   <li><a class="reference" href="#add_sample%2CVCF%2Cstring"
-    title="add_sample(v: VCF; sample: string)"><wbr />add_<wbr />sample<span class="attachedType" style="visibility:hidden">VCF</span></a></li>
+    title="add_sample(v: VCF; sample: string)"><wbr />add_<wbr />sample<span class="attachedType">VCF</span></a></li>
   <li><a class="reference" href="#add_string%2CHeader%2Cstring"
-    title="add_string(h: Header; header: string): Status"><wbr />add_<wbr />string<span class="attachedType" style="visibility:hidden">Header</span></a></li>
+    title="add_string(h: Header; header: string): Status"><wbr />add_<wbr />string<span class="attachedType">Header</span></a></li>
   <li><a class="reference" href="#%24%2CHeader"
-    title="`$`(h: Header): string"><wbr />`$`<span class="attachedType" style="visibility:hidden">Header</span></a></li>
+    title="`$`(h: Header): string"><wbr />`$`<span class="attachedType">Header</span></a></li>
+  <li><a class="reference" href="#%24%2CHeaderRecord"
+    title="`$`(h: HeaderRecord): string"><wbr />`$`<span class="attachedType">HeaderRecord</span></a></li>
+  <li><a class="reference" href="#%5B%5D%2CHeaderRecord%2Cstring"
+    title="`[]`(h: HeaderRecord; key: string): string"><wbr />`[]`<span class="attachedType">HeaderRecord</span></a></li>
+  <li><a class="reference" href="#get%2CHeader%2Cstring%2CBCF_HEADER_TYPE"
+    title="get(h: Header; name: string; typ: BCF_HEADER_TYPE): HeaderRecord"><wbr />get<span class="attachedType">Header</span></a></li>
   <li><a class="reference" href="#from_string%2CHeader%2Cstring"
-    title="from_string(h: var Header; s: string)"><wbr />from_<wbr />string<span class="attachedType" style="visibility:hidden">Header</span></a></li>
+    title="from_string(h: var Header; s: string)"><wbr />from_<wbr />string<span class="attachedType">Header</span></a></li>
   <li><a class="reference" href="#add_info%2CHeader%2Cstring%2Cstring%2Cstring%2Cstring"
-    title="add_info(h: Header; ID: string; Number: string; Type: string; Description: string): Status"><wbr />add_<wbr />info<span class="attachedType" style="visibility:hidden">Header</span></a></li>
+    title="add_info(h: Header; ID: string; Number: string; Type: string; Description: string): Status"><wbr />add_<wbr />info<span class="attachedType">Header</span></a></li>
   <li><a class="reference" href="#remove_info%2CHeader%2Cstring"
-    title="remove_info(h: Header; ID: string): Status"><wbr />remove_<wbr />info<span class="attachedType" style="visibility:hidden">Header</span></a></li>
+    title="remove_info(h: Header; ID: string): Status"><wbr />remove_<wbr />info<span class="attachedType">Header</span></a></li>
   <li><a class="reference" href="#add_format%2CHeader%2Cstring%2Cstring%2Cstring%2Cstring"
-    title="add_format(h: Header; ID: string; Number: string; Type: string; Description: string): Status"><wbr />add_<wbr />format<span class="attachedType" style="visibility:hidden">Header</span></a></li>
+    title="add_format(h: Header; ID: string; Number: string; Type: string; Description: string): Status"><wbr />add_<wbr />format<span class="attachedType">Header</span></a></li>
   <li><a class="reference" href="#remove_format%2CHeader%2Cstring"
-    title="remove_format(h: Header; ID: string): Status"><wbr />remove_<wbr />format<span class="attachedType" style="visibility:hidden">Header</span></a></li>
+    title="remove_format(h: Header; ID: string): Status"><wbr />remove_<wbr />format<span class="attachedType">Header</span></a></li>
   <li><a class="reference" href="#info%2CVariant"
-    title="info(v: Variant): INFO"><wbr />info<span class="attachedType" style="visibility:hidden">Variant</span></a></li>
+    title="info(v: Variant): INFO"><wbr />info<span class="attachedType">Variant</span></a></li>
   <li><a class="reference" href="#format%2CVariant"
-    title="format(v: Variant): FORMAT"><wbr />format<span class="attachedType" style="visibility:hidden">Variant</span></a></li>
+    title="format(v: Variant): FORMAT"><wbr />format<span class="attachedType">Variant</span></a></li>
   <li><a class="reference" href="#n_samples%2CVariant"
-    title="n_samples(v: Variant): int"><wbr />n_<wbr />samples<span class="attachedType" style="visibility:hidden">Variant</span></a></li>
-  <li><a class="reference" href="#get%2CFORMAT%2Cstring%2Cseq%5Bint32%5D"
-    title="get(f: FORMAT; key: string; data: var seq[int32]): Status"><wbr />get<span class="attachedType" style="visibility:hidden">FORMAT</span></a></li>
-  <li><a class="reference" href="#get%2CFORMAT%2Cstring%2Cseq%5Bfloat32%5D"
-    title="get(f: FORMAT; key: string; data: var seq[float32]): Status"><wbr />get<span class="attachedType" style="visibility:hidden">FORMAT</span></a></li>
-  <li><a class="reference" href="#get%2CFORMAT%2Cstring%2Cseq%5Bstring%5D"
-    title="get(f: FORMAT; key: string; data: var seq[string]): Status"><wbr />get<span class="attachedType" style="visibility:hidden">FORMAT</span></a></li>
-  <li><a class="reference" href="#set%2CFORMAT%2Cstring%2Cseq%5Bstring%5D"
-    title="set(f: FORMAT; key: string; data: var seq[string]): Status"><wbr />set<span class="attachedType" style="visibility:hidden">FORMAT</span></a></li>
-  <li><a class="reference" href="#set%2CFORMAT%2Cstring%2Cseq%5Bint32%5D"
-    title="set(f: FORMAT; key: string; values: var seq[int32]): Status"><wbr />set<span class="attachedType" style="visibility:hidden">FORMAT</span></a></li>
-  <li><a class="reference" href="#set%2CFORMAT%2Cstring%2Cseq%5Bfloat32%5D"
-    title="set(f: FORMAT; key: string; values: var seq[float32]): Status"><wbr />set<span class="attachedType" style="visibility:hidden">FORMAT</span></a></li>
-  <li><a class="reference" href="#get%2CINFO%2Cstring%2Cseq%5Bint32%5D"
-    title="get(i: INFO; key: string; data: var seq[int32]): Status"><wbr />get<span class="attachedType" style="visibility:hidden">INFO</span></a></li>
-  <li><a class="reference" href="#get%2CINFO%2Cstring%2Cseq%5Bfloat32%5D"
-    title="get(i: INFO; key: string; data: var seq[float32]): Status"><wbr />get<span class="attachedType" style="visibility:hidden">INFO</span></a></li>
+    title="n_samples(v: Variant): int"><wbr />n_<wbr />samples<span class="attachedType">Variant</span></a></li>
+  <li><a class="reference" href="#delete%2CFORMAT%2Cstring"
+    title="delete(f: FORMAT; key: string): Status"><wbr />delete<span class="attachedType">FORMAT</span></a></li>
+  <li><a class="reference" href="#get%2CFORMAT%2Cstring%2Cseq%5BT%5D%5Bint32%5D"
+    title="get(f: FORMAT; key: string; data: var seq[int32]): Status"><wbr />get<span class="attachedType">FORMAT</span></a></li>
+  <li><a class="reference" href="#get%2CFORMAT%2Cstring%2Cseq%5BT%5D%5Bfloat32%5D"
+    title="get(f: FORMAT; key: string; data: var seq[float32]): Status"><wbr />get<span class="attachedType">FORMAT</span></a></li>
+  <li><a class="reference" href="#get%2CFORMAT%2Cstring%2Cseq%5BT%5D%5Bstring%5D"
+    title="get(f: FORMAT; key: string; data: var seq[string]): Status"><wbr />get<span class="attachedType">FORMAT</span></a></li>
+  <li><a class="reference" href="#set%2CFORMAT%2Cstring%2Cseq%5BT%5D%5Bstring%5D"
+    title="set(f: FORMAT; key: string; data: var seq[string]): Status"><wbr />set<span class="attachedType">FORMAT</span></a></li>
+  <li><a class="reference" href="#set%2CFORMAT%2Cstring%2Cseq%5BT%5D%5Bint32%5D"
+    title="set(f: FORMAT; key: string; values: var seq[int32]): Status"><wbr />set<span class="attachedType">FORMAT</span></a></li>
+  <li><a class="reference" href="#set%2CFORMAT%2Cstring%2Cseq%5BT%5D%5Bfloat32%5D"
+    title="set(f: FORMAT; key: string; values: var seq[float32]): Status"><wbr />set<span class="attachedType">FORMAT</span></a></li>
+  <li><a class="reference" href="#get%2CINFO%2Cstring%2Cseq%5BT%5D%5Bint32%5D"
+    title="get(i: INFO; key: string; data: var seq[int32]): Status"><wbr />get<span class="attachedType">INFO</span></a></li>
+  <li><a class="reference" href="#get%2CINFO%2Cstring%2Cseq%5BT%5D%5Bfloat32%5D"
+    title="get(i: INFO; key: string; data: var seq[float32]): Status"><wbr />get<span class="attachedType">INFO</span></a></li>
   <li><a class="reference" href="#get%2CINFO%2Cstring%2Cstring"
-    title="get(i: INFO; key: string; data: var string): Status"><wbr />get<span class="attachedType" style="visibility:hidden">INFO</span></a></li>
+    title="get(i: INFO; key: string; data: var string): Status"><wbr />get<span class="attachedType">INFO</span></a></li>
   <li><a class="reference" href="#has_flag%2CINFO%2Cstring"
-    title="has_flag(i: INFO; key: string): bool"><wbr />has_<wbr />flag<span class="attachedType" style="visibility:hidden">INFO</span></a></li>
+    title="has_flag(i: INFO; key: string): bool"><wbr />has_<wbr />flag<span class="attachedType">INFO</span></a></li>
   <li><a class="reference" href="#delete%2CINFO%2Cstring"
-    title="delete(i: INFO; key: string): Status"><wbr />delete<span class="attachedType" style="visibility:hidden">INFO</span></a></li>
+    title="delete(i: INFO; key: string): Status"><wbr />delete<span class="attachedType">INFO</span></a></li>
   <li><a class="reference" href="#set%2CINFO%2Cstring%2Cstring"
-    title="set(i: INFO; key: string; value: var string): Status"><wbr />set<span class="attachedType" style="visibility:hidden">INFO</span></a></li>
+    title="set(i: INFO; key: string; value: var string): Status"><wbr />set<span class="attachedType">INFO</span></a></li>
+  <li><a class="reference" href="#set%2CINFO%2Cstring%2Cbool"
+    title="set(i: INFO; key: string; value: bool): Status"><wbr />set<span class="attachedType">INFO</span></a></li>
   <li><a class="reference" href="#set%2CINFO%2Cstring%2CT"
-    title="set[T: float32 | float | float64](i: INFO; key: string; value: var T): Status"><wbr />set<span class="attachedType" style="visibility:hidden">INFO</span></a></li>
+    title="set[T: float32 | float | float64](i: INFO; key: string; value: var T): Status"><wbr />set<span class="attachedType">INFO</span></a></li>
   <li><a class="reference" href="#set%2CINFO%2Cstring%2CT_2"
-    title="set[T: int32 | int | int64](i: INFO; key: string; value: var T): Status"><wbr />set<span class="attachedType" style="visibility:hidden">INFO</span></a></li>
-  <li><a class="reference" href="#set%2CINFO%2Cstring%2Cseq%5Bfloat32%5D"
-    title="set(i: INFO; key: string; values: var seq[float32]): Status"><wbr />set<span class="attachedType" style="visibility:hidden">INFO</span></a></li>
-  <li><a class="reference" href="#set%2CINFO%2Cstring%2Cseq%5Bint32%5D"
-    title="set(i: INFO; key: string; values: var seq[int32]): Status"><wbr />set<span class="attachedType" style="visibility:hidden">INFO</span></a></li>
+    title="set[T: int32 | int | int64](i: INFO; key: string; value: var T): Status"><wbr />set<span class="attachedType">INFO</span></a></li>
+  <li><a class="reference" href="#set%2CINFO%2Cstring%2Cseq%5BT%5D%5Bfloat32%5D"
+    title="set(i: INFO; key: string; values: var seq[float32]): Status"><wbr />set<span class="attachedType">INFO</span></a></li>
+  <li><a class="reference" href="#set%2CINFO%2Cstring%2Cseq%5BT%5D%5Bint32%5D"
+    title="set(i: INFO; key: string; values: var seq[int32]): Status"><wbr />set<span class="attachedType">INFO</span></a></li>
   <li><a class="reference" href="#from_string%2CVariant%2CHeader%2Cstring"
-    title="from_string(v: var Variant; h: Header; s: var string)"><wbr />from_<wbr />string<span class="attachedType" style="visibility:hidden">Variant</span></a></li>
+    title="from_string(v: var Variant; h: Header; s: var string)"><wbr />from_<wbr />string<span class="attachedType">Variant</span></a></li>
   <li><a class="reference" href="#newVariant"
-    title="newVariant(): Variant"><wbr />new<wbr />Variant<span class="attachedType" style="visibility:hidden">Variant</span></a></li>
+    title="newVariant(): Variant"><wbr />new<wbr />Variant<span class="attachedType">Variant</span></a></li>
   <li><a class="reference" href="#close%2CVCF"
-    title="close(v: VCF)"><wbr />close<span class="attachedType" style="visibility:hidden">VCF</span></a></li>
+    title="close(v: VCF)"><wbr />close<span class="attachedType">VCF</span></a></li>
   <li><a class="reference" href="#copy_header%2CVCF%2CHeader"
-    title="copy_header(v: var VCF; hdr: Header)"><wbr />copy_<wbr />header<span class="attachedType" style="visibility:hidden">VCF</span></a></li>
+    title="copy_header(v: var VCF; hdr: Header)"><wbr />copy_<wbr />header<span class="attachedType">VCF</span></a></li>
   <li><a class="reference" href="#write_header%2CVCF"
-    title="write_header(v: VCF): bool"><wbr />write_<wbr />header<span class="attachedType" style="visibility:hidden">VCF</span></a></li>
+    title="write_header(v: VCF): bool"><wbr />write_<wbr />header<span class="attachedType">VCF</span></a></li>
   <li><a class="reference" href="#write_variant%2CVCF%2CVariant"
-    title="write_variant(v: VCF; variant: Variant): bool"><wbr />write_<wbr />variant<span class="attachedType" style="visibility:hidden">VCF</span></a></li>
-  <li><a class="reference" href="#open%2CVCF%2Cstring%2Cstring%2Cseq%5Bstring%5D%2Cint"
+    title="write_variant(v: VCF; variant: Variant): bool"><wbr />write_<wbr />variant<span class="attachedType">VCF</span></a></li>
+  <li><a class="reference" href="#open%2CVCF%2Cstring%2Cstring%2Cseq%5BT%5D%5Bstring%5D%2Cint"
     title="open(v: var VCF; fname: string; mode: string = &quot;r&quot;; samples: seq[string] = empty_samples;
-     threads: int = 0): bool"><wbr />open<span class="attachedType" style="visibility:hidden">VCF</span></a></li>
+     threads: int = 0): bool"><wbr />open<span class="attachedType">VCF</span></a></li>
   <li><a class="reference" href="#CHROM%2CVariant"
-    title="CHROM(v: Variant): cstring"><wbr />CHROM<span class="attachedType" style="visibility:hidden">Variant</span></a></li>
+    title="CHROM(v: Variant): cstring"><wbr />CHROM<span class="attachedType">Variant</span></a></li>
   <li><a class="reference" href="#rid%2CVariant"
-    title="rid(v: Variant): int32"><wbr />rid<span class="attachedType" style="visibility:hidden">Variant</span></a></li>
+    title="rid(v: Variant): int32"><wbr />rid<span class="attachedType">Variant</span></a></li>
   <li><a class="reference" href="#tostring%2CVariant"
-    title="tostring(v: Variant): string"><wbr />tostring<span class="attachedType" style="visibility:hidden">Variant</span></a></li>
+    title="tostring(v: Variant): string"><wbr />tostring<span class="attachedType">Variant</span></a></li>
+  <li><a class="reference" href="#load_index%2CVCF%2Cstring"
+    title="load_index(v: VCF; path: string)"><wbr />load_<wbr />index<span class="attachedType">VCF</span></a></li>
   <li><a class="reference" href="#copy%2CVariant"
-    title="copy(v: Variant): Variant"><wbr />copy<span class="attachedType" style="visibility:hidden">Variant</span></a></li>
+    title="copy(v: Variant): Variant"><wbr />copy<span class="attachedType">Variant</span></a></li>
   <li><a class="reference" href="#POS%2CVariant"
-    title="POS(v: Variant): int"><wbr />POS<span class="attachedType" style="visibility:hidden">Variant</span></a></li>
+    title="POS(v: Variant): int"><wbr />POS<span class="attachedType">Variant</span></a></li>
   <li><a class="reference" href="#start%2CVariant"
-    title="start(v: Variant): int"><wbr />start<span class="attachedType" style="visibility:hidden">Variant</span></a></li>
+    title="start(v: Variant): int"><wbr />start<span class="attachedType">Variant</span></a></li>
   <li><a class="reference" href="#stop%2CVariant"
-    title="stop(v: Variant): int"><wbr />stop<span class="attachedType" style="visibility:hidden">Variant</span></a></li>
+    title="stop(v: Variant): int"><wbr />stop<span class="attachedType">Variant</span></a></li>
   <li><a class="reference" href="#ID%2CVariant"
-    title="ID(v: Variant): cstring"><wbr />ID<span class="attachedType" style="visibility:hidden">Variant</span></a></li>
+    title="ID(v: Variant): cstring"><wbr />ID<span class="attachedType">Variant</span></a></li>
   <li><a class="reference" href="#FILTER%2CVariant"
-    title="FILTER(v: Variant): string"><wbr />FILTER<span class="attachedType" style="visibility:hidden">Variant</span></a></li>
+    title="FILTER(v: Variant): string"><wbr />FILTER<span class="attachedType">Variant</span></a></li>
   <li><a class="reference" href="#QUAL%2CVariant%2Cfloat"
-    title="QUAL(v: Variant; default: float = 0): float"><wbr />QUAL<span class="attachedType" style="visibility:hidden">Variant</span></a></li>
+    title="QUAL(v: Variant; default: float = 0): float"><wbr />QUAL<span class="attachedType">Variant</span></a></li>
   <li><a class="reference" href="#QUAL%3D%2CVariant%2Cfloat"
-    title="QUAL=(v: Variant; value: float)"><wbr />QUAL=<span class="attachedType" style="visibility:hidden">Variant</span></a></li>
+    title="QUAL=(v: Variant; value: float)"><wbr />QUAL=<span class="attachedType">Variant</span></a></li>
   <li><a class="reference" href="#REF%2CVariant"
-    title="REF(v: Variant): string"><wbr />REF<span class="attachedType" style="visibility:hidden">Variant</span></a></li>
+    title="REF(v: Variant): string"><wbr />REF<span class="attachedType">Variant</span></a></li>
   <li><a class="reference" href="#ALT%2CVariant"
-    title="ALT(v: Variant): seq[string]"><wbr />ALT<span class="attachedType" style="visibility:hidden">Variant</span></a></li>
+    title="ALT(v: Variant): seq[string]"><wbr />ALT<span class="attachedType">Variant</span></a></li>
   <li><a class="reference" href="#copy%2CGenotypes"
-    title="copy(g: Genotypes): Genotypes"><wbr />copy<span class="attachedType" style="visibility:hidden"></span></a></li>
+    title="copy(g: Genotypes): Genotypes"><wbr />copy<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#phased%2CAllele"
-    title="phased(a: Allele): bool"><wbr />phased<span class="attachedType" style="visibility:hidden">Allele</span></a></li>
+    title="phased(a: Allele): bool"><wbr />phased<span class="attachedType">Allele</span></a></li>
   <li><a class="reference" href="#value%2CAllele"
-    title="value(a: Allele): int"><wbr />value<span class="attachedType" style="visibility:hidden">Allele</span></a></li>
+    title="value(a: Allele): int"><wbr />value<span class="attachedType">Allele</span></a></li>
   <li><a class="reference" href="#%5B%5D%2CGenotypes%2Cint"
-    title="`[]`(g: Genotypes; i: int): Genotype"><wbr />`[]`<span class="attachedType" style="visibility:hidden">Genotype</span></a></li>
+    title="`[]`(g: Genotypes; i: int): Genotype"><wbr />`[]`<span class="attachedType">Genotype</span></a></li>
   <li><a class="reference" href="#len%2CGenotypes"
-    title="len(g: Genotypes): int"><wbr />len<span class="attachedType" style="visibility:hidden"></span></a></li>
+    title="len(g: Genotypes): int"><wbr />len<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#%24%2CAllele"
-    title="`$`(a: Allele): string"><wbr />`$`<span class="attachedType" style="visibility:hidden">Allele</span></a></li>
-  <li><a class="reference" href="#%24%2CGenotype"
-    title="`$`(g: Genotype): string"><wbr />`$`<span class="attachedType" style="visibility:hidden">Genotype</span></a></li>
-  <li><a class="reference" href="#alts%2CGenotype"
-    title="alts(g: Genotype): int8"><wbr />alts<span class="attachedType" style="visibility:hidden">Genotype</span></a></li>
-  <li><a class="reference" href="#genotypes%2CFORMAT%2Cseq%5Bint32%5D"
-    title="genotypes(f: FORMAT; gts: var seq[int32]): Genotypes"><wbr />genotypes<span class="attachedType" style="visibility:hidden">FORMAT</span></a></li>
+    title="`$`(a: Allele): string"><wbr />`$`<span class="attachedType">Allele</span></a></li>
+  <li><a class="reference" href="#%24%2Cseq%5BAllele%5D"
+    title="`$`(g: Genotype): string"><wbr />`$`<span class="attachedType">Genotype</span></a></li>
+  <li><a class="reference" href="#alts%2Cseq%5BAllele%5D"
+    title="alts(g: Genotype): int8"><wbr />alts<span class="attachedType">Genotype</span></a></li>
+  <li><a class="reference" href="#genotypes%2CFORMAT%2Cseq%5BT%5D%5Bint32%5D"
+    title="genotypes(f: FORMAT; gts: var seq[int32]): Genotypes"><wbr />genotypes<span class="attachedType">FORMAT</span></a></li>
   <li><a class="reference" href="#%24%2CGenotypes"
-    title="`$`(gs: Genotypes): string"><wbr />`$`<span class="attachedType" style="visibility:hidden"></span></a></li>
+    title="`$`(gs: Genotypes): string"><wbr />`$`<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#alts%2CGenotypes"
-    title="alts(gs: Genotypes): seq[int8]"><wbr />alts<span class="attachedType" style="visibility:hidden"></span></a></li>
+    title="alts(gs: Genotypes): seq[int8]"><wbr />alts<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#%24%2CVariant"
-    title="`$`(v: Variant): string"><wbr />`$`<span class="attachedType" style="visibility:hidden">Variant</span></a></li>
+    title="`$`(v: Variant): string"><wbr />`$`<span class="attachedType">Variant</span></a></li>
 
   </ul>
 </li>
@@ -1017,15 +1037,15 @@ function main() {
   <a class="reference reference-toplevel" href="#15" id="65">Iterators</a>
   <ul class="simple simple-toc-section">
       <li><a class="reference" href="#fields.i%2CFORMAT"
-    title="fields(f: FORMAT): FormatField"><wbr />fields<span class="attachedType" style="visibility:hidden">FORMAT</span></a></li>
+    title="fields(f: FORMAT): FormatField"><wbr />fields<span class="attachedType">FORMAT</span></a></li>
   <li><a class="reference" href="#fields.i%2CINFO"
-    title="fields(info: INFO): InfoField"><wbr />fields<span class="attachedType" style="visibility:hidden">INFO</span></a></li>
+    title="fields(info: INFO): InfoField"><wbr />fields<span class="attachedType">INFO</span></a></li>
   <li><a class="reference" href="#items.i%2CVCF"
-    title="items(v: VCF): Variant"><wbr />items<span class="attachedType" style="visibility:hidden">VCF</span></a></li>
+    title="items(v: VCF): Variant"><wbr />items<span class="attachedType">VCF</span></a></li>
   <li><a class="reference" href="#query.i%2CVCF%2Cstring"
-    title="query(v: VCF; region: string): Variant"><wbr />query<span class="attachedType" style="visibility:hidden">VCF</span></a></li>
+    title="query(v: VCF; region: string): Variant"><wbr />query<span class="attachedType">VCF</span></a></li>
   <li><a class="reference" href="#items.i%2CGenotypes"
-    title="items(g: Genotypes): Genotype"><wbr />items<span class="attachedType" style="visibility:hidden">Genotype</span></a></li>
+    title="items(g: Genotypes): Genotype"><wbr />items<span class="attachedType">Genotype</span></a></li>
 
   </ul>
 </li>
@@ -1035,6 +1055,7 @@ function main() {
   </div>
   <div class="nine columns" id="content">
   <div id="tocRoot"></div>
+  
   <p class="module-desc"></p>
   <div class="section" id="6">
 <h1><a class="toc-backref" href="#6">Imports</a></h1>
@@ -1049,6 +1070,7 @@ function main() {
   <span class="Identifier">hdr</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">ptr</span> <a href="hts_concat.html#bcf_hdr_t"><span class="Identifier">bcf_hdr_t</span></a>
 </pre></dt>
 <dd>
+
 Header wraps the bam header info.
 
 </dd>
@@ -1062,6 +1084,7 @@ Header wraps the bam header info.
   <span class="Identifier">fname</span><span class="Other">:</span> <span class="Identifier">string</span>
 </pre></dt>
 <dd>
+
 VCF is a VCF/BCF object
 
 </dd>
@@ -1073,6 +1096,7 @@ VCF is a VCF/BCF object
   <span class="Identifier">own</span><span class="Other">:</span> <span class="Identifier">bool</span>
 </pre></dt>
 <dd>
+
 Variant is a single line from a VCF
 
 </dd>
@@ -1082,6 +1106,7 @@ Variant is a single line from a VCF
   <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span>
 </pre></dt>
 <dd>
+
 INFO of a variant
 
 </dd>
@@ -1091,12 +1116,14 @@ INFO of a variant
   <span class="Identifier">p</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">pointer</span>
 </pre></dt>
 <dd>
+
 FORMAT exposes access to the sample format fields in the VCF
 
 </dd>
 <a id="CPtr"></a>
 <dt><pre><a href="vcf.html#CPtr"><span class="Identifier">CPtr</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span> <span class="Other">=</span> <span class="Keyword">ptr</span> <span class="Identifier">CArray</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span></pre></dt>
 <dd>
+
 
 
 </dd>
@@ -1108,13 +1135,15 @@ FORMAT exposes access to the sample format fields in the VCF
   <span class="Identifier">UndefinedTag</span> <span class="Other">=</span> <span class="Operator">-</span><span class="DecNumber">1</span><span class="Other">,</span>            <span class="Comment">## Tag is not present in the Header</span>
   <span class="Identifier">OK</span> <span class="Other">=</span> <span class="DecNumber">0</span>                        <span class="Comment">## Tag was found</span></pre></dt>
 <dd>
+
 contains the values returned from the INFO for FORMAT fields.
 
 </dd>
-<a id="BCF_HEADER_LINE"></a>
-<dt><pre><a href="vcf.html#BCF_HEADER_LINE"><span class="Identifier">BCF_HEADER_LINE</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">pure</span></span><span class="Other">.}</span></span> <span class="Other">=</span> <span class="Keyword">enum</span>
+<a id="BCF_HEADER_TYPE"></a>
+<dt><pre><a href="vcf.html#BCF_HEADER_TYPE"><span class="Identifier">BCF_HEADER_TYPE</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">pure</span></span><span class="Other">.}</span></span> <span class="Other">=</span> <span class="Keyword">enum</span>
   <span class="Identifier">BCF_HL_FLT</span><span class="Other">,</span> <span class="Identifier">BCF_HL_INFO</span><span class="Other">,</span> <span class="Identifier">BCF_HL_FMT</span><span class="Other">,</span> <span class="Identifier">BCF_HL_CTG</span><span class="Other">,</span> <span class="Identifier">BCF_HL_STR</span><span class="Other">,</span> <span class="Identifier">BCF_HL_GEN</span></pre></dt>
 <dd>
+
 
 
 </dd>
@@ -1123,6 +1152,17 @@ contains the values returned from the INFO for FORMAT fields.
   <span class="Identifier">NULL</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">,</span> <span class="Identifier">INT8</span> <span class="Other">=</span> <span class="DecNumber">1</span><span class="Other">,</span> <span class="Identifier">INT16</span> <span class="Other">=</span> <span class="DecNumber">2</span><span class="Other">,</span> <span class="Identifier">INT32</span> <span class="Other">=</span> <span class="DecNumber">3</span><span class="Other">,</span> <span class="Identifier">FLOAT</span> <span class="Other">=</span> <span class="DecNumber">5</span><span class="Other">,</span> <span class="Identifier">CHAR</span> <span class="Other">=</span> <span class="DecNumber">7</span></pre></dt>
 <dd>
 
+
+
+</dd>
+<a id="HeaderRecord"></a>
+<dt><pre><a href="vcf.html#HeaderRecord"><span class="Identifier">HeaderRecord</span></a> <span class="Other">=</span> <span class="Keyword">object</span>
+  <span class="Identifier">name</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">string</span>
+  <span class="Identifier">c</span><span class="Other">:</span> <span class="Keyword">ptr</span> <a href="hts_concat.html#bcf_hrec_t"><span class="Identifier">bcf_hrec_t</span></a>
+</pre></dt>
+<dd>
+
+HeaderRecord represents a row from the VCF header (hrec from htslib)
 
 </dd>
 <a id="FormatField"></a>
@@ -1133,6 +1173,7 @@ contains the values returned from the INFO for FORMAT fields.
   <span class="Identifier">i</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int</span>
 </pre></dt>
 <dd>
+
 FormatField represents the name (e.g. AD or DP), the number of values per sample, and the type (BCF_<a class="reference external" href="#bt">BT</a>*) of a FORMAT field.
 
 </dd>
@@ -1146,6 +1187,7 @@ FormatField represents the name (e.g. AD or DP), the number of values per sample
 <dd>
 
 
+
 </dd>
 <a id="Genotypes"></a>
 <dt><pre><a href="vcf.html#Genotypes"><span class="Identifier">Genotypes</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">shallow</span></span><span class="Other">.}</span></span> <span class="Other">=</span> <span class="Keyword">object</span>
@@ -1153,6 +1195,7 @@ FormatField represents the name (e.g. AD or DP), the number of values per sample
   <span class="Identifier">ploidy</span><span class="Other">:</span> <span class="Identifier">int</span>
 </pre></dt>
 <dd>
+
 Genotypes are the genotype calls for each sample. These are represented efficiently with the int32 values used in the underlying representation. However, we are able to efficiently manipulate them by adding methods to the base type.
 
 </dd>
@@ -1161,10 +1204,12 @@ Genotypes are the genotype calls for each sample. These are represented efficien
 <dd>
 
 
+
 </dd>
 <a id="Genotype"></a>
 <dt><pre><a href="vcf.html#Genotype"><span class="Identifier">Genotype</span></a> <span class="Other">=</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="vcf.html#Allele"><span class="Identifier">Allele</span></a><span class="Other">]</span></pre></dt>
 <dd>
+
 
 
 </dd>
@@ -1174,8 +1219,9 @@ Genotypes are the genotype calls for each sample. These are represented efficien
 <h1><a class="toc-backref" href="#8">Vars</a></h1>
 <dl class="item">
 <a id="errno"></a>
-<dt><pre><span class="Identifier">errno</span><span class="Other">:</span> <span class="Identifier">cint</span></pre></dt>
+<dt><pre><a href="vcf.html#errno"><span class="Identifier">errno</span></a><span class="Other">:</span> <span class="Identifier">cint</span></pre></dt>
 <dd>
+
 
 
 </dd>
@@ -1189,41 +1235,70 @@ Genotypes are the genotype calls for each sample. These are represented efficien
 <dd>
 
 
+
 </dd>
-<a id="set_samples,VCF,seq[string]"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#set_samples%2CVCF%2Cseq%5Bstring%5D"><span class="Identifier">set_samples</span></a><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <a href="vcf.html#VCF"><span class="Identifier">VCF</span></a><span class="Other">;</span> <span class="Identifier">samples</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">]</span><span class="Other">,</span>
+<a id="set_samples,VCF,seq[T][string]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#set_samples%2CVCF%2Cseq%5BT%5D%5Bstring%5D"><span class="Identifier">set_samples</span></a><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <a href="vcf.html#VCF"><span class="Identifier">VCF</span></a><span class="Other">;</span> <span class="Identifier">samples</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">WriteIOEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 set the samples that will be decoded
 
 </dd>
 <a id="samples,VCF"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#samples%2CVCF"><span class="Identifier">samples</span></a><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <a href="vcf.html#VCF"><span class="Identifier">VCF</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 get the list of samples
 
 </dd>
 <a id="add_sample,VCF,string"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#add_sample%2CVCF%2Cstring"><span class="Identifier">add_sample</span></a><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <a href="vcf.html#VCF"><span class="Identifier">VCF</span></a><span class="Other">;</span> <span class="Identifier">sample</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 add a sample to the VCF
 
 </dd>
 <a id="add_string,Header,string"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#add_string%2CHeader%2Cstring"><span class="Identifier">add_string</span></a><span class="Other">(</span><span class="Identifier">h</span><span class="Other">:</span> <a href="vcf.html#Header"><span class="Identifier">Header</span></a><span class="Other">;</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Status"><span class="Identifier">Status</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 add the full string header to the VCF.
 
 </dd>
 <a id="$,Header"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#%24%2CHeader"><span class="Identifier">`$`</span></a><span class="Other">(</span><span class="Identifier">h</span><span class="Other">:</span> <a href="vcf.html#Header"><span class="Identifier">Header</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 return the string header
+
+</dd>
+<a id="$,HeaderRecord"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#%24%2CHeaderRecord"><span class="Identifier">`$`</span></a><span class="Other">(</span><span class="Identifier">h</span><span class="Other">:</span> <a href="vcf.html#HeaderRecord"><span class="Identifier">HeaderRecord</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="[],HeaderRecord,string"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%2CHeaderRecord%2Cstring"><span class="Identifier">`[]`</span></a><span class="Other">(</span><span class="Identifier">h</span><span class="Other">:</span> <a href="vcf.html#HeaderRecord"><span class="Identifier">HeaderRecord</span></a><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+get the value from the recode, key can be, for example ID or Description or Number or Type
+
+</dd>
+<a id="get,Header,string,BCF_HEADER_TYPE"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#get%2CHeader%2Cstring%2CBCF_HEADER_TYPE"><span class="Identifier">get</span></a><span class="Other">(</span><span class="Identifier">h</span><span class="Other">:</span> <a href="vcf.html#Header"><span class="Identifier">Header</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">typ</span><span class="Other">:</span> <a href="vcf.html#BCF_HEADER_TYPE"><span class="Identifier">BCF_HEADER_TYPE</span></a><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#HeaderRecord"><span class="Identifier">HeaderRecord</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+get the HeaderRecord for the given name.
 
 </dd>
 <a id="from_string,Header,string"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#from_string%2CHeader%2Cstring"><span class="Identifier">from_string</span></a><span class="Other">(</span><span class="Identifier">h</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="vcf.html#Header"><span class="Identifier">Header</span></a><span class="Other">;</span> <span class="Identifier">s</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 create a new header from a VCF header string.
 
 </dd>
@@ -1231,12 +1306,14 @@ create a new header from a VCF header string.
 <dt><pre><span class="Keyword">proc</span> <a href="#add_info%2CHeader%2Cstring%2Cstring%2Cstring%2Cstring"><span class="Identifier">add_info</span></a><span class="Other">(</span><span class="Identifier">h</span><span class="Other">:</span> <a href="vcf.html#Header"><span class="Identifier">Header</span></a><span class="Other">;</span> <span class="Identifier">ID</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">Number</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">Type</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">Description</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Status"><span class="Identifier">Status</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 add an INFO field to the header with the given values
 
 </dd>
 <a id="remove_info,Header,string"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#remove_info%2CHeader%2Cstring"><span class="Identifier">remove_info</span></a><span class="Other">(</span><span class="Identifier">h</span><span class="Other">:</span> <a href="vcf.html#Header"><span class="Identifier">Header</span></a><span class="Other">;</span> <span class="Identifier">ID</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Status"><span class="Identifier">Status</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 remove an INFO field from the header
 
 </dd>
@@ -1244,12 +1321,14 @@ remove an INFO field from the header
 <dt><pre><span class="Keyword">proc</span> <a href="#add_format%2CHeader%2Cstring%2Cstring%2Cstring%2Cstring"><span class="Identifier">add_format</span></a><span class="Other">(</span><span class="Identifier">h</span><span class="Other">:</span> <a href="vcf.html#Header"><span class="Identifier">Header</span></a><span class="Other">;</span> <span class="Identifier">ID</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">Number</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">Type</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">Description</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Status"><span class="Identifier">Status</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 add a FORMAT field to the header with the given values
 
 </dd>
 <a id="remove_format,Header,string"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#remove_format%2CHeader%2Cstring"><span class="Identifier">remove_format</span></a><span class="Other">(</span><span class="Identifier">h</span><span class="Other">:</span> <a href="vcf.html#Header"><span class="Identifier">Header</span></a><span class="Other">;</span> <span class="Identifier">ID</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Status"><span class="Identifier">Status</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 remove a FORMAT field from the header
 
 </dd>
@@ -1258,10 +1337,12 @@ remove a FORMAT field from the header
 <dd>
 
 
+
 </dd>
 <a id="format,Variant"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#format%2CVariant"><span class="Identifier">format</span></a><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <a href="vcf.html#Variant"><span class="Identifier">Variant</span></a><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#FORMAT"><span class="Identifier">FORMAT</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 
 
 </dd>
@@ -1270,77 +1351,96 @@ remove a FORMAT field from the header
 <dd>
 
 
+
 </dd>
-<a id="get,FORMAT,string,seq[int32]"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#get%2CFORMAT%2Cstring%2Cseq%5Bint32%5D"><span class="Identifier">get</span></a><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="vcf.html#FORMAT"><span class="Identifier">FORMAT</span></a><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">data</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">int32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Status"><span class="Identifier">Status</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+<a id="delete,FORMAT,string"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#delete%2CFORMAT%2Cstring"><span class="Identifier">delete</span></a><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="vcf.html#FORMAT"><span class="Identifier">FORMAT</span></a><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Status"><span class="Identifier">Status</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+delete the value from the FORMAT field for all samples
+
+</dd>
+<a id="get,FORMAT,string,seq[T][int32]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#get%2CFORMAT%2Cstring%2Cseq%5BT%5D%5Bint32%5D"><span class="Identifier">get</span></a><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="vcf.html#FORMAT"><span class="Identifier">FORMAT</span></a><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">data</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">int32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Status"><span class="Identifier">Status</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 fill data with integer values for each sample with the given key
 
 </dd>
-<a id="get,FORMAT,string,seq[float32]"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#get%2CFORMAT%2Cstring%2Cseq%5Bfloat32%5D"><span class="Identifier">get</span></a><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="vcf.html#FORMAT"><span class="Identifier">FORMAT</span></a><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">data</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">float32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Status"><span class="Identifier">Status</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+<a id="get,FORMAT,string,seq[T][float32]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#get%2CFORMAT%2Cstring%2Cseq%5BT%5D%5Bfloat32%5D"><span class="Identifier">get</span></a><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="vcf.html#FORMAT"><span class="Identifier">FORMAT</span></a><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">data</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">float32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Status"><span class="Identifier">Status</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 fill data with float values for each sample with the given key
 
 </dd>
-<a id="get,FORMAT,string,seq[string]"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#get%2CFORMAT%2Cstring%2Cseq%5Bstring%5D"><span class="Identifier">get</span></a><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="vcf.html#FORMAT"><span class="Identifier">FORMAT</span></a><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">data</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Status"><span class="Identifier">Status</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+<a id="get,FORMAT,string,seq[T][string]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#get%2CFORMAT%2Cstring%2Cseq%5BT%5D%5Bstring%5D"><span class="Identifier">get</span></a><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="vcf.html#FORMAT"><span class="Identifier">FORMAT</span></a><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">data</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Status"><span class="Identifier">Status</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 fill data with string values for each sample with the given key
 
 </dd>
-<a id="set,FORMAT,string,seq[string]"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#set%2CFORMAT%2Cstring%2Cseq%5Bstring%5D"><span class="Identifier">set</span></a><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="vcf.html#FORMAT"><span class="Identifier">FORMAT</span></a><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">data</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Status"><span class="Identifier">Status</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+<a id="set,FORMAT,string,seq[T][string]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#set%2CFORMAT%2Cstring%2Cseq%5BT%5D%5Bstring%5D"><span class="Identifier">set</span></a><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="vcf.html#FORMAT"><span class="Identifier">FORMAT</span></a><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">data</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Status"><span class="Identifier">Status</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 set the format field with the given strings.
 
 </dd>
-<a id="set,FORMAT,string,seq[int32]"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#set%2CFORMAT%2Cstring%2Cseq%5Bint32%5D"><span class="Identifier">set</span></a><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="vcf.html#FORMAT"><span class="Identifier">FORMAT</span></a><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">values</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">int32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Status"><span class="Identifier">Status</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+<a id="set,FORMAT,string,seq[T][int32]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#set%2CFORMAT%2Cstring%2Cseq%5BT%5D%5Bint32%5D"><span class="Identifier">set</span></a><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="vcf.html#FORMAT"><span class="Identifier">FORMAT</span></a><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">values</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">int32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Status"><span class="Identifier">Status</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 set the sample fields. values must be a multiple of number of samples.
 
 </dd>
-<a id="set,FORMAT,string,seq[float32]"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#set%2CFORMAT%2Cstring%2Cseq%5Bfloat32%5D"><span class="Identifier">set</span></a><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="vcf.html#FORMAT"><span class="Identifier">FORMAT</span></a><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">values</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">float32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Status"><span class="Identifier">Status</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+<a id="set,FORMAT,string,seq[T][float32]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#set%2CFORMAT%2Cstring%2Cseq%5BT%5D%5Bfloat32%5D"><span class="Identifier">set</span></a><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="vcf.html#FORMAT"><span class="Identifier">FORMAT</span></a><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">values</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">float32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Status"><span class="Identifier">Status</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 set the sample fields. values must be a multiple of number of samples.
 
 </dd>
-<a id="get,INFO,string,seq[int32]"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#get%2CINFO%2Cstring%2Cseq%5Bint32%5D"><span class="Identifier">get</span></a><span class="Other">(</span><span class="Identifier">i</span><span class="Other">:</span> <a href="vcf.html#INFO"><span class="Identifier">INFO</span></a><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">data</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">int32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Status"><span class="Identifier">Status</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<a id="get,INFO,string,seq[T][int32]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#get%2CINFO%2Cstring%2Cseq%5BT%5D%5Bint32%5D"><span class="Identifier">get</span></a><span class="Other">(</span><span class="Identifier">i</span><span class="Other">:</span> <a href="vcf.html#INFO"><span class="Identifier">INFO</span></a><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">data</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">int32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Status"><span class="Identifier">Status</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 fills the given data with ints associated with the key.
 
 </dd>
-<a id="get,INFO,string,seq[float32]"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#get%2CINFO%2Cstring%2Cseq%5Bfloat32%5D"><span class="Identifier">get</span></a><span class="Other">(</span><span class="Identifier">i</span><span class="Other">:</span> <a href="vcf.html#INFO"><span class="Identifier">INFO</span></a><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">data</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">float32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Status"><span class="Identifier">Status</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+<a id="get,INFO,string,seq[T][float32]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#get%2CINFO%2Cstring%2Cseq%5BT%5D%5Bfloat32%5D"><span class="Identifier">get</span></a><span class="Other">(</span><span class="Identifier">i</span><span class="Other">:</span> <a href="vcf.html#INFO"><span class="Identifier">INFO</span></a><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">data</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">float32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Status"><span class="Identifier">Status</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 fills the given data with ints associated with the key. in many cases, the user will want only a single value; in that case data will have length 1 with the single value.
 
 </dd>
 <a id="get,INFO,string,string"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#get%2CINFO%2Cstring%2Cstring"><span class="Identifier">get</span></a><span class="Other">(</span><span class="Identifier">i</span><span class="Other">:</span> <a href="vcf.html#INFO"><span class="Identifier">INFO</span></a><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">data</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Status"><span class="Identifier">Status</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 fills the data with the value for the key and returns a Status indicating success
 
 </dd>
 <a id="has_flag,INFO,string"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#has_flag%2CINFO%2Cstring"><span class="Identifier">has_flag</span></a><span class="Other">(</span><span class="Identifier">i</span><span class="Other">:</span> <a href="vcf.html#INFO"><span class="Identifier">INFO</span></a><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 return indicates whether the flag is found in the INFO.
 
 </dd>
 <a id="delete,INFO,string"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#delete%2CINFO%2Cstring"><span class="Identifier">delete</span></a><span class="Other">(</span><span class="Identifier">i</span><span class="Other">:</span> <a href="vcf.html#INFO"><span class="Identifier">INFO</span></a><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Status"><span class="Identifier">Status</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 delete the value from the INFO field
 
 </dd>
@@ -1349,30 +1449,42 @@ delete the value from the INFO field
 <dd>
 
 
+
+</dd>
+<a id="set,INFO,string,bool"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#set%2CINFO%2Cstring%2Cbool"><span class="Identifier">set</span></a><span class="Other">(</span><span class="Identifier">i</span><span class="Other">:</span> <a href="vcf.html#INFO"><span class="Identifier">INFO</span></a><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Status"><span class="Identifier">Status</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+set a flag (when value is true) and remove it (when value is false)
+
 </dd>
 <a id="set,INFO,string,T"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#set%2CINFO%2Cstring%2CT"><span class="Identifier">set</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">float32</span> <span class="Operator">|</span> <span class="Identifier">float</span> <span class="Operator">|</span> <span class="Identifier">float64</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">i</span><span class="Other">:</span> <a href="vcf.html#INFO"><span class="Identifier">INFO</span></a><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">T</span><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Status"><span class="Identifier">Status</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 set the info key with the given float value).
 
 </dd>
 <a id="set,INFO,string,T_2"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#set%2CINFO%2Cstring%2CT_2"><span class="Identifier">set</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">int32</span> <span class="Operator">|</span> <span class="Identifier">int</span> <span class="Operator">|</span> <span class="Identifier">int64</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">i</span><span class="Other">:</span> <a href="vcf.html#INFO"><span class="Identifier">INFO</span></a><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">T</span><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Status"><span class="Identifier">Status</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 set the info key with the given int value).
 
 </dd>
-<a id="set,INFO,string,seq[float32]"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#set%2CINFO%2Cstring%2Cseq%5Bfloat32%5D"><span class="Identifier">set</span></a><span class="Other">(</span><span class="Identifier">i</span><span class="Other">:</span> <a href="vcf.html#INFO"><span class="Identifier">INFO</span></a><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">values</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">float32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Status"><span class="Identifier">Status</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+<a id="set,INFO,string,seq[T][float32]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#set%2CINFO%2Cstring%2Cseq%5BT%5D%5Bfloat32%5D"><span class="Identifier">set</span></a><span class="Other">(</span><span class="Identifier">i</span><span class="Other">:</span> <a href="vcf.html#INFO"><span class="Identifier">INFO</span></a><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">values</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">float32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Status"><span class="Identifier">Status</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 set the info key with the given float value(s).
 
 </dd>
-<a id="set,INFO,string,seq[int32]"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#set%2CINFO%2Cstring%2Cseq%5Bint32%5D"><span class="Identifier">set</span></a><span class="Other">(</span><span class="Identifier">i</span><span class="Other">:</span> <a href="vcf.html#INFO"><span class="Identifier">INFO</span></a><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">values</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">int32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Status"><span class="Identifier">Status</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+<a id="set,INFO,string,seq[T][int32]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#set%2CINFO%2Cstring%2Cseq%5BT%5D%5Bint32%5D"><span class="Identifier">set</span></a><span class="Other">(</span><span class="Identifier">i</span><span class="Other">:</span> <a href="vcf.html#INFO"><span class="Identifier">INFO</span></a><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">values</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">int32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Status"><span class="Identifier">Status</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 set the info key with the given int values.
 
 </dd>
@@ -1381,10 +1493,12 @@ set the info key with the given int values.
 <dd>
 
 
+
 </dd>
 <a id="newVariant"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#newVariant"><span class="Identifier">newVariant</span></a><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Variant"><span class="Identifier">Variant</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 make an empty variant.
 
 </dd>
@@ -1393,90 +1507,112 @@ make an empty variant.
 <dd>
 
 
+
 </dd>
 <a id="copy_header,VCF,Header"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#copy_header%2CVCF%2CHeader"><span class="Identifier">copy_header</span></a><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="vcf.html#VCF"><span class="Identifier">VCF</span></a><span class="Other">;</span> <span class="Identifier">hdr</span><span class="Other">:</span> <a href="vcf.html#Header"><span class="Identifier">Header</span></a><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
+
 </dd>
 <a id="write_header,VCF"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#write_header%2CVCF"><span class="Identifier">write_header</span></a><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <a href="vcf.html#VCF"><span class="Identifier">VCF</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 write a the header to the file (must have been opened in write mode) and return a bool for success.
 
 </dd>
 <a id="write_variant,VCF,Variant"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#write_variant%2CVCF%2CVariant"><span class="Identifier">write_variant</span></a><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <a href="vcf.html#VCF"><span class="Identifier">VCF</span></a><span class="Other">;</span> <span class="Identifier">variant</span><span class="Other">:</span> <a href="vcf.html#Variant"><span class="Identifier">Variant</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 write a variant to the VCF opened in write mode and return a bool indicating success.
 
 </dd>
-<a id="open,VCF,string,string,seq[string],int"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#open%2CVCF%2Cstring%2Cstring%2Cseq%5Bstring%5D%2Cint"><span class="Identifier">open</span></a><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="vcf.html#VCF"><span class="Identifier">VCF</span></a><span class="Other">;</span> <span class="Identifier">fname</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">mode</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Other">=</span> <span class="StringLit">&quot;r&quot;</span><span class="Other">;</span>
+<a id="open,VCF,string,string,seq[T][string],int"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#open%2CVCF%2Cstring%2Cstring%2Cseq%5BT%5D%5Bstring%5D%2Cint"><span class="Identifier">open</span></a><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="vcf.html#VCF"><span class="Identifier">VCF</span></a><span class="Other">;</span> <span class="Identifier">fname</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">mode</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Other">=</span> <span class="StringLit">&quot;r&quot;</span><span class="Other">;</span>
          <span class="Identifier">samples</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span> <span class="Other">=</span> <span class="Identifier">empty_samples</span><span class="Other">;</span> <span class="Identifier">threads</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
-    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">WriteIOEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">WriteIOEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 open a VCF at the given path
 
 </dd>
 <a id="CHROM,Variant"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#CHROM%2CVariant"><span class="Identifier">CHROM</span></a><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <a href="vcf.html#Variant"><span class="Identifier">Variant</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cstring</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 return the chromosome associated with the variant
 
 </dd>
 <a id="rid,Variant"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#rid%2CVariant"><span class="Identifier">rid</span></a><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <a href="vcf.html#Variant"><span class="Identifier">Variant</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int32</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 return the reference id of the variant.
 
 </dd>
 <a id="tostring,Variant"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#tostring%2CVariant"><span class="Identifier">tostring</span></a><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <a href="vcf.html#Variant"><span class="Identifier">Variant</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 return the full variant string including new-line from vcf_format.
+
+</dd>
+<a id="load_index,VCF,string"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#load_index%2CVCF%2Cstring"><span class="Identifier">load_index</span></a><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <a href="vcf.html#VCF"><span class="Identifier">VCF</span></a><span class="Other">;</span> <span class="Identifier">path</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">OSError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+load the index at the given path (remote or local).
 
 </dd>
 <a id="copy,Variant"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#copy%2CVariant"><span class="Identifier">copy</span></a><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <a href="vcf.html#Variant"><span class="Identifier">Variant</span></a><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Variant"><span class="Identifier">Variant</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 make a copy of the variant and the underlying pointer.
 
 </dd>
 <a id="POS,Variant"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#POS%2CVariant"><span class="Identifier">POS</span></a><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <a href="vcf.html#Variant"><span class="Identifier">Variant</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 return the 1-based position of the start of the variant
 
 </dd>
 <a id="start,Variant"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#start%2CVariant"><span class="Identifier">start</span></a><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <a href="vcf.html#Variant"><span class="Identifier">Variant</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 return the 0-based position of the start of the variant
 
 </dd>
 <a id="stop,Variant"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#stop%2CVariant"><span class="Identifier">stop</span></a><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <a href="vcf.html#Variant"><span class="Identifier">Variant</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 return the 0-based position of the end of the variant
 
 </dd>
 <a id="ID,Variant"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#ID%2CVariant"><span class="Identifier">ID</span></a><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <a href="vcf.html#Variant"><span class="Identifier">Variant</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cstring</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 the VCF ID field
 
 </dd>
 <a id="FILTER,Variant"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#FILTER%2CVariant"><span class="Identifier">FILTER</span></a><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <a href="vcf.html#Variant"><span class="Identifier">Variant</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 Return a string representation of the FILTER will be ';' delimited for multiple values
 
 </dd>
 <a id="QUAL,Variant,float"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#QUAL%2CVariant%2Cfloat"><span class="Identifier">QUAL</span></a><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <a href="vcf.html#Variant"><span class="Identifier">Variant</span></a><span class="Other">;</span> <span class="Identifier">default</span><span class="Other">:</span> <span class="Identifier">float</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">float</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 variant quality; returns default if it was unspecified in the VCF
 
 </dd>
@@ -1485,34 +1621,40 @@ variant quality; returns default if it was unspecified in the VCF
 <dd>
 
 
+
 </dd>
 <a id="REF,Variant"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#REF%2CVariant"><span class="Identifier">REF</span></a><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <a href="vcf.html#Variant"><span class="Identifier">Variant</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 the reference allele
 
 </dd>
 <a id="ALT,Variant"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#ALT%2CVariant"><span class="Identifier">ALT</span></a><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <a href="vcf.html#Variant"><span class="Identifier">Variant</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 a seq of alternate alleles
 
 </dd>
 <a id="copy,Genotypes"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#copy%2CGenotypes"><span class="Identifier">copy</span></a><span class="Other">(</span><span class="Identifier">g</span><span class="Other">:</span> <a href="vcf.html#Genotypes"><span class="Identifier">Genotypes</span></a><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Genotypes"><span class="Identifier">Genotypes</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 make a copy of the genotypes
 
 </dd>
 <a id="phased,Allele"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#phased%2CAllele"><span class="Identifier">phased</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="vcf.html#Allele"><span class="Identifier">Allele</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 is the allele pahsed.
 
 </dd>
 <a id="value,Allele"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#value%2CAllele"><span class="Identifier">value</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="vcf.html#Allele"><span class="Identifier">Allele</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 e.g. 0 for REF, 1 for first alt, -1 for unknown.
 
 </dd>
@@ -1521,34 +1663,40 @@ e.g. 0 for REF, 1 for first alt, -1 for unknown.
 <dd>
 
 
+
 </dd>
 <a id="len,Genotypes"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#len%2CGenotypes"><span class="Identifier">len</span></a><span class="Other">(</span><span class="Identifier">g</span><span class="Other">:</span> <a href="vcf.html#Genotypes"><span class="Identifier">Genotypes</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 this should match the number of samples.
 
 </dd>
 <a id="$,Allele"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#%24%2CAllele"><span class="Identifier">`$`</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="vcf.html#Allele"><span class="Identifier">Allele</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 string representation of a single allele.
 
 </dd>
-<a id="$,Genotype"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#%24%2CGenotype"><span class="Identifier">`$`</span></a><span class="Other">(</span><span class="Identifier">g</span><span class="Other">:</span> <a href="vcf.html#Genotype"><span class="Identifier">Genotype</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<a id="$,seq[Allele]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#%24%2Cseq%5BAllele%5D"><span class="Identifier">`$`</span></a><span class="Other">(</span><span class="Identifier">g</span><span class="Other">:</span> <a href="vcf.html#Genotype"><span class="Identifier">Genotype</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 string representation of a genotype. removes trailing phase value.
 
 </dd>
-<a id="alts,Genotype"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#alts%2CGenotype"><span class="Identifier">alts</span></a><span class="Other">(</span><span class="Identifier">g</span><span class="Other">:</span> <a href="vcf.html#Genotype"><span class="Identifier">Genotype</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int8</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">OSError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<a id="alts,seq[Allele]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#alts%2Cseq%5BAllele%5D"><span class="Identifier">alts</span></a><span class="Other">(</span><span class="Identifier">g</span><span class="Other">:</span> <a href="vcf.html#Genotype"><span class="Identifier">Genotype</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int8</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">OSError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 the number of alternate alleles in the genotype. only makes sense for bi-allelics. ./1 == 1 0/. == 0 ./. -&gt; -1 1/1 -&gt; 2
 
 </dd>
-<a id="genotypes,FORMAT,seq[int32]"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#genotypes%2CFORMAT%2Cseq%5Bint32%5D"><span class="Identifier">genotypes</span></a><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="vcf.html#FORMAT"><span class="Identifier">FORMAT</span></a><span class="Other">;</span> <span class="Identifier">gts</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">int32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Genotypes"><span class="Identifier">Genotypes</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<a id="genotypes,FORMAT,seq[T][int32]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#genotypes%2CFORMAT%2Cseq%5BT%5D%5Bint32%5D"><span class="Identifier">genotypes</span></a><span class="Other">(</span><span class="Identifier">f</span><span class="Other">:</span> <a href="vcf.html#FORMAT"><span class="Identifier">FORMAT</span></a><span class="Other">;</span> <span class="Identifier">gts</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">int32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Genotypes"><span class="Identifier">Genotypes</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 give sequence of genotypes (using the underlying array given in gts)
 
 </dd>
@@ -1557,16 +1705,19 @@ give sequence of genotypes (using the underlying array given in gts)
 <dd>
 
 
+
 </dd>
 <a id="alts,Genotypes"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#alts%2CGenotypes"><span class="Identifier">alts</span></a><span class="Other">(</span><span class="Identifier">gs</span><span class="Other">:</span> <a href="vcf.html#Genotypes"><span class="Identifier">Genotypes</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">int8</span><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">OSError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 return the number of alternate alleles. Unknown is -1.
 
 </dd>
 <a id="$,Variant"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#%24%2CVariant"><span class="Identifier">`$`</span></a><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <a href="vcf.html#Variant"><span class="Identifier">Variant</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 
 
 </dd>
@@ -1580,16 +1731,19 @@ return the number of alternate alleles. Unknown is -1.
 <dd>
 
 
+
 </dd>
 <a id="fields.i,INFO"></a>
 <dt><pre><span class="Keyword">iterator</span> <a href="#fields.i%2CINFO"><span class="Identifier">fields</span></a><span class="Other">(</span><span class="Identifier">info</span><span class="Other">:</span> <a href="vcf.html#INFO"><span class="Identifier">INFO</span></a><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#InfoField"><span class="Identifier">InfoField</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
+
 </dd>
 <a id="items.i,VCF"></a>
 <dt><pre><span class="Keyword">iterator</span> <a href="#items.i%2CVCF"><span class="Identifier">items</span></a><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <a href="vcf.html#VCF"><span class="Identifier">VCF</span></a><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Variant"><span class="Identifier">Variant</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">WriteIOEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 Each returned Variant has a pointer in the underlying iterator that is updated each iteration; use .copy to keep it in memory
 
 </dd>
@@ -1597,12 +1751,14 @@ Each returned Variant has a pointer in the underlying iterator that is updated e
 <dt><pre><span class="Keyword">iterator</span> <a href="#query.i%2CVCF%2Cstring"><span class="Identifier">query</span></a><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <a href="vcf.html#VCF"><span class="Identifier">VCF</span></a><span class="Other">;</span> <span class="Identifier">region</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Variant"><span class="Identifier">Variant</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 iterate over variants in a VCF/BCF for the given region. Each returned Variant has a pointer in the underlying iterator that is updated each iteration; use .copy to keep it in memory
 
 </dd>
 <a id="items.i,Genotypes"></a>
 <dt><pre><span class="Keyword">iterator</span> <a href="#items.i%2CGenotypes"><span class="Identifier">items</span></a><span class="Other">(</span><span class="Identifier">g</span><span class="Other">:</span> <a href="vcf.html#Genotypes"><span class="Identifier">Genotypes</span></a><span class="Other">)</span><span class="Other">:</span> <a href="vcf.html#Genotype"><span class="Identifier">Genotype</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 
 
 </dd>
@@ -1616,7 +1772,7 @@ iterate over variants in a VCF/BCF for the given region. Each returned Variant h
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small>Made with Nim. Generated: 2019-02-13 17:11:35 UTC</small>
+        <small>Made with Nim. Generated: 2019-06-26 15:38:31 UTC</small>
       </div>
     </div>
   </div>

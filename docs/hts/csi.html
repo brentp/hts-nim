@@ -345,11 +345,11 @@ dl {
 
 dt {
   margin-bottom: -0.5em;
-  margin-left: 0.5em; }
+  margin-left: 0.0em; }
 
 dd {
-  margin-left: 0.5em;
-  margin-bottom: 2.5em;
+  margin-left: 2.0em;
+  margin-bottom: 3.0em;
   margin-top: 0.5em; }
 
 
@@ -761,6 +761,10 @@ span.pragmawrap {
   display: none;
 }
 
+span.attachedType {
+  display: none;
+  visibility: hidden;
+}
 </style>
 
 <script type="text/javascript" src="dochack.js"></script>
@@ -815,7 +819,7 @@ function main() {
     title="CSI = ref object of RootObj
   tbx*: tbx_t
   chroms*: seq[string]
-  subtract: int"><wbr />CSI<span class="attachedType" style="visibility:hidden"></span></a></li>
+  subtract: int"><wbr />CSI<span class="attachedType"></span></a></li>
 
   </ul>
 </li>
@@ -823,22 +827,22 @@ function main() {
   <a class="reference reference-toplevel" href="#12" id="62">Procs</a>
   <ul class="simple simple-toc-section">
       <li><a class="reference" href="#finalize_csi%2CCSI"
-    title="finalize_csi(c: CSI)"><wbr />finalize_<wbr />csi<span class="attachedType" style="visibility:hidden">CSI</span></a></li>
+    title="finalize_csi(c: CSI)"><wbr />finalize_<wbr />csi<span class="attachedType">CSI</span></a></li>
   <li><a class="reference" href="#open%2CCSI%2Cstring"
-    title="open(csi: var CSI; base_path: string): bool"><wbr />open<span class="attachedType" style="visibility:hidden">CSI</span></a></li>
+    title="open(csi: var CSI; base_path: string): bool"><wbr />open<span class="attachedType">CSI</span></a></li>
   <li><a class="reference" href="#new_csi%2Cint%2Cint%2Cint%2Cbool%2Cint%2Cint"
     title="new_csi(seq_col: int; start_col: int; end_col: int; one_based: bool; levels: int = 5;
-        min_shift: int = 14): CSI"><wbr />new_<wbr />csi<span class="attachedType" style="visibility:hidden">CSI</span></a></li>
+        min_shift: int = 14): CSI"><wbr />new_<wbr />csi<span class="attachedType">CSI</span></a></li>
   <li><a class="reference" href="#add%2CCSI%2Cint%2Cint%2Cint%2Cuint64"
-    title="add(c: CSI; tid: int; start: int; stop: int; offset: uint64): int"><wbr />add<span class="attachedType" style="visibility:hidden">CSI</span></a></li>
+    title="add(c: CSI; tid: int; start: int; stop: int; offset: uint64): int"><wbr />add<span class="attachedType">CSI</span></a></li>
   <li><a class="reference" href="#finish%2CCSI%2Cuint64"
-    title="finish(c: CSI; offset: uint64)"><wbr />finish<span class="attachedType" style="visibility:hidden">CSI</span></a></li>
+    title="finish(c: CSI; offset: uint64)"><wbr />finish<span class="attachedType">CSI</span></a></li>
   <li><a class="reference" href="#save%2CCSI%2Cstring"
-    title="save(c: CSI; path: string)"><wbr />save<span class="attachedType" style="visibility:hidden">CSI</span></a></li>
-  <li><a class="reference" href="#idx_set_meta%2Cptr.hts_idx_t%2Cptr.tbx_conf_t%2Cseq%5Bstring%5D"
-    title="idx_set_meta(idx: ptr hts_idx_t; tc: ptr tbx_conf_t; chroms: seq[string]): int"><wbr />idx_<wbr />set_<wbr />meta<span class="attachedType" style="visibility:hidden"></span></a></li>
+    title="save(c: CSI; path: string)"><wbr />save<span class="attachedType">CSI</span></a></li>
+  <li><a class="reference" href="#idx_set_meta%2Cptr.hts_idx_t%2Cptr.tbx_conf_t%2Cseq%5BT%5D%5Bstring%5D"
+    title="idx_set_meta(idx: ptr hts_idx_t; tc: ptr tbx_conf_t; chroms: seq[string]): int"><wbr />idx_<wbr />set_<wbr />meta<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#set_meta%2CCSI"
-    title="set_meta(c: CSI): int"><wbr />set_<wbr />meta<span class="attachedType" style="visibility:hidden">CSI</span></a></li>
+    title="set_meta(c: CSI): int"><wbr />set_<wbr />meta<span class="attachedType">CSI</span></a></li>
 
   </ul>
 </li>
@@ -848,6 +852,7 @@ function main() {
   </div>
   <div class="nine columns" id="content">
   <div id="tocRoot"></div>
+  
   <p class="module-desc"></p>
   <div class="section" id="6">
 <h1><a class="toc-backref" href="#6">Imports</a></h1>
@@ -866,6 +871,7 @@ function main() {
 <dd>
 
 
+
 </dd>
 
 </dl></div>
@@ -877,10 +883,12 @@ function main() {
 <dd>
 
 
+
 </dd>
 <a id="open,CSI,string"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#open%2CCSI%2Cstring"><span class="Identifier">open</span></a><span class="Other">(</span><span class="Identifier">csi</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="csi.html#CSI"><span class="Identifier">CSI</span></a><span class="Other">;</span> <span class="Identifier">base_path</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 
 
 </dd>
@@ -891,11 +899,13 @@ function main() {
 <dd>
 
 
+
 </dd>
 <a id="add,CSI,int,int,int,uint64"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#add%2CCSI%2Cint%2Cint%2Cint%2Cuint64"><span class="Identifier">add</span></a><span class="Other">(</span><span class="Identifier">c</span><span class="Other">:</span> <a href="csi.html#CSI"><span class="Identifier">CSI</span></a><span class="Other">;</span> <span class="Identifier">tid</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">start</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">stop</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">offset</span><span class="Other">:</span> <span class="Identifier">uint64</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 
 
 </dd>
@@ -904,23 +914,27 @@ function main() {
 <dd>
 
 
+
 </dd>
 <a id="save,CSI,string"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#save%2CCSI%2Cstring"><span class="Identifier">save</span></a><span class="Other">(</span><span class="Identifier">c</span><span class="Other">:</span> <a href="csi.html#CSI"><span class="Identifier">CSI</span></a><span class="Other">;</span> <span class="Identifier">path</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
+
 </dd>
-<a id="idx_set_meta,ptr.hts_idx_t,ptr.tbx_conf_t,seq[string]"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#idx_set_meta%2Cptr.hts_idx_t%2Cptr.tbx_conf_t%2Cseq%5Bstring%5D"><span class="Identifier">idx_set_meta</span></a><span class="Other">(</span><span class="Identifier">idx</span><span class="Other">:</span> <span class="Keyword">ptr</span> <a href="hts_concat.html#hts_idx_t"><span class="Identifier">hts_idx_t</span></a><span class="Other">;</span> <span class="Identifier">tc</span><span class="Other">:</span> <span class="Keyword">ptr</span> <a href="hts_concat.html#tbx_conf_t"><span class="Identifier">tbx_conf_t</span></a><span class="Other">;</span> <span class="Identifier">chroms</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+<a id="idx_set_meta,ptr.hts_idx_t,ptr.tbx_conf_t,seq[T][string]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#idx_set_meta%2Cptr.hts_idx_t%2Cptr.tbx_conf_t%2Cseq%5BT%5D%5Bstring%5D"><span class="Identifier">idx_set_meta</span></a><span class="Other">(</span><span class="Identifier">idx</span><span class="Other">:</span> <span class="Keyword">ptr</span> <a href="hts_concat.html#hts_idx_t"><span class="Identifier">hts_idx_t</span></a><span class="Other">;</span> <span class="Identifier">tc</span><span class="Other">:</span> <span class="Keyword">ptr</span> <a href="hts_concat.html#tbx_conf_t"><span class="Identifier">tbx_conf_t</span></a><span class="Other">;</span> <span class="Identifier">chroms</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 
 
 </dd>
 <a id="set_meta,CSI"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#set_meta%2CCSI"><span class="Identifier">set_meta</span></a><span class="Other">(</span><span class="Identifier">c</span><span class="Other">:</span> <a href="csi.html#CSI"><span class="Identifier">CSI</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 
 
 </dd>
@@ -934,7 +948,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small>Made with Nim. Generated: 2019-02-13 17:11:34 UTC</small>
+        <small>Made with Nim. Generated: 2019-06-26 15:38:29 UTC</small>
       </div>
     </div>
   </div>

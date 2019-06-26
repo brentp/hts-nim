@@ -191,6 +191,7 @@ iterator query*(bam: Bam, chrom:string, start:int=0, stop:int=0): Record =
     if slen < -1:
       stderr.write_line("[hts-nim] error in bam.query:" & $slen)
 
+
 iterator query*(bam: Bam, tid:int, start:int=0, stop:int=(-1)): Record =
   ## query iterates over the given region. A single element is used and
   ## overwritten on each iteration so use `Record.copy` to retain.
@@ -356,46 +357,6 @@ iterator items*(bam: Bam): Record {.raises: [ValueError]}=
 
 
 include "./bam/auxtags"
-
-type Splitter* = ref object
-    ## A splitter represents one item from an SA tag
-    aln*: Record
-    chrom*: string
-    start*: int
-    cigar*: string
-    qual*: uint8
-    NM*: uint16
-
-let consumes_ref = {'M', 'D', 'N', '=', 'X'}
-
-proc stop*(s: Splitter): int {.inline.} =
-  ## calculate the stop value for the splitter
-  result = s.start
-  var last_i = 0
-  for i, c in s.cigar:
-    if not c.isDigit:
-      if c in consumes_ref:
-        var num = s.cigar[last_i..<i]
-        result += parseInt(num)
-      last_i = i + 1
-
-proc `$`*(s: Splitter): string =
-  return format("Splitter($# $#..$# ($#))" % [s.chrom, $s.start, $s.stop, s.cigar])
-
-iterator splitters*(r: Record, atag:string="SA"): Splitter {.deprecated: "dont use splitters"} =
-  ## generate splitters from SA tag.
-  var aux = tag[string](r, atag)
-  if aux.isSome:
-    var spls = aux.get
-    for s in spls[0..<len(spls)-1].split(";"):
-      var toks = s.split(",")
-      if len(toks) == 4: # XA == chr,[strand]pos,CIGAR,NM
-        yield Splitter(aln:r, chrom: toks[0], start: -1 + parseInt(toks[1][1..<len(toks[1])]), cigar: toks[2], NM:uint16(parseInt(toks[3])))
-      else:
-        yield Splitter(aln:r, chrom:toks[0], start: -1 + parseInt(toks[1]), cigar: toks[3],
-                           qual: uint8(parseInt(toks[4])),
-                           NM: uint16(parseInt(toks[5])))
-
 
 proc main() =
 

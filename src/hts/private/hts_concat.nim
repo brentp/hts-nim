@@ -107,6 +107,10 @@ const
   BCF_HT_INT* = 1
   BCF_HT_REAL* = 2
   BCF_HT_STR* = 3
+  HTS_IDX_NOCOOR* = (-2)
+  HTS_IDX_START* = (-3)
+  HTS_IDX_REST* = (-4)
+  HTS_IDX_NONE* = (-5)
 
 proc malloc*(size: csize): pointer {.cdecl, importc: "malloc", dynlib: libname.}
 proc free*(a1: pointer) {.cdecl, importc: "free", dynlib: libname.}
@@ -221,14 +225,14 @@ type
 
 
 type
-  INNER_C_STRUCT_hts_concat_188* {.bycopy.} = object
+  INNER_C_STRUCT_hts_concat_193* {.bycopy.} = object
     major*: cshort
     minor*: cshort
 
   htsFormat* {.bycopy.} = object
     category*: htsFormatCategory
     format*: htsExactFormat
-    version*: INNER_C_STRUCT_hts_concat_188
+    version*: INNER_C_STRUCT_hts_concat_193
     compression*: htsCompression
     compression_level*: cshort ##  currently unused
     specific*: pointer         ##  format specific options; see struct hts_opt.
@@ -239,7 +243,7 @@ type
 ## ###########################
 
 type
-  INNER_C_UNION_hts_concat_207* {.bycopy.} = object {.union.}
+  INNER_C_UNION_hts_concat_212* {.bycopy.} = object {.union.}
     bgzf*: ptr BGZF
     cram*: ptr cram_fd
     hfile*: ptr hFILE
@@ -259,7 +263,7 @@ type
     line*: kstring_t
     fn*: cstring
     fn_aux*: cstring
-    fp*: INNER_C_UNION_hts_concat_207
+    fp*: INNER_C_UNION_hts_concat_212
     format*: htsFormat
 
 
@@ -641,7 +645,7 @@ const
 ##
 
 type
-  INNER_C_UNION_hts_concat_546* {.bycopy.} = object {.union.}
+  INNER_C_UNION_hts_concat_551* {.bycopy.} = object {.union.}
     i*: int32                  ##  integer value
     f*: cfloat                 ##  float value
 
@@ -671,7 +675,7 @@ type
     key*: cint                 ##  key: numeric tag id, the corresponding string is bcf_hdr_t::id[BCF_DT_ID][$key].key
     `type`*: cint
     len*: cint                 ##  type: one of BCF_BT_* types; len: vector length, 1 for scalars
-    v1*: INNER_C_UNION_hts_concat_546 ##  only set if $len==1; for easier access
+    v1*: INNER_C_UNION_hts_concat_551 ##  only set if $len==1; for easier access
     vptr*: ptr uint8            ##  pointer to data array in bcf1_t->shared.s, excluding the size+type and tag id bytes
     vptr_len*: uint32          ##  length of the vptr block or, when set, of the vptr_mod block, excluding offset
     vptr_off* {.bitsize: 31.}: uint32 ##  vptr offset, i.e., the size of the INFO key plus size+type bytes

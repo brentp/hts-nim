@@ -345,11 +345,11 @@ dl {
 
 dt {
   margin-bottom: -0.5em;
-  margin-left: 0.5em; }
+  margin-left: 0.0em; }
 
 dd {
-  margin-left: 0.5em;
-  margin-bottom: 2.5em;
+  margin-left: 2.0em;
+  margin-bottom: 3.0em;
   margin-top: 0.5em; }
 
 
@@ -761,6 +761,10 @@ span.pragmawrap {
   display: none;
 }
 
+span.attachedType {
+  display: none;
+  visibility: hidden;
+}
 </style>
 
 <script type="text/javascript" src="dochack.js"></script>
@@ -813,7 +817,7 @@ function main() {
   <ul class="simple simple-toc-section">
       <li><a class="reference" href="#BGZ"
     title="BGZ = ref object of RootObj
-  cptr*: ptr BGZF"><wbr />BGZ<span class="attachedType" style="visibility:hidden"></span></a></li>
+  cptr*: ptr BGZF"><wbr />BGZ<span class="attachedType"></span></a></li>
 
   </ul>
 </li>
@@ -821,21 +825,29 @@ function main() {
   <a class="reference reference-toplevel" href="#12" id="62">Procs</a>
   <ul class="simple simple-toc-section">
       <li><a class="reference" href="#close%2CBGZ"
-    title="close(b: BGZ): int"><wbr />close<span class="attachedType" style="visibility:hidden">BGZ</span></a></li>
+    title="close(b: BGZ): int"><wbr />close<span class="attachedType">BGZ</span></a></li>
   <li><a class="reference" href="#write%2CBGZ%2Cstring"
-    title="write(b: BGZ; line: string): int64"><wbr />write<span class="attachedType" style="visibility:hidden">BGZ</span></a></li>
+    title="write(b: BGZ; line: string): int64"><wbr />write<span class="attachedType">BGZ</span></a></li>
   <li><a class="reference" href="#write_line%2CBGZ%2Cstring"
-    title="write_line(b: BGZ; line: string): int"><wbr />write_<wbr />line<span class="attachedType" style="visibility:hidden">BGZ</span></a></li>
+    title="write_line(b: BGZ; line: string): int"><wbr />write_<wbr />line<span class="attachedType">BGZ</span></a></li>
   <li><a class="reference" href="#set_threads%2CBGZ%2Cint"
-    title="set_threads(b: BGZ; threads: int)"><wbr />set_<wbr />threads<span class="attachedType" style="visibility:hidden">BGZ</span></a></li>
+    title="set_threads(b: BGZ; threads: int)"><wbr />set_<wbr />threads<span class="attachedType">BGZ</span></a></li>
   <li><a class="reference" href="#read_line%2CBGZ%2Cptr.kstring_t"
-    title="read_line(b: BGZ; line: var ptr kstring_t): int"><wbr />read_<wbr />line<span class="attachedType" style="visibility:hidden">BGZ</span></a></li>
+    title="read_line(b: BGZ; line: var ptr kstring_t): int"><wbr />read_<wbr />line<span class="attachedType">BGZ</span></a></li>
   <li><a class="reference" href="#flush%2CBGZ"
-    title="flush(b: BGZ): int"><wbr />flush<span class="attachedType" style="visibility:hidden">BGZ</span></a></li>
+    title="flush(b: BGZ): int"><wbr />flush<span class="attachedType">BGZ</span></a></li>
   <li><a class="reference" href="#tell%2CBGZ"
-    title="tell(b: BGZ): uint64"><wbr />tell<span class="attachedType" style="visibility:hidden">BGZ</span></a></li>
+    title="tell(b: BGZ): uint64"><wbr />tell<span class="attachedType">BGZ</span></a></li>
   <li><a class="reference" href="#open%2CBGZ%2Cstring%2Cstring"
-    title="open(b: var BGZ; path: string; mode: string)"><wbr />open<span class="attachedType" style="visibility:hidden">BGZ</span></a></li>
+    title="open(b: var BGZ; path: string; mode: string)"><wbr />open<span class="attachedType">BGZ</span></a></li>
+
+  </ul>
+</li>
+<li>
+  <a class="reference reference-toplevel" href="#15" id="65">Iterators</a>
+  <ul class="simple simple-toc-section">
+      <li><a class="reference" href="#items.i%2CBGZ"
+    title="items(b: BGZ): string"><wbr />items<span class="attachedType">BGZ</span></a></li>
 
   </ul>
 </li>
@@ -845,6 +857,7 @@ function main() {
   </div>
   <div class="nine columns" id="content">
   <div id="tocRoot"></div>
+  
   <p class="module-desc"></p>
   <div class="section" id="6">
 <h1><a class="toc-backref" href="#6">Imports</a></h1>
@@ -861,6 +874,7 @@ function main() {
 <dd>
 
 
+
 </dd>
 
 </dl></div>
@@ -870,24 +884,28 @@ function main() {
 <a id="close,BGZ"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#close%2CBGZ"><span class="Identifier">close</span></a><span class="Other">(</span><span class="Identifier">b</span><span class="Other">:</span> <a href="bgzf.html#BGZ"><span class="Identifier">BGZ</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 close the filehandle
 
 </dd>
 <a id="write,BGZ,string"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#write%2CBGZ%2Cstring"><span class="Identifier">write</span></a><span class="Other">(</span><span class="Identifier">b</span><span class="Other">:</span> <a href="bgzf.html#BGZ"><span class="Identifier">BGZ</span></a><span class="Other">;</span> <span class="Identifier">line</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int64</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 write a string to the file
 
 </dd>
 <a id="write_line,BGZ,string"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#write_line%2CBGZ%2Cstring"><span class="Identifier">write_line</span></a><span class="Other">(</span><span class="Identifier">b</span><span class="Other">:</span> <a href="bgzf.html#BGZ"><span class="Identifier">BGZ</span></a><span class="Other">;</span> <span class="Identifier">line</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 write a string to the file and add a newline.
 
 </dd>
 <a id="set_threads,BGZ,int"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#set_threads%2CBGZ%2Cint"><span class="Identifier">set_threads</span></a><span class="Other">(</span><span class="Identifier">b</span><span class="Other">:</span> <a href="bgzf.html#BGZ"><span class="Identifier">BGZ</span></a><span class="Other">;</span> <span class="Identifier">threads</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 set the number of de/compression threads
 
 </dd>
@@ -895,11 +913,13 @@ set the number of de/compression threads
 <dt><pre><span class="Keyword">proc</span> <a href="#read_line%2CBGZ%2Cptr.kstring_t"><span class="Identifier">read_line</span></a><span class="Other">(</span><span class="Identifier">b</span><span class="Other">:</span> <a href="bgzf.html#BGZ"><span class="Identifier">BGZ</span></a><span class="Other">;</span> <span class="Identifier">line</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Keyword">ptr</span> <a href="hts_concat.html#kstring_t"><span class="Identifier">kstring_t</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
+read a line into the kstring t.
 
 </dd>
 <a id="flush,BGZ"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#flush%2CBGZ"><span class="Identifier">flush</span></a><span class="Other">(</span><span class="Identifier">b</span><span class="Other">:</span> <a href="bgzf.html#BGZ"><span class="Identifier">BGZ</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 
 
 </dd>
@@ -908,11 +928,25 @@ set the number of de/compression threads
 <dd>
 
 
+
 </dd>
 <a id="open,BGZ,string,string"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#open%2CBGZ%2Cstring%2Cstring"><span class="Identifier">open</span></a><span class="Other">(</span><span class="Identifier">b</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="bgzf.html#BGZ"><span class="Identifier">BGZ</span></a><span class="Other">;</span> <span class="Identifier">path</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">mode</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+
 open a BGZF file
+
+</dd>
+
+</dl></div>
+<div class="section" id="15">
+<h1><a class="toc-backref" href="#15">Iterators</a></h1>
+<dl class="item">
+<a id="items.i,BGZ"></a>
+<dt><pre><span class="Keyword">iterator</span> <a href="#items.i%2CBGZ"><span class="Identifier">items</span></a><span class="Other">(</span><span class="Identifier">b</span><span class="Other">:</span> <a href="bgzf.html#BGZ"><span class="Identifier">BGZ</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+iterates over the file line by line
 
 </dd>
 
@@ -925,7 +959,7 @@ open a BGZF file
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small>Made with Nim. Generated: 2019-02-13 17:11:35 UTC</small>
+        <small>Made with Nim. Generated: 2019-06-26 15:38:30 UTC</small>
       </div>
     </div>
   </div>

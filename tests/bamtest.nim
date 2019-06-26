@@ -17,12 +17,6 @@ suite "bam-suite":
     var n = 0
     for rec in b:
       n += 1
-      var found = false
-      for s in rec.splitters("SA"):
-        found = true
-        check s.start > 0
-        check s.stop > s.start
-      check found
     check n == 308
 
   test "test sa bam":
@@ -31,11 +25,6 @@ suite "bam-suite":
     var n = 0
     for rec in b:
       n += 1
-      var found = false
-      for s in rec.splitters("SA"):
-        found = true
-        check s.start > 0
-        check s.stop > s.start
     check n == 308
 
   #test "load non-standard index":
