@@ -984,6 +984,8 @@ function main() {
     title="copy(r: Record): Record"><wbr />copy<span class="attachedType">Record</span></a></li>
   <li><a class="reference" href="#qname%2CRecord"
     title="qname(r: Record): string"><wbr />qname<span class="attachedType">Record</span></a></li>
+  <li><a class="reference" href="#set_qname%2CRecord%2Cstring"
+    title="set_qname(r: Record; qname: string)"><wbr />set_<wbr />qname<span class="attachedType">Record</span></a></li>
   <li><a class="reference" href="#flag%2CRecord"
     title="flag(r: Record): Flag"><wbr />flag<span class="attachedType">Record</span></a></li>
   <li><a class="reference" href="#cigar%2CRecord"
@@ -1571,6 +1573,13 @@ The targets (chromosomes) from the header.
 <tt class="docutils literal"><span class="pre">qname</span></tt> returns the query name.
 
 </dd>
+<a id="set_qname,Record,string"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#set_qname%2CRecord%2Cstring"><span class="Identifier">set_qname</span></a><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">;</span> <span class="Identifier">qname</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+set a new qname for the record
+
+</dd>
 <a id="flag,Record"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#flag%2CRecord"><span class="Identifier">flag</span></a><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">)</span><span class="Other">:</span> <a href="bam.html#Flag"><span class="Identifier">Flag</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
@@ -1792,7 +1801,7 @@ returns true if the op consumes bases in the reference.
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small>Made with Nim. Generated: 2019-06-26 15:38:28 UTC</small>
+        <small>Made with Nim. Generated: 2019-07-12 17:17:54 UTC</small>
       </div>
     </div>
   </div>
