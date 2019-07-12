@@ -27,6 +27,30 @@ suite "bam-suite":
       n += 1
     check n == 308
 
+
+  test "set qname":
+
+    var ibam:Bam
+    check open(ibam, "tests/HG02002.bam")
+
+    for a in ibam:
+      var qn = a.qname
+      a.set_qname(a.qname)
+      check a.tostring().split("\t")[0] == a.qname
+
+      var before = a.tostring().split("\t")
+      for nq in ["a", "x21XXXXXXXXXXXXXXXXXXXXXXXXXXXXxx213423423423423:qwerwqesdfsdf234r23rwsr234we234wr234wef234er2342r234sdfase234", "asdf"]:
+        a.set_qname(nq)
+        var after = a.tostring().split("\t")
+        check a.qname == nq
+        check after[0] == nq
+        check after[1..<after.high] == before[1..<before.high]
+
+      a.set_qname(qn)
+      var after = a.tostring().split("\t")
+      check after == before
+
+
   #test "load non-standard index":
   #  var b:Bam
   #  open(b, "tests/sa.bam")

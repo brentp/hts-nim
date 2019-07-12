@@ -1,3 +1,7 @@
+v0.2.16
+=======
++ [bam] add `set_qname`
+
 v0.2.14
 =======
 + [vcf] add format.delete to delete format (sample) fields from vcf records.

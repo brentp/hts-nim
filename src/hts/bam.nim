@@ -161,6 +161,53 @@ proc qname*(r: Record): string {. inline .} =
   ## `qname` returns the query name.
   return $(bam_get_qname(r.b))
 
+proc c_realloc(p: pointer, newsize: csize): pointer {.
+  importc: "realloc", header: "<stdlib.h>".}
+
+proc set_qname*(r: Record, qname: string) =
+  ## set a new qname for the record
+  doAssert qname.len < uint8.high.int, "[hts-nim/bam/set_qname]: maximum qname length is 255 bases"
+
+  var l = qname.len + 1
+  var l_extranul = 0
+  if l mod 4 != 0:
+    l_extranul = 4 - l mod 4
+  l += l_extranul
+
+  var old_ld = r.b.l_data
+
+  r.b.l_data = r.b.l_data - r.b.core.l_qname.cint + l.cint
+  if r.b.m_data < r.b.l_data:
+    when defined(qname_debug):
+      echo ">>>>>>>>>>>realloc:", r.b.l_data, " m:", r.b.m_data
+    r.b.m_data = r.b.l_data
+    # 4-byte align
+    r.b.m_data += 32 - (r.b.m_data mod 32)
+    r.b.data = cast[ptr uint8](c_realloc(r.b.data.pointer, r.b.m_data.csize))
+  when defined(qname_debug):
+    echo "old:", r.qname
+    echo "new:", qname
+    echo "source offset:", r.b.core.l_qname.int - 1
+    echo "dest offset:", l
+    echo "extranul:", l_extranul
+    echo "copy size:", old_ld - r.b.core.l_qname.int
+    echo "old_size:", old_ld
+    echo "new_size:", r.b.l_data
+
+  # first move the data that follows the qname to its correct location
+  if r.b.core.l_qname != l.uint8:
+    moveMem(cast[pointer](cast[int](r.b.data.pointer) + l),
+            cast[pointer](cast[int](r.b.data.pointer) + r.b.core.l_qname.int),
+            old_ld - r.b.core.l_qname.int)
+
+  r.b.core.l_extranul = l_extranul.uint8
+  r.b.core.l_qname = l.uint8
+
+  copyMem(r.b.data.pointer, qname[0].unsafeAddr.pointer, qname.len)
+  var tmp = cast[cstring](r.b.data)
+  for i in 0..l_extranul:
+    tmp[qname.len+i] = '\0'
+
 proc flag*(r: Record): Flag {.inline.} =
   ## `flag` returns a `Flag` object.
   return Flag(r.b.core.flag)
@@ -236,6 +283,7 @@ proc tostring*(r: Record): string =
   return s
 
 proc finalize_bam(bam: Bam) =
+  if bam == nil: return
   if bam.idx != nil:
     hts_idx_destroy(bam.idx)
   if bam.hts != nil:
