@@ -450,12 +450,18 @@ proc bam_get_l_aux*(b: ptr bam1_t): cint {.cdecl, importc: "bam_get_l_aux",
                                       dynlib: libname.}
 proc bam_aux_get*(b: ptr bam1_t; tag: array[2, char]): ptr uint8 {.cdecl,
     importc: "bam_aux_get", dynlib: libname.}
-proc bam_aux2i*(s: ptr uint8): int32 {.cdecl, importc: "bam_aux2i", dynlib: libname.}
-proc bam_aux2f*(s: ptr uint8): cfloat {.cdecl, importc: "bam_aux2f", dynlib: libname.}
+proc bam_aux2i*(s: ptr uint8): int64 {.cdecl, importc: "bam_aux2i", dynlib: libname.}
+proc bam_aux2f*(s: ptr uint8): cdouble {.cdecl, importc: "bam_aux2f", dynlib: libname.}
 proc bam_aux2Z*(s: ptr uint8): cstring {.cdecl, importc: "bam_aux2Z", dynlib: libname.}
 proc bam_aux2A*(s: ptr uint8): char {.cdecl, importc: "bam_aux2A", dynlib: libname.}
 proc bam_aux_del*(b: ptr bam1_t; s: ptr uint8): cint {.cdecl, importc: "bam_aux_del",
     dynlib: libname.}
+proc bam_aux_update_str*(b: ptr bam1_t; tag: array[2, char]; len: cint; data: cstring): cint {.
+    cdecl, importc: "bam_aux_update_str", dynlib: libname.}
+proc bam_aux_update_int*(b: ptr bam1_t; tag: array[2, char]; val: int64): cint {.cdecl,
+    importc: "bam_aux_update_int", dynlib: libname.}
+proc bam_aux_update_float*(b: ptr bam1_t; tag: array[2, char]; val: cfloat): cint {.cdecl,
+    importc: "bam_aux_update_float", dynlib: libname.}
 proc bam_copy1*(bdst: ptr bam1_t; bsrc: ptr bam1_t): ptr bam1_t {.cdecl,
     importc: "bam_copy1", dynlib: libname.}
 proc bam_dup1*(bsrc: ptr bam1_t): ptr bam1_t {.cdecl, importc: "bam_dup1",
@@ -645,7 +651,7 @@ const
 ##
 
 type
-  INNER_C_UNION_hts_concat_551* {.bycopy.} = object {.union.}
+  INNER_C_UNION_hts_concat_555* {.bycopy.} = object {.union.}
     i*: int32                  ##  integer value
     f*: cfloat                 ##  float value
 
@@ -675,7 +681,7 @@ type
     key*: cint                 ##  key: numeric tag id, the corresponding string is bcf_hdr_t::id[BCF_DT_ID][$key].key
     `type`*: cint
     len*: cint                 ##  type: one of BCF_BT_* types; len: vector length, 1 for scalars
-    v1*: INNER_C_UNION_hts_concat_551 ##  only set if $len==1; for easier access
+    v1*: INNER_C_UNION_hts_concat_555 ##  only set if $len==1; for easier access
     vptr*: ptr uint8            ##  pointer to data array in bcf1_t->shared.s, excluding the size+type and tag id bytes
     vptr_len*: uint32          ##  length of the vptr block or, when set, of the vptr_mod block, excluding offset
     vptr_off* {.bitsize: 31.}: uint32 ##  vptr offset, i.e., the size of the INFO key plus size+type bytes

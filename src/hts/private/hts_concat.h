@@ -361,11 +361,15 @@ void bam_destroy1(bam1_t *b);
 uint8_t *bam_get_aux(bam1_t *b);
 int bam_get_l_aux(bam1_t *b);
 uint8_t *bam_aux_get(const bam1_t *b, const char tag[2]);
-int32_t bam_aux2i(const uint8_t *s);
-float bam_aux2f(const uint8_t *s);
+int64_t bam_aux2i(const uint8_t *s);
+double bam_aux2f(const uint8_t *s);
 char *bam_aux2Z(const uint8_t *s);
 char bam_aux2A(const uint8_t *s);
 int bam_aux_del(bam1_t *b, uint8_t *s);
+
+int bam_aux_update_str(bam1_t *b, const char tag[2], int len, const char *data);
+int bam_aux_update_int(bam1_t *b, const char tag[2], int64_t val);
+int bam_aux_update_float(bam1_t *b, const char tag[2], float val);
 
 
 bam1_t *bam_copy1(bam1_t *bdst, const bam1_t *bsrc);

@@ -27,6 +27,20 @@ suite "bam-suite":
       n += 1
     check n == 308
 
+  test "set aux":
+
+    var ibam:Bam
+    check open(ibam, "tests/HG02002.bam")
+    for a in ibam:
+      a.set_tag("AI", 22)
+      a.set_tag("GF", 23.3)
+      a.set_tag("SS", "asdfa")
+      #echo a.tostring()
+
+      check tag[int](a, "AI").get == 22
+      check abs(tag[float](a, "GF").get - 23.3) < 1e-5
+      check tag[string](a, "SS").get == "asdfa"
+
 
   test "set qname":
 
