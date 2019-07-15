@@ -6,7 +6,7 @@ import strutils
 when defined(nimUncheckedArrayTyp):
   type CArray[T] = UncheckedArray[T]
 else:
-  type CArray{.unchecked.}[T] = array[0..0, T]
+  type CArray[T]{.unchecked.} = array[0..0, T]
 
 type CPtr*[T] = ptr CArray[T]
 

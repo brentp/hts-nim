@@ -8,7 +8,7 @@ import sequtils
 when defined(nimUncheckedArrayTyp):
   type CArray[T] = UncheckedArray[T]
 else:
-  type CArray{.unchecked.}[T] = array[0..0, T]
+  type CArray[T]{.unchecked.} = array[0..0, T]
 
 type
   Header* = ref object of RootObj
@@ -190,8 +190,6 @@ proc format*(v:Variant): FORMAT {.inline.} =
 
 proc n_samples*(v:Variant): int {.inline.} =
   return v.c.n_sample.int
-
-proc c_memcpy(a, b: pointer, size: csize) {.importc: "memcpy", header: "<string.h>", inline.}
 
 proc toSeq[T](data: var seq[T], p:pointer, n:int) {.inline.} =
   ## helper function to fill a sequence with data from a pointer

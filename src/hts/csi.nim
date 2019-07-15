@@ -67,7 +67,6 @@ proc idx_set_meta*(idx: ptr hts_idx_t; tc: ptr tbx_conf_t; chroms: seq[string]):
   x[6] = uint32(l)
   var meta = new_seq[uint8](28 + l)
   copyMem(cast[pointer](meta[0].addr), cast[pointer](x[0].addr), 28)
-  var cs: cstring
 
   var offset = 28
   # copy each chrom, char by char into the meta array and leave the 0 (NULL) at the end of each.

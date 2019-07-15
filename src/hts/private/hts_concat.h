@@ -343,6 +343,8 @@ int bam_hdr_write(BGZF *fp, const bam_hdr_t *h);
 int sam_hdr_write(htsFile *fp, const bam_hdr_t *h);
 int sam_write1(htsFile *fp, const bam_hdr_t *h, const bam1_t *b);
 void bam_hdr_destroy(bam_hdr_t *h);
+//static inline void bam_hdr_destroy(sam_hdr_t *h) { sam_hdr_destroy(h); }
+
 
 
 

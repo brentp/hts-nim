@@ -48,7 +48,6 @@ suite "bgzf-suite":
   test "bgzf-iterator-err":
     var 
       b: BGZ
-      nb_lines = 0
     b.open("tests/gzip-err.gz", "r")
 
     expect IoError:
@@ -79,6 +78,7 @@ suite "bgzf-suite":
     check xc.metachar == 35
 
     var t = c
+    check t != nil
 
   test "csi-iterator":
     var rx = ropen_bgzi("ti.txt.gz")

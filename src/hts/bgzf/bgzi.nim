@@ -27,9 +27,6 @@ proc ropen_bgzi*(path: string): BGZI =
     quit(1)
   return BGZI(bgz: b, csi:c, path:path)
 
-type
-  interval = tuple[chrom: string, start: int, stop: int, line: string]
-
 proc fastSubStr(dest: var string; src: cstring, a, b: int) {.inline.} =
   # once the stdlib uses TR macros, these things should not be necessary
   template `+!`(src, a): untyped = cast[pointer](cast[int](src) + a)

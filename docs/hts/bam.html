@@ -1021,8 +1021,11 @@ function main() {
     title="set_option(b: Bam; f: FormatOption; val: int): int"><wbr />set_<wbr />option<span class="attachedType">Bam</span></a></li>
   <li><a class="reference" href="#delete_tag%2CRecord%2Cstring"
     title="delete_tag(r: Record; itag: string): bool"><wbr />delete_<wbr />tag<span class="attachedType">Record</span></a></li>
+  <li><a class="reference" href="#set_tag%2CRecord%2Cstring%2CT"
+    title="set_tag[T: int | float | string | char](r: Record; itag: string; value: T)"><wbr />set_<wbr />tag<span class="attachedType">Record</span></a></li>
   <li><a class="reference" href="#tag%2CRecord%2Cstring"
-    title="tag[T: int | float | string | char | cstring](r: Record; itag: string): Option[T]"><wbr />tag<span class="attachedType">Record</span></a></li>
+    title="tag[T: int | float | float32 | float64 | string | char | cstring](r: Record; itag: string): Option[
+    T]"><wbr />tag<span class="attachedType">Record</span></a></li>
 
   </ul>
 </li>
@@ -1704,11 +1707,19 @@ load the bam/cram index at the given path. This can be remote or local.
 remove the tag from the record return a bool indicating success.
 
 </dd>
-<a id="tag,Record,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#tag%2CRecord%2Cstring"><span class="Identifier">tag</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Operator">|</span> <span class="Identifier">float</span> <span class="Operator">|</span> <span class="Identifier">string</span> <span class="Operator">|</span> <span class="Identifier">char</span> <span class="Operator">|</span> <span class="Identifier">cstring</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">;</span> <span class="Identifier">itag</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="simpleoption.html#Option"><span class="Identifier">Option</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span></pre></dt>
+<a id="set_tag,Record,string,T"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#set_tag%2CRecord%2Cstring%2CT"><span class="Identifier">set_tag</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Operator">|</span> <span class="Identifier">float</span> <span class="Operator">|</span> <span class="Identifier">string</span> <span class="Operator">|</span> <span class="Identifier">char</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">;</span> <span class="Identifier">itag</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Identifier">T</span><span class="Other">)</span></pre></dt>
 <dd>
 
-Get the aux tag from the record. Due to <tt class="docutils literal"><span class="pre">nim</span></tt> language limitations, this must be used as, e.g.: <tt class="docutils literal"><span class="pre">tag[int](rec, &quot;NM&quot;)</span></tt>. It will return <tt class="docutils literal"><span class="pre">none</span></tt> if the tag does not exist or if it is not of the requested type. This can be a shorter alternative to rec.aux() which requires first checking if the value is nil and then getting the return type.
+set the aux tag to <tt class="docutils literal"><span class="pre">value</span></tt>.
+
+</dd>
+<a id="tag,Record,string"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#tag%2CRecord%2Cstring"><span class="Identifier">tag</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Operator">|</span> <span class="Identifier">float</span> <span class="Operator">|</span> <span class="Identifier">float32</span> <span class="Operator">|</span> <span class="Identifier">float64</span> <span class="Operator">|</span> <span class="Identifier">string</span> <span class="Operator">|</span> <span class="Identifier">char</span> <span class="Operator">|</span> <span class="Identifier">cstring</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">;</span> <span class="Identifier">itag</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="simpleoption.html#Option"><span class="Identifier">Option</span></a><span class="Other">[</span>
+    <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
+<dd>
+
+Get the aux tag from the record. Due to <tt class="docutils literal"><span class="pre">nim</span></tt> language limitations, this must be used as, e.g.: <tt class="docutils literal"><span class="pre">tag[int](rec, &quot;NM&quot;)</span></tt>. This returns an Option type that is either <tt class="docutils literal"><span class="pre">Some</span></tt> result or <tt class="docutils literal"><span class="pre">none</span></tt> if the tag does not exist or if it is not of the requested type.
 
 </dd>
 
@@ -1801,7 +1812,7 @@ returns true if the op consumes bases in the reference.
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small>Made with Nim. Generated: 2019-07-12 17:17:54 UTC</small>
+        <small>Made with Nim. Generated: 2019-07-15 16:48:10 UTC</small>
       </div>
     </div>
   </div>
