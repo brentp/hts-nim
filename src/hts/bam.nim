@@ -203,7 +203,10 @@ proc set_qname*(r: Record, qname: string) =
   r.b.core.l_extranul = l_extranul.uint8
   r.b.core.l_qname = l.uint8
 
-  copyMem(r.b.data.pointer, qname[0].unsafeAddr.pointer, qname.len)
+  # use loop instead of copyMem to avoid problems with older nim versions
+  for i in 0..qname.high:
+    (cast[CPtr[cchar]](r.b.data))[i] = qname[i]
+
   var tmp = cast[cstring](r.b.data)
   for i in 0..l_extranul:
     tmp[qname.len+i] = '\0'
