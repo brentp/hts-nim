@@ -65,7 +65,7 @@ if len(@(args["<nim_compiler_args>"])) > 0:
 if not args["--debug"]:
   if not added_dash:
     cmd &= " -- "
-  cmd &= " -d:danger"
+  cmd &= " -d:danger -d:release"
 
 echo cmd
 
