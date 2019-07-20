@@ -19,6 +19,7 @@ RUN apk add wget git xz bzip2 musl m4 autoconf tar xz-dev bzip2-dev \
 RUN cd / && \
     git clone -b v0.20.2 git://github.com/nim-lang/nim nim && \
     cd nim && sh ./build_all.sh && \
+    rm -rf csources && \
     echo 'PATH=/nim/bin:$PATH' >> ~/.bashrc && \
     echo 'PATH=/nim/bin:$PATH' >> ~/.bash_profile && \
     echo 'PATH=/nim/bin:$PATH' >> /etc/environment 
