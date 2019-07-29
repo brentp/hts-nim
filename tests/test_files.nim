@@ -14,3 +14,16 @@ suite "test files":
     expect OSError:
       for line in hts_lines("tests/sadfasdfasdfasdf"):
         discard
+
+
+  test "readLine":
+    var htf: HTSFile
+    htf.open("tests/test_files.nim")
+
+    var line = newStringOfCap(80)
+    check htf.readLine(line)
+    check line == "import hts/files"
+    check htf.readLine(line)
+    check line == ""
+    check htf.readLine(line)
+    check line == "import unittest"
