@@ -2,7 +2,7 @@ import ./private/hts_concat
 import ./bgzf
 
 type
-  CSI* = ref object of RootObj
+  CSI* = ref object
     tbx*: tbx_t
     chroms*: seq[string]
     subtract: int

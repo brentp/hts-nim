@@ -35,10 +35,11 @@ proc readLine*(h: var HTSFile, line: var string): bool {.inline.} =
   for i in 0..<n:
     line[i] = h.kstr.s[i]
 
-iterator hts_lines*(path:string): string {.inline.} =
+iterator hts_lines*(path:string, threads:int=1): string {.inline.} =
   ## yield lines from a file, it can be gzipped or regular file
   var h: HTSFile
   h.open(path, "r")
+  discard hts_set_threads(h.p, cint(threads))
 
   while hts_getline(h.p, cint(10), h.kstr.addr) >= 0:
     yield $h.kstr.s
