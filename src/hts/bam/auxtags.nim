@@ -1,6 +1,6 @@
 import ../simpleoption
 export simpleoption
-import strformat
+from strformat import `&`
 
 proc delete_tag*(r:Record, itag:string): bool {.inline.} =
   ## remove the tag from the record return a bool indicating success.
