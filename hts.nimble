@@ -8,7 +8,7 @@ license       = "MIT"
 
 # Dependencies
 
-requires "nim >= 0.18.0" 
+requires "nim >= 0.19.9"
 srcDir = "src"
 
 skipDirs = @["tests"]
