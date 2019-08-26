@@ -279,6 +279,13 @@ suite "vcf suite":
     global_variant.QUAL = 55
     check global_variant.QUAL == 55
 
+  test "set id":
+    check global_variant.ID == "."
+
+    global_variant.ID = "rs0123456789"
+
+    check global_variant.ID == "rs0123456789"
+    check global_variant.tostring.split('\t')[..2] == @["1", "10172", "rs0123456789"]
 
   test "new from string":
     var v:VCF
