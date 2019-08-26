@@ -687,6 +687,7 @@ void bcf_hdr_destroy(bcf_hdr_t *h);
 bcf1_t *bcf_dup(bcf1_t *src);
 void bcf_destroy(bcf1_t *v);
 int bcf_add_filter(const bcf_hdr_t *hdr, bcf1_t *line, int flt_id);
+int bcf_update_id(const bcf_hdr_t *hdr, bcf1_t *line, const char *id);
 int bcf_update_info(const bcf_hdr_t *hdr, bcf1_t *line, const char *key, const void *values, int n, int type);
 int bcf_update_alleles_str(const bcf_hdr_t *hdr, bcf1_t *line, char ***dst);
 

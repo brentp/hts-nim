@@ -703,7 +703,7 @@ proc ID*(v:Variant): cstring {.inline.} =
 
 proc `ID=`*(v:Variant, value: string) {.inline.} =
   ## Set the ID value, third column in the VCF spec.
-  v.c.d.id = value
+  doAssert(bcf_update_id(v.vcf.header.hdr, v.c, value) == 0)
 
 proc FILTER*(v:Variant): string {.inline.} =
   ## Return a string representation of the FILTER will be ';' delimited for multiple values
