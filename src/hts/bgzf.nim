@@ -1,6 +1,4 @@
 import ./private/hts_concat
-import strutils
-import os
 
 type
   BGZ* = ref object of RootObj

@@ -1,8 +1,6 @@
 import ../private/hts_concat
 import ../bgzf
 import ../csi
-import strutils
-import os
 
 type
   BGZI* = ref object of RootObj

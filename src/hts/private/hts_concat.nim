@@ -243,7 +243,7 @@ type
 ## ###########################
 
 type
-  INNER_C_UNION_hts_concat_212* {.bycopy.} = object {.union.}
+  INNER_C_UNION_hts_concat_212* {.bycopy, union.} = object
     bgzf*: ptr BGZF
     cram*: ptr cram_fd
     hfile*: ptr hFILE
@@ -536,7 +536,7 @@ template bam_cigar_gen*(l, o: untyped): untyped =
   ((l) shl BAM_CIGAR_SHIFT or (o))
 
 type
-  bam_pileup_cd* {.bycopy.} = object {.union.}
+  bam_pileup_cd* {.bycopy, union.} = object
     p*: pointer
     i*: int64
     f*: cdouble
@@ -653,7 +653,7 @@ const
 ##
 
 type
-  INNER_C_UNION_hts_concat_557* {.bycopy.} = object {.union.}
+  INNER_C_UNION_hts_concat_557* {.bycopy, union.} = object
     i*: int32                  ##  integer value
     f*: cfloat                 ##  float value
 

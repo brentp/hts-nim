@@ -1,5 +1,4 @@
 import ./private/hts_concat
-import ./bgzf
 
 type
   CSI* = ref object
