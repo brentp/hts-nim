@@ -703,7 +703,8 @@ proc ID*(v:Variant): cstring {.inline.} =
 
 proc `ID=`*(v:Variant, value: string) {.inline.} =
   ## Set the ID value, third column in the VCF spec.
-  doAssert(bcf_update_id(v.vcf.header.hdr, v.c, value) == 0)
+  doAssert(bcf_update_id(v.vcf.header.hdr, v.c, value) == 0,
+    &"[hts-nim/vcf] error setting variant id to: {value}")
 
 proc FILTER*(v:Variant): string {.inline.} =
   ## Return a string representation of the FILTER will be ';' delimited for multiple values
