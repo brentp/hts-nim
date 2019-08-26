@@ -824,6 +824,8 @@ proc bcf_dup*(src: ptr bcf1_t): ptr bcf1_t {.cdecl, importc: "bcf_dup", dynlib: 
 proc bcf_destroy*(v: ptr bcf1_t) {.cdecl, importc: "bcf_destroy", dynlib: libname.}
 proc bcf_add_filter*(hdr: ptr bcf_hdr_t; line: ptr bcf1_t; flt_id: cint): cint {.cdecl,
     importc: "bcf_add_filter", dynlib: libname.}
+proc bcf_update_id*(hdr: ptr bcf_hdr_t; line: ptr bcf1_t; id: cstring): cint {.cdecl,
+    importc: "bcf_update_id", dynlib: libname.}
 proc bcf_update_info*(hdr: ptr bcf_hdr_t; line: ptr bcf1_t; key: cstring;
                      values: pointer; n: cint; `type`: cint): cint {.cdecl,
     importc: "bcf_update_info", dynlib: libname.}

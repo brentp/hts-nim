@@ -100,6 +100,18 @@ for rec in v.query("1:15600-18250"):
 
 ```
 
+## TSV files
+
+```nim
+import hts
+
+var b: BGZI = ropen_bgzi("ti.txt.gz")  # Requires a CSI index: ti.txt.gz.csi
+
+for reg in b.query("aaa", 1, 5):
+  echo reg
+```
+
+
 ## Setup / Installation
 
 `hts-nim` requires that [htslib](https://github.com/samtools/htslib) is installed and the shared library is available
