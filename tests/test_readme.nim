@@ -19,7 +19,11 @@ proc saveNimCode(codeLines: seq[string]): string =
   result = getRandomNimname()
   var output = open(result, fmWrite)
   for line in codeLines:
-    output.writeLine(line)
+    if line == "import hts":
+      # Use the current hts package, not the installed one
+      output.writeLine(line.replace("hts", "src/hts"))
+    else:
+      output.writeLine(line)
   output.close()
 
 proc compileRun(filename: string): bool =
