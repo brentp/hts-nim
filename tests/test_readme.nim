@@ -2,6 +2,7 @@ import os, osproc
 import random
 import strformat
 import strutils
+import terminal
 import unittest
 
 
@@ -13,6 +14,29 @@ proc getRandomNimname(length: int = 8): string =
     result.add(sample(IdentChars))
   result.add(".nim")
 
+proc saveNimCode(codeLines: seq[string]): string =
+  # Write codeLines to a temporary file and return the filename
+  result = getRandomNimname()
+  var output = open(result, fmWrite)
+  for line in codeLines:
+    output.writeLine(line)
+  output.close()
+
+proc compileRun(filename: string): bool =
+  ## Compile and Run
+  result = true
+  let commands = @[("Compile", &"nim c -d:release {filename}"),
+                   ("Run", &"./{filename.changeFileExt(\"\")}")]
+
+  for command in commands:
+    var (outp, errC) = execCmdEx(command[1])
+    if errC > 0:
+      stdout.styledWrite(fgRed, styleBright, "  [FAILED] ")
+      echo &"{command[0]} Readme sample"
+      echo outp
+      result = false
+
+
 suite "Ensure the samples included in Readme.md works as intended":
   test "Code extraction and running.":
     var readme: File = open("README.md")
@@ -20,30 +44,29 @@ suite "Ensure the samples included in Readme.md works as intended":
 
     var codeSample: seq[string]
     var sampleInit: bool = false
+    var readmeLines: int
 
     for line in readme.lines:
+      readmeLines.inc
       if sampleInit and not line.startsWith("```"):
         codeSample.add(line)
+
       if line.startsWith("```") and sampleInit:
         sampleInit = false
 
-        # Write and test
-        var testFilename = getRandomNimname()
-        var output = open(testFilename, fmWrite)
-        for line in codeSample:
-          output.writeLine(line)
-        output.close()
+        var testFilename = saveNimCode(codeSample)
 
-        var (outp, errC) = execCmdEx(&"nim c -d:release {testFilename}")
-        doassert(errC == 0,
-          &"Failed to compile Readme sample: {testFilename}\n{outp}")
-        (outp, errC) = execCmdEx(&"./{testFilename.changeFileExt(\"\")}")
-        doassert(errC == 0, &"Failed to execute Readme sample: {outp}")
-
-        # Clear code sample and remove temp files
-        codeSample = @[]
-        removeFile(testFilename)
-        removeFile(testFilename.changeFileExt(""))
+        try:
+          doAssert compileRun(testFilename)
+        except AssertionError:
+          echo "Error: Readme.md sample code raised the above error between ",
+            &"lines {readmeLines - codeSample.len} and {readmeLines}."
+          raise newException(AssertionError, getCurrentExceptionMsg())
+        finally:
+          # Clear code sample and remove temp files
+          codeSample = @[]
+          removeFile(testFilename)
+          removeFile(testFilename.changeFileExt(""))
 
       if line.startsWith("```nim"):
         sampleInit = true
