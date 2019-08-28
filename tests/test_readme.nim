@@ -47,30 +47,31 @@ suite "Ensure the samples included in Readme.md works as intended":
     defer: readme.close()
 
     var codeSample: seq[string]
-    var sampleInit: bool = false
+    var inSnippet: bool = false
     var readmeLines: int
 
     for line in readme.lines:
       readmeLines.inc
-      if sampleInit and not line.startsWith("```"):
-        codeSample.add(line)
 
-      if line.startsWith("```") and sampleInit:
-        sampleInit = false
+      if line.startsWith("```nim"):  # Starting a snippet code
+        inSnippet = true
+        continue
 
-        var testFilename = saveNimCode(codeSample)
+      if inSnippet:
+        if not line.startsWith("```"):  # Save every line of the snippet
+          codeSample.add(line)
+        else:  # The end of the snippet in reached
+          inSnippet = false
 
-        try:
-          doAssert compileRun(testFilename)
-        except AssertionError:
-          echo "Error: Readme.md sample code raised the above error between ",
-            &"lines {readmeLines - codeSample.len} and {readmeLines}."
-          raise newException(AssertionError, getCurrentExceptionMsg())
-        finally:
-          # Clear code sample and remove temp files
-          codeSample = @[]
-          removeFile(testFilename)
-          removeFile(testFilename.changeFileExt(""))
-
-      if line.startsWith("```nim"):
-        sampleInit = true
+          var testFilename = saveNimCode(codeSample)
+          try:
+            doAssert compileRun(testFilename)
+          except AssertionError:
+            echo "Error: Readme.md sample code raised the above error between ",
+              &"lines {readmeLines - codeSample.len} and {readmeLines}."
+            raise newException(AssertionError, getCurrentExceptionMsg())
+          finally:
+            # Clear code sample and remove temp files
+            codeSample = @[]
+            removeFile(testFilename)
+            removeFile(testFilename.changeFileExt(""))

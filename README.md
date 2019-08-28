@@ -75,9 +75,9 @@ for rec in v:
   var info = rec.info
   # accessing stuff from the INFO field is meant to be as fast as possible, allowing
   # the user to re-use memory as needed.
-  discard info.get("CSQ", csq) # string
-  discard info.get("AC", acs) # ints
-  discard info.get("AF", afs) # floats
+  doAssert info.get("CSQ", csq) == Status.OK # string
+  doAssert info.get("AC", acs) == Status.OK # ints
+  doAssert info.get("AF", afs) == Status.OK # floats
   echo acs, afs, csq, info.has_flag("IN_EXAC")
 
   # accessing format fields is similar
