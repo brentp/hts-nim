@@ -29,8 +29,9 @@ proc saveNimCode(codeLines: seq[string]): string =
 proc compileRun(filename: string): bool =
   ## Compile and Run
   result = true
-  let commands = @[("Compile", &"nim c -d:release {filename}"),
-                   ("Run", &"./{filename.changeFileExt(\"\")}")]
+  let commands = @[
+    ("Compile", &"nim c -d:release {filename}"),
+    ("Run", &"{CurDir}{DirSep}{filename.changeFileExt(ExeExt)}")]
 
   for command in commands:
     var (outp, errC) = execCmdEx(command[1])
@@ -66,12 +67,15 @@ suite "Ensure the samples included in Readme.md works as intended":
           var testFilename = saveNimCode(codeSample)
           try:
             doAssert compileRun(testFilename)
+            echo "  Success: Readme.md sample code between ",
+              &"lines {readmeLines - codeSample.len} and {readmeLines} ",
+              "seems OK."
           except AssertionError:
-            echo "Error: Readme.md sample code raised the above error between ",
+            echo "  Error: Readme.md sample code raised the above error between ",
               &"lines {readmeLines - codeSample.len} and {readmeLines}."
             raise newException(AssertionError, getCurrentExceptionMsg())
           finally:
             # Clear code sample and remove temp files
             codeSample = @[]
             removeFile(testFilename)
-            removeFile(testFilename.changeFileExt(""))
+            removeFile(testFilename.changeFileExt(ExeExt))
