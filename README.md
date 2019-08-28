@@ -34,7 +34,7 @@ import hts
 
 # open a bam/cram and look for the index.
 var b:Bam
-open(b, "tests/HG02002.cramam", index=true, fai="/data/human/g1k_v37_decoy.fa")
+open(b, "tests/HG02002.bam", index=true, fai="/data/human/g1k_v37_decoy.fa")
 
 for record in b:
   if record.mapping_quality > 10u:
@@ -75,14 +75,14 @@ for rec in v:
   var info = rec.info
   # accessing stuff from the INFO field is meant to be as fast as possible, allowing
   # the user to re-use memory as needed.
-  info.get("CSQ", csq) # string
-  info.get("AC", acs) # ints
-  info.get("AF", afs) # floats
+  doAssert info.get("CSQ", csq) == Status.OK # string
+  doAssert info.get("AC", acs) == Status.OK # ints
+  doAssert info.get("AF", afs) == Status.OK # floats
   echo acs, afs, csq, info.has_flag("IN_EXAC")
 
   # accessing format fields is similar
   var dps = new_seq[int32](len(v.samples))
-  doAssert rec.format.ints("DP", dps) == Status.OK
+  doAssert rec.format.get("DP", dps) == Status.OK
 
 # open a VCF for writing
 var wtr:VCF
@@ -95,8 +95,8 @@ for rec in v.query("1:15600-18250"):
   echo rec.CHROM, ":", $rec.POS
   # adjust some values in the INFO
   var val = 22.3
-  check rec.info.set("VQSLOD", val) == Status.OK
-  doAssert(wtr.write_variant(rec))
+  doAssert rec.info.set("VQSLOD", val) == Status.OK
+  doAssert wtr.write_variant(rec)
 
 ```
 
