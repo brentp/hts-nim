@@ -1,3 +1,8 @@
+v0.2.21 (dev)
+=======
++ hts/vcf allow setting id.
++ hts/vcf flush stdout on close.
+
 v0.2.20
 =======
 + hts/files (iterate over bgzipped or text files identically)

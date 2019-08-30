@@ -416,6 +416,9 @@ proc newVariant*(): Variant =
   new(result, destroy_variant)
   result.c = bcf_init()
 
+proc c_fflush(f: File): cint {.
+  importc: "fflush", header: "<stdio.h>", discardable.}
+
 proc destroy_vcf(v:VCF) =
   bcf_hdr_destroy(v.header.hdr)
   if v.tidx != nil:
@@ -434,6 +437,8 @@ proc close*(v:VCF) =
         when defined(debug):
             stderr.write_line "[hts-nim] error closing vcf"
     v.hts = nil
+  if v.fname in ["/dev/stdout", "-"]:
+    c_fflush(stdout)
 
 
 proc copy_header*(v: var VCF, hdr: Header) =
