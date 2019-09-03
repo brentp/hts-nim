@@ -345,7 +345,7 @@ proc open*(bam: var Bam, path: cstring, threads: int=0, mode:string="r", fai: cs
   if mode[0] == 'r' and 0 != threads and 0 != hts_set_threads(hts, cint(threads)):
       raise newException(ValueError, "error setting number of threads")
 
-  if mode[0] == 'r' and bam.hts.format.format != hts_concat.sam and hts_check_EOF(hts) != 1:
+  if mode[0] == 'r' and hts_check_EOF(hts) < 1:
     raise newException(ValueError, "invalid bgzf file")
 
   if mode[0] == 'w':

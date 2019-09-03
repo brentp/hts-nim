@@ -2,6 +2,7 @@ v0.2.21 (dev)
 =======
 + hts/vcf allow setting id.
 + hts/vcf flush stdout on close.
++ hts/bam correct check for EOF (#48)
 
 v0.2.20
 =======
