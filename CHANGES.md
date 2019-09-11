@@ -1,4 +1,4 @@
-v0.2.21 (dev)
+v0.2.21
 =======
 + hts/vcf allow setting id.
 + hts/vcf flush stdout on close.
