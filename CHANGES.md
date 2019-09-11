@@ -3,6 +3,7 @@ v0.2.21 (dev)
 + hts/vcf allow setting id.
 + hts/vcf flush stdout on close.
 + hts/bam correct check for EOF (#48)
++ hts/bam better error message for error in interation
 
 v0.2.20
 =======

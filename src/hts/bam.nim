@@ -239,7 +239,7 @@ iterator query*(bam: Bam, chrom:string, start:int=0, stop:int=0): Record =
       slen = sam_itr_next(bam.hts, qiter, bam.rec.b)
     hts_itr_destroy(qiter)
     if slen < -1:
-      stderr.write_line("[hts-nim] error in bam.query:" & $slen)
+      stderr.write_line(&"[hts-nim] error:{slen} in bam.query for tid:{chrom} {start}..{stop}")
 
 
 iterator query*(bam: Bam, tid:int, start:int=0, stop:int=(-1)): Record =
@@ -256,7 +256,7 @@ iterator query*(bam: Bam, tid:int, start:int=0, stop:int=(-1)): Record =
       slen = sam_itr_next(bam.hts, qiter, bam.rec.b)
     hts_itr_destroy(qiter)
     if slen < -1:
-      stderr.write_line("[hts-nim] error in bam.queryi:" & $slen)
+      stderr.write_line(&"[hts-nim] error:{slen} in bam.queryi for tid:{tid} {start}..{stop}")
 
 proc `$`*(r: Record): string =
     return format("Record($1:$2-$3):$4", [r.chrom, intToStr(r.start), intToStr(r.stop), r.qname])
