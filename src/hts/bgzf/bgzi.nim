@@ -3,7 +3,7 @@ import ../bgzf
 import ../csi
 
 type
-  BGZI* = ref object of RootObj
+  BGZI* = ref object
     bgz*: BGZ
     csi*: CSI
     path: string
@@ -58,16 +58,15 @@ iterator query*(bi: BGZI, chrom: string, start:int, stop:int): string {.inline.}
 proc write_interval*(b: BGZI, line: string, chrom: string, start: int, stop: int): int {.inline.} =
   if b.last_start < 0:
     b.csi.chroms.add(chrom)
-  if chrom != b.csi.chroms[len(b.csi.chroms)-1]:
+  if chrom != b.csi.chroms[b.csi.chroms.high]:
     b.csi.chroms.add(chrom)
   elif start < b.last_start:
     stderr.write_line("[hts-nim] starts out of order for:", b.path, " in:", line)
   b.last_start = start
-  var r = b.bgz.write_line(line)
+  result = b.bgz.write_line(line)
   if b.csi.add(len(b.csi.chroms) - 1, start, stop, b.bgz.tell()) < 0:
     stderr.write_line("[hts-nim] error adding to csi index")
     quit(1)
-  return r
 
 proc close*(b: BGZI): int =
    discard b.bgz.flush()
