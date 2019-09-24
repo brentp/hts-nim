@@ -16,6 +16,7 @@ proc open*(csi: var CSI, base_path: string): bool =
   if ptbx == nil:
     return false
   csi.tbx = ptbx[]
+  #free(ptbx)
   var n: cint
   var names = tbx_seqnames(csi.tbx.addr, n.addr);
   csi.chroms = new_seq[string](int(n))
@@ -63,9 +64,12 @@ proc idx_set_meta*(idx: ptr hts_idx_t; tc: ptr tbx_conf_t; chroms: seq[string]):
   var l = 0
   for chrom in chroms:
     l += chrom.len + 1
+  # https://github.com/samtools/htslib/issues/936
+  # can remove this after that is fixed
+  l += 1
   x[6] = uint32(l)
   var meta = new_seq[uint8](28 + l)
-  copyMem(cast[pointer](meta[0].addr), cast[pointer](x[0].addr), 28)
+  copyMem(meta[0].addr, x[0].addr, 28)
 
   var offset = 28
   # copy each chrom, char by char into the meta array and leave the 0 (NULL) at the end of each.
@@ -74,8 +78,9 @@ proc idx_set_meta*(idx: ptr hts_idx_t; tc: ptr tbx_conf_t; chroms: seq[string]):
       meta[offset] = uint8(c)
       offset += 1
     offset += 1
+  #doAssert offset == len(meta)
   var do_copy = cint(1)
-  return int(hts_idx_set_meta(idx, uint32(len(meta)), cast[ptr uint8](meta[0].addr), do_copy))
+  return int(hts_idx_set_meta(idx, uint32(len(meta)), meta[0].addr, do_copy))
 
 proc set_meta*(c: CSI): int =
   return idx_set_meta(c.tbx.idx, c.tbx.conf.addr, c.chroms)
