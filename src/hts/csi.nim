@@ -5,6 +5,7 @@ type
     tbx*: tbx_t
     chroms*: seq[string]
     subtract: int
+    meta: seq[uint8] # see: https://github.com/samtools/htslib/issues/936
 
 proc finalize_csi*(c: CSI) =
   if c != nil and c.tbx.idx != nil:
@@ -22,6 +23,9 @@ proc open*(csi: var CSI, base_path: string): bool =
   csi.chroms = new_seq[string](int(n))
   for i in 0..<int(n):
     csi.chroms[i] = $names[i]
+  if csi.chroms.len > 0:
+    if csi.chroms[csi.chroms.high] == "":
+      csi.chroms.setLen(csi.chroms.high)
   free(names)
   return true
 
@@ -53,7 +57,7 @@ proc finish*(c: CSI, offset: uint64) =
 proc save*(c: CSI, path: string) =
   hts_idx_save(c.tbx.idx, cstring(path), HTS_FMT_CSI)
 
-proc idx_set_meta*(idx: ptr hts_idx_t; tc: ptr tbx_conf_t; chroms: seq[string]): int =
+proc idx_set_meta*(csi:var CSI, idx: ptr hts_idx_t; tc: ptr tbx_conf_t; chroms: seq[string]): int =
   var x: array[7, uint32]
   x[0] = uint32(tc.preset)
   x[1] = uint32(tc.sc)
@@ -64,23 +68,21 @@ proc idx_set_meta*(idx: ptr hts_idx_t; tc: ptr tbx_conf_t; chroms: seq[string]):
   var l = 0
   for chrom in chroms:
     l += chrom.len + 1
-  # https://github.com/samtools/htslib/issues/936
-  # can remove this after that is fixed
-  l += 1
   x[6] = uint32(l)
-  var meta = new_seq[uint8](28 + l)
-  copyMem(meta[0].addr, x[0].addr, 28)
+  csi.meta = new_seq[uint8](28 + l)
+  copyMem(csi.meta[0].addr, x[0].addr, 28)
 
   var offset = 28
   # copy each chrom, char by char into the meta array and leave the 0 (NULL) at the end of each.
   for chrom in chroms:
     for c in chrom:
-      meta[offset] = uint8(c)
+      csi.meta[offset] = uint8(c)
       offset += 1
     offset += 1
-  #doAssert offset == len(meta)
-  var do_copy = cint(1)
-  return int(hts_idx_set_meta(idx, uint32(len(meta)), meta[0].addr, do_copy))
+  doAssert offset == len(csi.meta)
+  # https://github.com/samtools/htslib/issues/936
+  var do_copy = cint(0)
+  return int(hts_idx_set_meta(idx, uint32(len(csi.meta)), csi.meta[0].addr, do_copy))
 
-proc set_meta*(c: CSI): int =
-  return idx_set_meta(c.tbx.idx, c.tbx.conf.addr, c.chroms)
+proc set_meta*(c: var CSI): int =
+  return c.idx_set_meta(c.tbx.idx, c.tbx.conf.addr, c.chroms)

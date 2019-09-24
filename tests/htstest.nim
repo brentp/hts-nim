@@ -41,5 +41,6 @@ suite "flag hts-suite":
 
     check b.set_fields(SamField.SAM_POS, SamField.SAM_RNEXT) == 0
     check b.set_option(FormatOption.CRAM_OPT_DECODE_MD, 0) == 0
+    b.close
 
 
