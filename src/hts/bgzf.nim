@@ -1,14 +1,14 @@
 import ./private/hts_concat
 
 type
-  BGZ* = ref object of RootObj
+  BGZ* = ref object
     cptr*: ptr BGZF
 
-proc close*(b: BGZ): int =
+proc close*(b: BGZ): int {.discardable.} =
   ## close the filehandle
-  if b.cptr != nil:
+  if b != nil and b.cptr != nil:
     result = int(bgzf_close(b.cptr))
-  b.cptr = nil
+    b.cptr = nil
 
 proc write*(b: BGZ, line: string): int64 {.inline.} =
   ## write a string to the file
@@ -27,7 +27,7 @@ proc set_threads*(b: BGZ, threads: int) =
   ## set the number of de/compression threads
   discard bgzf_mt(b.cptr, cint(threads), 128)
 
-proc read_line*(b: BGZ, line:var ptr kstring_t): int {.inline.} =
+proc read_line*(b: BGZ, line:ptr kstring_t): int {.inline.} =
   ## read a line into the kstring t.
   bgzf_getline(b.cptr, cint(10), line)
 
@@ -51,21 +51,16 @@ proc open*(b: var BGZ, path: string, mode: string) =
 
 iterator items*(b: BGZ): string =
   ## iterates over the file line by line
-  var 
-    kstr: kstring_t
+  var
+    kstr = kstring_t(l:0, m:0, s:nil)
     r: int
 
-  kstr.l = 0
-  kstr.m = 0
-  kstr.s = nil
-  var p = kstr.addr
-
-  r = b.read_line(p)
+  r = b.read_line(kstr.addr)
   while r >= 0:
     yield $kstr.s
-    r = b.read_line(p)
-  
+    r = b.read_line(kstr.addr)
+
   free(kstr.s)
-  
+
   if r <= -2:
     raise newException(IOError, "error while reading bgzip file")

@@ -153,10 +153,6 @@ proc stop*(r: Record): int {.inline.} =
   ## `stop` returns end position of the read.
   return bam_endpos(r.b)
 
-proc copy*(r: Record): Record =
-  ## `copy` makes a copy of the record.
-  return Record(b: bam_dup1(r.b), hdr: r.hdr)
-
 proc qname*(r: Record): string {. inline .} =
   ## `qname` returns the query name.
   return $(bam_get_qname(r.b))
@@ -295,6 +291,12 @@ proc finalize_bam(bam: Bam) =
 
 proc finalize_record(rec: Record) =
   bam_destroy1(rec.b)
+
+proc copy*(r: Record): Record {.noInit.} =
+  ## `copy` makes a copy of the record.
+  new(result, finalize_record)
+  result.b = bam_dup1(r.b)
+  result.hdr = r.hdr
 
 proc write_header*(bam: var Bam, header: Header) =
   ## write the bam the the bam stream. useful when a bam is opened in write mode.
