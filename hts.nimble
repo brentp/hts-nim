@@ -17,7 +17,7 @@ skipFiles = @["teloage.nim"]
 import ospaths,strutils
 
 task test, "run the tests":
-  exec "nim c --lineDir:on --debuginfo -r tests/all"
+  exec "nim c  -d:useSysAssert -d:useGcAssert --lineDir:on --debuginfo -r tests/all"
 
 #before test:
 #  exec "c2nim src/hts/private/hts_concat.h"
