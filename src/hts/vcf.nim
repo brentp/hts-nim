@@ -199,7 +199,7 @@ proc toSeq[T](data: var seq[T], p:pointer, n:int) {.inline.} =
   if data.len != n:
     data.set_len(n)
   if n == 0: return
-  copyMem(data[0].addr, p, (n * sizeof(T).csize))
+  copyMem(data[0].addr, p, csize(n * sizeof(T)))
 
 proc bcf_hdr_id2type(hdr:ptr bcf_hdr_t, htype:int, int_id:int): int {.inline.}=
   # translation of htslib macro.
@@ -403,7 +403,7 @@ proc destroy_variant(v:Variant) =
     free(v.p)
 
 proc from_string*(v: var Variant, h: Header, s:var string) =
-  var str = kstring_t(s:s.cstring, l:s.len, m:s.len)
+  var str = kstring_t(s:s.cstring, l:s.len.csize, m:s.len.csize)
   if v == nil:
     new(v, destroy_variant)
   if v.c == nil:

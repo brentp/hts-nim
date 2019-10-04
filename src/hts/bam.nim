@@ -67,7 +67,7 @@ proc from_string*(r:Record, record_string:string) =
       raise newException(ValueError, "must create record with NewRecord before calling from_string")
 
 
-    var kstr = kstring_t(s:record_string.cstring, m:record_string.len, l:record_string.len)
+    var kstr = kstring_t(s:record_string.cstring, m:record_string.len.csize, l:record_string.len.csize)
     var ret = sam_parse1(kstr.addr, r.hdr.hdr, r.b)
     if ret != 0:
       raise newException(ValueError, "error:" & $ret & " in from_string parsing record: " & record_string)

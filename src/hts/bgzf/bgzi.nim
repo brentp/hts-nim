@@ -51,7 +51,7 @@ iterator query*(bi: BGZI, chrom: string, start:int, stop:int): string {.inline.}
     fastSubStr(outstr, kstr.s, 0, int(kstr.l))
     yield outstr
   hts_itr_destroy(itr)
-  assert kstr.l >= 0
+  assert int(kstr.l) >= 0
   free(kstr.s)
   assert fn.addr != nil
 
