@@ -763,7 +763,7 @@ proc copy*(g: Genotypes): Genotypes =
   return Genotypes(gts:gts, ploidy:g.ploidy)
 
 proc phased*(a:Allele): bool {.inline.} =
-  ## is the allele pahsed.
+  ## is the allele phased.
   return (cast[int32](a) and 1) == 1
 
 proc value*(a:Allele): int {.inline.} =
@@ -809,7 +809,7 @@ proc alts*(g:Genotype): int8 {.inline.} =
   if likely(g.len == 2):
     var g0 = g[0].value
     var g1 = g[1].value
-    if g0 >= 0 and g1 >= 0:
+    if likely(g0 >= 0 and g1 >= 0):
       return int8(g0 + g1)
     # only unknown if both are unknown
     if (g0 == -1 and g1 == -1) or g1 < -1:
