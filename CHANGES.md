@@ -1,3 +1,8 @@
+v0.2.22
+=======
++ changes for latest nim
++ fix several memory leaks in rarely-used functions
+
 v0.2.21
 =======
 + hts/vcf allow setting id.
