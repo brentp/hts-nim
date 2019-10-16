@@ -1,3 +1,7 @@
+v0.2.23
+=======
++ hts/bam fix from_string for bam record and header. See quinlan-lab/STRling#10
+
 v0.2.22
 =======
 + changes for latest nim
