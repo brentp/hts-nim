@@ -185,6 +185,9 @@ proc bgzf_close*(fp: ptr BGZF): cint {.cdecl, importc: "bgzf_close", dynlib: lib
 proc bgzf_hopen*(fp: ptr hFILE; mode: cstring): ptr BGZF {.cdecl, importc: "bgzf_hopen",
     dynlib: libname.}
 proc bgzf_flush*(fp: ptr BGZF): cint {.cdecl, importc: "bgzf_flush", dynlib: libname.}
+proc hopen*(filename: cstring; mode: cstring): ptr hFILE {.varargs, cdecl,
+    importc: "hopen", dynlib: libname.}
+proc hclose*(fp: ptr hFILE): cint {.cdecl, importc: "hclose", dynlib: libname.}
 ## *
 ##  Write _length_ bytes from _data_ to the file.  If no I/O errors occur,
 ##  the complete _length_ bytes will be written (or queued for writing).
@@ -225,14 +228,14 @@ type
 
 
 type
-  INNER_C_STRUCT_hts_concat_193* {.bycopy.} = object
+  INNER_C_STRUCT_hts_concat_197* {.bycopy.} = object
     major*: cshort
     minor*: cshort
 
   htsFormat* {.bycopy.} = object
     category*: htsFormatCategory
     format*: htsExactFormat
-    version*: INNER_C_STRUCT_hts_concat_193
+    version*: INNER_C_STRUCT_hts_concat_197
     compression*: htsCompression
     compression_level*: cshort ##  currently unused
     specific*: pointer         ##  format specific options; see struct hts_opt.
@@ -243,7 +246,7 @@ type
 ## ###########################
 
 type
-  INNER_C_UNION_hts_concat_212* {.bycopy, union.} = object
+  INNER_C_UNION_hts_concat_216* {.bycopy.} = object {.union.}
     bgzf*: ptr BGZF
     cram*: ptr cram_fd
     hfile*: ptr hFILE
@@ -263,7 +266,7 @@ type
     line*: kstring_t
     fn*: cstring
     fn_aux*: cstring
-    fp*: INNER_C_UNION_hts_concat_212
+    fp*: INNER_C_UNION_hts_concat_216
     format*: htsFormat
 
 
@@ -536,7 +539,7 @@ template bam_cigar_gen*(l, o: untyped): untyped =
   ((l) shl BAM_CIGAR_SHIFT or (o))
 
 type
-  bam_pileup_cd* {.bycopy, union.} = object
+  bam_pileup_cd* {.bycopy.} = object {.union.}
     p*: pointer
     i*: int64
     f*: cdouble
@@ -653,7 +656,7 @@ const
 ##
 
 type
-  INNER_C_UNION_hts_concat_557* {.bycopy, union.} = object
+  INNER_C_UNION_hts_concat_562* {.bycopy.} = object {.union.}
     i*: int32                  ##  integer value
     f*: cfloat                 ##  float value
 
@@ -683,7 +686,7 @@ type
     key*: cint                 ##  key: numeric tag id, the corresponding string is bcf_hdr_t::id[BCF_DT_ID][$key].key
     `type`*: cint
     len*: cint                 ##  type: one of BCF_BT_* types; len: vector length, 1 for scalars
-    v1*: INNER_C_UNION_hts_concat_557 ##  only set if $len==1; for easier access
+    v1*: INNER_C_UNION_hts_concat_562 ##  only set if $len==1; for easier access
     vptr*: ptr uint8            ##  pointer to data array in bcf1_t->shared.s, excluding the size+type and tag id bytes
     vptr_len*: uint32          ##  length of the vptr block or, when set, of the vptr_mod block, excluding offset
     vptr_off* {.bitsize: 31.}: uint32 ##  vptr offset, i.e., the size of the INFO key plus size+type bytes

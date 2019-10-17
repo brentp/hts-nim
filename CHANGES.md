@@ -1,6 +1,7 @@
 v0.2.23
 =======
 + hts/bam fix from_string for bam record and header. See quinlan-lab/STRling#10
++ hts/files add fname.file_type to get the file type given a path
 
 v0.2.22
 =======

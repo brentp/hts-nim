@@ -147,6 +147,10 @@ int bgzf_close(BGZF *fp);
 BGZF* bgzf_hopen(struct hFILE *fp, const char *mode);
 int bgzf_flush(BGZF *fp);
 
+hFILE *hopen(const char *filename, const char *mode, ...);
+int hclose(hFILE *fp);
+
+
     /**
      * Write _length_ bytes from _data_ to the file.  If no I/O errors occur,
      * the complete _length_ bytes will be written (or queued for writing).
@@ -398,6 +402,7 @@ hts_itr_t *sam_itr_queryi(const hts_idx_t *idx, int tid, int beg, int end);
 
 int hts_detect_format(struct hFILE *fp, htsFormat *fmt);
 char *hts_format_description(const htsFormat *format);
+
 
 
 #define sam_itr_next(htsfp, itr, r) hts_itr_next((htsfp)->fp.bgzf, (itr), (r), (htsfp))
