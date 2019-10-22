@@ -2,7 +2,7 @@ FROM alpine:3.10
 
 ENV CFLAGS="-fPIC -O3"
 
-RUN apk add wget git xz bzip2 musl m4 autoconf tar xz-dev bzip2-dev build-base libpthread-stubs # gcc abuild binutils binutils-doc gcc-doc
+RUN apk add wget git xz bzip2 musl m4 autoconf tar xz-dev bzip2-dev build-base libpthread-stubs libzip-dev
 
 RUN mkdir -p /usr/local/include && \
     git clone --depth 1 https://github.com/ebiggers/libdeflate.git && \
