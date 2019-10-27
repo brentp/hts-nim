@@ -445,6 +445,10 @@ proc bcf_hdr_id2name(hdr: ptr bcf_hdr_t, rid: cint): cstring {.inline.} =
   var v = cast[CPtr[bcf_idpair_t]](hdr.id[1])
   return v[rid.int].key
 
+let bcf_hdr_id2namep = proc(hdr: pointer, rid: cint): cstring {.cdecl.} =
+  ## for looking up contigs
+  result = bcf_hdr_id2name(cast[ptr bcf_hdr_t](hdr), rid)
+
 proc write_header*(v: VCF): bool =
   ## write a the header to the file (must have been opened in write mode) and return a bool for success.
   return bcf_hdr_write(v.hts, v.header.hdr) == 0
@@ -577,13 +581,52 @@ iterator items*(v:VCF): Variant =
     stderr.write_line "last read variant:", variant.tostring()
     quit(2)
 
+
+type Contig* = object
+  ## Contig is a chromosome+length from the VCF header
+  ## if the length is not found, it is set to -1
+  name*: string
+  length*: int64
+
+proc `$`*(c:Contig): string =
+  return &"Contig(name:\"{c.name}\", length:{c.length}'i64)"
+
 proc load_index*(v: VCF, path: string) =
   ## load the index at the given path (remote or local).
+  if v.bidx != nil or v.tidx != nil:
+    return
   v.bidx = hts_idx_load2(v.fname, path)
   if v.bidx == nil:
     v.tidx = tbx_index_load2(v.fname, path)
   if v.bidx == nil and v.tidx == nil:
     raise newException(OSError, "unable to load index at:" & path)
+
+proc contigs*(v:VCF): seq[Contig] =
+  var n:cint
+  var cnames = bcf_hdr_seqnames(v.header.hdr, n.addr)
+  if n > 0:
+    result.setLen(n.int)
+    for i in 0..<n:
+      result[i].name = $cnames[i]
+      result[i].length = -1
+    free(cnames)
+  else:
+    try:
+       v.load_index("")
+    except OSError:
+      raise newException(OSError, "hts-nim/vcf: unable to find contigs in header or index")
+    if v.bidx != nil:
+      var f:hts_id2name_f = bcf_hdr_id2namep
+      cnames = hts_idx_seqnames(v.bidx, n.addr, f, v.header.hdr)
+    else:
+      cnames = tbx_seqnames(v.tidx, n.addr)
+    if n > 0:
+      result.setLen(n.int)
+      for i in 0..<n:
+        result[i].name = $cnames[i]
+        result[i].length = -1
+      free(cnames)
+
 
 iterator vquery(v:VCF, region:string): Variant =
   ## internal iterator for VCF regions called from query()

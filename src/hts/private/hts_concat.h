@@ -258,7 +258,6 @@ hts_itr_t *hts_itr_query(const hts_idx_t *idx, int tid, int beg, int stop, hts_r
 void hts_itr_destroy(hts_itr_t *iter);
 
 int hts_itr_next(BGZF *fp, hts_itr_t *iter, void *r, void *data);
-const char **hts_idx_seqnames(const hts_idx_t *idx, int *n, hts_id2name_f getid, void *hdr);
 
 typedef hts_itr_t *hts_itr_query_func(const hts_idx_t *idx, int tid, int beg, int end, hts_readrec_func *readrec);
 typedef int (*hts_name2id_f)(void*, const char*);
@@ -705,6 +704,9 @@ int bcf_get_format_string(const bcf_hdr_t *hdr, bcf1_t *line, const char *tag, c
 //typedef htsFile vcfFile;
 int bcf_hdr_append(bcf_hdr_t *h, const char *line);
 int bcf_hdr_sync(bcf_hdr_t *h);
+const char **bcf_hdr_seqnames(const bcf_hdr_t *h, int *nseqs);
+
+
 
 int bcf_update_format_string(const bcf_hdr_t *hdr, bcf1_t *line, const char *key, const char **values, int n);
 int bcf_update_format(const bcf_hdr_t *hdr, bcf1_t *line, const char *key, const void *values, int n, int type);
@@ -715,6 +717,9 @@ int vcf_format(const bcf_hdr_t *h, const bcf1_t *v, kstring_t *s);
 
 hts_idx_t *bcf_index_load(char *fn);
 #define bcf_itr_queryi(idx, tid, beg, end) hts_itr_query((idx), (tid), (beg), (end), bcf_readrec)
+
+const char **hts_idx_seqnames(const hts_idx_t *idx, int *n, hts_id2name_f getid, void *hdr); // free only the array, not the values
+
 
 int bcf_itr_next(htsFile *, hts_itr_t* iter, bcf1_t*);
 

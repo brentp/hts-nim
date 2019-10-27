@@ -336,6 +336,13 @@ suite "genotypes suite":
       check a[12] == -1
       check a[13] == 0
 
+  test "contig names":
+    var v:VCF
+    check open(v, "tests/csq-bug.vcf.gz")
+    var ctgs = v.contigs
+    for i, ctg in ctgs:
+      if i > 21: break
+      check ctg.name == $(i + 1)
 
 suite "header record":
   test "info test":
