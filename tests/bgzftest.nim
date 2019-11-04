@@ -1,5 +1,4 @@
 import unittest, hts
-import os
 
 suite "bgzf-suite":
   test "test-write":

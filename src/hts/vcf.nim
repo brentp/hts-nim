@@ -591,9 +591,9 @@ type Contig* = object
 proc `$`*(c:Contig): string =
   return &"Contig(name:\"{c.name}\", length:{c.length}'i64)"
 
-proc load_index*(v: VCF, path: string) =
+proc load_index*(v: VCF, path: string, force:bool=false) =
   ## load the index at the given path (remote or local).
-  if v.bidx != nil or v.tidx != nil:
+  if not force and (v.bidx != nil or v.tidx != nil):
     return
   v.bidx = hts_idx_load2(v.fname, path)
   if v.bidx == nil:
@@ -609,7 +609,6 @@ proc contigs*(v:VCF): seq[Contig] =
     for i in 0..<n:
       result[i].name = $cnames[i]
       result[i].length = -1
-    free(cnames)
   else:
     try:
        v.load_index("")
@@ -625,7 +624,7 @@ proc contigs*(v:VCF): seq[Contig] =
       for i in 0..<n:
         result[i].name = $cnames[i]
         result[i].length = -1
-      free(cnames)
+  free(cnames)
 
 
 iterator vquery(v:VCF, region:string): Variant =

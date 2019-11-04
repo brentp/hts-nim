@@ -14,7 +14,7 @@ srcDir = "src"
 skipDirs = @["tests"]
 skipFiles = @["teloage.nim"]
 
-import ospaths,strutils
+import os, strutils
 
 task test, "run the tests":
   exec "nim c  -d:useSysAssert -d:useGcAssert --lineDir:on --debuginfo -r tests/all"

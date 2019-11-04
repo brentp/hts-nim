@@ -1,4 +1,4 @@
-import unittest, hts, strutils
+import unittest, hts
 import hts/vcf
 
 
