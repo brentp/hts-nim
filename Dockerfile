@@ -1,8 +1,10 @@
-FROM alpine:3.10
+#FROM alpine:3.10
+FROM alpine:20190925
 
 ENV CFLAGS="-fPIC -O3"
 
-RUN apk add wget git xz bzip2 musl m4 autoconf tar xz-dev bzip2-dev build-base libpthread-stubs libzip-dev
+RUN apk add wget git xz bzip2-static musl m4 autoconf tar xz-dev bzip2-dev build-base libpthread-stubs libzip-dev gfortran \
+	    openssl-libs-static openblas-static
 
 RUN mkdir -p /usr/local/include && \
     git clone --depth 1 https://github.com/ebiggers/libdeflate.git && \
@@ -14,7 +16,7 @@ RUN mkdir -p /usr/local/include && \
     rm -rf cloudflare-zlib
 
 RUN cd / && \
-    git clone -b v1.0.0 git://github.com/nim-lang/nim nim && \
+    git clone -b v1.0.2 git://github.com/nim-lang/nim nim && \
     cd nim && sh ./build_all.sh && \
     rm -rf csources && \
     echo 'PATH=/nim/bin:$PATH' >> ~/.bashrc && \
@@ -33,8 +35,7 @@ RUN \
 ADD . /src/
 RUN cat /src/docker/docker.nim.cfg >> /nim/config/nim.cfg && \
     source ~/.bashrc && cd /src/ && nimble install -y && \
-    nimble install -y docopt && \
-    nimble install -y c2nim && \
+    nimble install -y c2nim docopt && \
     nimble install -y websocket@#head && \
     nim c -o:/usr/local/bin/nsb /src/docker/nsb.nim && \
     rm -rf /src/
