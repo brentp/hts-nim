@@ -112,12 +112,12 @@ const
   HTS_IDX_REST* = (-4)
   HTS_IDX_NONE* = (-5)
 
-proc malloc*(size: csize): pointer {.cdecl, importc: "malloc", dynlib: libname.}
-proc free*(a1: pointer) {.cdecl, importc: "free", dynlib: libname.}
+proc malloc*(size: csize): pointer {.cdecl, importc: "malloc", header: "<stdlib.h>".}
+proc free*(a1: pointer) {.cdecl, importc: "free", header: "<stdlib.h>".}
 proc strncpy*(dst: cstring; src: cstring; size: csize): cstring {.cdecl,
-    importc: "strncpy", dynlib: libname.}
+    importc: "strncpy", header: "<string.h>".}
 proc strtol*(str: cstring; endptr: cstringArray; base: cint): clong {.cdecl,
-    importc: "strtol", dynlib: libname.}
+    importc: "strtol", header: "<stdlib.h>".}
 const
   BCF_DT_ID* = 0
   BCF_DT_CTG* = 1
