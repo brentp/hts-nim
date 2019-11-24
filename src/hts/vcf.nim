@@ -82,9 +82,8 @@ proc set_samples*(v:VCF, samples:seq[string]) =
     isamples = @["-"]
   var sample_str = join(isamples, ",")
   var ret = bcf_hdr_set_samples(v.header.hdr, sample_str.cstring, 0)
-  if ret < 0:
-    stderr.write_line("hts-nim/vcf: error setting samples in " & v.fname)
-    quit(1)
+  doAssert ret >= 0, ("[hts-nim/vcf]: error setting samples in " & v.fname)
+  doAssert bcf_hdr_sync(v.header.hdr) == 0, "[hts/nim-vcf] error in vcf.set_samples"
 
 proc samples*(v:VCF): seq[string] =
   ## get the list of samples
