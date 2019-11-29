@@ -111,14 +111,6 @@ const
   HTS_IDX_START* = (-3)
   HTS_IDX_REST* = (-4)
   HTS_IDX_NONE* = (-5)
-
-proc malloc*(size: csize): pointer {.cdecl, importc: "malloc", header: "<stdlib.h>".}
-proc free*(a1: pointer) {.cdecl, importc: "free", header: "<stdlib.h>".}
-proc strncpy*(dst: cstring; src: cstring; size: csize): cstring {.cdecl,
-    importc: "strncpy", header: "<string.h>".}
-proc strtol*(str: cstring; endptr: cstringArray; base: cint): clong {.cdecl,
-    importc: "strtol", header: "<stdlib.h>".}
-const
   BCF_DT_ID* = 0
   BCF_DT_CTG* = 1
   BCF_DT_SAMPLE* = 2
@@ -228,14 +220,14 @@ type
 
 
 type
-  INNER_C_STRUCT_hts_concat_197* {.bycopy.} = object
+  INNER_C_STRUCT_hts_concat_191* {.bycopy.} = object
     major*: cshort
     minor*: cshort
 
   htsFormat* {.bycopy.} = object
     category*: htsFormatCategory
     format*: htsExactFormat
-    version*: INNER_C_STRUCT_hts_concat_197
+    version*: INNER_C_STRUCT_hts_concat_191
     compression*: htsCompression
     compression_level*: cshort ##  currently unused
     specific*: pointer         ##  format specific options; see struct hts_opt.
@@ -246,7 +238,7 @@ type
 ## ###########################
 
 type
-  INNER_C_UNION_hts_concat_216* {.bycopy.} = object {.union.}
+  INNER_C_UNION_hts_concat_210* {.bycopy.} = object {.union.}
     bgzf*: ptr BGZF
     cram*: ptr cram_fd
     hfile*: ptr hFILE
@@ -266,7 +258,7 @@ type
     line*: kstring_t
     fn*: cstring
     fn_aux*: cstring
-    fp*: INNER_C_UNION_hts_concat_216
+    fp*: INNER_C_UNION_hts_concat_210
     format*: htsFormat
 
 
@@ -653,7 +645,7 @@ const
 ##
 
 type
-  INNER_C_UNION_hts_concat_561* {.bycopy.} = object {.union.}
+  INNER_C_UNION_hts_concat_555* {.bycopy.} = object {.union.}
     i*: int32                  ##  integer value
     f*: cfloat                 ##  float value
 
@@ -683,7 +675,7 @@ type
     key*: cint                 ##  key: numeric tag id, the corresponding string is bcf_hdr_t::id[BCF_DT_ID][$key].key
     `type`*: cint
     len*: cint                 ##  type: one of BCF_BT_* types; len: vector length, 1 for scalars
-    v1*: INNER_C_UNION_hts_concat_561 ##  only set if $len==1; for easier access
+    v1*: INNER_C_UNION_hts_concat_555 ##  only set if $len==1; for easier access
     vptr*: ptr uint8            ##  pointer to data array in bcf1_t->shared.s, excluding the size+type and tag id bytes
     vptr_len*: uint32          ##  length of the vptr block or, when set, of the vptr_mod block, excluding offset
     vptr_off* {.bitsize: 31.}: uint32 ##  vptr offset, i.e., the size of the INFO key plus size+type bytes
@@ -829,9 +821,11 @@ proc bcf_update_id*(hdr: ptr bcf_hdr_t; line: ptr bcf1_t; id: cstring): cint {.c
 proc bcf_update_info*(hdr: ptr bcf_hdr_t; line: ptr bcf1_t; key: cstring;
                      values: pointer; n: cint; `type`: cint): cint {.cdecl,
     importc: "bcf_update_info", dynlib: libname.}
-proc bcf_update_alleles_str*(hdr: ptr bcf_hdr_t; line: ptr bcf1_t;
-                            dst: ptr cstringArray): cint {.cdecl,
-    importc: "bcf_update_alleles_str", dynlib: libname.}
+proc bcf_update_alleles_str*(hdr: ptr bcf_hdr_t; line: ptr bcf1_t; alleles_str: cstring): cint {.
+    cdecl, importc: "bcf_update_alleles_str", dynlib: libname.}
+proc bcf_update_alleles*(hdr: ptr bcf_hdr_t; line: ptr bcf1_t; alleles: cstringArray;
+                        nals: cint): cint {.cdecl, importc: "bcf_update_alleles",
+    dynlib: libname.}
 proc bcf_hdr_set_samples*(hdr: ptr bcf_hdr_t; samples: cstring; is_file: cint): cint {.
     cdecl, importc: "bcf_hdr_set_samples", dynlib: libname.}
 proc bcf_subset_format*(hdr: ptr bcf_hdr_t; rec: ptr bcf1_t): cint {.cdecl,

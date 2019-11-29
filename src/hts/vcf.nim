@@ -1,4 +1,5 @@
 import ./private/hts_concat
+import ./utils
 import strformat
 import strutils
 import system

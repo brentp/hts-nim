@@ -1,4 +1,5 @@
 import ./private/hts_concat
+import ./utils
 type
   Fai* = ref object
     ## Header wraps the bam header info.

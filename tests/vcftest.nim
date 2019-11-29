@@ -364,6 +364,26 @@ suite "header record":
     check $h == """{ID:AD, Number:R, Type:Integer, Description:"Allelic depths for the ref and alt alleles in the order listed", IDX:80}"""
     check h["Type"] == "Integer"
 
+suite "vcf alleles":
+
+  test "update alleles with low-level setters works":
+
+    var ivcf:VCF
+    check ivcf.open("tests/test.vcf.gz")
+    var alleles_str = "AAA,CCC"
+
+    var alleles = allocCStringArray(@["TTT", "GGG"])
+
+    for v in ivcf:
+      check 0 == bcf_update_alleles_str(ivcf.header.hdr, v.c, alleles_str.cstring)
+      check v.REF == "AAA"
+      check v.ALT == @["CCC"]
+      check 0 == bcf_update_alleles(ivcf.header.hdr, v.c, alleles, 2)
+      check v.REF == "TTT"
+      check v.ALT == @["GGG"]
+
+    alleles.deallocCStringArray
+
 suite "bug suite":
     test "csq reader":
         var v:VCF

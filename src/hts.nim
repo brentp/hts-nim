@@ -1,7 +1,8 @@
 import ./hts/utils
 import ./hts/private/hts_concat
-export kstring_t, free, hts_open, hts_close, hts_getline, htsFile, bcf_float_missing
+
 export utils
+export kstring_t, free, hts_open, hts_close, hts_getline, htsFile, bcf_float_missing
 import ./hts/bam
 export bam
 import ./hts/vcf

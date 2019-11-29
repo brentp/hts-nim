@@ -92,12 +92,6 @@ enum hts_fmt_option {
 #define HTS_IDX_NONE   (-5)
 
 
-void *malloc(size_t size);
-void free(void *);
-
-char *strncpy(char *dst, char *src, size_t size);
-long int strtol (const char* str, char** endptr, int base);
-
 #define BCF_DT_ID       0 // dictionary type
 #define BCF_DT_CTG      1
 #define BCF_DT_SAMPLE   2
@@ -693,7 +687,8 @@ void bcf_destroy(bcf1_t *v);
 int bcf_add_filter(const bcf_hdr_t *hdr, bcf1_t *line, int flt_id);
 int bcf_update_id(const bcf_hdr_t *hdr, bcf1_t *line, const char *id);
 int bcf_update_info(const bcf_hdr_t *hdr, bcf1_t *line, const char *key, const void *values, int n, int type);
-int bcf_update_alleles_str(const bcf_hdr_t *hdr, bcf1_t *line, char ***dst);
+int bcf_update_alleles_str(const bcf_hdr_t *hdr, bcf1_t *line, char *alleles_str);
+int bcf_update_alleles(const bcf_hdr_t *hdr, bcf1_t *line, char **alleles, int nals);
 
 int bcf_hdr_set_samples(bcf_hdr_t *hdr, const char *samples, int is_file);
 int bcf_subset_format(const bcf_hdr_t *hdr, bcf1_t *rec);

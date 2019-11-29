@@ -1,5 +1,6 @@
 import ../private/hts_concat
 import ../bgzf
+import ../utils
 import ../csi
 
 type

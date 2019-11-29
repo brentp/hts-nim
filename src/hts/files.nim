@@ -1,4 +1,6 @@
 import ./private/hts_concat
+import ./utils
+
 
 type HTSFile* = object
   ## HTSFile allows iterating over regular, gzipped, or bgzipped files
