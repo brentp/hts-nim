@@ -781,6 +781,24 @@ proc ALT*(v:Variant): seq[string] {.inline.} =
   for i in 1..(v.c.n_allele.int - 1):
     result[i-1] = $(v.c.d.allele[i])
 
+proc `REF=`*(v:Variant, allele:string) {.inline.} =
+  ## the reference allele
+  assert v.c != nil
+  var a = @[allele]
+  a.add(v.ALT)
+  let als = allocCStringArray(a)
+  doAssert 0 == bcf_update_alleles(v.vcf.header.hdr, v.c, als, a.len.cint)
+  deallocCStringArray(als)
+
+proc `ALT=`*(v:Variant, alleles:string|seq[string]) {.inline.} =
+  ## the reference allele
+  assert v.c != nil
+  var a = @[v.REF]
+  a.add(alleles)
+  let als = allocCStringArray(a)
+  doAssert 0 == bcf_update_alleles(v.vcf.header.hdr, v.c, als, a.len.cint)
+  deallocCStringArray(als)
+
 type
   Genotypes* {.shallow.} = object
     ## Genotypes are the genotype calls for each sample.

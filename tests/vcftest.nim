@@ -384,6 +384,21 @@ suite "vcf alleles":
 
     alleles.deallocCStringArray
 
+  test "update alleles with high-level setters works":
+    var ivcf:VCF
+    check ivcf.open("tests/test.vcf.gz")
+
+    for v in ivcf:
+      v.REF = "ACGT"
+      check v.REF == "ACGT"
+
+      v.ALT = "ACAAA"
+      check v.ALT == @["ACAAA"]
+
+      v.ALT = @["A", "T"]
+      check v.ALT == @["A", "T"]
+
+
 suite "bug suite":
     test "csq reader":
         var v:VCF
