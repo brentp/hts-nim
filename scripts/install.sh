@@ -21,7 +21,7 @@ set -x
 nimble refresh
 
 git clone --recursive https://github.com/samtools/htslib.git
-cd htslib && git checkout 1.9 && autoheader && autoconf && ./configure --enable-libcurl
+cd htslib && git checkout 1.10 && autoheader && autoconf && ./configure --enable-libcurl
 
 cd
 make -j 4 -C htslib
