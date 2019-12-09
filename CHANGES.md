@@ -1,3 +1,9 @@
+v0.3.0
+======
++ **breaking change** update to htslib 1.10. this is a breaking change and will
+  require htslib 1.10 or higher. 
++ bam/Target is no longer a ref object (this will affect almost noone)
+
 v0.2.23
 =======
 + hts/bam fix from_string for bam record and header. See quinlan-lab/STRling#10
