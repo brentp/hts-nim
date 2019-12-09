@@ -23,7 +23,7 @@ type
     idx*: ptr hts_idx_t
     path: cstring ## path the the alignment file.
 
-  Target* = ref object
+  Target* = object
     ## Target is a chromosome or contig from the bam header.
     name*: string
     length*: uint32
