@@ -268,6 +268,7 @@ void hts_idx_save(const hts_idx_t *idx, const char *fn, int fmt);
 hts_idx_t *hts_idx_load(const char *fn, int fmt);
 hts_idx_t *hts_idx_load2(const char *fn, const char *fnidx);
 
+const char *hts_version(void);
 
 uint8_t *hts_idx_get_meta(hts_idx_t *idx, int *l_meta);
 int hts_idx_set_meta(hts_idx_t *idx, uint32_t l_meta, uint8_t *meta, int is_copy);

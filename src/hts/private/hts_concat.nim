@@ -319,6 +319,7 @@ proc hts_idx_load*(fn: cstring; fmt: cint): ptr hts_idx_t {.cdecl,
     importc: "hts_idx_load", dynlib: libname.}
 proc hts_idx_load2*(fn: cstring; fnidx: cstring): ptr hts_idx_t {.cdecl,
     importc: "hts_idx_load2", dynlib: libname.}
+proc hts_version*(): cstring {.cdecl, importc: "hts_version", dynlib: libname.}
 proc hts_idx_get_meta*(idx: ptr hts_idx_t; l_meta: ptr cint): ptr uint8 {.cdecl,
     importc: "hts_idx_get_meta", dynlib: libname.}
 proc hts_idx_set_meta*(idx: ptr hts_idx_t; l_meta: uint32; meta: ptr uint8; is_copy: cint): cint {.
@@ -593,7 +594,7 @@ const
   BCF_ERR_TAG_INVALID* = 64
 
 type
-  INNER_C_UNION_hts_concat_522* {.bycopy.} = object {.union.}
+  INNER_C_UNION_hts_concat_523* {.bycopy.} = object {.union.}
     i*: int64                  ##  integer value
     f*: cfloat                 ##  float value
 
@@ -622,7 +623,7 @@ type
   bcf_info_t* {.bycopy.} = object
     key*: cint                 ##  key: numeric tag id, the corresponding string is bcf_hdr_t::id[BCF_DT_ID][$key].key
     `type`*: cint              ##  type: one of BCF_BT_* types
-    v1*: INNER_C_UNION_hts_concat_522 ##  only set if $len==1; for easier access
+    v1*: INNER_C_UNION_hts_concat_523 ##  only set if $len==1; for easier access
     vptr*: ptr uint8            ##  pointer to data array in bcf1_t->shared.s, excluding the size+type and tag id bytes
     vptr_len*: uint32          ##  length of the vptr block or, when set, of the vptr_mod block, excluding offset
     vptr_off* {.bitsize: 31.}: uint32 ##  vptr offset, i.e., the size of the INFO key plus size+type bytes

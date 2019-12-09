@@ -1,8 +1,10 @@
 v0.3.0
 ======
 + **breaking change** update to htslib 1.10. this is a breaking change and will
-  require htslib 1.10 or higher. 
+  require htslib 1.10 or higher. if hts-nim detects a version of < 1.10, it will generate an error
++ add htslibVersion() function which returns a string of the version reported by htslib
 + bam/Target is no longer a ref object (this will affect almost noone)
+
 
 v0.2.23
 =======
