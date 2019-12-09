@@ -180,7 +180,7 @@ proc set_qname*(r: Record, qname: string) =
       echo ">>>>>>>>>>>realloc:", r.b.l_data, " m:", r.b.m_data
     r.b.m_data = r.b.l_data.uint32
     # 4-byte align
-    r.b.m_data += 32 - (r.b.m_data mod 32)
+    r.b.m_data += 32'u32 - (r.b.m_data mod 32'u32)
     r.b.data = cast[ptr uint8](c_realloc(r.b.data.pointer, r.b.m_data.csize))
   when defined(qname_debug):
     echo "old:", r.qname
