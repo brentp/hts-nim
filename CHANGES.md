@@ -1,3 +1,7 @@
+v0.3.0
+======
++ update to htslib 1.10. code-bases needing htslib < 1.10 should
+  use `hts-nim` version <= 0.2.23
 v0.2.23
 =======
 + hts/bam fix from_string for bam record and header. See quinlan-lab/STRling#10
