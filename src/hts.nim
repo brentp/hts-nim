@@ -17,4 +17,20 @@ import ./hts/csi
 export csi
 import ./hts/stats
 export stats
+import strutils
 
+
+proc htslibVersion*(): string =
+  $hts_version()
+
+proc checkVersion() =
+  var v = htslibVersion().split("-")[0].split(".")
+  doAssert v[0] == "1"
+  v[1] = v[1].split("-")[0]
+  let minor = parseInt(v[1])
+  doAssert minor >= 10, ("[hts/nim] error this version of hts-nim requires htslib >=1.10, got version: " & htslibVersion())
+
+checkVersion()
+
+when isMainModule:
+  echo htslibVersion()

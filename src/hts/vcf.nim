@@ -636,12 +636,12 @@ iterator vquery(v:VCF, region:string): Variant =
     quit(2)
 
   var
-    read_func:hts_readrec_func = tbx_readrec
+    read_func:ptr hts_readrec_func = cast[ptr hts_readrec_func](tbx_readrec)
     ret = 0
     slen = 0
     s = kstring_t()
-    start: cint
-    stop: cint
+    start: int64
+    stop: int64
     tid:cint = 0
 
   discard hts_parse_reg(region.cstring, start.addr, stop.addr)
@@ -651,7 +651,7 @@ iterator vquery(v:VCF, region:string): Variant =
   else:
     tid = tbx_name2id(v.tidx,region[0..<cidx])
 
-  var itr = hts_itr_query(v.tidx.idx, tid.cint, start, stop, read_func)
+  var itr = hts_itr_query(v.tidx.idx, tid.cint, start.int64, stop.int64, read_func)
     #itr = tbx_itr_querys(v.tidx, region)
   var variant: Variant
   new(variant, destroy_variant)
@@ -686,10 +686,10 @@ iterator query*(v:VCF, region: string): Variant =
       stderr.write_line("hts-nim/vcf no index found for " & v.fname)
       quit(2)
     var
-      start: cint
-      stop: cint
+      start: int64
+      stop: int64
       tid:cint = 0
-      read_fn:hts_readrec_func = bcf_readrec
+      read_fn:ptr hts_readrec_func = cast[ptr hts_readrec_func](bcf_readrec)
 
     discard hts_parse_reg(region.cstring, start.addr, stop.addr)
     tid = bcf_hdr_name2id(v.header.hdr, region.split({':'}, maxsplit=1)[0].cstring)
@@ -728,15 +728,15 @@ proc copy*(v:Variant): Variant =
   v2.p = nil
   return v2
 
-proc POS*(v:Variant): int {.inline.} =
+proc POS*(v:Variant): int64 {.inline.} =
   ## return the 1-based position of the start of the variant
   return v.c.pos + 1
 
-proc start*(v:Variant): int {.inline.} =
+proc start*(v:Variant): int64 {.inline.} =
   ## return the 0-based position of the start of the variant
   return v.c.pos
 
-proc stop*(v:Variant): int {.inline.} =
+proc stop*(v:Variant): int64 {.inline.} =
   ## return the 0-based position of the end of the variant
   return v.c.pos + v.c.rlen
 
