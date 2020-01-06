@@ -27,7 +27,7 @@ ENV PATH=:/root/.nimble/bin:/nim/bin/:$PATH
 
 RUN \
     git clone https://github.com/samtools/htslib && \
-    cd htslib && git checkout 1.9 && autoheader && autoconf && \
+    cd htslib && git checkout 1.10 && autoheader && autoconf && \
     ./configure --disable-s3 --disable-libcurl --with-libdeflate && \
     make -j4 CFLAGS="-fPIC -O3" install && \
     cd ../ && rm -rf htslib
