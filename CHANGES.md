@@ -1,3 +1,7 @@
+v0.3.1
+======
++ fix off-by-one error. (brentp/mosdepth#98)
+
 v0.3.0
 ======
 + **breaking change** update to htslib 1.10. this is a breaking change and will

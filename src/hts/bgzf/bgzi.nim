@@ -13,7 +13,7 @@ type
 proc wopen_bgzi*(path: string, seq_col: int, start_col: int, end_col: int, zero_based: bool, compression_level:int=1, levels:int=5, min_shift:int=14): BGZI =
   var b : BGZ
   b.open(path, "w" & $compression_level)
-  var bgzi = BGZI(bgz:b, csi: new_csi(seq_col, start_col, end_col, zero_based, levels, min_shift), path:path)
+  var bgzi = BGZI(bgz:b, csi: new_csi(seq_col, start_col, end_col, not zero_based, levels, min_shift), path:path)
   bgzi.last_start = -100000
   return bgzi
 
