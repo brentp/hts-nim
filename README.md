@@ -3,9 +3,7 @@ hts-nim
 
 <h4>
 v0.2.23 of hts-nim will be the last version that supports htslib below 1.10 (which was release in early december 2019).
-the master branch a subsequent tags will require htslib 1.10 and higher and will be backward incompatible with previous releases.
-
-The <i>dev</i> branch contains work to support 1.10 fully so switch to that branch for early testing
+The master branch requires htslib 1.10 and higher and will be backward incompatible with previous releases.
 </h4>
 
 
