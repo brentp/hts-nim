@@ -1,0 +1,23 @@
+# git clone https://github.com/jquery/jquery-dist themes/github.com/jquery/jquery-dist
+# git clone https://github.com/olivernn/lunr.js themes/github.com/olivernn/lunr.js
+# git clone https://github.com/slatedocs/slate themes/slate themes/github.com/slatedocs/slate
+# git clone https://github.com/bep/docuapi/ themes/docuapi
+theme: "docdock"
+title: "hts-nim documentation"
+baseURL: "https://brentp.github.io/hts-nim"
+
+pygmentsCodeFences: true
+pygmentsCodeFencesGuesSsyntax: false
+pygmentsOptions: ""
+pygmentsStyle: "monokai"
+pygmentsUseClasses: false
+markup:
+        goldmark:
+                parser:
+                        autoHeadingIDType: "github-ascii"
+params:
+        search: true
+        language_tabs:
+                - nim: "nim"
+        themeStyle: "original"
+

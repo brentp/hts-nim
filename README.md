@@ -130,11 +130,12 @@ Or you can copy the [Dockerfile from this repo](https://github.com/brentp/hts-ni
 
 If you don't use docker, you can use [choosenim](https://github.com/dom96/choosenim) to quickly install Nim and nimble.
 
-Users can also either follow or run [scripts/simple-install.sh](https://github.com/brentp/hts-nim/blob/master/scripts/simple-install.sh) which sets up Nim and nimble ready for use and shows the needed adjustments to `$PATH`.
+Users can also either follow or run [scripts/simple-install.sh](https://github.com/brentp/hts-nim/blob/master/scripts/simple-install.sh)
+which sets up Nim and nimble ready for use and shows the needed adjustments to `$PATH`.
 
 Once Nim is set up, `hts-nim` can be installed with `nimble install -y` from the root of this repository.
 
-In all cases, it's recommended to use nim version 0.18.0 or more recent.
+In all cases, it's recommended to use nim version 0.20.0 or more recent.
 
 Then, from this repo you can run `nimble test` and `nimble install` and then you can save the above snippets into `some.nim`
 and run them with `nim c -d:release -r some.nim`. This will run them and save an executable named `some`.
@@ -142,16 +143,17 @@ and run them with `nim c -d:release -r some.nim`. This will run them and save an
 ## Static Builds
 
 `hts-nim` is meant to simplify and speed development and distribution. To that end, there is some machinery to help create
-truly static binaries for linux from nim-projects and for simple nim scripts. This means that there is no dependency on libhts.so. These builds only require docker and [this static binary](https://github.com/brentp/hts-nim/releases/download/v0.2.8/hts_nim_static_builder).
+truly static binaries for linux from nim-projects and for simple nim scripts.
+This means that there is **no dependency on libhts.so**.
+Building a static binary requires docker and [this static binary](https://github.com/brentp/hts-nim/releases/download/v0.2.8/hts_nim_static_builder).
 
 For a single file application that does not have a nimble file we can specify the dependencies using `--deps`:
 
 ```
-hts_nim_static_builder -s vcf_cleaner.nim --deps "hts@>=0.2.7" --deps "binaryheap"
+hts_nim_static_builder -s vcf_cleaner.nim --deps "hts@>=0.3.0" --deps "binaryheap"
 ```
 
 This will create a static binary at `./vcf_cleaner`.
-
 
 
 Projects with `.nimble` files can use that directly to indicate dependencies.
