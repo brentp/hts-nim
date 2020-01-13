@@ -1,3 +1,7 @@
+v0.3.2 (dev)
+============
++ allow specifying "*" or "-3" for the chromosome in vcf.query to iterator over   entire file.
+
 v0.3.1
 ======
 + fix off-by-one error. (brentp/mosdepth#98)
