@@ -672,50 +672,55 @@ iterator vquery(v:VCF, region:string): Variant =
 
 
 iterator query*(v:VCF, region: string): Variant =
-  ## iterate over variants in a VCF/BCF for the given region.
-  ## Each returned Variant has a pointer in the underlying iterator
-  ## that is updated each iteration; use .copy to keep it in memory
-  if v.hts.format.format == htsExactFormat.vcf:
-    for v in v.vquery(region):
-      yield v
+  if region in ["-3", "*"]:
+    for variant in v:
+      yield variant
   else:
-    if v.bidx == nil:
-      v.bidx = hts_idx_load(v.fname, HTS_FMT_CSI)
 
-    if v.bidx == nil:
-      stderr.write_line("hts-nim/vcf no index found for " & v.fname)
-      quit(2)
-    var
-      start: int64
-      stop: int64
-      tid:cint = 0
-      read_fn:ptr hts_readrec_func = cast[ptr hts_readrec_func](bcf_readrec)
+    ## iterate over variants in a VCF/BCF for the given region.
+    ## Each returned Variant has a pointer in the underlying iterator
+    ## that is updated each iteration; use .copy to keep it in memory
+    if v.hts.format.format == htsExactFormat.vcf:
+      for v in v.vquery(region):
+        yield v
+    else:
+      if v.bidx == nil:
+        v.bidx = hts_idx_load(v.fname, HTS_FMT_CSI)
 
-    discard hts_parse_reg(region.cstring, start.addr, stop.addr)
-    tid = bcf_hdr_name2id(v.header.hdr, region.split({':'}, maxsplit=1)[0].cstring)
-    var itr = hts_itr_query(v.bidx, tid, start, stop, read_fn)
-    var ret = 0
-    var variant: Variant
-    new(variant, destroy_variant)
-    while true:
-        #ret = bcf_itr_next(v.hts, itr, v.c)
-        ret = hts_itr_next(v.hts.fp.bgzf, itr, v.c, nil)
-        if ret < 0: break
-        discard bcf_unpack(v.c, 1 or 2)
-        if bcf_subset_format(v.header.hdr, v.c) != 0:
-            stderr.write_line "[hts-nim/vcf] error with bcf subset format"
-            break
-        variant.c = v.c
-        variant.vcf = v
-        yield variant
+      if v.bidx == nil:
+        stderr.write_line("hts-nim/vcf no index found for " & v.fname)
+        quit(2)
+      var
+        start: int64
+        stop: int64
+        tid:cint = 0
+        read_fn:ptr hts_readrec_func = cast[ptr hts_readrec_func](bcf_readrec)
 
-    hts_itr_destroy(itr)
-    if ret > 0:
-      stderr.write_line "hts-nim/vcf: error parsing "
-      quit(2)
+      discard hts_parse_reg(region.cstring, start.addr, stop.addr)
+      tid = bcf_hdr_name2id(v.header.hdr, region.split({':'}, maxsplit=1)[0].cstring)
+      var itr = hts_itr_query(v.bidx, tid, start, stop, read_fn)
+      var ret = 0
+      var variant: Variant
+      new(variant, destroy_variant)
+      while true:
+          #ret = bcf_itr_next(v.hts, itr, v.c)
+          ret = hts_itr_next(v.hts.fp.bgzf, itr, v.c, nil)
+          if ret < 0: break
+          discard bcf_unpack(v.c, 1 or 2)
+          if bcf_subset_format(v.header.hdr, v.c) != 0:
+              stderr.write_line "[hts-nim/vcf] error with bcf subset format"
+              break
+          variant.c = v.c
+          variant.vcf = v
+          yield variant
 
-  if v.c.errcode != 0:
-    stderr.write_line "hts-nim/vcf bcf_read error:" & $v.c.errcode
+      hts_itr_destroy(itr)
+      if ret > 0:
+        stderr.write_line "hts-nim/vcf: error parsing "
+        quit(2)
+
+    if v.c.errcode != 0:
+      stderr.write_line "hts-nim/vcf bcf_read error:" & $v.c.errcode
 
 proc copy*(v:Variant): Variant =
   ## make a copy of the variant and the underlying pointer.
