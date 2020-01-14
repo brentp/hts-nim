@@ -1,3 +1,7 @@
+v0.3.3
+======
++ report contig length if available in vcf.contigs (#51)
+
 v0.3.2
 ======
 + allow specifying `"*"` or `"-3"` for the chromosome in vcf.query to iterator over   entire file.

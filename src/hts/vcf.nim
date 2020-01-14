@@ -601,14 +601,23 @@ proc load_index*(v: VCF, path: string, force:bool=false) =
   if v.bidx == nil and v.tidx == nil:
     raise newException(OSError, "unable to load index at:" & path)
 
+template get_info(p:ptr bcf_idpair_t, i:int32, j:int): int64 =
+  var d = cast[CPtr[bcf_idpair_t]](p)
+  if(d[i].val == nil):
+    -1'i64
+  else:
+    d[i].val.info[j].int64
+
 proc contigs*(v:VCF): seq[Contig] =
   var n:cint
-  var cnames = bcf_hdr_seqnames(v.header.hdr, n.addr)
+  let h:ptr bcf_hdr_t = v.header.hdr
+  var cnames = bcf_hdr_seqnames(h, n.addr)
+
   if n > 0:
     result.setLen(n.int)
-    for i in 0..<n:
+    for i in 0..<h.n[BCF_DT_CTG]:
       result[i].name = $cnames[i]
-      result[i].length = -1
+      result[i].length = get_info(h.id[BCF_DT_CTG], i, 0) #.val.info[0]
   else:
     try:
        v.load_index("")
