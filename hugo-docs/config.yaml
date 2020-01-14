@@ -20,4 +20,7 @@ params:
         language_tabs:
                 - nim: "nim"
         themeStyle: "original"
+        disableInlineCopyToClipBoard: true
 
+
+publishDir: "hugo-docs"
