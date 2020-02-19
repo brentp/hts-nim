@@ -199,7 +199,7 @@ proc toSeq[T](data: var seq[T], p:pointer, n:int) {.inline.} =
   if data.len != n:
     data.set_len(n)
   if n == 0: return
-  copyMem(data[0].addr, p, csize_t(n * sizeof(T)))
+  copyMem(data[0].addr, p, csize(n * sizeof(T)))
 
 proc bcf_hdr_id2type(hdr:ptr bcf_hdr_t, htype:int, int_id:int): int {.inline.}=
   # translation of htslib macro.
