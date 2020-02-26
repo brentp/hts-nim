@@ -283,13 +283,14 @@ proc tostring*(r: Record): string =
   free(kstr.s)
   return s
 
-proc finalize_bam(bam: Bam) =
-  if bam == nil: return
-  if bam.idx != nil:
-    hts_idx_destroy(bam.idx)
-  if bam.hts != nil:
-    discard hts_close(bam.hts)
-    bam.hts = nil
+proc finalize_bam(ibam: Bam) =
+  if ibam == nil: return
+  if ibam.idx != nil:
+    hts_idx_destroy(ibam.idx)
+    ibam.idx = nil
+  if ibam.hts != nil:
+    discard hts_close(ibam.hts)
+    ibam.hts = nil
 
 proc finalize_record(rec: Record) =
   bam_destroy1(rec.b)

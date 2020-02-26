@@ -36,7 +36,7 @@ proc flush*(b: BGZ): int =
   return int(bgzf_flush(b.cptr))
 
 proc tell*(b: BGZ): uint64 {.inline.} =
-  return uint64(bgzf_tell(b.cptr))
+  result = uint64(bgzf_tell(b.cptr))
 
 proc finalize(b: BGZ) =
   if b.cptr != nil:
