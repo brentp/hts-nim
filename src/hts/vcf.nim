@@ -881,34 +881,34 @@ proc alts*(g:Genotype): int8 {.inline.} =
   ## ./. -> -1
   ## 1/1 -> 2
   if likely(g.len == 2):
-    var g0 = g[0].value
-    var g1 = g[1].value
+    let g0 = g[0].value
+    let g1 = g[1].value
     if likely(g0 >= 0 and g1 >= 0):
       return int8(g0 + g1)
     # only unknown if both are unknown
     if (g0 == -1 and g1 == -1) or g1 < -1:
       return -1
 
-    if g0 == -1:
+    if g0 <= -1:
       return int8(g1)
-    if g1 == -1:
+    if g1 <= -1:
       return int8(g0)
 
-  var has_unknown = false
-  for a in g:
-    if a.value == -1:
-      has_unknown = true
-      break
-
-  if not has_unknown:
-    var nalts = 0
-    for a in g:
-      nalts += a.value
-    return int8(nalts)
-
-  if g.len == 1 and g[0].value == -1:
+  if g.len == 1 and g[0].value <= -1:
     return -1
-  raise newException(OSError, "not implemented for:" & $g)
+
+  # ploidy > 2. return sum of alleles as long as there's at least 1 known
+  # genotype
+  var n_found = 0
+  for i in 0..<g.len:
+    if g[i].value >= 0:
+      result += g[i].value.int8
+      n_found.inc
+
+  if n_found == 0:
+    result = -1'i8
+
+  #raise newException(OSError, "not implemented for:" & $g & " should be:" & $result)
 
 proc genotypes*(f:FORMAT, gts: var seq[int32]): Genotypes {.inline.} =
   ## give sequence of genotypes (using the underlying array given in gts)

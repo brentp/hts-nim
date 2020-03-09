@@ -1,3 +1,7 @@
+v0.3.4
+======
++ hts/vcf Variant.alts will report sum of known alt alleles for ploidy greater than 2.
+
 v0.3.3
 ======
 + report contig length if available in vcf.contigs (#51)
