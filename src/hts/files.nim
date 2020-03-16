@@ -18,6 +18,11 @@ type FileType* {.pure.} = enum
   BCF = htsExactFormat.bcf
   CSI = htsExactFormat.csi
   TBI = htsExactFormat.tbi
+  BED = htsExactFormat.bed
+
+  FASTA = htsExactFormat.fasta_format
+  FAI = htsExactFormat.fai_format
+
 
 proc file_type*(fname:string): FileType =
   var h = hopen(fname, "r")
