@@ -30,9 +30,9 @@ suite "bgzf-suite":
     check int(b.tell()) > 0
     free(kstr.s)
     check b.close() == 0
-  
+
   test "bgzf-iterator":
-    var 
+    var
       b: BGZ
       nb_lines = 0
     b.open("t.gz", "r")
@@ -41,11 +41,11 @@ suite "bgzf-suite":
       nb_lines.inc()
       if nb_lines == 2:
         check line == "b\t10\t20"
-    
+
     check nb_lines == 2
 
   test "bgzf-iterator-err":
-    var 
+    var
       b: BGZ
     b.open("tests/gzip-err.gz", "r")
 
@@ -87,3 +87,16 @@ suite "bgzf-suite":
       found += 1
       check reg == "aaa\t4\t10"
     check found == 1
+
+  test "bgzi-query from VCF rows":
+    ## There was a discrepancy between rec.POS (int32) and BGZI.query (int64)
+    let db = ropen_bgzi("tests/test_files/simple.tsv.gz")
+    var v: VCF
+    doAssert(v.open("tests/test.vcf.gz"))
+
+    var rows: seq[string] = @[]
+    for rec in v:
+      for row in db.query($rec.CHROM, rec.POS - 1, rec.POS):
+        rows.add row
+    check rows.len == 1
+    check rows[0] == "1\t10492\tC\tT"

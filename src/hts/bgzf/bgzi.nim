@@ -32,7 +32,7 @@ proc fastSubStr(dest: var string; src: cstring, a, b: int) {.inline.} =
   setLen(dest, b-a)
   copyMem(addr dest[0], src+!a, b-a)
 
-iterator query*(bi: BGZI, chrom: string, start:int, stop:int): string {.inline.} =
+iterator query*(bi: BGZI, chrom: string, start:int64, stop:int64): string {.inline.} =
   var tid = -1
   var fn: hts_readrec_func = tbx_readrec
   for i, cchrom in bi.csi.chroms:
@@ -42,7 +42,7 @@ iterator query*(bi: BGZI, chrom: string, start:int, stop:int): string {.inline.}
   if tid == -1:
     stderr.write_line("[hts-nim] no intervals for ", chrom, " found in ", bi.path)
   # TODO: make itr an attribute on BGZI
-  var itr = hts_itr_query(bi.csi.tbx.idx, cint(tid), start.int64, stop.int64, cast[ptr hts_readrec_func](fn))
+  var itr = hts_itr_query(bi.csi.tbx.idx, cint(tid), start, stop, cast[ptr hts_readrec_func](fn))
 
   var kstr = kstring_t(s:nil, m:0, l:0)
   var outstr = newStringOfCap(10000)
