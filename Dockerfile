@@ -1,10 +1,10 @@
-#FROM alpine:3.10
-FROM alpine:20190925
+FROM alpine:3.11.5
+#FROM alpine:20190925
 
 ENV CFLAGS="-fPIC -O3"
 
 RUN apk add wget git xz bzip2-static musl m4 autoconf tar xz-dev bzip2-dev build-base libpthread-stubs libzip-dev gfortran \
-	    openssl-libs-static openblas-static pcre-dev openblas-dev lapack-dev
+	    openssl-libs-static openblas-static pcre-dev
 
 RUN mkdir -p /usr/local/include && \
     git clone --depth 1 https://github.com/ebiggers/libdeflate.git && \
@@ -17,7 +17,7 @@ RUN mkdir -p /usr/local/include && \
 
 
 RUN cd / && \
-    git clone -b v1.0.4 git://github.com/nim-lang/nim nim && \
+    git clone -b v1.2.0 git://github.com/nim-lang/nim nim && \
     cd nim && sh ./build_all.sh && \
     rm -rf csources && \
     echo 'PATH=/nim/bin:$PATH' >> ~/.bashrc && \
@@ -38,12 +38,12 @@ ENV PATH=:/root/.nimble/bin:/nim/bin/:$PATH
 
 RUN \
     git clone https://github.com/samtools/htslib && \
-    cd htslib && git checkout 1.10 && autoheader && autoconf && \
+    cd htslib && git checkout 1.10.2 && autoheader && autoconf && \
     ./configure --disable-s3 --disable-libcurl --with-libdeflate && \
     make -j4 CFLAGS="-fPIC -O3" install && \
     cd ../ && \
     git clone https://github.com/samtools/bcftools && \
-    cd bcftools && git checkout 1.10 && autoheader && autoconf && \
+    cd bcftools && git checkout 1.10.2 && autoheader && autoconf && \
     ./configure --disable-s3 --disable-libcurl --with-libdeflate && \
     make -j4 CFLAGS="-fPIC -O3" install && \
     cd ../ && rm -rf htslib bcftools
