@@ -418,7 +418,7 @@ suite "speed tests":
     var t = cpuTime()
     var v:VCF
     var n:int
-    for i in 0..2:
+    for i in 0..<2:
       check open(v, "tests/test.vcf.gz")
 
       var ints:seq[int32]

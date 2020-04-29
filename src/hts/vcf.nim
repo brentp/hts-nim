@@ -34,7 +34,7 @@ type
   INFO* = ref object
     ## INFO of a variant
     v: Variant
-    i: int
+    i: int32
 
   FORMAT* = ref object
     ## FORMAT exposes access to the sample format fields in the VCF
@@ -175,7 +175,7 @@ proc remove_format*(h:Header, ID:string): Status =
   bcf_hdr_remove(h.hdr, BCF_HEADER_TYPE.BCF_HL_FMT.cint, ID.cstring)
   return Status(bcf_hdr_sync(h.hdr))
 
-proc info*(v:Variant): INFO {.inline.} =
+proc info*(v:Variant): INFO {.inline, noInit.} =
   discard bcf_unpack(v.c, BCF_UN_STR or BCF_UN_FLT or BCF_UN_INFO)
   result = INFO(i:0, v:v)
 
@@ -183,10 +183,11 @@ proc destroy_format(f:Format) =
   if f != nil and f.p != nil:
     free(f.p)
 
-proc format*(v:Variant): FORMAT {.inline.} =
+proc format*(v:Variant): FORMAT {.inline, noInit.} =
   discard bcf_unpack(v.c, BCF_UN_ALL)
   new(result, destroy_format)
   result.v = v
+  result.p = nil
 
 proc n_samples*(v:Variant): int {.inline.} =
   return v.c.n_sample.int
@@ -406,15 +407,17 @@ proc from_string*(v: var Variant, h: Header, s:var string) =
   var str = kstring_t(s:s.cstring, l:s.len, m:s.len)
   if v == nil:
     new(v, destroy_variant)
+    v.own = true
   if v.c == nil:
     v.c = bcf_init()
   if vcf_parse(str.addr, h.hdr, v.c) != 0:
    raise newException(ValueError, "hts-nim/Variant/from_string: error parsing variant:" & s)
 
-proc newVariant*(): Variant =
+proc newVariant*(): Variant {.noInit.} =
   ## make an empty variant.
   new(result, destroy_variant)
   result.c = bcf_init()
+  result.own = true
 
 proc destroy_vcf(v:VCF) =
   bcf_hdr_destroy(v.header.hdr)
