@@ -18,7 +18,7 @@
 
 <!-- CSS -->
 <title>bam</title>
-<link rel="stylesheet" type="text/css" href="nimdoc.css">
+<link rel="stylesheet" type="text/css" href="nimdoc.out.css">
 
 <script type="text/javascript" src="dochack.js"></script>
 
@@ -108,23 +108,19 @@ function main() {
   <ul class="simple simple-toc-section">
       <li><a class="reference" href="#FormatOption"
     title="FormatOption {.size: 4.} = enum
-  CRAM_OPT_DECODE_MD, CRAM_OPT_PREFIX, CRAM_OPT_VERBOSITY, ## obsolete use hts_set_log_level() instead
-  CRAM_OPT_SEQS_PER_SLICE, CRAM_OPT_SLICES_PER_CONTAINER, CRAM_OPT_RANGE, CRAM_OPT_VERSION, ## rename to cram_version?
-  CRAM_OPT_EMBED_REF, CRAM_OPT_IGNORE_MD5, CRAM_OPT_REFERENCE, ## make general
+  CRAM_OPT_DECODE_MD, CRAM_OPT_PREFIX, CRAM_OPT_VERBOSITY, CRAM_OPT_SEQS_PER_SLICE,
+  CRAM_OPT_SLICES_PER_CONTAINER, CRAM_OPT_RANGE, CRAM_OPT_VERSION,
+  CRAM_OPT_EMBED_REF, CRAM_OPT_IGNORE_MD5, CRAM_OPT_REFERENCE,
   CRAM_OPT_MULTI_SEQ_PER_SLICE, CRAM_OPT_NO_REF, CRAM_OPT_USE_BZIP2,
-  CRAM_OPT_SHARED_REF, CRAM_OPT_NTHREADS, ## deprecated use HTS_OPT_NTHREADS
-  CRAM_OPT_THREAD_POOL,       ## make general
-  CRAM_OPT_USE_LZMA, CRAM_OPT_USE_RANS, CRAM_OPT_REQUIRED_FIELDS,
-  CRAM_OPT_LOSSY_NAMES, CRAM_OPT_BASES_PER_SLICE, ## General purpose
-  HTS_OPT_COMPRESSION_LEVEL = 100, HTS_OPT_NTHREADS, HTS_OPT_THREAD_POOL,
-  HTS_OPT_CACHE_SIZE, HTS_OPT_BLOCK_SIZE"><wbr />Format<wbr />Option<span class="attachedType"></span></a></li>
+  CRAM_OPT_SHARED_REF, CRAM_OPT_NTHREADS, CRAM_OPT_THREAD_POOL, CRAM_OPT_USE_LZMA,
+  CRAM_OPT_USE_RANS, CRAM_OPT_REQUIRED_FIELDS, CRAM_OPT_LOSSY_NAMES,
+  CRAM_OPT_BASES_PER_SLICE, HTS_OPT_COMPRESSION_LEVEL = 100, HTS_OPT_NTHREADS,
+  HTS_OPT_THREAD_POOL, HTS_OPT_CACHE_SIZE, HTS_OPT_BLOCK_SIZE"><wbr />Format<wbr />Option<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#SamField"
     title="SamField {.size: 4.} = enum
-  SAM_QNAME = 0x00000001, SAM_FLAG = 0x00000002, SAM_RNAME = 0x00000004,
-  SAM_POS = 0x00000008, SAM_MAPQ = 0x00000010, SAM_CIGAR = 0x00000020,
-  SAM_RNEXT = 0x00000040, SAM_PNEXT = 0x00000080, SAM_TLEN = 0x00000100,
-  SAM_SEQ = 0x00000200, SAM_QUAL = 0x00000400, SAM_AUX = 0x00000800,
-  SAM_RGAUX = 0x00001000"><wbr />Sam<wbr />Field<span class="attachedType"></span></a></li>
+  SAM_QNAME = 1, SAM_FLAG = 2, SAM_RNAME = 4, SAM_POS = 8, SAM_MAPQ = 16, SAM_CIGAR = 32,
+  SAM_RNEXT = 64, SAM_PNEXT = 128, SAM_TLEN = 256, SAM_SEQ = 512, SAM_QUAL = 1024,
+  SAM_AUX = 2048, SAM_RGAUX = 4096"><wbr />Sam<wbr />Field<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#Flag"
     title="Flag = distinct uint16"><wbr />Flag<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#CPtr"
@@ -139,7 +135,7 @@ function main() {
     title="Consume = distinct uint32"><wbr />Consume<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#CigarOp"
     title="CigarOp {.pure.} = enum
-  match = 0&apos;u32, insert, deletion, ref_skip, soft_clip, hard_clip, pad, equal, diff, back"><wbr />Cigar<wbr />Op<span class="attachedType"></span></a></li>
+  match = 0, insert, deletion, ref_skip, soft_clip, hard_clip, pad, equal, diff, back"><wbr />Cigar<wbr />Op<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#Range"
     title="Range = tuple[start: int, stop: int]"><wbr />Range<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#Header"
@@ -243,6 +239,8 @@ function main() {
     title="stats(idx: ptr hts_idx_t; tid: int): IndexStats"><wbr />stats<span class="attachedType">IndexStats</span></a></li>
   <li><a class="reference" href="#copy%2CHeader"
     title="copy(h: Header): Header"><wbr />copy<span class="attachedType">Header</span></a></li>
+  <li><a class="reference" href="#xam_index%2Cstring%2Cstring%2Cint%2Cint"
+    title="xam_index(fn: string; fnidx: string = &quot;&quot;; min_shift: int = 14; nthreads: int = 1)"><wbr />xam_<wbr />index<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#from_string%2CHeader%2Cstring"
     title="from_string(h: Header; header_string: string)"><wbr />from_<wbr />string<span class="attachedType">Header</span></a></li>
   <li><a class="reference" href="#from_string%2CRecord%2Cstring"
@@ -251,7 +249,7 @@ function main() {
     title="sequence(r: Record; s: var string): string"><wbr />sequence<span class="attachedType">Record</span></a></li>
   <li><a class="reference" href="#base_at%2CRecord%2Cint"
     title="base_at(r: Record; i: int): char"><wbr />base_<wbr />at<span class="attachedType">Record</span></a></li>
-  <li><a class="reference" href="#base_qualities%2CRecord%2Cseq%5BT%5D%5Buint8%5D"
+  <li><a class="reference" href="#base_qualities%2CRecord%2Cseq%5Buint8%5D"
     title="base_qualities(r: Record; q: var seq[uint8]): seq[uint8]"><wbr />base_<wbr />qualities<span class="attachedType">Record</span></a></li>
   <li><a class="reference" href="#base_quality_at%2CRecord%2Cint"
     title="base_quality_at(r: Record; i: int): uint8"><wbr />base_<wbr />quality_<wbr />at<span class="attachedType">Record</span></a></li>
@@ -374,16 +372,14 @@ function main() {
 <dl class="item">
 <a id="FormatOption"></a>
 <dt><pre><a href="bam.html#FormatOption"><span class="Identifier">FormatOption</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">size</span><span class="Other">:</span> <span class="DecNumber">4</span></span><span class="Other">.}</span></span> <span class="Other">=</span> <span class="Keyword">enum</span>
-  <span class="Identifier">CRAM_OPT_DECODE_MD</span><span class="Other">,</span> <span class="Identifier">CRAM_OPT_PREFIX</span><span class="Other">,</span> <span class="Identifier">CRAM_OPT_VERBOSITY</span><span class="Other">,</span> <span class="Comment">## obsolete use hts_set_log_level() instead</span>
-  <span class="Identifier">CRAM_OPT_SEQS_PER_SLICE</span><span class="Other">,</span> <span class="Identifier">CRAM_OPT_SLICES_PER_CONTAINER</span><span class="Other">,</span> <span class="Identifier">CRAM_OPT_RANGE</span><span class="Other">,</span> <span class="Identifier">CRAM_OPT_VERSION</span><span class="Other">,</span> <span class="Comment">## rename to cram_version?</span>
-  <span class="Identifier">CRAM_OPT_EMBED_REF</span><span class="Other">,</span> <span class="Identifier">CRAM_OPT_IGNORE_MD5</span><span class="Other">,</span> <span class="Identifier">CRAM_OPT_REFERENCE</span><span class="Other">,</span> <span class="Comment">## make general</span>
+  <span class="Identifier">CRAM_OPT_DECODE_MD</span><span class="Other">,</span> <span class="Identifier">CRAM_OPT_PREFIX</span><span class="Other">,</span> <span class="Identifier">CRAM_OPT_VERBOSITY</span><span class="Other">,</span> <span class="Identifier">CRAM_OPT_SEQS_PER_SLICE</span><span class="Other">,</span>
+  <span class="Identifier">CRAM_OPT_SLICES_PER_CONTAINER</span><span class="Other">,</span> <span class="Identifier">CRAM_OPT_RANGE</span><span class="Other">,</span> <span class="Identifier">CRAM_OPT_VERSION</span><span class="Other">,</span>
+  <span class="Identifier">CRAM_OPT_EMBED_REF</span><span class="Other">,</span> <span class="Identifier">CRAM_OPT_IGNORE_MD5</span><span class="Other">,</span> <span class="Identifier">CRAM_OPT_REFERENCE</span><span class="Other">,</span>
   <span class="Identifier">CRAM_OPT_MULTI_SEQ_PER_SLICE</span><span class="Other">,</span> <span class="Identifier">CRAM_OPT_NO_REF</span><span class="Other">,</span> <span class="Identifier">CRAM_OPT_USE_BZIP2</span><span class="Other">,</span>
-  <span class="Identifier">CRAM_OPT_SHARED_REF</span><span class="Other">,</span> <span class="Identifier">CRAM_OPT_NTHREADS</span><span class="Other">,</span> <span class="Comment">## deprecated use HTS_OPT_NTHREADS</span>
-  <span class="Identifier">CRAM_OPT_THREAD_POOL</span><span class="Other">,</span>       <span class="Comment">## make general</span>
-  <span class="Identifier">CRAM_OPT_USE_LZMA</span><span class="Other">,</span> <span class="Identifier">CRAM_OPT_USE_RANS</span><span class="Other">,</span> <span class="Identifier">CRAM_OPT_REQUIRED_FIELDS</span><span class="Other">,</span>
-  <span class="Identifier">CRAM_OPT_LOSSY_NAMES</span><span class="Other">,</span> <span class="Identifier">CRAM_OPT_BASES_PER_SLICE</span><span class="Other">,</span> <span class="Comment">## General purpose</span>
-  <span class="Identifier">HTS_OPT_COMPRESSION_LEVEL</span> <span class="Other">=</span> <span class="DecNumber">100</span><span class="Other">,</span> <span class="Identifier">HTS_OPT_NTHREADS</span><span class="Other">,</span> <span class="Identifier">HTS_OPT_THREAD_POOL</span><span class="Other">,</span>
-  <span class="Identifier">HTS_OPT_CACHE_SIZE</span><span class="Other">,</span> <span class="Identifier">HTS_OPT_BLOCK_SIZE</span></pre></dt>
+  <span class="Identifier">CRAM_OPT_SHARED_REF</span><span class="Other">,</span> <span class="Identifier">CRAM_OPT_NTHREADS</span><span class="Other">,</span> <span class="Identifier">CRAM_OPT_THREAD_POOL</span><span class="Other">,</span> <span class="Identifier">CRAM_OPT_USE_LZMA</span><span class="Other">,</span>
+  <span class="Identifier">CRAM_OPT_USE_RANS</span><span class="Other">,</span> <span class="Identifier">CRAM_OPT_REQUIRED_FIELDS</span><span class="Other">,</span> <span class="Identifier">CRAM_OPT_LOSSY_NAMES</span><span class="Other">,</span>
+  <span class="Identifier">CRAM_OPT_BASES_PER_SLICE</span><span class="Other">,</span> <span class="Identifier">HTS_OPT_COMPRESSION_LEVEL</span> <span class="Other">=</span> <span class="DecNumber">100</span><span class="Other">,</span> <span class="Identifier">HTS_OPT_NTHREADS</span><span class="Other">,</span>
+  <span class="Identifier">HTS_OPT_THREAD_POOL</span><span class="Other">,</span> <span class="Identifier">HTS_OPT_CACHE_SIZE</span><span class="Other">,</span> <span class="Identifier">HTS_OPT_BLOCK_SIZE</span></pre></dt>
 <dd>
 
 CRAM specific
@@ -391,11 +387,9 @@ CRAM specific
 </dd>
 <a id="SamField"></a>
 <dt><pre><a href="bam.html#SamField"><span class="Identifier">SamField</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">size</span><span class="Other">:</span> <span class="DecNumber">4</span></span><span class="Other">.}</span></span> <span class="Other">=</span> <span class="Keyword">enum</span>
-  <span class="Identifier">SAM_QNAME</span> <span class="Other">=</span> <span class="DecNumber">0x00000001</span><span class="Other">,</span> <span class="Identifier">SAM_FLAG</span> <span class="Other">=</span> <span class="DecNumber">0x00000002</span><span class="Other">,</span> <span class="Identifier">SAM_RNAME</span> <span class="Other">=</span> <span class="DecNumber">0x00000004</span><span class="Other">,</span>
-  <span class="Identifier">SAM_POS</span> <span class="Other">=</span> <span class="DecNumber">0x00000008</span><span class="Other">,</span> <span class="Identifier">SAM_MAPQ</span> <span class="Other">=</span> <span class="DecNumber">0x00000010</span><span class="Other">,</span> <span class="Identifier">SAM_CIGAR</span> <span class="Other">=</span> <span class="DecNumber">0x00000020</span><span class="Other">,</span>
-  <span class="Identifier">SAM_RNEXT</span> <span class="Other">=</span> <span class="DecNumber">0x00000040</span><span class="Other">,</span> <span class="Identifier">SAM_PNEXT</span> <span class="Other">=</span> <span class="DecNumber">0x00000080</span><span class="Other">,</span> <span class="Identifier">SAM_TLEN</span> <span class="Other">=</span> <span class="DecNumber">0x00000100</span><span class="Other">,</span>
-  <span class="Identifier">SAM_SEQ</span> <span class="Other">=</span> <span class="DecNumber">0x00000200</span><span class="Other">,</span> <span class="Identifier">SAM_QUAL</span> <span class="Other">=</span> <span class="DecNumber">0x00000400</span><span class="Other">,</span> <span class="Identifier">SAM_AUX</span> <span class="Other">=</span> <span class="DecNumber">0x00000800</span><span class="Other">,</span>
-  <span class="Identifier">SAM_RGAUX</span> <span class="Other">=</span> <span class="DecNumber">0x00001000</span></pre></dt>
+  <span class="Identifier">SAM_QNAME</span> <span class="Other">=</span> <span class="DecNumber">1</span><span class="Other">,</span> <span class="Identifier">SAM_FLAG</span> <span class="Other">=</span> <span class="DecNumber">2</span><span class="Other">,</span> <span class="Identifier">SAM_RNAME</span> <span class="Other">=</span> <span class="DecNumber">4</span><span class="Other">,</span> <span class="Identifier">SAM_POS</span> <span class="Other">=</span> <span class="DecNumber">8</span><span class="Other">,</span> <span class="Identifier">SAM_MAPQ</span> <span class="Other">=</span> <span class="DecNumber">16</span><span class="Other">,</span> <span class="Identifier">SAM_CIGAR</span> <span class="Other">=</span> <span class="DecNumber">32</span><span class="Other">,</span>
+  <span class="Identifier">SAM_RNEXT</span> <span class="Other">=</span> <span class="DecNumber">64</span><span class="Other">,</span> <span class="Identifier">SAM_PNEXT</span> <span class="Other">=</span> <span class="DecNumber">128</span><span class="Other">,</span> <span class="Identifier">SAM_TLEN</span> <span class="Other">=</span> <span class="DecNumber">256</span><span class="Other">,</span> <span class="Identifier">SAM_SEQ</span> <span class="Other">=</span> <span class="DecNumber">512</span><span class="Other">,</span> <span class="Identifier">SAM_QUAL</span> <span class="Other">=</span> <span class="DecNumber">1024</span><span class="Other">,</span>
+  <span class="Identifier">SAM_AUX</span> <span class="Other">=</span> <span class="DecNumber">2048</span><span class="Other">,</span> <span class="Identifier">SAM_RGAUX</span> <span class="Other">=</span> <span class="DecNumber">4096</span></pre></dt>
 <dd>
 
 
@@ -441,7 +435,7 @@ CRAM specific
 </dd>
 <a id="CigarOp"></a>
 <dt><pre><a href="bam.html#CigarOp"><span class="Identifier">CigarOp</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">pure</span></span><span class="Other">.}</span></span> <span class="Other">=</span> <span class="Keyword">enum</span>
-  <span class="Identifier">match</span> <span class="Other">=</span> <span class="DecNumber">0'u32</span><span class="Other">,</span> <span class="Identifier">insert</span><span class="Other">,</span> <span class="Identifier">deletion</span><span class="Other">,</span> <span class="Identifier">ref_skip</span><span class="Other">,</span> <span class="Identifier">soft_clip</span><span class="Other">,</span> <span class="Identifier">hard_clip</span><span class="Other">,</span> <span class="Identifier">pad</span><span class="Other">,</span> <span class="Identifier">equal</span><span class="Other">,</span> <span class="Identifier">diff</span><span class="Other">,</span> <span class="Identifier">back</span></pre></dt>
+  <span class="Identifier">match</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">,</span> <span class="Identifier">insert</span><span class="Other">,</span> <span class="Identifier">deletion</span><span class="Other">,</span> <span class="Identifier">ref_skip</span><span class="Other">,</span> <span class="Identifier">soft_clip</span><span class="Other">,</span> <span class="Identifier">hard_clip</span><span class="Other">,</span> <span class="Identifier">pad</span><span class="Other">,</span> <span class="Identifier">equal</span><span class="Other">,</span> <span class="Identifier">diff</span><span class="Other">,</span> <span class="Identifier">back</span></pre></dt>
 <dd>
 
 
@@ -755,6 +749,14 @@ get the stats from the index.
 make a copy of the bam Header and underlying pointer.
 
 </dd>
+<a id="xam_index,string,string,int,int"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#xam_index%2Cstring%2Cstring%2Cint%2Cint"><span class="Identifier">xam_index</span></a><span class="Other">(</span><span class="Identifier">fn</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">fnidx</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Other">=</span> <span class="StringLit">&quot;&quot;</span><span class="Other">;</span> <span class="Identifier">min_shift</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">14</span><span class="Other">;</span> <span class="Identifier">nthreads</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">1</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+index the file
+
+</dd>
 <a id="from_string,Header,string"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#from_string%2CHeader%2Cstring"><span class="Identifier">from_string</span></a><span class="Other">(</span><span class="Identifier">h</span><span class="Other">:</span> <a href="bam.html#Header"><span class="Identifier">Header</span></a><span class="Other">;</span> <span class="Identifier">header_string</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
@@ -783,8 +785,8 @@ fill the given string with the read sequence
 return just the base at the requsted index 'i' into the query sequence.
 
 </dd>
-<a id="base_qualities,Record,seq[T][uint8]"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#base_qualities%2CRecord%2Cseq%5BT%5D%5Buint8%5D"><span class="Identifier">base_qualities</span></a><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">;</span> <span class="Identifier">q</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">uint8</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">uint8</span><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<a id="base_qualities,Record,seq[uint8]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#base_qualities%2CRecord%2Cseq%5Buint8%5D"><span class="Identifier">base_qualities</span></a><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="bam.html#Record"><span class="Identifier">Record</span></a><span class="Other">;</span> <span class="Identifier">q</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">uint8</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">uint8</span><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 fill the given seq with the base-qualities.
@@ -1103,7 +1105,7 @@ returns true if the op consumes bases in the reference.
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2020-01-14 18:10:29 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2020-05-08 20:48:16 UTC</small>
       </div>
     </div>
   </div>
