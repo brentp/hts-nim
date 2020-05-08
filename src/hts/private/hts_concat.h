@@ -408,6 +408,7 @@ int sam_parse1(kstring_t *s, bam_hdr_t *h, bam1_t *b);
 hts_idx_t * sam_index_load(samFile *in, char *); // load index
 hts_idx_t *sam_index_load2(htsFile *fp, const char *fn, const char *fnidx);
 int bam_index_build(const char *fn, int min_shift);
+int sam_index_build3(const char *fn, const char *fnidx, int min_shift, int nthreads);
 
 
 hts_itr_t * sam_itr_querys(hts_idx_t*, bam_hdr_t *h, char * region);

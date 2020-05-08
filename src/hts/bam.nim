@@ -52,6 +52,33 @@ proc copy*(h: Header): Header =
   hdr.hdr = sam_hdr_dup(h.hdr)
   return hdr
 
+proc xam_index*(fn:string, fnidx:string="", min_shift:int=14, nthreads:int=1) =
+  ## index the file
+  var fnidx = if fnidx == "":
+      if fn.endswith(".bam"):
+        if min_shift == 14:
+          fn & ".bai"
+        else:
+          fn & ".csi"
+      elif fn.endswith(".cram"):
+        fn & ".crai"
+      else:
+        raise newException(ValueError, "hts-nim/xam_index: specify fnidx for file with unknown format")
+    else:
+      fnidx
+
+  let ret = sam_index_build3(fn.cstring, fnidx.cstring, min_shift.cint, nthreads.cint)
+  if ret == 0: return
+  if ret == -2.cint:
+    raise newException(OSError, "hts-nim/xam_index: error creating index for:" & fn)
+  elif ret == -2.cint:
+    raise newException(OSError, "hts-nim/xam_index: failed to open file:" & fn)
+  elif ret == -3.cint:
+    raise newException(OSError, "hts-nim/xam_index: format not indexable:" & fn)
+  elif ret == -4.cint:
+    raise newException(OSError, "hts-nim/xam_index: failed to create or save index:" & fn)
+
+
 proc from_string*(h:Header, header_string:string) =
     ## create a new header from a string
     var header_string = header_string
@@ -342,7 +369,7 @@ proc open*(bam: var Bam, path: cstring, threads: int=0, mode:string="r", fai: cs
   bam.hts = hts
   bam.path = path
 
-  if fai != nil:
+  if fai != nil and fai.len > 0:
     if 0 != hts_set_fai_filename(hts, fai):
       stderr.write_line "[hts-nim] could not load '" & $fai & "' as fasta index. " & $strerror(errno)
       return false
