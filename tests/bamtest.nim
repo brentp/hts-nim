@@ -40,7 +40,7 @@ suite "bam-suite":
 
   test "cram writing":
     var c:Bam
-    doAssert open(c, "_xxx.cram", mode="wc")
+    doAssert open(c, "_xxx.cram", mode="w")
     var b: Bam
     open(b, "tests/sa.bam")
     doAssert c.hts[].is_cram == 1'u32
