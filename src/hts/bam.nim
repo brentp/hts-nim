@@ -361,6 +361,12 @@ proc strerror(errnum:cint): cstring {.importc, header: "<errno.h>", cdecl.}
 proc open*(bam: var Bam, path: cstring, threads: int=0, mode:string="r", fai: cstring=nil, index: bool=false): bool {.discardable.} =
   ## `open_hts` returns a bam object for the given path. If CRAM, then fai must be given.
   ## if index is true, then it will attempt to open an index file for regional queries.
+  ## for writing, mode can be, e.g. 'wb7' to indicate bam format with compression level 7 or
+  ## 'wc' for cram format with default compression level.
+  var mode = mode
+  if mode[0] == 'w':
+    if ($path).endsWith(".bam") and 'b' notin mode and 'c' notin mode: mode &= 'b'
+    elif ($path).endsWith(".cram") and 'b' notin mode and 'c' notin mode: mode &= 'c'
   var hts = hts_open(path, mode)
   if hts == nil:
       stderr.write_line "[hts-nim] could not open '" & $path & "'. " & $strerror(errno)

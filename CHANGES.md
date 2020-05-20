@@ -1,3 +1,8 @@
+v0.3.6
+======
++ automatically set cram or bam file-type for file opened in write mode based
+  on file extension (#64)
+
 v0.3.5
 ======
 + add `xam_index` to index bam and cram files.

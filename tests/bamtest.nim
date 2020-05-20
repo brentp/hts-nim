@@ -38,6 +38,17 @@ suite "bam-suite":
       n += 1
     check n == 308
 
+  test "cram writing":
+    var c:Bam
+    doAssert open(c, "_xxx.cram", mode="wc")
+    var b: Bam
+    open(b, "tests/sa.bam")
+    doAssert c.hts[].is_cram == 1'u32
+    c.close
+    b.close
+    removeFile("_xxx.cram")
+
+
   test "set aux":
 
     var ibam:Bam
