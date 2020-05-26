@@ -1,3 +1,7 @@
+v0.3.7
+======
++ fix bai creation in `xam_index`
+
 v0.3.6
 ======
 + automatically set cram or bam file-type for file opened in write mode based

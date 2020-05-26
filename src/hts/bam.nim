@@ -54,6 +54,7 @@ proc copy*(h: Header): Header =
 
 proc xam_index*(fn:string, fnidx:string="", min_shift:int=14, nthreads:int=1) =
   ## index the file
+  var min_shift = min_shift
   var fnidx = if fnidx == "":
       if fn.endswith(".bam"):
         if min_shift == 14:
@@ -66,6 +67,8 @@ proc xam_index*(fn:string, fnidx:string="", min_shift:int=14, nthreads:int=1) =
         raise newException(ValueError, "hts-nim/xam_index: specify fnidx for file with unknown format")
     else:
       fnidx
+  if fnidx.endswith(".bai"):
+    min_shift = 0
 
   let ret = sam_index_build3(fn.cstring, fnidx.cstring, min_shift.cint, nthreads.cint)
   if ret == 0: return
