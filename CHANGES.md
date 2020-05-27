@@ -1,3 +1,7 @@
+v0.3.8
+======
++ flush stdout on destroy_vcf
+
 v0.3.7
 ======
 + fix bai creation in `xam_index`

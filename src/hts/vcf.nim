@@ -427,9 +427,12 @@ proc destroy_vcf(v:VCF) =
     hts_idx_destroy(v.bidx)
   if v.c != nil:
     bcf_destroy(v.c)
-  if v.fname != "-" and v.fname != "/dev/stdin" and v.hts != nil:
-    discard hts_close(v.hts)
-    v.hts = nil
+  if v.fname != "-" and v.fname != "/dev/stdin":
+    if v.hts != nil:
+      discard hts_close(v.hts)
+      v.hts = nil
+  else:
+    flushFile(stdout)
 
 proc close*(v:VCF) =
   if v.fname != "-" and v.fname != "/dev/stdin" and v.hts != nil:
