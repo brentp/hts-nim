@@ -2,7 +2,7 @@ import ./private/hts_concat
 import ./utils
 type
   Fai* = ref object
-    ## Header wraps the bam header info.
+    ## Fai provides random access to fasta sequences.
     cptr*: ptr faidx_t
 
 proc destroy_fai(fai: Fai) =

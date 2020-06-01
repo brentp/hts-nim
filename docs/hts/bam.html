@@ -959,7 +959,7 @@ create a new bam record and associate it with the header
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">WriteIOEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-<tt class="docutils literal"><span class="pre">open_hts</span></tt> returns a bam object for the given path. If CRAM, then fai must be given. if index is true, then it will attempt to open an index file for regional queries.
+<tt class="docutils literal"><span class="pre">open_hts</span></tt> returns a bam object for the given path. If CRAM, then fai must be given. if index is true, then it will attempt to open an index file for regional queries. for writing, mode can be, e.g. 'wb7' to indicate bam format with compression level 7 or 'wc' for cram format with default compression level.
 
 </dd>
 <a id="load_index,Bam,string"></a>
@@ -1105,7 +1105,7 @@ returns true if the op consumes bases in the reference.
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2020-05-08 20:48:16 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2020-06-01 17:23:31 UTC</small>
       </div>
     </div>
   </div>
