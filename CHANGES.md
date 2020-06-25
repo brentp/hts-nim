@@ -1,3 +1,7 @@
+v0.3.9
+======
++ add `newCigar(els: seq[CigarElement]): Cigar` (#9)
+
 v0.3.8
 ======
 + flush stdout on destroy_vcf

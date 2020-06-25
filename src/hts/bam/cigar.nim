@@ -25,6 +25,9 @@ type
 type CigarOp* {.pure.} = enum
   match = 0'u32, insert, deletion, ref_skip, soft_clip, hard_clip, pad, equal, diff, back
 
+proc `==`*(a, b: CigarElement): bool {.borrow.}
+
+
 proc `$`*(o:CigarOp): char {.inline.} =
   return "MIDNSHP=XB"[int(o)]
 
@@ -72,6 +75,13 @@ proc `$`*(c: Cigar): string =
   for o in c:
     s &= $o
   return s
+
+proc newCigar*(els: var seq[CigarElement]): Cigar =
+  ## create a new cigar from a sequence of cigar elements.
+  ## This uses a pointer to the elements so user is responsible for ensuring that `els` remain
+  ## in memory (e.g. with GC_ref) for as long as the  resulting Cigar is available.
+  var x = cast[CPtr[uint32]](els[0].addr)
+  result = Cigar(cig: x, n: els.len.uint32)
 
 template consumes*(o: CigarElement): Consume =
   cast[Consume](bam_cigar_type(o.op))

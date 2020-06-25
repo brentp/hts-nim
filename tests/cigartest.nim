@@ -14,3 +14,15 @@ suite "flag cigar-suite":
     check $CigarElement(2056) == "128X"
     check $CigarElement(2057) == "128B"
     check $CigarElement(4096) == "256M"
+
+  test "new cigar":
+    var els = @[CigarElement(2048), CigarElement(2049), CigarElement(2048)]
+    GC_ref(els)
+
+    var cig = newCigar(els)
+    var i = 0
+    for e in cig:
+      check e == els[i]
+      i.inc
+
+    GC_unref(els)
