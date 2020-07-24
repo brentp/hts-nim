@@ -328,7 +328,7 @@ proc get*(i:INFO, key:string, data:var string): Status {.inline.} =
   var n:cint = 0
   result = Status.OK
 
-  var ret = bcf_get_info_values(i.v.vcf.header.hdr, i.v.c, key.cstring,
+  let ret = bcf_get_info_values(i.v.vcf.header.hdr, i.v.c, key.cstring,
      i.v.p.addr, n.addr, BCF_HT_STR.cint)
   if ret < 0:
     if data.len != 0: data.set_len(0)
