@@ -54,7 +54,8 @@ suite "bgzf-suite":
         echo line
 
   test "write-with-index":
-    var bx = wopen_bgzi("ti.txt.gz", 1, 2, 3, true)
+    var bx:BGZI
+    check bx.open("ti.txt.gz", fmWrite, 1, 2, 3, true)
     check bx.write_interval("aaa\t4\t10", "aaa", 4, 10) > 0
     check bx.write_interval("aaa\t40\t100", "aaa", 40, 100) > 0
     check bx.write_interval("bbbbb\t2\t20", "bbbbb", 2, 20) > 0
@@ -80,7 +81,8 @@ suite "bgzf-suite":
     check t != nil
 
   test "csi-iterator":
-    var rx = ropen_bgzi("ti.txt.gz")
+    var rx:BGZI
+    check rx.open("ti.txt.gz")
 
     var found = 0
     for reg in rx.query("aaa", 1, 5):
@@ -90,7 +92,8 @@ suite "bgzf-suite":
 
   test "bgzi-query from VCF rows":
     ## There was a discrepancy between rec.POS (int32) and BGZI.query (int64)
-    let db = ropen_bgzi("tests/test_files/simple.tsv.gz")
+    var db:BGZI
+    check db.open("tests/test_files/simple.tsv.gz")
     var v: VCF
     doAssert(v.open("tests/test.vcf.gz"))
 

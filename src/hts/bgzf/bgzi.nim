@@ -2,6 +2,7 @@ import ../private/hts_concat
 import ../bgzf
 import ../utils
 import ../csi
+import os
 
 type
   BGZI* = ref object
@@ -10,14 +11,16 @@ type
     path: string
     last_start: int
 
-proc wopen_bgzi*(path: string, seq_col: int, start_col: int, end_col: int, zero_based: bool, compression_level:int=1, levels:int=5, min_shift:int=14): BGZI =
+proc wopen_bgzi*(path: string, seq_col: int, start_col: int, end_col: int, zero_based: bool, compression_level:int=1, levels:int=5, min_shift:int=14): BGZI {.deprecated: "open" } =
+  ## deprecated means of writing an indexed file
   var b : BGZ
   b.open(path, "w" & $compression_level)
   var bgzi = BGZI(bgz:b, csi: new_csi(seq_col, start_col, end_col, not zero_based, levels, min_shift), path:path)
   bgzi.last_start = -100000
   return bgzi
 
-proc ropen_bgzi*(path: string): BGZI =
+proc ropen_bgzi*(path: string): BGZI {.deprecated: "open" } =
+  ## deprecated means of opening an indexed file
   var b: BGZ
   b.open(path, "r")
   var c: CSI
@@ -25,6 +28,26 @@ proc ropen_bgzi*(path: string): BGZI =
     stderr.write_line("[hts-nim] error opening csi file for:", path)
     quit(1)
   return BGZI(bgz: b, csi:c, path:path)
+
+proc open*(b:var BGZI, path:string, mode:FileMode=fmRead, seq_col:int=0, start_col:int=0, end_col:int=0, zero_based:bool=false, compression_level:int=1, levels:int=5, min_shift:int=14): bool =
+
+  if mode == FileMode.fmRead:
+    var bg:BGZ
+    bg.open(path, "r")
+    var c:CSI
+    if not c.open(path):
+      raise newException(IOError, "hts: error opening index for " & path)
+    result = true
+    b = BGZI(bgz:bg, csi: c, path:path)
+
+  elif mode == FileMode.fmWrite:
+    var bg : BGZ
+    bg.open(path, "w" & $compression_level)
+    b = BGZI(bgz:bg, csi: new_csi(seq_col, start_col, end_col, not zero_based, levels, min_shift), path:path)
+    result = true
+    b.last_start = -100000
+  else:
+    raise newException(IOError, "hts: mode " & $mode & "not supported for bgzi")
 
 proc fastSubStr(dest: var string; src: cstring, a, b: int) {.inline.} =
   # once the stdlib uses TR macros, these things should not be necessary

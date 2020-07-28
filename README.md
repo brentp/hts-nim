@@ -111,7 +111,8 @@ for rec in v.query("1:15600-18250"):
 ```nim
 import hts
 
-var b: BGZI = ropen_bgzi("ti.txt.gz")  # Requires a CSI index: ti.txt.gz.csi
+var b: BGZI
+doAssert b.open("ti.txt.gz")  # Requires a CSI index: ti.txt.gz.csi
 
 for reg in b.query("aaa", 1, 5):
   echo reg

@@ -1,3 +1,8 @@
+v0.3.11
+=======
++ add bgzi.open which allows opening for reading and writing without quit() and replaces
+  `wopen_bgzi` and `ropen_bgzi`
+
 v0.3.9
 ======
 + add `newCigar(els: seq[CigarElement]): Cigar` (#9)
