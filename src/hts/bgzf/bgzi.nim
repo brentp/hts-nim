@@ -92,7 +92,7 @@ proc write_interval*(b: BGZI, line: string, chrom: string, start: int, stop: int
     stderr.write_line("[hts-nim] error adding to csi index")
     quit(1)
 
-proc close*(b: BGZI): int =
+proc close*(b: BGZI): int {.discardable.} =
    discard b.bgz.flush()
    b.csi.finish(b.bgz.tell())
    if b.csi.set_meta() != 0:
