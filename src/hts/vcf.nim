@@ -623,7 +623,7 @@ proc contigs*(v:VCF): seq[Contig] =
     result.setLen(n.int)
     for i in 0..<h.n[BCF_DT_CTG]:
       result[i].name = $cnames[i]
-      result[i].length = get_info(h.id[BCF_DT_CTG], i, 0) #.val.info[0]
+      result[i].length = get_info(h.id[BCF_DT_CTG], i.int32, 0) #.val.info[0]
   else:
     try:
        v.load_index("")
