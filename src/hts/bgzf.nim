@@ -13,14 +13,14 @@ proc close*(b: BGZ): int {.discardable.} =
 
 proc write*(b: BGZ, line: string): int64 {.inline.} =
   ## write a string to the file
-  bgzf_write(b.cptr, cstring(line), csize(line.len))
+  bgzf_write(b.cptr, cstring(line), csize_t(line.len))
 
 proc write_line*(b: BGZ, line: string): int {.inline.} =
   ## write a string to the file and add a newline.
 
-  var r = int(bgzf_write(b.cptr, cstring(line), csize(line.len)))
+  var r = int(bgzf_write(b.cptr, cstring(line), csize_t(line.len)))
   if r > 0:
-    if int(bgzf_write(b.cptr, cstring("\n"), csize(1))) < 0:
+    if int(bgzf_write(b.cptr, cstring("\n"), csize_t(1))) < 0:
       return -1
   return r + 1
 
