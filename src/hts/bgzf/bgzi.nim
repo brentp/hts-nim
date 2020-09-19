@@ -2,7 +2,6 @@ import ../private/hts_concat
 import ../bgzf
 import ../utils
 import ../csi
-import os
 
 type
   BGZI* = ref object
