@@ -243,7 +243,7 @@ type
 ## ###########################
 
 type
-  INNER_C_UNION_hts_concat_232* {.bycopy.} = object {.union.}
+  INNER_C_UNION_hts_concat_232* {.bycopy, union.} = object
     bgzf*: ptr BGZF
     cram*: ptr cram_fd
     hfile*: ptr hFILE
@@ -596,7 +596,7 @@ const
   BCF_ERR_TAG_INVALID* = 64
 
 type
-  INNER_C_UNION_hts_concat_524* {.bycopy.} = object {.union.}
+  INNER_C_UNION_hts_concat_524* {.bycopy, union.} = object
     i*: int64                  ##  integer value
     f*: cfloat                 ##  float value
 
