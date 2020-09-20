@@ -1,0 +1,70 @@
+diff --git a/d4binding/Cargo.toml b/d4binding/Cargo.toml
+index 5990f12..5cfecc2 100644
+--- a/d4binding/Cargo.toml
++++ b/d4binding/Cargo.toml
+@@ -11,7 +11,6 @@ d4 = {path = "../d4"}
+ rayon = "1.3.0"
+ 
+ [build-dependencies]
+-bindgen = "0.53.2"
+ 
+ [lib]
+ crate_type = ["cdylib", "staticlib"]
+diff --git a/d4binding/build.rs b/d4binding/build.rs
+index fb5a5e6..61c4da3 100644
+--- a/d4binding/build.rs
++++ b/d4binding/build.rs
+@@ -6,6 +6,7 @@ fn main() {
+     if !binding_dir.is_dir() {
+         std::fs::create_dir_all(binding_dir).unwrap();
+     }
++    /*
+ 
+     bindgen::Builder::default()
+         .header(format!(
+@@ -18,4 +19,5 @@ fn main() {
+         .unwrap()
+         .write_to_file("bindgen/c_api.rs")
+         .expect("Unable to write the generated file");
++   */
+ }
+diff --git a/hts/Cargo.toml b/hts/Cargo.toml
+index 4c175d4..c7ca556 100644
+--- a/hts/Cargo.toml
++++ b/hts/Cargo.toml
+@@ -9,5 +9,4 @@ edition = "2018"
+ [dependencies]
+ 
+ [build-dependencies]
+-bindgen = "*"
+ num_cpus = "*"
+diff --git a/hts/build.rs b/hts/build.rs
+index b40b1bf..14f14b4 100644
+--- a/hts/build.rs
++++ b/hts/build.rs
+@@ -1,7 +1,7 @@
+ use std::path::Path;
+ use std::process::Command;
+ 
+-use bindgen::Builder as BG;
++//use bindgen::Builder as BG;
+
+ use num_cpus::get as get_num_cpus;
+ 
+@@ -10,6 +10,7 @@ use std::env;
+ fn create_hts_bindings(base: &str) -> Result<(), ()> {
+     let include_param = format!("-I{}/htslib/", base);
+     if !Path::new("generated/hts.rs").exists() {
++        /*
+         BG::default()
+             .header("hts_inc.h")
+             .clang_arg(include_param.as_str())
+@@ -18,6 +19,7 @@ fn create_hts_bindings(base: &str) -> Result<(), ()> {
+             .generate()?
+             .write_to_file("generated/hts.rs")
+             .expect("Unable to write the generated file");
++          */
+     }
+     Ok(())
+ }
+

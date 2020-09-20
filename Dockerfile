@@ -4,7 +4,7 @@ FROM alpine:3.11.5
 ENV CFLAGS="-fPIC -O3"
 
 RUN apk add wget git xz bzip2-static musl m4 autoconf tar xz-dev bzip2-dev build-base libpthread-stubs libzip-dev gfortran \
-	    openssl-libs-static openblas-static pcre-dev
+	    openssl-libs-static openblas-static pcre-dev curl llvm-dev curl-static
 
 RUN mkdir -p /usr/local/include && \
     git clone --depth 1 https://github.com/ebiggers/libdeflate.git && \
@@ -15,10 +15,10 @@ RUN mkdir -p /usr/local/include && \
     cd .. && \
     rm -rf cloudflare-zlib
 
-
 RUN cd / && \
-    git clone -b v1.2.0 git://github.com/nim-lang/nim nim && \
-    cd nim && sh ./build_all.sh && \
+    git clone -b v1.2.6 git://github.com/nim-lang/nim nim && \
+    cd nim &&  \
+    sh ./build_all.sh && \
     rm -rf csources && \
     echo 'PATH=/nim/bin:$PATH' >> ~/.bashrc && \
     echo 'PATH=/nim/bin:$PATH' >> ~/.bash_profile && \
@@ -47,6 +47,26 @@ RUN \
     ./configure --disable-s3 --disable-libcurl --with-libdeflate && \
     make -j4 CFLAGS="-fPIC -O3" install && \
     cd ../ && rm -rf htslib bcftools
+
+
+
+RUN sh -c 'curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -q -y' \
+	    && apk add clang-libs
+
+ENV HTSLIB=dynamic
+ENV PATH=$PATH:~/.cargo/bin/
+
+COPY docker/d4.patch /tmp/
+
+RUN ~/.cargo/bin/rustup target add x86_64-unknown-linux-musl \
+	&& git clone https://github.com/38/d4-format \
+	&& cd d4-format \
+	&& git apply < /tmp/d4.patch \
+	&& ~/.cargo/bin/cargo build --target x86_64-unknown-linux-musl --release
+
+RUN install -m 644 d4-format/target/x86_64-unknown-linux-musl/release/libd4binding.a /usr/lib && \
+	install -m 644 d4-format/d4binding/include/d4.h /usr/include
+
 
 ADD . /src/
 RUN cat /src/docker/docker.nim.cfg >> /nim/config/nim.cfg && \
