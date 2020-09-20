@@ -200,7 +200,7 @@ proc toSeq[T](data: var seq[T], p:pointer, n:int) {.inline.} =
   if data.len != n:
     data.set_len(n)
   if n == 0: return
-  copyMem(data[0].addr, p, csize(n * sizeof(T)))
+  copyMem(data[0].addr, p, csize_t(n * sizeof(T)))
 
 proc bcf_hdr_id2type(hdr:ptr bcf_hdr_t, htype:int, int_id:int): int {.inline.}=
   # translation of htslib macro.
@@ -404,7 +404,7 @@ proc destroy_variant(v:Variant) =
     free(v.p)
 
 proc from_string*(v: var Variant, h: Header, s:var string) =
-  var str = kstring_t(s:s.cstring, l:s.len, m:s.len)
+  var str = kstring_t(s:s.cstring, l:s.len.csize_t, m:s.len.csize_t)
   if v == nil:
     new(v, destroy_variant)
     v.own = true
@@ -623,7 +623,7 @@ proc contigs*(v:VCF): seq[Contig] =
     result.setLen(n.int)
     for i in 0..<h.n[BCF_DT_CTG]:
       result[i].name = $cnames[i]
-      result[i].length = get_info(h.id[BCF_DT_CTG], i, 0) #.val.info[0]
+      result[i].length = get_info(h.id[BCF_DT_CTG], i.int32, 0) #.val.info[0]
   else:
     try:
        v.load_index("")

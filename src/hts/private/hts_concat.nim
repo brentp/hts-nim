@@ -8,6 +8,9 @@ elif defined(macosx):
 else:
   const
     libname* = "libhts.so"
+when NimMajor < 1:
+    type
+        csize_t* = csize
 ##
 ## enum hts_fmt_option {
 ##     // CRAM specific
@@ -125,8 +128,8 @@ type
 
 type
   kstring_t* {.bycopy.} = object
-    l*: csize
-    m*: csize
+    l*: csize_t
+    m*: csize_t
     s*: cstring
 
 
@@ -193,7 +196,7 @@ proc hclose*(fp: ptr hFILE): cint {.cdecl, importc: "hclose", dynlib: libname.}
 ##  @return       number of bytes written (i.e., _length_); negative on error
 ##
 
-proc bgzf_write*(fp: ptr BGZF; data: pointer; length: csize): int64 {.cdecl,
+proc bgzf_write*(fp: ptr BGZF; data: pointer; length: csize_t): int64 {.cdecl,
     importc: "bgzf_write", dynlib: libname.}
 template bgzf_tell*(fp: untyped): untyped =
   (((fp).block_address shl 16) or ((fp).block_offset and 0x0000FFFF))
@@ -243,7 +246,7 @@ type
 ## ###########################
 
 type
-  INNER_C_UNION_hts_concat_232* {.bycopy.} = object {.union.}
+  INNER_C_UNION_hts_concat_232* {.bycopy, union.} = object
     bgzf*: ptr BGZF
     cram*: ptr cram_fd
     hfile*: ptr hFILE
@@ -256,7 +259,7 @@ type
   sam_hdr_t* {.bycopy.} = object
     n_targets*: int32
     ignore_sam_err*: int32
-    l_text*: csize
+    l_text*: csize_t
     target_len*: ptr uint32
     cigar_tab*: ptr int8        ## HTS_DEPRECATED("Use bam_cigar_table[] instead");
     target_name*: cstringArray
@@ -596,7 +599,7 @@ const
   BCF_ERR_TAG_INVALID* = 64
 
 type
-  INNER_C_UNION_hts_concat_524* {.bycopy.} = object {.union.}
+  INNER_C_UNION_hts_concat_524* {.bycopy, union.} = object
     i*: int64                  ##  integer value
     f*: cfloat                 ##  float value
 

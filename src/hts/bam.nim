@@ -99,7 +99,7 @@ proc from_string*(r:Record, record_string:string) =
       raise newException(ValueError, "must create record with NewRecord before calling from_string")
 
 
-    var kstr = kstring_t(s:record_string.cstring, m:record_string.len.csize, l:record_string.len.csize)
+    var kstr = kstring_t(s:record_string.cstring, m:record_string.len.csize_t, l:record_string.len.csize_t)
     var ret = sam_parse1(kstr.addr, r.hdr.hdr, r.b)
     if ret != 0:
       raise newException(ValueError, "error:" & $ret & " in from_string parsing record: " & record_string)
@@ -189,7 +189,7 @@ proc qname*(r: Record): string {. inline .} =
   ## `qname` returns the query name.
   return $(bam_get_qname(r.b))
 
-proc c_realloc(p: pointer, newsize: csize): pointer {.
+proc c_realloc(p: pointer, newsize: csize_t): pointer {.
   importc: "realloc", header: "<stdlib.h>".}
 
 proc set_qname*(r: Record, qname: string) =
@@ -211,7 +211,7 @@ proc set_qname*(r: Record, qname: string) =
     r.b.m_data = r.b.l_data.uint32
     # 4-byte align
     r.b.m_data += 32'u32 - (r.b.m_data mod 32'u32)
-    r.b.data = cast[ptr uint8](c_realloc(r.b.data.pointer, r.b.m_data.csize))
+    r.b.data = cast[ptr uint8](c_realloc(r.b.data.pointer, r.b.m_data.csize_t))
   when defined(qname_debug):
     echo "old:", r.qname
     echo "new:", qname
