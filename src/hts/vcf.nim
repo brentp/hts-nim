@@ -73,6 +73,17 @@ var empty_samples: seq[string]
 converter toInt(b:BCF_HEADER_TYPE): int = b.int
 converter toCint(b:BCF_HEADER_TYPE): cint = b.cint
 
+proc destroy_variant(v:Variant) =
+  if v != nil and v.c != nil and v.own:
+    bcf_destroy(v.c)
+    v.c = nil
+  if v.p != nil:
+    free(v.p)
+
+proc destroy_format(f:Format) =
+  if f != nil and f.p != nil:
+    free(f.p)
+
 proc n_samples*(v:VCF): int {.inline.} =
   bcf_hdr_nsamples(v.header.hdr).int
 
@@ -175,15 +186,68 @@ proc remove_format*(h:Header, ID:string): Status =
   bcf_hdr_remove(h.hdr, BCF_HEADER_TYPE.BCF_HL_FMT.cint, ID.cstring)
   return Status(bcf_hdr_sync(h.hdr))
 
-proc info*(v:Variant): INFO {.inline, noInit.} =
-  discard bcf_unpack(v.c, BCF_UN_STR or BCF_UN_FLT or BCF_UN_INFO)
-  result = INFO(i:0, v:v)
+proc destroy_vcf(v:VCF) =
+  bcf_hdr_destroy(v.header.hdr)
+  if v.tidx != nil:
+    tbx_destroy(v.tidx)
+  if v.bidx != nil:
+    hts_idx_destroy(v.bidx)
+  if v.c != nil:
+    bcf_destroy(v.c)
+  if v.fname != "-" and v.fname != "/dev/stdin":
+    if v.hts != nil:
+      discard hts_close(v.hts)
+      v.hts = nil
+  else:
+    flushFile(stdout)
 
-proc destroy_format(f:Format) =
-  if f != nil and f.p != nil:
-    free(f.p)
+var
+  errno* {.importc, header: "<errno.h>".}: cint
 
-proc format*(v:Variant): FORMAT {.inline, noInit.} =
+proc strerror(errnum:cint): cstring {.importc, header: "<errno.h>", cdecl.}
+
+
+proc open*(v:var VCF, fname:string, mode:string="r", samples:seq[string]=empty_samples, threads:int=0): bool =
+  ## open a VCF at the given path
+  new(v, destroy_vcf)
+  var vmode = mode
+  if vmode[0] == 'w' and vmode.len == 1:
+    if fname.endswith(".gz"): vmode &= "z"
+    elif fname.endswith(".bcf"): vmode &= "b"
+
+  v.hts = hts_open(fname.cstring, vmode.cstring)
+  v.fname = fname
+  if v.hts == nil:
+    stderr.write_line "hts-nim/vcf: error opening file:" & fname & ". " & $strerror(errno)
+    return false
+
+  if mode[0] == 'w': return true
+
+  if mode[0] == 'r' and 0 != threads and 0 != hts_set_threads(v.hts, cint(threads)):
+    raise newException(ValueError, "error setting number of threads")
+
+
+  v.header = Header(hdr:bcf_hdr_read(v.hts))
+  if v.header.hdr == nil:
+    raise newException(OSError, &"[hts-nim/vcf] error reading VCF header from '{fname}'")
+  if samples.len != 0:
+    v.set_samples(samples)
+
+  v.c = bcf_init()
+
+  if v.c == nil:
+    stderr.write_line "hts-nim/vcf: error opening file:" & fname
+    return false
+
+  return true
+
+proc newVariant*(): Variant {.noInit.} =
+  ## make an empty variant.
+  new(result, destroy_variant)
+  result.c = bcf_init()
+  result.own = true
+
+proc format*(v:Variant): FORMAT {.inline.} =
   discard bcf_unpack(v.c, BCF_UN_ALL)
   new(result, destroy_format)
   result.v = v
@@ -396,44 +460,6 @@ proc set*(i:INFO, key:string, values:var seq[int32]): Status {.inline.} =
       values[0].addr.pointer, len(values).cint, BCF_HT_INT.cint)
   return Status(ret.int)
 
-proc destroy_variant(v:Variant) =
-  if v != nil and v.c != nil and v.own:
-    bcf_destroy(v.c)
-    v.c = nil
-  if v.p != nil:
-    free(v.p)
-
-proc from_string*(v: var Variant, h: Header, s:var string) =
-  var str = kstring_t(s:s.cstring, l:s.len.csize_t, m:s.len.csize_t)
-  if v == nil:
-    new(v, destroy_variant)
-    v.own = true
-  if v.c == nil:
-    v.c = bcf_init()
-  if vcf_parse(str.addr, h.hdr, v.c) != 0:
-   raise newException(ValueError, "hts-nim/Variant/from_string: error parsing variant:" & s)
-
-proc newVariant*(): Variant {.noInit.} =
-  ## make an empty variant.
-  new(result, destroy_variant)
-  result.c = bcf_init()
-  result.own = true
-
-proc destroy_vcf(v:VCF) =
-  bcf_hdr_destroy(v.header.hdr)
-  if v.tidx != nil:
-    tbx_destroy(v.tidx)
-  if v.bidx != nil:
-    hts_idx_destroy(v.bidx)
-  if v.c != nil:
-    bcf_destroy(v.c)
-  if v.fname != "-" and v.fname != "/dev/stdin":
-    if v.hts != nil:
-      discard hts_close(v.hts)
-      v.hts = nil
-  else:
-    flushFile(stdout)
-
 proc close*(v:VCF) =
   if v.fname != "-" and v.fname != "/dev/stdin" and v.hts != nil:
     if hts_close(v.hts) != 0:
@@ -469,44 +495,9 @@ proc write_variant*(v:VCF, variant:Variant): bool =
       doAssert bcf_hdr_sync(variant.vcf.header.hdr) == 0
   return bcf_write(v.hts, v.header.hdr, variant.c) == 0
 
-var
-  errno* {.importc, header: "<errno.h>".}: cint
-
-proc strerror(errnum:cint): cstring {.importc, header: "<errno.h>", cdecl.}
-
-proc open*(v:var VCF, fname:string, mode:string="r", samples:seq[string]=empty_samples, threads:int=0): bool =
-  ## open a VCF at the given path
-  new(v, destroy_vcf)
-  var vmode = mode
-  if vmode[0] == 'w' and vmode.len == 1:
-    if fname.endswith(".gz"): vmode &= "z"
-    elif fname.endswith(".bcf"): vmode &= "b"
-
-  v.hts = hts_open(fname.cstring, vmode.cstring)
-  v.fname = fname
-  if v.hts == nil:
-    stderr.write_line "hts-nim/vcf: error opening file:" & fname & ". " & $strerror(errno)
-    return false
-
-  if mode[0] == 'w': return true
-
-  if mode[0] == 'r' and 0 != threads and 0 != hts_set_threads(v.hts, cint(threads)):
-    raise newException(ValueError, "error setting number of threads")
-
-
-  v.header = Header(hdr:bcf_hdr_read(v.hts))
-  if v.header.hdr == nil:
-    raise newException(OSError, &"[hts-nim/vcf] error reading VCF header from '{fname}'")
-  if samples.len != 0:
-    v.set_samples(samples)
-
-  v.c = bcf_init()
-
-  if v.c == nil:
-    stderr.write_line "hts-nim/vcf: error opening file:" & fname
-    return false
-
-  return true
+proc info*(v:Variant): INFO {.inline, noInit.} =
+  discard bcf_unpack(v.c, BCF_UN_STR or BCF_UN_FLT or BCF_UN_INFO)
+  result = INFO(i:0, v:v)
 
 proc bcf_hdr_int2id(hdr: ptr bcf_hdr_t, typ: int, rid:int): cstring {.inline.} =
   var v = cast[CPtr[bcf_idpair_t]](hdr.id[typ])
