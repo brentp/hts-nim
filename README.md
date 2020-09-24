@@ -17,7 +17,7 @@ too different to python.
 
 If you use this library, please cite [the paper](https://academic.oup.com/bioinformatics/advance-article-abstract/doi/10.1093/bioinformatics/bty358/4990493)
 
-Projects using `hts-nim` are accumulating [in the wiki](https://github.com/brentp/hts-nim/wiki/Examples)
+Projects using `hts-nim` are accumulating [in the wiki](https://github.com/brentp/hts-nim/wiki/Example-uses-of-hts-nim)
 
 ## Installation
 
@@ -29,7 +29,7 @@ Examples of `hts-nim` tools are available in the [hts-nim-tools repo](https://gi
 
 below are examples of the syntax in this library see the [docs](https://brentp.github.io/hts-nim/) for more info:
 
-Also see examples and other repos using hts-nim in the [wiki](https://github.com/brentp/hts-nim/wiki/Examples)
+Also see examples and other repos using hts-nim in the [wiki](https://github.com/brentp/hts-nim/wiki/Example-uses-of-hts-nim)
 
 ## BAM / CRAM / SAM
 
