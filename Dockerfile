@@ -38,7 +38,7 @@ ENV PATH=:/root/.nimble/bin:/nim/bin/:$PATH
 
 RUN \
     git clone https://github.com/samtools/htslib && \
-    cd htslib && git checkout 1.10.2 && autoheader && autoconf && \
+    cd htslib && git checkout 1.11 && autoheader && autoconf && \
     ./configure --disable-s3 --disable-libcurl --with-libdeflate && \
     make -j4 CFLAGS="-fPIC -O3" install && \
     cd ../ && \
@@ -49,20 +49,19 @@ RUN \
     cd ../ && rm -rf htslib bcftools
 
 
+RUN sh -c 'curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -q -y'
+#	    && apk add clang-libs
 
-RUN sh -c 'curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -q -y' \
-	    && apk add clang-libs
-
-ENV HTSLIB=dynamic
+#ENV HTSLIB=dynamic
 ENV PATH=$PATH:~/.cargo/bin/
 
-COPY docker/d4.patch /tmp/
+#COPY docker/d4.patch /tmp/
 
+#&& git apply < /tmp/d4.patch \
 RUN ~/.cargo/bin/rustup target add x86_64-unknown-linux-musl \
 	&& git clone https://github.com/38/d4-format \
 	&& cd d4-format \
-	&& git apply < /tmp/d4.patch \
-	&& ~/.cargo/bin/cargo build --target x86_64-unknown-linux-musl --release
+	&& ~/.cargo/bin/cargo build --all --target x86_64-unknown-linux-musl --release
 
 RUN install -m 644 d4-format/target/x86_64-unknown-linux-musl/release/libd4binding.a /usr/lib && \
 	install -m 644 d4-format/d4binding/include/d4.h /usr/include
