@@ -8,9 +8,10 @@ elif defined(macosx):
 else:
   const
     libname* = "libhts.so"
-when NimMajor < 1:
-    type
-        csize_t* = csize
+
+when (NimMajor, NimMinor) < (1, 1):
+  type
+    csize_t* = csize
 ##
 ## enum hts_fmt_option {
 ##     // CRAM specific
