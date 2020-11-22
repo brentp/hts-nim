@@ -1,3 +1,7 @@
+v0.3.13
+=======
++ changes for nim ORC/ARC GCs
+
 v0.3.11
 =======
 + add bgzi.open which allows opening for reading and writing without quit() and replaces
