@@ -32,3 +32,9 @@ suite "fai-suite":
       check fai[0] == "ref"
       check fai[0] == "ref"
       check fai.get(fai[0], 0, 2) == "ACG"
+
+  test "close":
+      var fai:Fai
+      check open(fai, "tests/sample.fa")
+      fai.close()
+      check true

@@ -1,3 +1,7 @@
+v0.3.14
+=======
++ add close method to fai for consistency (continues to also occur automatically upon garbage collection) #70
+
 v0.3.13
 =======
 + changes for nim ORC/ARC GCs

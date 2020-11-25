@@ -5,9 +5,13 @@ type
     ## Fai provides random access to fasta sequences.
     cptr*: ptr faidx_t
 
-proc destroy_fai(fai: Fai) =
+proc close*(fai: Fai) =
+  ## close the fai
   if fai.cptr != nil:
     fai_destroy(fai.cptr)
+
+proc destroy_fai(fai: Fai) =
+  fai.close
 
 proc open*(fai:var Fai, path: string): bool =
   ## open an fai and return a bool indicating success
