@@ -176,3 +176,19 @@ At this time, libcurl is not supported so only binaries built using this method 
 
 The docker images does use [libdeflate](https://github.com/ebiggers/libdeflate) by default. That provides,
 for example, a 20% speed improvement when used to build [mosdepth](https://github.com/brentp/mosdepth).
+
+### Static binary with singularity
+
+The default static build setup uses docker on linux. This is not possible on some clusters. To build a project using singularity, use something like this:
+
+```
+singularity run \
+	    --bind $(pwd):/load \
+	    --bind /scratch \
+	    --bind /uufs \
+            'docker://brentp/musl-hts-nim:latest' /usr/local/bin/nsb -n slivar.nimble -s src/slivar.nim -- -d:danger -d:release
+```
+where the first `bind` is required as-is. The other binds can be modified to adjust which paths on the machine need to be available to access all 
+local source files.
+Then, replace `slivar.nimble` which your nimble file and `src/slivar.nim` with your main source file.
+It's also sometimes useful to replace `-d:danger -d:release` with `-d:debug` to get a debug build.
