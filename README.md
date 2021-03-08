@@ -189,6 +189,6 @@ singularity run \
             'docker://brentp/musl-hts-nim:latest' /usr/local/bin/nsb -n slivar.nimble -s src/slivar.nim -- -d:danger -d:release
 ```
 where the first `bind` is required as-is. The other binds can be modified to adjust which paths on the machine need to be available to access all 
-local source files.
-Then, replace `slivar.nimble` which your nimble file and `src/slivar.nim` with your main source file.
+local source files. This command will create a `slivar` executable in `pwd`.
+Then, replace `slivar.nimble` with your nimble file and `src/slivar.nim` with your main source file.
 It's also sometimes useful to replace `-d:danger -d:release` with `-d:debug` to get a debug build.
