@@ -1,3 +1,7 @@
+v0.3.15
+=======
++ vcf: expose a couple more functions from htslib
+
 v0.3.14
 =======
 + add close method to fai for consistency (continues to also occur automatically upon garbage collection) #70

@@ -8,10 +8,6 @@ elif defined(macosx):
 else:
   const
     libname* = "libhts.so"
-
-when (NimMajor, NimMinor) < (1, 1):
-  type
-    csize_t* = csize
 ##
 ## enum hts_fmt_option {
 ##     // CRAM specific
@@ -719,6 +715,8 @@ proc bcf_hdr_remove*(h: ptr bcf_hdr_t; `type`: cint; key: cstring) {.cdecl,
     importc: "bcf_hdr_remove", dynlib: libname.}
 proc bcf_hdr_add_sample*(hdr: ptr bcf_hdr_t; sample: cstring): cint {.cdecl,
     importc: "bcf_hdr_add_sample", dynlib: libname.}
+proc bcf_hdr_merge*(dst: ptr bcf_hdr_t; src: ptr bcf_hdr_t): ptr bcf_hdr_t {.cdecl,
+    importc: "bcf_hdr_merge", dynlib: libname.}
 template bcf_hdr_nsamples*(hdr: untyped): untyped =
   (hdr).n[BCF_DT_SAMPLE]
 

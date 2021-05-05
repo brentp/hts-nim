@@ -607,6 +607,7 @@ int bcf_hdr_printf(bcf_hdr_t *h, const char *format, ...);
 void bcf_hdr_remove(bcf_hdr_t *h, int type, const char *key);
 
 int bcf_hdr_add_sample(bcf_hdr_t *hdr, const char *sample);
+bcf_hdr_t *bcf_hdr_merge(bcf_hdr_t *dst, const bcf_hdr_t *src);
 
 
 
