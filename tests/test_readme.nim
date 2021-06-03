@@ -10,7 +10,7 @@ randomize()
 
 proc getRandomNimname(length: int = 8): string =
   result = "test_"
-  for _ in ..length:
+  for _ in 0..length:
     result.add(sample(IdentChars))
   result.add(".nim")
 

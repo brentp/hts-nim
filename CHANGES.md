@@ -1,3 +1,8 @@
+v0.3.16
+=======
++ expose VCF.fname
++ change rendering of unknown alleles to fix './.'
+
 v0.3.15
 =======
 + vcf: expose a couple more functions from htslib

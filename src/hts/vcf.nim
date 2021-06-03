@@ -22,7 +22,7 @@ type
     c: ptr bcf1_t
     bidx: ptr hts_idx_t
     tidx: ptr tbx_t
-    fname: string
+    fname*: string
 
   Variant* = ref object
     ## Variant is a single line from a VCF
@@ -859,7 +859,7 @@ proc `$`*(a:Allele): string {.inline.} =
   ## string representation of a single allele.
   if a.value < 0:
     # set end to / so it is removed in '$'
-    result = if int32(a) == 0: "." else: "$"
+    result = if int32(a) == 0: "./" else: "$"
   else:
     result = intToStr(a.value) & (if a.phased: '|' else: '/')
 

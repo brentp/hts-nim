@@ -285,7 +285,7 @@ suite "vcf suite":
     global_variant.ID = "rs0123456789"
 
     check global_variant.ID == "rs0123456789"
-    check global_variant.tostring.split('\t')[..2] == @["1", "10172", "rs0123456789"]
+    check global_variant.tostring.split('\t')[0..2] == @["1", "10172", "rs0123456789"]
 
   test "new from string":
     var v:VCF
