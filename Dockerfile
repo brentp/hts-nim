@@ -4,7 +4,7 @@ FROM alpine:3.11.5
 ENV CFLAGS="-fPIC -O3"
 
 RUN apk add wget git xz bzip2-static musl m4 autoconf tar xz-dev bzip2-dev build-base libpthread-stubs libzip-dev gfortran \
-	    openssl-libs-static openblas-static pcre-dev curl llvm-dev curl-static bash
+	    openssl-libs-static openblas-static pcre-dev curl llvm-dev curl-static bash curl-dev clang-libs
 
 RUN mkdir -p /usr/local/include && \
     git clone --depth 1 https://github.com/ebiggers/libdeflate.git && \
@@ -16,7 +16,7 @@ RUN mkdir -p /usr/local/include && \
     rm -rf cloudflare-zlib
 
 RUN cd / && \
-    git clone -b v1.2.6 git://github.com/nim-lang/nim nim && \
+    git clone -b v1.4.8 git://github.com/nim-lang/nim nim && \
     cd nim &&  \
     sh ./build_all.sh && \
     rm -rf csources && \
@@ -37,14 +37,14 @@ RUN apk add cmake openssl-dev && \
 ENV PATH=:/root/.nimble/bin:/nim/bin/:$PATH	
 
 RUN \
-    git clone https://github.com/samtools/htslib && \
-    cd htslib && git checkout 1.11 && autoheader && autoconf && \
-    ./configure --disable-s3 --disable-libcurl --with-libdeflate && \
+    git clone -b 1.12 --recursive https://github.com/samtools/htslib && \
+    cd htslib && autoheader && autoconf && \
+    ./configure --enable-s3 --enable-libcurl --with-libdeflate && \
     make -j4 CFLAGS="-fPIC -O3" install && \
     cd ../ && \
-    git clone https://github.com/samtools/bcftools && \
-    cd bcftools && git checkout 1.10.2 && autoheader && autoconf && \
-    ./configure --disable-s3 --disable-libcurl --with-libdeflate && \
+    git clone -b 1.12 --recursive https://github.com/samtools/bcftools && \
+    cd bcftools && autoheader && autoconf && \
+    ./configure --enable-s3 --enable-libcurl --with-libdeflate && \
     make -j4 CFLAGS="-fPIC -O3" install && \
     cd ../ && rm -rf htslib bcftools
 
@@ -56,6 +56,7 @@ ENV HTSLIB=system
 ENV PATH=$PATH:~/.cargo/bin/
 
 #COPY docker/d4.patch /tmp/
+RUN apk add clang-static
 
 #&& git apply < /tmp/d4.patch \
 RUN ~/.cargo/bin/rustup target add x86_64-unknown-linux-musl \
