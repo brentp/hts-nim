@@ -4,7 +4,7 @@ FROM alpine:3.11.5
 ENV CFLAGS="-fPIC -O3"
 
 RUN apk add wget git xz bzip2-static musl m4 autoconf tar xz-dev bzip2-dev build-base libpthread-stubs libzip-dev gfortran \
-	    openssl-libs-static openblas-static pcre-dev curl llvm-dev curl-static bash curl-dev clang-libs
+	    openssl-libs-static openblas-static pcre-dev curl llvm-dev curl-static bash curl-dev clang-static
 
 RUN mkdir -p /usr/local/include && \
     git clone --depth 1 https://github.com/ebiggers/libdeflate.git && \
@@ -55,8 +55,10 @@ RUN sh -c 'curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- 
 ENV HTSLIB=system
 ENV PATH=$PATH:~/.cargo/bin/
 
+
 #COPY docker/d4.patch /tmp/
-RUN apk add clang-static
+
+ENV RUSTFLAGS=-Ctarget-feature=-crt-static
 
 #&& git apply < /tmp/d4.patch \
 RUN ~/.cargo/bin/rustup target add x86_64-unknown-linux-musl \
