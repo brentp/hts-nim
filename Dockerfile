@@ -52,7 +52,6 @@ RUN \
 RUN sh -c 'curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -q -y'
 #	    && apk add clang-libs
 
-ENV HTSLIB=system
 ENV PATH=$PATH:~/.cargo/bin/
 
 
