@@ -169,13 +169,13 @@ proc mate_chrom*(r: Record): string {.inline.} =
     return ""
   return $r.hdr.hdr.target_name[tid]
 
-proc mate_tid*(r: Record): int {.inline.} =
-  ## `mate_tid` returns the tid of the mate or -1 if not mapped.
-  result = r.b.core.mtid
-
 proc tid*(r: Record): int {.inline.} =
   ## `tid` returns the tid of the alignment or -1 if not mapped.
   result = r.b.core.tid
+
+proc mate_tid*(r: Record): int {.inline.} =
+  ## `mate_tid` returns the tid of the mate or -1 if not mapped.
+  result = r.b.core.mtid
 
 proc start*(r: Record): int64 {.inline.} =
   ## `start` returns 0-based start position.
