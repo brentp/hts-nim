@@ -576,7 +576,7 @@ iterator items*(v:VCF): Variant =
   if v.c.errcode > 1:
     stderr.write_line "hts-nim/vcf bcf_read error:" & $v.c.errcode
     stderr.write_line "last read variant:", variant.tostring()
-    quit(2)
+    raise newException(IOError, "Error reading variant")
 
 
 type Contig* = object
@@ -639,7 +639,7 @@ iterator vquery(v:VCF, region:string): Variant =
     v.tidx = tbx_index_load(v.fname)
   if v.tidx == nil:
     stderr.write_line("hts-nim/vcf no index found for " & v.fname)
-    quit(2)
+    raise newException(IOError, "No Index found for " & v.fname)
 
   var
     read_func:ptr hts_readrec_func = cast[ptr hts_readrec_func](tbx_readrec)
@@ -695,7 +695,7 @@ iterator query*(v:VCF, region: string): Variant =
 
       if v.bidx == nil:
         stderr.write_line("hts-nim/vcf no index found for " & v.fname)
-        quit(2)
+        raise newException(IOError, "No Index found for " & v.fname)
       var
         start: int64
         stop: int64
@@ -723,7 +723,7 @@ iterator query*(v:VCF, region: string): Variant =
       hts_itr_destroy(itr)
       if ret > 0:
         stderr.write_line "hts-nim/vcf: error parsing "
-        quit(2)
+        raise newException(IOError, "error parsing vcf")
 
     if v.c.errcode != 0:
       stderr.write_line "hts-nim/vcf bcf_read error:" & $v.c.errcode

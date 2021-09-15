@@ -1,3 +1,7 @@
+v0.3.17
+=======
++ turn quits into exceptions
+
 v0.3.16
 =======
 + expose VCF.fname
