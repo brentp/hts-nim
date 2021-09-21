@@ -15,6 +15,7 @@ RUN mkdir -p /usr/local/include && \
     cd .. && \
     rm -rf cloudflare-zlib
 
+
 RUN cd / && \
     git clone -b v1.4.8 git://github.com/nim-lang/nim nim && \
     cd nim &&  \
@@ -37,12 +38,12 @@ RUN apk add cmake openssl-dev && \
 ENV PATH=:/root/.nimble/bin:/nim/bin/:$PATH	
 
 RUN \
-    git clone -b 1.12 --recursive https://github.com/samtools/htslib && \
+    git clone -b 1.13 --recursive https://github.com/samtools/htslib && \
     cd htslib && autoheader && autoconf && \
     ./configure --enable-s3 --enable-libcurl --with-libdeflate && \
     make -j4 CFLAGS="-fPIC -O3" install && \
     cd ../ && \
-    git clone -b 1.12 --recursive https://github.com/samtools/bcftools && \
+    git clone -b 1.13 --recursive https://github.com/samtools/bcftools && \
     cd bcftools && autoheader && autoconf && \
     ./configure --enable-s3 --enable-libcurl --with-libdeflate && \
     make -j4 CFLAGS="-fPIC -O3" install && \
@@ -53,10 +54,6 @@ RUN sh -c 'curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- 
 #	    && apk add clang-libs
 
 ENV PATH=$PATH:~/.cargo/bin/
-
-
-#COPY docker/d4.patch /tmp/
-
 ENV RUSTFLAGS=-Ctarget-feature=-crt-static
 
 #&& git apply < /tmp/d4.patch \

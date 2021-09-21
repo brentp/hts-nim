@@ -187,7 +187,9 @@ proc remove_format*(h:Header, ID:string): Status =
   return Status(bcf_hdr_sync(h.hdr))
 
 proc destroy_vcf(v:VCF) =
-  bcf_hdr_destroy(v.header.hdr)
+  if v.header != nil and v.header.hdr != nil:
+    bcf_hdr_destroy(v.header.hdr)
+    v.header.hdr = nil
   if v.tidx != nil:
     tbx_destroy(v.tidx)
   if v.bidx != nil:
@@ -196,7 +198,8 @@ proc destroy_vcf(v:VCF) =
     bcf_destroy(v.c)
   if v.fname != "-" and v.fname != "/dev/stdin":
     if v.hts != nil:
-      discard hts_close(v.hts)
+      if hts_close(v.hts) != 0:
+        stderr.write_line "[hts-nim] underlying error closing vcf file"
       v.hts = nil
   else:
     flushFile(stdout)

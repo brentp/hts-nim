@@ -1,3 +1,7 @@
+v0.3.18
+=======
++ [vcf] fix for #77 for to avoid double-free of header when it's re-used.
+
 v0.3.17
 =======
 + turn quits into exceptions

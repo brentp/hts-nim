@@ -400,6 +400,22 @@ suite "vcf alleles":
       v.ALT = @["A", "T"]
       check v.ALT == @["A", "T"]
 
+proc write_linked_blocks(ivcf:var VCF, ovcf:var VCF):int = 
+  var current_line: string
+  var v_off = 1
+  var currentBlock = 0
+  doAssert Status.OK == ivcf.header.add_string("""##sgcocaller_v0.1=phaseBlocks""")
+  ovcf.header = ivcf.header
+  doAssert ovcf.write_header()
+  var gt_string:seq[int32]
+  var block_pos_i = 0
+  for v in ivcf.query("*"):
+    gt_string = @[int32(2),int32(5)]
+    if v.format().set("GT",gt_string) != Status.OK:
+      quit "set GT failed"
+    if not ovcf.write_variant(v) :
+      quit "write vcf failed for " & $voff
+  return 0
 
 suite "bug suite":
     test "csq reader":
@@ -410,6 +426,25 @@ suite "bug suite":
         for variant in v:
             var st = variant.info.get("CSQ", anno)
             check st in {Status.OK, Status.NotFound}
+
+    test "re-use same header issue 77":
+      let threads = 1
+      var chrs = @["chr1", "chr1"]
+
+      var ivcf,ovcf: VCF
+      var inFile,outFile:string
+
+      for chrName in chrs:
+        inFile  = "tests/test_same_header.vcf.gz"
+        outFile = "__x.vcf.gz"
+        if not open(ivcf, inFile, threads=threads):
+            quit "couldn't open input vcf file"
+        if not open(ovcf, outFile, threads=threads, mode ="w"):
+          quit "couldn't open output vcf file"
+        doAssert 0 == write_linked_blocks(ivcf,ovcf)
+        ivcf.close()
+        ovcf.close()
+
 
 import times
 
