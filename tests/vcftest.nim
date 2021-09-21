@@ -444,6 +444,7 @@ suite "bug suite":
         doAssert 0 == write_linked_blocks(ivcf,ovcf)
         ivcf.close()
         ovcf.close()
+        removeFile(outFile)
 
 
 import times
