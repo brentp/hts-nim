@@ -1,3 +1,7 @@
+v0.3.19
+=======
++ [vcf] allow using `vcf.set_samples(@["^"])` to remove all samples
+
 v0.3.18
 =======
 + [vcf] fix for #77 for to avoid double-free of header when it's re-used.

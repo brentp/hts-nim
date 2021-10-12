@@ -89,11 +89,14 @@ proc n_samples*(v:VCF): int {.inline.} =
 
 proc set_samples*(v:VCF, samples:seq[string]) =
   ## set the samples that will be decoded
+  ## use v.set_samples(@["^"]) to exclude all samples.
   var isamples = samples
   if isamples.len == 0:
     isamples = @["-"]
-  var sample_str = join(isamples, ",")
-  var ret = bcf_hdr_set_samples(v.header.hdr, sample_str.cstring, 0)
+  var sample_str = join(isamples, ",").cstring 
+  if isamples.len == 1 and samples[0] == "^":
+    sample_str = nil
+  var ret = bcf_hdr_set_samples(v.header.hdr, sample_str, 0)
   doAssert ret >= 0, ("[hts-nim/vcf]: error setting samples in " & v.fname)
   doAssert bcf_hdr_sync(v.header.hdr) == 0, "[hts/nim-vcf] error in vcf.set_samples"
 
