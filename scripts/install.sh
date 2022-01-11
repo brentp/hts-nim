@@ -10,7 +10,7 @@ sudo apt-get -qy install bwa make build-essential cmake libncurses-dev ncurses-d
 
 cd
 
-git clone -b $BRANCH --depth 5 git://github.com/nim-lang/nim nim-$BRANCH/
+git clone -b $BRANCH --depth 5 https://github.com/nim-lang/nim nim-$BRANCH/
 cd nim-$BRANCH
 sh build_all.sh
 
