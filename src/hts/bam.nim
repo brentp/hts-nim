@@ -401,8 +401,14 @@ proc open*(bam: var Bam, path: cstring, threads: int=0, mode:string="r", fai: cs
   bam.hdr = hdr
   bam.rec = rec
 
-  if index:
-    var idx = sam_index_load(bam.hts, path)
+  if index or ("##idx##" in $path):
+
+    var idx = if "##idx##" in $path:
+      let spl = ($path).split("##idx##")
+      doAssert spl.len == 2, "mosdepth: expected ##idx## to separate bam from index path"
+      sam_index_load2(bam.hts, spl[0], spl[1])
+    else:
+      sam_index_load(bam.hts, path)
     if idx != nil:
         bam.idx = idx
     else:
