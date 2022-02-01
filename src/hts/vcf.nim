@@ -94,7 +94,7 @@ proc set_samples*(v:VCF, samples:seq[string]) =
   if isamples.len == 0:
     isamples = @["-"]
   var sample_str = join(isamples, ",").cstring 
-  if isamples.len == 1 and samples[0] == "^":
+  if isamples.len == 1 and (samples.len == 0 or samples[0] == "^"):
     sample_str = nil
   var ret = bcf_hdr_set_samples(v.header.hdr, sample_str, 0)
   doAssert ret >= 0, ("[hts-nim/vcf]: error setting samples in " & v.fname)
