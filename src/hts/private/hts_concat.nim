@@ -1,4 +1,3 @@
- {.deadCodeElim: on.}
 when defined(windows):
   const
     libname* = "libhts.dll"
