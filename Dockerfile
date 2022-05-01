@@ -40,7 +40,7 @@ ENV PATH=:/root/.nimble/bin:/nim/bin/:$PATH
 RUN \
     git clone -b 1.13 --recursive https://github.com/samtools/htslib && \
     cd htslib && autoheader && autoconf && \
-    ./configure --enable-s3 --enable-libcurl --with-libdeflate && \
+    ./configure --enable-s3 --enable-gcs --enable-libcurl --with-libdeflate && \
     make -j4 CFLAGS="-fPIC -O3" install && \
     cd ../ && \
     git clone -b 1.13 --recursive https://github.com/samtools/bcftools && \
@@ -61,9 +61,9 @@ RUN ~/.cargo/bin/rustup target add x86_64-unknown-linux-musl \
 	&& git clone https://github.com/38/d4-format \
 	&& cd d4-format \
         && ln -s /usr/bin/gcc /usr/bin/musl-gcc \
-	&& ~/.cargo/bin/cargo build --all --target x86_64-unknown-linux-musl --release
+  && ~/.cargo/bin/cargo build --package=d4binding --release 
 
-RUN install -m 644 d4-format/target/x86_64-unknown-linux-musl/release/libd4binding.a /usr/lib && \
+RUN install -m 644 d4-format/target/release/libd4binding.a /usr/lib && \
 	install -m 644 d4-format/d4binding/include/d4.h /usr/include
 
 
