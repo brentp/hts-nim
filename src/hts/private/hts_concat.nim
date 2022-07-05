@@ -843,3 +843,22 @@ proc bcf_get_info_values*(hdr: ptr bcf_hdr_t; line: ptr bcf1_t; tag: cstring;
 proc bcf_hdr_get_hrec*(hdr: ptr bcf_hdr_t; `type`: cint; key: cstring; value: cstring;
                       str_class: cstring): ptr bcf_hrec_t {.cdecl,
     importc: "bcf_hdr_get_hrec", dynlib: libname.}
+
+##
+##  bcf_index_build3() - Generate and save an index to a specific file
+##  @fn:         Input VCF/BCF filename
+##  @fnidx:      Output filename, or NULL to add .csi/.tbi to @fn
+##  @min_shift:  Positive to generate CSI, or 0 to generate TBI
+##  @n_threads:  Number of VCF/BCF decoder threads
+##
+##  Returns 0 if successful, or negative if an error occurred.
+##
+##  List of error codes:
+##      -1 .. indexing failed
+##      -2 .. opening @fn failed
+##      -3 .. format not indexable
+##      -4 .. failed to create and/or save the index
+##
+
+proc bcf_index_build3*(fn: cstring, fnidx: cstring, min_shift: cint, n_threads: cint): cint {.cdecl,
+    importc: "bcf_index_build3", dynlib: libname.}

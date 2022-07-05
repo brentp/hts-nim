@@ -938,6 +938,22 @@ proc `$`*(v:Variant): string =
   return format("Variant($#:$# $#/$#)" % [$v.CHROM, $v.POS, $v.REF, join(v.ALT, ",")])
 
 
+proc bcfBuildIndex*(fnameIn, fnameOut: string; csi: bool = true, threads: int = 1) = 
+  ##  Uses bcf_index_build3() - Generate and save an index to a specific file
+  ##  fnameIn: Input VCF/BCF filename
+  ##  fnameOut: Output filename
+  ##  csi: `true` to generate CSI, or `false` to generate TBI, Note: bcf can't make csi index
+  ##  threads: Number of VCF/BCF decoder threads
+  let errorCode = bcf_index_build3(fnameIn.cstring, fnameOut.cstring, cast[int](csi).cint, threads.cint).int
+  let errorMsg = case errorCode:
+  of -1: "indexing failed"
+  of -2: "opening @fn failed"
+  of -3: "format not indexable"
+  of -4: "failed to create and/or save the index"
+  else: ""
+  if errorMsg != "":
+    raise newException(ValueError, errorMsg)
+
 when isMainModule:
 
   var tsamples = @["101976-101976", "100920-100920", "100231-100231", "100232-100232", "100919-100919"]

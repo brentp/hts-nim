@@ -472,3 +472,52 @@ suite "speed tests":
           doAssert gts[0][0].value > -2
       v.close()
     echo n, " in .. ", cpuTime() - t, " seconds "
+
+
+suite "vcf indexing suite":
+
+  proc checkIndexWorks(fnameIn: string): bool =
+    var v:VCF
+    doAssert(open(v, fnameIn))
+    for rec in v.query("1:15600-18250"):
+      result = rec.POS >= 0
+      break
+
+  test "index vcf.gz":
+    # Setup
+    var fnameIn = "tests/test.vcf.gz"
+    var fnameInNew = "tests/test00.vcf.gz"
+    var fnameIndexCsi = "tests/test00.vcf.gz.csi"
+    var fnameIndexTbi = "tests/test00.vcf.gz.tbi"
+    copyFile(fnameIn, fnameInNew)
+
+    bcfBuildIndex(fnameInNew, fnameIndexCsi, true, 0)
+    check checkIndexWorks(fnameInNew)
+    removeFile(fnameIndexCsi)
+
+    bcfBuildIndex(fnameInNew, fnameIndexTbi, false, 0)
+    check checkIndexWorks(fnameInNew)
+    removeFile(fnameIndexTbi)
+
+    # Teardown
+    removeFile(fnameInNew)
+
+  test "index bcf":
+    # Setup
+    var fnameIn = "tests/test.bcf"
+    var fnameInNew = "tests/test00.bcf"
+    var fnameIndexCsi = "tests/test00.bcf.csi"
+    var fnameIndexTbi = "tests/test00.bcf.tbi"
+    copyFile(fnameIn, fnameInNew)
+
+    bcfBuildIndex(fnameInNew, fnameIndexCsi, true, 0)
+    check checkIndexWorks(fnameInNew)
+    removeFile(fnameIndexCsi)
+
+    # Can't make tbi for bcf
+    expect ValueError:
+      bcfBuildIndex(fnameInNew, fnameIndexTbi, false, 0)
+      removeFile(fnameIndexTbi)
+
+    # Teardown
+    removeFile(fnameInNew)
