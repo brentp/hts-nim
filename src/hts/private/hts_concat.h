@@ -708,3 +708,22 @@ int bcf_get_info_values(const bcf_hdr_t *hdr, bcf1_t *line, const char *tag, voi
 *  @param str_class: the class of BCF_HL_STR line (e.g. "ALT" or "SAMPLE"), otherwise NULL
 */
 bcf_hrec_t *bcf_hdr_get_hrec(const bcf_hdr_t *hdr, int type, const char *key, const char *value, const char *str_class);
+
+/**
+*  bcf_index_build3() - Generate and save an index to a specific file
+*  @fn:         Input VCF/BCF filename
+*  @fnidx:      Output filename, or NULL to add .csi/.tbi to @fn
+*  @min_shift:  Positive to generate CSI, or 0 to generate TBI
+*  @n_threads:  Number of VCF/BCF decoder threads
+*
+*  Returns 0 if successful, or negative if an error occurred.
+*
+*  List of error codes:
+*      -1 .. indexing failed
+*      -2 .. opening @fn failed
+*      -3 .. format not indexable
+*      -4 .. failed to create and/or save the index
+*/
+
+int bcf_index_build3(const char *fn, const char *fnidx, int min_shift, int n_threads);
+
