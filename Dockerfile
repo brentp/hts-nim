@@ -1,6 +1,9 @@
 FROM alpine:3.11.5
 #FROM alpine:20190925
 
+ARG nim_version=1.6.6
+
+
 ENV CFLAGS="-fPIC -O3"
 
 RUN apk add wget git xz bzip2-static musl m4 autoconf tar xz-dev bzip2-dev build-base libpthread-stubs libzip-dev gfortran \
@@ -9,21 +12,16 @@ RUN apk add wget git xz bzip2-static musl m4 autoconf tar xz-dev bzip2-dev build
 RUN mkdir -p /usr/local/include && \
     git clone --depth 1 https://github.com/ebiggers/libdeflate.git && \
     cd libdeflate && make -j4 CFLAGS="-fPIC -O3" install && \
-    cd .. && rm -rf libdeflate && \
-    git clone https://github.com/cloudflare/zlib cloudflare-zlib && \
-    cd cloudflare-zlib && ./configure && make install && \
-    cd .. && \
-    rm -rf cloudflare-zlib
+    cd .. && rm -rf cloudflare-zlib
 
 
 RUN cd / && \
-    git clone -b v1.4.8 git://github.com/nim-lang/nim nim && \
-    cd nim &&  \
-    sh ./build_all.sh && \
-    rm -rf csources && \
-    echo 'PATH=/nim/bin:$PATH' >> ~/.bashrc && \
-    echo 'PATH=/nim/bin:$PATH' >> ~/.bash_profile && \
-    echo 'PATH=/nim/bin:$PATH' >> /etc/environment 
+    wget -q https://nim-lang.org/download/nim-${nim_version}-linux_x64.tar.xz && \
+    tar xf nim-${nim_version}-linux_x64.tar.xz && \
+    echo 'PATH=/nim-${nim_version}/bin:$PATH' >> ~/.bashrc && \
+    echo 'PATH=/nim-${nim_version}/bin:$PATH' >> ~/.bash_profile && \
+    echo 'PATH=/nim-${nim_version}/bin:$PATH' >> /etc/environment  && \
+    rm -f nim-${nim_version}-linux_x64.tar.xz
 
 RUN apk add cmake openssl-dev && \
 	wget https://libzip.org/download/libzip-1.6.1.tar.gz && \
@@ -35,15 +33,15 @@ RUN apk add cmake openssl-dev && \
 	cd ../../ && rm -rf libzip-1.6.1*
 
 
-ENV PATH=:/root/.nimble/bin:/nim/bin/:$PATH	
+ENV PATH=:/root/.nimble/bin:/nim-${nim_version}/bin/:$PATH	
 
 RUN \
-    git clone -b 1.13 --recursive https://github.com/samtools/htslib && \
+    git clone --depth 1 -b 1.15 --recursive https://github.com/samtools/htslib && \
     cd htslib && autoheader && autoconf && \
     ./configure --enable-s3 --enable-gcs --enable-libcurl --with-libdeflate && \
     make -j4 CFLAGS="-fPIC -O3" install && \
     cd ../ && \
-    git clone -b 1.13 --recursive https://github.com/samtools/bcftools && \
+    git clone --depth 1 -b 1.15 --recursive https://github.com/samtools/bcftools && \
     cd bcftools && autoheader && autoconf && \
     ./configure --enable-s3 --enable-libcurl --with-libdeflate && \
     make -j4 CFLAGS="-fPIC -O3" install && \
@@ -64,14 +62,15 @@ RUN ~/.cargo/bin/rustup target add x86_64-unknown-linux-musl \
   && ~/.cargo/bin/cargo build --package=d4binding --release 
 
 RUN install -m 644 d4-format/target/release/libd4binding.a /usr/lib && \
-	install -m 644 d4-format/d4binding/include/d4.h /usr/include
-
+	install -m 644 d4-format/d4binding/include/d4.h /usr/include && \
+  rm -rf d4-format/target/ && \
+  rm -rf /root/.rustup/
+    
 
 ADD . /src/
-RUN cat /src/docker/docker.nim.cfg >> /nim/config/nim.cfg && \
+RUN cat /src/docker/docker.nim.cfg >> /nim-${nim_version}/config/nim.cfg && \
     source ~/.bashrc && cd /src/ && nimble install -y && \
     nimble install -y c2nim docopt && \
     nimble install -y websocket@#head && \
     nim c -o:/usr/local/bin/nsb /src/docker/nsb.nim && \
     rm -rf /src/
-
