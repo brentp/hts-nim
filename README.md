@@ -105,7 +105,7 @@ for rec in v.query("1:15600-18250"):
   doAssert wtr.write_variant(rec)
 
 # Generate index files - .vcf.gz (tbi + csi ) & .bcf (csi)
-var fnameIn = "tests/test.bcf"
+var fnameInNew = "tests/test.bcf"
 var fnameIndexCsi = "tests/test00.bcf.csi"
 bcfBuildIndex(fnameInNew, fnameIndexCsi, true) # `true` for csi and `false` for tbi
 
