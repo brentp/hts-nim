@@ -68,7 +68,8 @@ iterator query*(bi: BGZI, chrom: string, start:int64, stop:int64): string {.inli
 
   var kstr = kstring_t(s:nil, m:0, l:0)
   var outstr = newStringOfCap(10000)
-  shallow(outstr)
+  when not defined(gcArc) and not defined(gcOrc):
+    shallow(outstr)
 
   while hts_itr_next(bi.bgz.cptr, itr, kstr.addr, bi.csi.tbx.addr) > 0:
     fastSubStr(outstr, kstr.s, 0, int(kstr.l))
