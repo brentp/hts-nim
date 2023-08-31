@@ -11,9 +11,9 @@ RUN apk add wget git xz bzip2-static musl m4 autoconf tar xz-dev bzip2-dev build
 
 RUN mkdir -p /usr/local/include && \
     git clone -b v1.18 --depth 1 https://github.com/ebiggers/libdeflate.git && \
-    cd libdeflate && cmake -B build && cmake --build build && cmake --install build && \
+    cd libdeflate && cmake -B build && cmake --build build && cmake --install build  && \
+    ln -s ln -s /usr/local/lib64/* /usr/local/lib && \
     cd .. && rm -rf libdeflate
-
 
 RUN cd / && \
     wget -q https://nim-lang.org/download/nim-${nim_version}-linux_x64.tar.xz && \
