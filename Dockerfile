@@ -6,7 +6,7 @@ ARG nim_version=1.6.6
 
 ENV CFLAGS="-fPIC -O3"
 
-RUN apk add wget git xz bzip2-static musl m4 autoconf tar xz-dev bzip2-dev build-base libpthread-stubs libzip-dev gfortran \
+RUN apk update && apk upgrade && apk add wget git xz bzip2-static musl m4 autoconf tar xz-dev bzip2-dev build-base libpthread-stubs libzip-dev gfortran \
     openssl-libs-static openblas-static pcre-dev curl llvm-dev curl-static bash curl-dev clang-static nghttp2-static  zlib-static cmake
 
 RUN mkdir -p /usr/local/include && \
