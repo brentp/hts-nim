@@ -1,3 +1,7 @@
+v0.3.25
+=======
++ new smaller docker image (#85)
+
 v0.3.19
 =======
 + [vcf] allow using `vcf.set_samples(@["^"])` to remove all samples
