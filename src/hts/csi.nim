@@ -82,7 +82,7 @@ proc idx_set_meta*(csi:var CSI, idx: ptr hts_idx_t; tc: ptr tbx_conf_t; chroms: 
     offset += 1
   doAssert offset == len(csi.meta)
   # https://github.com/samtools/htslib/issues/936
-  var do_copy = cint(0)
+  var do_copy = cint(1)
   return int(hts_idx_set_meta(idx, uint32(len(csi.meta)), csi.meta[0].addr, do_copy))
 
 proc set_meta*(c: var CSI): int =

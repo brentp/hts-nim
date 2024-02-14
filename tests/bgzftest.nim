@@ -1,6 +1,13 @@
 import unittest, hts
 
 suite "bgzf-suite":
+
+  test "issue86":
+    var b: BGZI
+    doAssert(b.open("tests/test_files/sample.tsv.gz"))
+    b.close()
+
+
   test "test-write":
     var b: BGZ
     b.open("t.gz", "w")

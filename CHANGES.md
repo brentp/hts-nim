@@ -1,3 +1,7 @@
+v0.3.26 (dev)
+=============
++ fix for `hts_idx_set_meta` (#86)
+
 v0.3.25
 =======
 + new smaller docker image (#85)
