@@ -36,7 +36,7 @@ RUN apk add cmake openssl-dev && \
 ENV PATH=:/root/.nimble/bin:/nim-${nim_version}/bin/:$PATH	
 
 RUN \
-    git clone --depth 1 -b 1.18 --recursive https://github.com/samtools/htslib && \
+    git clone --depth 1 -b 1.19.1 --recursive https://github.com/samtools/htslib && \
     cd htslib && autoheader && autoconf && \
     ./configure --enable-s3 --enable-gcs --enable-libcurl --with-libdeflate && \
     make -j4 CFLAGS="-fPIC -O3" install && \
