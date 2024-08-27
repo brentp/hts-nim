@@ -17,7 +17,9 @@ suite "flag cigar-suite":
 
   test "new cigar":
     var els = @[CigarElement(2048), CigarElement(2049), CigarElement(2048)]
-    GC_ref(els)
+ 
+    when NimMajor < 2:
+        GC_ref(els)
 
     var cig = newCigar(els)
     var i = 0
@@ -25,4 +27,5 @@ suite "flag cigar-suite":
       check e == els[i]
       i.inc
 
-    GC_unref(els)
+    when NimMajor < 2:
+        GC_unref(els)

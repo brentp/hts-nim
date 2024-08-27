@@ -1,7 +1,7 @@
 FROM alpine:3.11.5
 #FROM alpine:20190925
 
-ARG nim_version=1.6.6
+ARG nim_version=1.6.20
 
 
 ENV CFLAGS="-fPIC -O3"
