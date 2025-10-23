@@ -12,14 +12,15 @@ proc `$`*(f:fisher_result): string =
          ", two:" & formatFloat(f.two, ffScientific, precision=4) & ")"
 
 # kt_fisher_exact(int n11, int n12, int n21, int n22, double *_left
-proc fishers_exact_test*[T:int|int64|int32](n11:T, n12:T, n21:T, n22:T): fisher_result {.inline.} =
+proc fishers_exact_test*[T:int|int64|int32](n11:T, n12:T, n21:T, n22:T): fisher_result {.inline.} = 
   result = fisher_result()
-  # Cast the address to ptr cdouble if needed
-  discard kt_fisher_exact(n11.cint, n12.cint, n21.cint, n22.cint, 
-                          cast[ptr cdouble](addr result.left),
-                          cast[ptr cdouble](addr result.right),
-                          cast[ptr cdouble](addr result.two))
-
+  # Pass addresses directly - Nim will handle type conversion
+  discard kt_fisher_exact(
+    n11.cint, n12.cint, n21.cint, n22.cint, 
+    result.left.addr,   # Remove .cdouble
+    result.right.addr,  # Remove .cdouble
+    result.two.addr     # Remove .cdouble
+  )
 
 proc binom_test*[T:int|int64|int32|uint32|uint64|uint16](successes:T, trials:T): float64 {.inline.} =
   if trials == 0: return 1
