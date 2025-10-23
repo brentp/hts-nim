@@ -1,0 +1,59 @@
+name: Test
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        nim-version: ['1.6.6', '2.2.4']
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install build dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential libcurl4-openssl-dev libssl-dev zlib1g-dev libbz2-dev liblzma-dev autoconf automake make
+
+    - name: Build and install htslib
+      run: |
+        # Clone htslib
+        git clone --recursive --depth 1 --branch 1.21 https://github.com/samtools/htslib.git
+        cd htslib
+
+        # Build and install
+        autoreconf -i
+        ./configure --prefix=/usr/local
+        make -j$(nproc)
+        sudo make install
+
+        # Update library cache
+        sudo ldconfig
+
+    - name: Verify htslib installation
+      run: |
+        pkg-config --modversion htslib
+        ls -la /usr/local/lib/libhts.*
+
+    - name: Install Nim
+      uses: jiro4989/setup-nim-action@v2
+      with:
+        nim-version: ${{ matrix.nim-version }}
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Verify Nim installation
+      run: nim -v
+
+    - name: Install hts-nim dependencies
+      run: nimble install -y
+
+    - name: Run tests
+      run: |
+        nimble test
+        nim c -r src/hts/vcf.nim > out.txt

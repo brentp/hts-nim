@@ -6,6 +6,11 @@ import system
 import sequtils
 
 
+# Compatibility alias for Nim versions < 2
+when NimMajor < 2:
+  template newSeqUninit[T](len: Natural): untyped =
+    newSeqUninitialized[T](len)
+
 when defined(nimUncheckedArrayTyp):
   type CArray[T] = UncheckedArray[T]
 else:
@@ -523,7 +528,8 @@ iterator fields*(f:FORMAT): FormatField {.inline.} =
   for i in 0..<f.v.c.n_fmt.int:
     var fmt = cast[CPtr[bcf_fmt_t]](f.v.c.d.fmt)[i]
     var t = FormatField()
-    t.name = $bcf_hdr_int2id(f.v.vcf.header.hdr, BCF_DT_ID, fmt.id)
+    var name = bcf_hdr_int2id(f.v.vcf.header.hdr, BCF_DT_ID, fmt.id)
+    t.name = $name
     t.vtype = BCF_TYPE(fmt.`type`)
     t.n_per_sample = fmt.n
     t.i = fmt.id
@@ -834,7 +840,7 @@ type
 
 proc copy*(g: Genotypes): Genotypes =
   ## make a copy of the genotypes
-  var gts = newSeqUninitialized[int32](g.gts.len)
+  var gts = newSeqUninit[int32](g.gts.len)
   var src = g.gts[0]
   copyMem(gts[0].addr.pointer, src.addr.pointer, gts.len * sizeof(int32))
   return Genotypes(gts:gts, ploidy:g.ploidy)
@@ -928,7 +934,7 @@ proc `$`*(gs:Genotypes): string =
 
 proc alts*(gs:Genotypes): seq[int8] {.inline.} =
   ## return the number of alternate alleles. Unknown is -1.
-  result = newSeqUninitialized[int8](gs.len)
+  result = newSeqUninit[int8](gs.len)
   var i = 0
   for g in gs:
     result[i] = g.alts
@@ -958,7 +964,7 @@ when isMainModule:
 
   var tsamples = @["101976-101976", "100920-100920", "100231-100231", "100232-100232", "100919-100919"]
 
-  for k in 0..2000:
+  for k in 0..1500:
     var v:VCF
     if k mod 200 == 0:
       stderr.write_line $k
@@ -973,7 +979,7 @@ when isMainModule:
     for rec in v:
       if rec.n_samples != tsamples.len:
         quit(2)
-      echo rec.tostring()
+      var s = rec.tostring()
       if rec.info.get("AC", ac) != Status.OK:
           quit "couldn't get AC"
       if rec.info.get("AF", af) != Status.OK:
