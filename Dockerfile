@@ -63,7 +63,7 @@ RUN sh -c 'curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- 
     
 ADD . /src/
 RUN cat /src/docker/docker.nim.cfg >> /nim-${nim_version}/config/nim.cfg && \
-    cd /src/ && nimble install -y && \
+    cd /src/ && nimble install -y &&  \
     nimble install -y c2nim docopt && \
     nimble install -y websocket@#head && \
     nim c -o:/usr/local/bin/nsb /src/docker/nsb.nim && \

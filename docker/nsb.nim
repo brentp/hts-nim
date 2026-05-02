@@ -42,21 +42,28 @@ for d in @(args["--deps"]):
   if 0 != execCmd(&"""nimble install -y "{d}" """):
     quit "failed on nimble install of " & d
 
+
+var name = "exe"
+
 if $args["--nimble-file"] != "nil":
-  var (dir, _, _) = splitFile(expandFileName($args["--nimble-file"]))
-  dir.setCurrentDir
+  var (srcDir, local_name, _) = splitFile(source)
+  name = local_name
 
-  if execCmd(&"""sh -c "export PATH={path}; nimble install -d -y " """) != 0:
-    quit "coudn't run nimble install"
+  if $args["--nimble-file"] != "nil":
+    var (pkgDir, _, _) = splitFile(expandFileName($args["--nimble-file"]))
+    pkgDir.setCurrentDir
 
+    if execCmd(&"""sh -c "export PATH={path}; nimble install -d -y" """) != 0:
+      quit "couldn't run nimble install"
 
-var (dir, name, _) = splitFile(source)
-dir.setCurrentDir
-
-removeFile("xx_exe_out")
-var cmd = &"""nim c -d:nsb_static {join(@(args["<nim_compiler_args>"]), " ")} -o:xx_exe_out {name}"""
-if execCmd(&"""sh -c "{cmd}" """) != 0:
-  quit "error compiling code"
+    var cmd = &"""nimble c -d:nsb_static {join(@(args["<nim_compiler_args>"]), " ")} -o:xx_exe_out {source}"""
+    if execCmd(&"""sh -c "{cmd}" """) != 0:
+      quit "error compiling code"
+  else:
+    srcDir.setCurrentDir
+    var cmd = &"""nim c -d:nsb_static {join(@(args["<nim_compiler_args>"]), " ")} -o:xx_exe_out {name}"""
+    if execCmd(&"""sh -c "{cmd}" """) != 0:
+      quit "error compiling code"
 
 copyFileWithPermissions("xx_exe_out", &"/load/{name}")
 removeFile("xx_exe_out")
