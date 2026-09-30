@@ -24,3 +24,5 @@ tests/flagtest
 tests/cigartest
 tests/vcftest
 tests/all
+hts_nim_static_builder
+tests

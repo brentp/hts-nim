@@ -1,3 +1,7 @@
+v0.3.32
+=======
++ fix version parsing for distro versions with a non-numeric suffix, e.g. debian's `1.13+ds`
+
 v0.3.30
 =======
 + fix compilation on newer gcc by fixing callback signatures

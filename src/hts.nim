@@ -24,10 +24,9 @@ proc htslibVersion*(): string =
   $hts_version()
 
 proc checkVersion() =
-  var v = htslibVersion().split("-")[0].split(".")
-  doAssert v[0] == "1"
-  v[1] = v[1].split("-")[0]
-  let minor = parseInt(v[1])
+  var v = htslibVersion().split(".")
+  doAssert v[0] == "1", ("[hts/nim] error this version of hts-nim requires htslib 1.x, got version: " & htslibVersion())
+  let minor = parseInt(v[1].split({'-', '+', '~', ' '})[0]) # strip e.g. debian's "13+ds"
   doAssert minor >= 10, ("[hts/nim] error this version of hts-nim requires htslib >=1.10, got version: " & htslibVersion())
 
 checkVersion()
